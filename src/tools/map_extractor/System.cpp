@@ -100,6 +100,8 @@ float CONF_use_minHeight = -500.0f;
 
 // This option allow use float to int conversion
 bool  CONF_allow_float_to_int   = true;
+std::set<uint32> CONF_only_maps;
+std::set<uint32> CONF_skip_maps;
 float CONF_float_to_int8_limit  = 2.0f;      // Max accuracy = val/256
 float CONF_float_to_int16_limit = 2048.0f;   // Max accuracy = val/65536
 float CONF_flat_height_delta_limit = 0.005f; // If max - min less this value - surface is flat
@@ -154,6 +156,8 @@ void Usage(char* prg)
         "-o set output path\n"\
         "-e extract only MAP(1)/DBC(2)/Camera(4) - standard: all(7)\n"\
         "-f height stored as int (less map size but lost some accuracy) 1 by default\n"\
+        "-m extract only this map id (repeatable)\n"\
+        "-x skip this map id (repeatable)\n"\
         "Example: %s -f 0 -i \"c:\\games\\game\"", prg, prg);
     exit(1);
 }
@@ -205,6 +209,18 @@ void HandleArgs(int argc, char* arg[])
                 {
                     Usage(arg[0]);
                 }
+                break;
+            case 'm':
+                if (c + 1 < argc)
+                    CONF_only_maps.insert(atoi(arg[(c++) + 1]));
+                else
+                    Usage(arg[0]);
+                break;
+            case 'x':
+                if (c + 1 < argc)
+                    CONF_skip_maps.insert(atoi(arg[(c++) + 1]));
+                else
+                    Usage(arg[0]);
                 break;
             case 'e':
                 if (c + 1 < argc)                           // all ok
@@ -749,7 +765,17 @@ bool ConvertADT(std::string const& inputPath, std::string const& outputPath, int
                 }
 
                 liquid_entry[i][j] = h->LiquidType;
-                switch (LiquidTypes.at(h->LiquidType).SoundBank)
+                auto const liquidType = LiquidTypes.find(h->LiquidType);
+                uint8 soundBank = LIQUID_TYPE_WATER;
+                if (liquidType != LiquidTypes.end())
+                    soundBank = liquidType->second.SoundBank;
+                else
+                {
+                    printf("\nUnknown liquid type %u for map %s chunk %d,%d, treated as water\n", h->LiquidType,
+                        inputPath.c_str(), i, j);
+                }
+
+                switch (soundBank)
                 {
                     case LIQUID_TYPE_WATER: liquid_flags[i][j] |= MAP_LIQUID_TYPE_WATER; break;
                     case LIQUID_TYPE_OCEAN: liquid_flags[i][j] |= MAP_LIQUID_TYPE_OCEAN; if (attrs.Deep) liquid_flags[i][j] |= MAP_LIQUID_TYPE_DARK_WATER; break;
@@ -984,6 +1010,9 @@ void ExtractMapsFromMpq(uint32 build)
     printf("Convert map files\n");
     for (uint32 z = 0; z < map_count; ++z)
     {
+        if ((!CONF_only_maps.empty() && !CONF_only_maps.count(map_ids[z].id)) || CONF_skip_maps.count(map_ids[z].id))
+            continue;
+
         printf("Extract %s (%d/%u)                  \n", map_ids[z].name, z + 1, map_count);
         // Loadup map grid data
         mpqMapName = Acore::StringFormat(R"(World\Maps\{}\{}.wdt)", map_ids[z].name, map_ids[z].name);
