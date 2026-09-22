@@ -51,7 +51,7 @@ SUITES = {
     },
     'world-content': {
         'paths': [CONTENT + '*.py'],
-        'commands': [[CONTENT + 'test_validate_content.py']],
+        'commands': [[CONTENT + 'test_validate_content.py'], [CONTENT + 'test_archive.py']],
     },
     'registrations': {
         'paths': [MODULE + 'src/*.cpp', MODULE + 'src/*.h', MODULE + 'include.sh', 'tools/*registrations.py'],
