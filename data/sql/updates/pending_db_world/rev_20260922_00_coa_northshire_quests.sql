@@ -14,6 +14,11 @@
 --     sub-area the quest text names, using the CoA area ids the extracted terrain carries: Shadewell
 --     Spring 10305 for the murlocs and the estate, the dungeon box for the Censor, the abbey for the
 --     Spadas. Every inferred spawn is marked in its Comment column.
+--   NPC appearance  STAND-IN for three of them. The cache gives Bianca 652000, Moroi 652001 and
+--     the Theologian 652003, and none of those display ids exists in the client, so it falls back to
+--     a default human. CoA hands its custom NPCs their look over the mirror-image channel from
+--     creature_display_preset, which no source we hold carries. Until a capture supplies it they use
+--     resolvable stock displays: Bianca 3344, Moroi 3253, the Theologian and its images 5001.
 --   quest givers  INFERRED except one. Quest 1660000 names them itself: "Speak with Seminarian Moroi,
 --     brother of Bianca Spada", so Bianca starts it and Moroi ends it. The rest are assigned to Moroi
 --     because he is the seminarian the storyline follows. No source records a giver for any of them.
@@ -68,15 +73,15 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), 
 DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161700, 161701, 161716, 161717, 161736, 161707, 161712, 161713, 161904, 161703, 161704, 161714, 161715, 161824, 161825, 161826);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
-(161700, 0, 652000, 1, 1),
-(161701, 0, 652001, 1, 1),
+(161700, 0, 3344, 1, 1),
+(161701, 0, 3253, 1, 1),
 (161716, 0, 757, 1, 1),
 (161717, 0, 1079, 1, 1),
 (161736, 0, 4418, 1, 1),
 (161707, 0, 955, 1, 1),
 (161712, 0, 7555, 1, 1),
-(161713, 0, 652003, 1, 1),
-(161904, 0, 652003, 1, 1),
+(161713, 0, 5001, 1, 1),
+(161904, 0, 5001, 1, 1),
 (161703, 0, 11686, 1, 1),
 (161704, 0, 11686, 1, 1),
 (161714, 0, 11686, 1, 1),
@@ -228,27 +233,33 @@ VALUES
 (9001019, 161736, 0, 0, 0, 1, 1, 0, -8815.3, -388.3, 105.0, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, ruined tower, top'),
 (9001020, 161736, 0, 0, 0, 1, 1, 0, -8801.3, -402.3, 74.4, 0, 300, 12, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, ruined tower, patrolling the yard'),
 (9001021, 161736, 0, 0, 0, 1, 1, 0, -8831.3, -379.3, 73.337, 0, 300, 12, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, ruined tower, patrolling the yard'),
-(9001022, 161707, 0, 0, 0, 1, 1, 0, -8813.9, -300.4, 74.761, 0, 300, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village ruins'),
-(9001023, 161707, 0, 0, 0, 1, 1, 0, -8806.9, -305.4, 73.669, 0, 300, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village ruins'),
-(9001024, 161707, 0, 0, 0, 1, 1, 0, -8819.9, -294.4, 76.11, 0, 300, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village ruins'),
-(9001025, 161707, 0, 0, 0, 1, 1, 0, -8787.3, -294.0, 74.226, 0, 300, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village ruins'),
-(9001026, 161707, 0, 0, 0, 1, 1, 0, -8780.3, -299.0, 74.584, 0, 300, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village ruins'),
-(9001027, 161707, 0, 0, 0, 1, 1, 0, -8793.3, -288.0, 75.234, 0, 300, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village ruins'),
-(9001028, 161713, 0, 0, 0, 1, 1, 0, -8572.0, -487.0, 140.59, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, ruined estate, top of the waterfall'),
-(9001029, 161714, 0, 0, 0, 1, 1, 0, -8775.58, -278.45, 80.4, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: derived placement, at the Dungeon Door, credits the cellar entrance'),
-(9001030, 161703, 0, 0, 0, 1, 1, 0, -8649.0, -479.0, 141.757, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, hidden path up to the falls'),
-(9001031, 161704, 0, 0, 0, 1, 1, 0, -8574.0, -491.0, 140.506, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, ruined estate, credits the discovery'),
-(9001032, 161715, 0, 0, 0, 1, 1, 0, -8644.0, -398.0, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, dungeon interior, journal credit'),
-(9001033, 161824, 0, 0, 0, 1, 1, 0, -8638.85, -404.45, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: derived placement, dungeon interior, at the Abbess''s Staff'),
-(9001034, 161825, 0, 0, 0, 1, 1, 0, -8635.0, -399.0, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, dungeon interior, idol credit'),
-(9001035, 161826, 0, 0, 0, 1, 1, 0, -8646.0, -408.0, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, dungeon interior, jewel credit');
+(9001022, 161707, 0, 0, 0, 1, 1, 0, -8838.0, -262.0, 82.919, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001023, 161707, 0, 0, 0, 1, 1, 0, -8816.0, -272.0, 77.851, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001024, 161707, 0, 0, 0, 1, 1, 0, -8790.0, -258.0, 82.846, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001025, 161707, 0, 0, 0, 1, 1, 0, -8762.0, -270.0, 79.714, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001026, 161707, 0, 0, 0, 1, 1, 0, -8828.0, -300.0, 74.898, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001027, 161707, 0, 0, 0, 1, 1, 0, -8800.0, -296.0, 74.39, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001028, 161707, 0, 0, 0, 1, 1, 0, -8772.0, -308.0, 74.712, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001029, 161707, 0, 0, 0, 1, 1, 0, -8842.0, -336.0, 70.018, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001030, 161707, 0, 0, 0, 1, 1, 0, -8809.0, -344.0, 65.568, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001031, 161707, 0, 0, 0, 1, 1, 0, -8776.0, -352.0, 66.491, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001032, 161707, 0, 0, 0, 1, 1, 0, -8834.0, -374.0, 71.516, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001033, 161707, 0, 0, 0, 1, 1, 0, -8788.0, -382.0, 72.266, 0, 300, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, Old Northshire Village, spread across the ruins'),
+(9001034, 161713, 0, 0, 0, 1, 1, 0, -8572.0, -487.0, 140.59, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, ruined estate, top of the waterfall'),
+(9001035, 161714, 0, 0, 0, 1, 1, 0, -8775.58, -278.45, 80.4, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: derived placement, at the Dungeon Door, credits the cellar entrance'),
+(9001036, 161703, 0, 0, 0, 1, 1, 0, -8649.0, -479.0, 141.757, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, hidden path up to the falls'),
+(9001037, 161704, 0, 0, 0, 1, 1, 0, -8574.0, -491.0, 140.506, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, ruined estate, credits the discovery'),
+(9001038, 161715, 0, 0, 0, 1, 1, 0, -8644.0, -398.0, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, dungeon interior, journal credit'),
+(9001039, 161824, 0, 0, 0, 1, 1, 0, -8638.85, -404.45, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: derived placement, dungeon interior, at the Abbess''s Staff'),
+(9001040, 161825, 0, 0, 0, 1, 1, 0, -8635.0, -399.0, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, dungeon interior, idol credit'),
+(9001041, 161826, 0, 0, 0, 1, 1, 0, -8646.0, -408.0, 55.2, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: inferred placement, dungeon interior, jewel credit');
 
 DELETE FROM `gameobject` WHERE `guid` BETWEEN 6910000 AND 6910099;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
 (6910000, 2300500, 0, 0, 0, 1, 1, -8912.93, -209.89, 82.99, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page I'),
 (6910001, 2300517, 0, 0, 0, 1, 1, -8912.76, -208.82, 82.99, 5.45, 0, 0, 0.404647, -0.914473, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page VI'),
-(6910002, 2300501, 0, 0, 0, 1, 1, -8775.58, -278.45, 79.17, 1.5708, 0, 0, 0.707108, 0.707105, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Dungeon Door'),
+(6910002, 2300501, 0, 0, 0, 1, 1, -8775.58, -278.45, 79.17, 0.0, 0, 0, 0.0, 1.0, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Dungeon Door'),
 (6910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 54.72, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Abbess''s Staff'),
 (6910004, 96001, 0, 0, 0, 1, 1, -8906.66, -705.67, 70.67, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Smudged Note');
 
