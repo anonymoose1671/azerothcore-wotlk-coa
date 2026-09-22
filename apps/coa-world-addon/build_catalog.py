@@ -77,7 +77,7 @@ def spell_offsets(repo):
 
     columns = {field.name: field.offset for field in schemas.spell_schema(schemas.ROOT).columns}
     required = ('Effect[0]', 'Effect[1]', 'Effect[2]', 'EffectApplyAuraName[0]',
-                'DurationIndex', 'SpellName[enUS]')
+                'DurationIndex', 'SpellName[enUS]', 'Description[enUS]', 'SpellVisual[0]')
     missing = [name for name in required if name not in columns]
     if missing:
         raise ValueError('Spell schema is missing fields: ' + ', '.join(missing))
@@ -96,6 +96,10 @@ def visual_auras(dbc_dir, repo):
         if spell.uint_at(row, offsets['EffectApplyAuraName[0]']) != AURA_DUMMY:
             continue
         if spell.uint_at(row, offsets['DurationIndex']) != INFINITE_DURATION:
+            continue
+        if not spell.uint_at(row, offsets['SpellVisual[0]']):
+            continue
+        if spell.text_at(row, offsets['Description[enUS]']).strip():
             continue
         name = spell.text_at(row, offsets['SpellName[enUS]']).strip()
         if not name:

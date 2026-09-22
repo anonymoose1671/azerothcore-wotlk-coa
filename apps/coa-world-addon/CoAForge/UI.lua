@@ -31,33 +31,40 @@ local INSET = {
 }
 
 local ROW_HEIGHT = 16
+local STEPS = { 0.1, 0.25, 0.5, 1, 2, 5, 10 }
 local TABS = { "Place", "Look", "Quest", "Browse", "Changes" }
+local WINDOW_WIDTH = 780
+local WINDOW_HEIGHT = 650
 
 local UI = {}
 F.UI = UI
 
-local window, tabPanels, statusText, undoButton, redoButton, dirtyText
+local window, tabPanels, statusText, undoButton, redoButton, dirtyText, linkText
+local listSerial = 0
 
-local function Label(parent, text, size)
-    local label = parent:CreateFontString(nil, "OVERLAY", size or "GameFontNormalSmall")
+local function Label(parent, text, font, x, y)
+    local label = parent:CreateFontString(nil, "OVERLAY", font or "GameFontNormalSmall")
     label:SetText(text)
+    if x then label:SetPoint("TOPLEFT", x, y) end
     return label
 end
 
-local function Button(parent, text, width, onClick)
+local function Button(parent, text, width, x, y, onClick)
     local button = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
-    button:SetWidth(width or 80)
-    button:SetHeight(20)
+    button:SetWidth(width)
+    button:SetHeight(22)
     button:SetText(text)
+    if x then button:SetPoint("TOPLEFT", x, y) end
     button:SetScript("OnClick", onClick)
     return button
 end
 
-local function Edit(parent, width, onAccept)
+local function Edit(parent, width, x, y, onAccept)
     local box = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
-    box:SetWidth(width or 60)
-    box:SetHeight(18)
+    box:SetWidth(width)
+    box:SetHeight(20)
     box:SetAutoFocus(false)
+    if x then box:SetPoint("TOPLEFT", x + 6, y - 1) end
     box:SetScript("OnEnterPressed", function(self)
         self:ClearFocus()
         if onAccept then onAccept(self:GetText()) end
@@ -73,16 +80,17 @@ local function Panel(parent)
     return panel
 end
 
-local function ScrollList(parent, width, height, buildRow)
-    local rows = math.floor(height / ROW_HEIGHT)
+local function ScrollList(parent, x, y, width, height, buildRow)
+    local rows = math.floor((height - 8) / ROW_HEIGHT)
+    listSerial = listSerial + 1
     local holder = CreateFrame("Frame", nil, parent)
     holder:SetWidth(width)
     holder:SetHeight(height)
+    holder:SetPoint("TOPLEFT", x, y)
     holder:SetBackdrop(INSET)
     holder:SetBackdropColor(0, 0, 0, 0.5)
 
-    local scroll = CreateFrame("ScrollFrame", "CoAForgeScroll" .. tostring(GetTime()) .. tostring(math.random(99999)),
-        holder, "FauxScrollFrameTemplate")
+    local scroll = CreateFrame("ScrollFrame", "CoAForgeScroll" .. listSerial, holder, "FauxScrollFrameTemplate")
     scroll:SetPoint("TOPLEFT", 4, -4)
     scroll:SetPoint("BOTTOMRIGHT", -26, 4)
 
@@ -109,6 +117,8 @@ local function ScrollList(parent, width, height, buildRow)
             local row = self.buttons[index]
             local item = self.data[index + offset]
             if item then
+                row:SetScript("OnEnter", nil)
+                row:SetScript("OnLeave", nil)
                 buildRow(row, item)
                 row:Show()
             else
@@ -129,13 +139,15 @@ local function ScrollList(parent, width, height, buildRow)
     return holder
 end
 
-local function TextArea(parent, width, height)
+local function TextArea(parent, x, y, width, height)
     local holder = CreateFrame("Frame", nil, parent)
     holder:SetWidth(width)
     holder:SetHeight(height)
+    holder:SetPoint("TOPLEFT", x, y)
     holder:SetBackdrop(INSET)
     holder:SetBackdropColor(0, 0, 0, 0.6)
-    local scroll = CreateFrame("ScrollFrame", "CoAForgeTextScroll", holder, "UIPanelScrollFrameTemplate")
+    listSerial = listSerial + 1
+    local scroll = CreateFrame("ScrollFrame", "CoAForgeText" .. listSerial, holder, "UIPanelScrollFrameTemplate")
     scroll:SetPoint("TOPLEFT", 6, -6)
     scroll:SetPoint("BOTTOMRIGHT", -28, 6)
     local box = CreateFrame("EditBox", nil, scroll)
@@ -149,35 +161,88 @@ local function TextArea(parent, width, height)
     return holder
 end
 
+local function ModelView(parent, x, y, width, height)
+    local holder = CreateFrame("Frame", nil, parent)
+    holder:SetWidth(width)
+    holder:SetHeight(height)
+    holder:SetPoint("TOPLEFT", x, y)
+    holder:SetBackdrop(INSET)
+    holder:SetBackdropColor(0, 0, 0, 0.7)
+
+    local model = CreateFrame("PlayerModel", nil, holder)
+    model:SetPoint("TOPLEFT", 5, -5)
+    model:SetPoint("BOTTOMRIGHT", -5, 5)
+    holder.model = model
+    holder.facing = 0.4
+
+    local empty = holder:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    empty:SetPoint("CENTER")
+    empty:SetText("hover a model")
+    holder.empty = empty
+
+    model:EnableMouse(true)
+    model:EnableMouseWheel(true)
+    model:SetScript("OnMouseDown", function(self) self.dragging = true self.startX = GetCursorPosition() end)
+    model:SetScript("OnMouseUp", function(self) self.dragging = false end)
+    model:SetScript("OnUpdate", function(self)
+        if not self.dragging then return end
+        local currentX = GetCursorPosition()
+        holder.facing = holder.facing + (currentX - (self.startX or currentX)) * 0.01
+        self.startX = currentX
+        self:SetRotation(holder.facing)
+    end)
+
+    function holder:SetModel(displayId, label)
+        if not displayId or displayId == 0 then
+            model:Hide()
+            empty:Show()
+            return
+        end
+        empty:Hide()
+        model:Show()
+        model:SetDisplayInfo(displayId)
+        model:SetRotation(holder.facing)
+        holder.current = displayId
+        if holder.caption then holder.caption:SetText(label or "") end
+    end
+
+    return holder
+end
+
 local function SelectionSummary()
     local selection = F.Selection
-    if not selection then return "no selection" end
-    return string.format("%s  |cffaaaaaaguid|r %s  |cffaaaaaaentry|r %s  |cffaaaaaadisplay|r %s",
+    if not selection then return "|cffaaaaaano selection|r" end
+    return string.format("%s   |cffaaaaaaguid|r %s   |cffaaaaaaentry|r %s   |cffaaaaaadisplay|r %s",
         tostring(selection.name or "?"), tostring(selection.guid or "?"),
         tostring(selection.entry or "?"), tostring(selection.display or "-"))
 end
 
 local function BuildPlaceTab(panel)
-    local target = Label(panel, "no selection", "GameFontNormal")
-    target:SetPoint("TOPLEFT", 12, -10)
+    local target = Label(panel, "", "GameFontNormal", 10, -8)
+    local position = Label(panel, "", "GameFontHighlightSmall", 10, -28)
 
-    local position = Label(panel, "", "GameFontHighlightSmall")
-    position:SetPoint("TOPLEFT", 12, -28)
+    local refresh = Button(panel, "Refresh", 80, 0, 0, function() F.Forge:RefreshTarget() end)
+    refresh:ClearAllPoints()
+    refresh:SetPoint("TOPRIGHT", -10, -6)
 
-    local refresh = Button(panel, "Refresh", 70, function() F.Forge:RefreshTarget() end)
-    refresh:SetPoint("TOPRIGHT", -12, -6)
-
-    local stepLabel = Label(panel, "Step")
-    stepLabel:SetPoint("TOPLEFT", 12, -52)
-    local stepButton
-    stepButton = Button(panel, tostring(CoAForgeDB.step) .. " yd", 60, function()
-        local steps = { 0.1, 0.25, 0.5, 1, 2, 5, 10 }
-        local index = 1
-        for i, value in ipairs(steps) do if value == CoAForgeDB.step then index = i end end
-        CoAForgeDB.step = steps[(index % #steps) + 1]
-        stepButton:SetText(tostring(CoAForgeDB.step) .. " yd")
-    end)
-    stepButton:SetPoint("LEFT", stepLabel, "RIGHT", 6, 0)
+    Label(panel, "Step", "GameFontNormalSmall", 10, -54)
+    panel.stepButtons = {}
+    for index, value in ipairs(STEPS) do
+        local button = Button(panel, tostring(value), 44, 44 + (index - 1) * 46, -50, function()
+            CoAForgeDB.step = value
+            panel.RefreshSteps()
+        end)
+        panel.stepButtons[index] = button
+    end
+    function panel.RefreshSteps()
+        for index, button in ipairs(panel.stepButtons) do
+            if STEPS[index] == CoAForgeDB.step then
+                button:SetNormalFontObject("GameFontHighlightSmall")
+            else
+                button:SetNormalFontObject("GameFontDisableSmall")
+            end
+        end
+    end
 
     local function nudge(dx, dy, dz)
         return function()
@@ -186,97 +251,117 @@ local function BuildPlaceTab(panel)
         end
     end
 
-    local north = Button(panel, "N +X", 52, nudge(1, 0, 0))
-    north:SetPoint("TOPLEFT", 150, -46)
-    local south = Button(panel, "S -X", 52, nudge(-1, 0, 0))
-    south:SetPoint("TOPLEFT", north, "BOTTOMLEFT", 0, -22)
-    local west = Button(panel, "W +Y", 52, nudge(0, 1, 0))
-    west:SetPoint("RIGHT", north, "LEFT", -4, -11)
-    local east = Button(panel, "E -Y", 52, nudge(0, -1, 0))
-    east:SetPoint("LEFT", north, "RIGHT", 4, -11)
-    local up = Button(panel, "Up", 46, nudge(0, 0, 1))
-    up:SetPoint("LEFT", east, "RIGHT", 12, 11)
-    local down = Button(panel, "Down", 46, nudge(0, 0, -1))
-    down:SetPoint("LEFT", east, "RIGHT", 12, -11)
+    Button(panel, "North  +X", 88, 96, -82, nudge(1, 0, 0))
+    Button(panel, "West  +Y", 88, 6, -108, nudge(0, 1, 0))
+    Button(panel, "East  -Y", 88, 186, -108, nudge(0, -1, 0))
+    Button(panel, "South  -X", 88, 96, -134, nudge(-1, 0, 0))
+    Button(panel, "Up", 64, 292, -82, nudge(0, 0, 1))
+    Button(panel, "Down", 64, 292, -134, nudge(0, 0, -1))
 
-    local turnLeft = Button(panel, "Turn -45", 66, function()
-        if F.Selection then F.Forge:Face((F.Selection.o or 0) - math.pi / 4) end
+    Label(panel, "Facing", "GameFontNormalSmall", 380, -60)
+    local facing = CreateFrame("Slider", "CoAForgeFacingSlider", panel, "OptionsSliderTemplate")
+    facing:SetWidth(280)
+    facing:SetHeight(16)
+    facing:SetPoint("TOPLEFT", 386, -86)
+    facing:SetMinMaxValues(0, 360)
+    facing:SetValueStep(1)
+    facing:SetValue(0)
+    _G["CoAForgeFacingSliderLow"]:SetText("0")
+    _G["CoAForgeFacingSliderHigh"]:SetText("360")
+    _G["CoAForgeFacingSliderText"]:SetText("")
+
+    local facingBox = Edit(panel, 52, 676, -84)
+    facingBox:SetNumeric(false)
+
+    local function setFacingDisplay(degrees)
+        panel.updatingFacing = true
+        facing:SetValue(degrees)
+        facingBox:SetText(string.format("%.0f", degrees))
+        panel.updatingFacing = false
+    end
+
+    local function applyFacing(degrees)
+        while degrees < 0 do degrees = degrees + 360 end
+        degrees = math.fmod(degrees, 360)
+        setFacingDisplay(degrees)
+        F.Forge:Face(degrees * math.pi / 180)
+    end
+
+    facing:SetScript("OnValueChanged", function(self, value)
+        if panel.updatingFacing then return end
+        facingBox:SetText(string.format("%.0f", value))
     end)
-    turnLeft:SetPoint("TOPLEFT", 12, -112)
-    local turnRight = Button(panel, "Turn +45", 66, function()
-        if F.Selection then F.Forge:Face((F.Selection.o or 0) + math.pi / 4) end
+    facing:SetScript("OnMouseUp", function(self)
+        if panel.updatingFacing then return end
+        applyFacing(self:GetValue())
     end)
-    turnRight:SetPoint("LEFT", turnLeft, "RIGHT", 4, 0)
-    local faceMe = Button(panel, "Face me", 66, function()
+    facingBox:SetScript("OnEnterPressed", function(self)
+        self:ClearFocus()
+        local value = tonumber(self:GetText())
+        if value then applyFacing(value) end
+    end)
+
+    Button(panel, "Face me", 88, 386, -112, function()
         F.Forge:ReadPlayerPosition(function(me)
             local s = F.Selection
-            if me and s then
-                F.Forge:Face(math.atan2(me.y - s.y, me.x - s.x))
-            end
+            if me and s then F.Forge:Face(math.atan2(me.y - s.y, me.x - s.x)) end
         end)
     end)
-    faceMe:SetPoint("LEFT", turnRight, "RIGHT", 4, 0)
+    Button(panel, "Turn -15", 76, 478, -112, function()
+        if F.Selection then applyFacing((F.Selection.o or 0) * 180 / math.pi - 15) end
+    end)
+    Button(panel, "Turn +15", 76, 558, -112, function()
+        if F.Selection then applyFacing((F.Selection.o or 0) * 180 / math.pi + 15) end
+    end)
 
-    local toCursor = Button(panel, "Move to cursor", 110, function() F.Forge:MoveToCursor() end)
-    toCursor:SetPoint("TOPLEFT", turnLeft, "BOTTOMLEFT", 0, -6)
-    local ground = Button(panel, "Drop to ground", 110, function() F.Forge:DropToGround() end)
-    ground:SetPoint("LEFT", toCursor, "RIGHT", 4, 0)
+    Button(panel, "Move to cursor", 116, 6, -172, function() F.Forge:MoveToCursor() end)
+    Button(panel, "Drop to ground", 116, 126, -172, function() F.Forge:DropToGround() end)
+    Button(panel, "Copy", 76, 246, -172, function() F.Forge:Copy() end)
+    Button(panel, "Paste", 76, 326, -172, function() F.Forge:Paste() end)
+    Button(panel, "Delete", 76, 406, -172, function() F.Forge:DeleteSelection() end)
+    Button(panel, "Apply queued", 110, 486, -172, function() F.Forge:ApplyQueued() end)
 
-    local copy = Button(panel, "Copy", 60, function() F.Forge:Copy() end)
-    copy:SetPoint("LEFT", ground, "RIGHT", 12, 0)
-    local paste = Button(panel, "Paste", 60, function() F.Forge:Paste() end)
-    paste:SetPoint("LEFT", copy, "RIGHT", 4, 0)
-
-    local moveLabel = Label(panel, "Movement")
-    moveLabel:SetPoint("TOPLEFT", toCursor, "BOTTOMLEFT", 0, -12)
-    local moveType
-    moveType = Button(panel, "stay", 64, function()
+    Label(panel, "Movement", "GameFontNormalSmall", 10, -206)
+    local moveType = Button(panel, "stay", 72, 76, -202, nil)
+    moveType:SetScript("OnClick", function()
         local order = { "stay", "random", "way" }
-        local current = moveType:GetText()
         local index = 1
-        for i, value in ipairs(order) do if value == current then index = i end end
+        for position, value in ipairs(order) do
+            if value == moveType:GetText() then index = position end
+        end
         local nextType = order[(index % #order) + 1]
         moveType:SetText(nextType)
         F.Forge:SetMoveType(nextType)
     end)
-    moveType:SetPoint("LEFT", moveLabel, "RIGHT", 6, 0)
 
-    local wanderLabel = Label(panel, "Wander")
-    wanderLabel:SetPoint("LEFT", moveType, "RIGHT", 12, 0)
-    local wander = Edit(panel, 46, function(text)
+    Label(panel, "Wander", "GameFontNormalSmall", 162, -206)
+    local wander = Edit(panel, 56, 210, -204, function(text)
         local value = tonumber(text)
         if value then F.Forge:SetWander(value) end
     end)
-    wander:SetPoint("LEFT", wanderLabel, "RIGHT", 8, 0)
 
-    local respawnLabel = Label(panel, "Respawn s")
-    respawnLabel:SetPoint("LEFT", wander, "RIGHT", 12, 0)
-    local respawn = Edit(panel, 52, function(text)
+    Label(panel, "Respawn s", "GameFontNormalSmall", 284, -206)
+    local respawn = Edit(panel, 64, 348, -204, function(text)
         local value = tonumber(text)
         if value then F.Forge:SetSpawnTime(math.floor(value)) end
     end)
-    respawn:SetPoint("LEFT", respawnLabel, "RIGHT", 8, 0)
 
-    local spawnLabel = Label(panel, "Entry")
-    spawnLabel:SetPoint("TOPLEFT", moveLabel, "BOTTOMLEFT", 0, -16)
-    local spawnEntry = Edit(panel, 80)
-    spawnEntry:SetPoint("LEFT", spawnLabel, "RIGHT", 8, 0)
-    local spawnNpc = Button(panel, "Spawn NPC", 90, function()
+    Label(panel, "Entry", "GameFontNormalSmall", 10, -240)
+    local spawnEntry = Edit(panel, 84, 50, -238)
+    Button(panel, "Spawn NPC", 100, 146, -236, function()
         local entry = tonumber(spawnEntry:GetText())
         if entry then F.Forge:SpawnCreature(entry) else F.Warn("enter a creature entry") end
     end)
-    spawnNpc:SetPoint("LEFT", spawnEntry, "RIGHT", 8, 0)
-    local spawnObject = Button(panel, "Spawn object", 96, function()
+    Button(panel, "Spawn object", 108, 250, -236, function()
         local entry = tonumber(spawnEntry:GetText())
         if entry then F.Forge:SpawnObject(entry) else F.Warn("enter a gameobject entry") end
     end)
-    spawnObject:SetPoint("LEFT", spawnNpc, "RIGHT", 4, 0)
-    local remove = Button(panel, "Delete", 66, function() F.Forge:DeleteSelection() end)
-    remove:SetPoint("LEFT", spawnObject, "RIGHT", 12, 0)
 
-    local scanLabel = Label(panel, "Nearby spawns (click to select)")
-    scanLabel:SetPoint("TOPLEFT", spawnLabel, "BOTTOMLEFT", 0, -14)
-    local scan = Button(panel, "Scan", 60, function()
+    Label(panel, "Nearby spawns", "GameFontNormalSmall", 10, -274)
+    local range = Edit(panel, 44, 96, -272)
+    range:SetText(tostring(CoAForgeDB.scanRange))
+    Button(panel, "Scan", 64, 152, -270, function()
+        CoAForgeDB.scanRange = tonumber(range:GetText()) or 30
         F.Forge:ScanNear(CoAForgeDB.scanRange, function(result)
             local rows = {}
             for _, row in ipairs(result.creatures) do
@@ -288,152 +373,156 @@ local function BuildPlaceTab(panel)
                 rows[#rows + 1] = row
             end
             panel.list:SetData(rows)
+            panel.scanCount:SetText(#rows .. " found")
         end)
     end)
-    scan:SetPoint("LEFT", scanLabel, "RIGHT", 8, 0)
+    panel.scanCount = Label(panel, "", "GameFontDisableSmall", 224, -274)
 
-    panel.list = ScrollList(panel, 560, 140, function(row, item)
+    panel.list = ScrollList(panel, 6, -296, 736, 212, function(row, item)
         local tag = item.kind == "gameobject" and "|cffffcc66OBJ|r" or "|cff88ff88NPC|r"
-        row.text:SetText(string.format("%s %s  |cffaaaaaa%s / %s|r", tag, tostring(item.name),
+        row.text:SetText(string.format("%s  %s   |cffaaaaaaguid %s  entry %s|r", tag, tostring(item.name),
             tostring(item.guid), tostring(item.entry)))
         row:SetScript("OnClick", function()
             if item.kind == "gameobject" then
                 F.Forge:SelectGameObject(item.guid)
+            elseif F.Server.forge then
+                F.Forge:Select(item.guid)
             else
                 F.Print("target " .. tostring(item.name) .. " in game, then press Refresh")
             end
         end)
     end)
-    panel.list:SetPoint("TOPLEFT", scanLabel, "BOTTOMLEFT", 0, -6)
 
     local function update()
         target:SetText(SelectionSummary())
         local selection = F.Selection
         if selection then
-            position:SetText(string.format("x %.3f  y %.3f  z %.3f  o %.3f  map %s",
-                selection.x or 0, selection.y or 0, selection.z or 0, selection.o or 0,
-                tostring(selection.map or 0)))
+            position:SetText(string.format("x %.3f   y %.3f   z %.3f   facing %.0f deg   map %s",
+                selection.x or 0, selection.y or 0, selection.z or 0,
+                (selection.o or 0) * 180 / math.pi, tostring(selection.map or 0)))
+            setFacingDisplay(math.fmod((selection.o or 0) * 180 / math.pi + 360, 360))
+            if selection.movetype then moveType:SetText(selection.movetype) end
+            if selection.wander then wander:SetText(string.format("%.1f", selection.wander)) end
+            if selection.spawntime then respawn:SetText(tostring(selection.spawntime)) end
         else
-            position:SetText("target a creature and press Refresh, or Scan and pick an object")
+            position:SetText("target a creature and press Refresh, or press Scan and click a row")
         end
     end
     F.Events:Register("TARGET", update)
-    panel.Update = update
+    panel.Update = function()
+        update()
+        panel.RefreshSteps()
+    end
 end
 
 local function BuildLookTab(panel)
-    local target = Label(panel, "", "GameFontNormal")
-    target:SetPoint("TOPLEFT", 12, -10)
+    local target = Label(panel, "", "GameFontNormal", 10, -8)
 
-    local displayLabel = Label(panel, "Display id")
-    displayLabel:SetPoint("TOPLEFT", 12, -34)
-    local displayBox = Edit(panel, 80)
-    displayBox:SetPoint("LEFT", displayLabel, "RIGHT", 8, 0)
-    local applyDisplay = Button(panel, "Apply (saved)", 100, function()
+    Label(panel, "Display id", "GameFontNormalSmall", 10, -34)
+    local displayBox = Edit(panel, 80, 70, -32)
+    Button(panel, "Apply to target", 116, 162, -30, function()
         local value = tonumber(displayBox:GetText())
         if value then F.Forge:SetDisplay(value) end
     end)
-    applyDisplay:SetPoint("LEFT", displayBox, "RIGHT", 8, 0)
 
-    local searchLabel = Label(panel, "Find model")
-    searchLabel:SetPoint("TOPLEFT", displayLabel, "BOTTOMLEFT", 0, -14)
-    local searchBox = Edit(panel, 150, function(text)
-        panel.displayList:SetData(F.Catalog:SearchDisplays(text, 200))
+    Label(panel, "Scale", "GameFontNormalSmall", 420, -34)
+    local scaleBox = Edit(panel, 54, 460, -32)
+    scaleBox:SetText("1.0")
+    Button(panel, "Set", 54, 528, -30, function()
+        local value = tonumber(scaleBox:GetText())
+        if value then F.Forge:SetScale(value) end
     end)
-    searchBox:SetPoint("LEFT", searchLabel, "RIGHT", 8, 0)
-    local searchGo = Button(panel, "Search", 66, function()
-        panel.displayList:SetData(F.Catalog:SearchDisplays(searchBox:GetText(), 200))
+    Button(panel, "x0.33", 60, 586, -30, function()
+        scaleBox:SetText("0.33")
+        F.Forge:SetScale(0.33)
     end)
-    searchGo:SetPoint("LEFT", searchBox, "RIGHT", 8, 0)
+    Button(panel, "Reset", 60, 650, -30, function()
+        scaleBox:SetText("1.0")
+        F.Forge:SetScale(1)
+    end)
 
-    panel.displayList = ScrollList(panel, 270, 190, function(row, item)
-        row.text:SetText(string.format("|cffffd100%s|r %s", item.id, item.label))
+    Label(panel, "Find model", "GameFontNormalSmall", 10, -62)
+    local searchBox = Edit(panel, 170, 74, -60)
+    local function runModelSearch()
+        local results, total = F.Catalog:SearchDisplays(searchBox:GetText(), 400)
+        panel.displayList:SetData(results)
+        panel.displayCount:SetText(string.format("showing %d of %d", #results, total))
+    end
+    searchBox:SetScript("OnEnterPressed", function(self) self:ClearFocus() runModelSearch() end)
+    Button(panel, "Search", 70, 256, -58, runModelSearch)
+    panel.displayCount = Label(panel, "", "GameFontDisableSmall", 334, -62)
+
+    panel.preview = ModelView(panel, 470, -86, 270, 230)
+    panel.preview.caption = Label(panel, "", "GameFontDisableSmall", 470, -322)
+    panel.preview.caption:SetWidth(270)
+
+    panel.displayList = ScrollList(panel, 6, -86, 456, 230, function(row, item)
+        row.text:SetText(string.format("|cffffd100%s|r  %s", item.id, item.label))
+        row:SetScript("OnEnter", function()
+            panel.preview:SetModel(item.id, item.id .. "  " .. item.label)
+        end)
         row:SetScript("OnClick", function()
             displayBox:SetText(tostring(item.id))
             F.Forge:SetDisplay(item.id)
         end)
     end)
-    panel.displayList:SetPoint("TOPLEFT", searchLabel, "BOTTOMLEFT", 0, -8)
 
-    local scaleLabel = Label(panel, "Scale (preview only)")
-    scaleLabel:SetPoint("TOPLEFT", 300, -34)
-    local scaleBox = Edit(panel, 56)
-    scaleBox:SetPoint("LEFT", scaleLabel, "RIGHT", 8, 0)
-    scaleBox:SetText("1.0")
-    local applyScale = Button(panel, "Preview", 70, function()
-        local value = tonumber(scaleBox:GetText())
-        if value then F.Forge:PreviewScale(value) end
-    end)
-    applyScale:SetPoint("TOPLEFT", scaleLabel, "BOTTOMLEFT", 0, -4)
-    local thirds = Button(panel, "x0.33", 56, function()
-        F.Forge:PreviewScale(0.33)
-        scaleBox:SetText("0.33")
-    end)
-    thirds:SetPoint("LEFT", applyScale, "RIGHT", 4, 0)
-    local resetScale = Button(panel, "Reset", 56, function()
-        F.Forge:PreviewScale(1)
-        scaleBox:SetText("1.0")
-    end)
-    resetScale:SetPoint("LEFT", thirds, "RIGHT", 4, 0)
-
-    local auraLabel = Label(panel, "Visual effect")
-    auraLabel:SetPoint("TOPLEFT", 300, -88)
-    local auraBox = Edit(panel, 70)
-    auraBox:SetPoint("LEFT", auraLabel, "RIGHT", 8, 0)
-    local applyAura = Button(panel, "Apply", 56, function()
+    Label(panel, "Visual effect", "GameFontNormalSmall", 10, -324)
+    local auraBox = Edit(panel, 70, 84, -322)
+    Button(panel, "Apply", 64, 164, -320, function()
         local value = tonumber(auraBox:GetText())
-        if value then F.Forge:PreviewAura(value) end
+        if value then F.Forge:AddAura(value) end
     end)
-    applyAura:SetPoint("LEFT", auraBox, "RIGHT", 6, 0)
-    local clearAura = Button(panel, "Clear all", 70, function() F.Forge:ClearAuras() end)
-    clearAura:SetPoint("LEFT", applyAura, "RIGHT", 4, 0)
+    Button(panel, "Clear all", 76, 232, -320, function() F.Forge:ClearAuras() end)
 
-    local auraSearch = Edit(panel, 150, function(text)
-        panel.auraList:SetData(F.Catalog:SearchAuras(text, 200))
-    end)
-    auraSearch:SetPoint("TOPLEFT", auraLabel, "BOTTOMLEFT", 0, -26)
-    local auraGo = Button(panel, "Search", 66, function()
-        panel.auraList:SetData(F.Catalog:SearchAuras(auraSearch:GetText(), 200))
-    end)
-    auraGo:SetPoint("LEFT", auraSearch, "RIGHT", 8, 0)
+    local auraSearch = Edit(panel, 150, 330, -322)
+    local function runAuraSearch()
+        local results, total = F.Catalog:SearchAuras(auraSearch:GetText(), 400)
+        panel.auraList:SetData(results)
+        panel.auraCount:SetText(string.format("showing %d of %d", #results, total))
+    end
+    auraSearch:SetScript("OnEnterPressed", function(self) self:ClearFocus() runAuraSearch() end)
+    Button(panel, "Search", 70, 492, -320, runAuraSearch)
+    panel.auraCount = Label(panel, "", "GameFontDisableSmall", 570, -324)
 
-    panel.auraList = ScrollList(panel, 270, 150, function(row, item)
-        row.text:SetText(string.format("|cffffd100%s|r %s", item.id, item.label))
+    panel.auraList = ScrollList(panel, 6, -348, 736, 150, function(row, item)
+        row.text:SetText(string.format("|cffffd100%s|r  %s", item.id, item.label))
         row:SetScript("OnClick", function()
             auraBox:SetText(tostring(item.id))
-            F.Forge:PreviewAura(item.id)
+            F.Forge:AddAura(item.id)
         end)
     end)
-    panel.auraList:SetPoint("TOPLEFT", auraSearch, "BOTTOMLEFT", 0, -8)
 
-    local queued = Button(panel, "Apply queued to target", 160, function() F.Forge:ApplyQueued() end)
-    queued:SetPoint("BOTTOMLEFT", 12, 10)
-
-    local note = Label(panel, "", "GameFontDisableSmall")
-    note:SetPoint("LEFT", queued, "RIGHT", 10, 0)
-    note:SetText("Scale and effects are live previews; export them from Changes.")
+    local note = Label(panel, "", "GameFontDisableSmall", 10, -504)
+    note:SetWidth(736)
+    note:SetJustifyH("LEFT")
 
     local function update()
         target:SetText(SelectionSummary())
+        if F.Server.forge then
+            note:SetText("Scale and effects are saved to the database and previewed live.")
+        else
+            note:SetText("Server toolset absent: scale and effects are previews only, exported from Changes.")
+        end
+        local selection = F.Selection
+        if selection and selection.display then
+            panel.preview:SetModel(selection.display, "selected: " .. tostring(selection.name))
+        end
     end
     F.Events:Register("TARGET", update)
     F.Events:Register("PENDING", update)
+    F.Events:Register("STATUS", update)
+
     panel.Update = function()
         update()
-        if #panel.displayList.data == 0 then
-            panel.displayList:SetData(F.Catalog:SearchDisplays("", 200))
-        end
-        if #panel.auraList.data == 0 then
-            panel.auraList:SetData(F.Catalog:SearchAuras("", 200))
-        end
+        if #panel.displayList.data == 0 then runModelSearch() end
+        if #panel.auraList.data == 0 then runAuraSearch() end
     end
 end
 
 local function BuildQuestTab(panel)
-    local questLabel = Label(panel, "Quest id")
-    questLabel:SetPoint("TOPLEFT", 12, -14)
-    local questBox = Edit(panel, 90)
-    questBox:SetPoint("LEFT", questLabel, "RIGHT", 8, 0)
+    Label(panel, "Quest id", "GameFontNormalSmall", 10, -16)
+    local questBox = Edit(panel, 90, 64, -14)
 
     local function questAction(action)
         return function()
@@ -442,24 +531,11 @@ local function BuildQuestTab(panel)
         end
     end
 
-    local add = Button(panel, "Add", 60, questAction("add"))
-    add:SetPoint("LEFT", questBox, "RIGHT", 10, 0)
-    local complete = Button(panel, "Complete", 76, questAction("complete"))
-    complete:SetPoint("LEFT", add, "RIGHT", 4, 0)
-    local reward = Button(panel, "Reward", 66, questAction("reward"))
-    reward:SetPoint("LEFT", complete, "RIGHT", 4, 0)
-    local drop = Button(panel, "Remove", 70, questAction("remove"))
-    drop:SetPoint("LEFT", reward, "RIGHT", 4, 0)
-    local retake = Button(panel, "Reset", 60, function()
-        local id = tonumber(questBox:GetText())
-        if not id then return F.Warn("enter a quest id") end
-        F.Rpc:SendSequence({ "quest remove " .. id }, function()
-            F.Print("quest " .. id .. " removed; pick it up again to retest")
-        end)
-    end)
-    retake:SetPoint("LEFT", drop, "RIGHT", 4, 0)
-
-    local watchAdd = Button(panel, "Watch", 60, function()
+    Button(panel, "Add", 64, 166, -12, questAction("add"))
+    Button(panel, "Complete", 82, 234, -12, questAction("complete"))
+    Button(panel, "Reward", 74, 320, -12, questAction("reward"))
+    Button(panel, "Remove", 74, 398, -12, questAction("remove"))
+    Button(panel, "Watch", 66, 476, -12, function()
         local id = tonumber(questBox:GetText())
         if not id then return end
         for _, existing in ipairs(CoAForgeDB.questWatch) do
@@ -468,29 +544,27 @@ local function BuildQuestTab(panel)
         table.insert(CoAForgeDB.questWatch, id)
         panel.Update()
     end)
-    watchAdd:SetPoint("TOPLEFT", questLabel, "BOTTOMLEFT", 0, -10)
 
-    local watchLabel = Label(panel, "Watched quests (click removes, shift-click completes)")
-    watchLabel:SetPoint("LEFT", watchAdd, "RIGHT", 10, 0)
-
-    panel.watchList = ScrollList(panel, 270, 120, function(row, item)
+    Label(panel, "Watched quests. Click to complete, shift-click to drop from the list.",
+        "GameFontDisableSmall", 10, -48)
+    panel.watchList = ScrollList(panel, 6, -66, 360, 150, function(row, item)
         row.text:SetText("quest " .. tostring(item))
-        row:RegisterForClicks("LeftButtonUp")
         row:SetScript("OnClick", function()
             if IsShiftKeyDown() then
-                F.Forge:Quest("complete", item)
-            else
                 for index, value in ipairs(CoAForgeDB.questWatch) do
-                    if value == item then table.remove(CoAForgeDB.questWatch, index) break end
+                    if value == item then
+                        table.remove(CoAForgeDB.questWatch, index)
+                        break
+                    end
                 end
                 panel.Update()
+            else
+                F.Forge:Quest("complete", item)
             end
         end)
     end)
-    panel.watchList:SetPoint("TOPLEFT", watchAdd, "BOTTOMLEFT", 0, -8)
 
-    local reloadLabel = Label(panel, "Reload server data")
-    reloadLabel:SetPoint("TOPLEFT", 300, -44)
+    Label(panel, "Reload server data", "GameFontNormalSmall", 390, -48)
     local reloads = {
         { "quest_template", "quest_template" },
         { "quest givers", "creature_queststarter" },
@@ -501,31 +575,25 @@ local function BuildQuestTab(panel)
         { "smart scripts", "smart_scripts" },
         { "creature text", "creature_text" },
     }
-    local previous
     for index, entry in ipairs(reloads) do
-        local button = Button(panel, entry[1], 130, function() F.Forge:Reload(entry[2]) end)
-        if index == 1 then
-            button:SetPoint("TOPLEFT", reloadLabel, "BOTTOMLEFT", 0, -6)
-        else
-            button:SetPoint("TOPLEFT", previous, "BOTTOMLEFT", 0, -2)
-        end
-        previous = button
+        local column = (index - 1) % 2
+        local rowIndex = math.floor((index - 1) / 2)
+        Button(panel, entry[1], 168, 390 + column * 176, -68 - rowIndex * 26, function()
+            F.Forge:Reload(entry[2])
+        end)
     end
 
-    local bookmarkLabel = Label(panel, "Bookmark")
-    bookmarkLabel:SetPoint("TOPLEFT", 12, -230)
-    local bookmarkBox = Edit(panel, 120)
-    bookmarkBox:SetPoint("LEFT", bookmarkLabel, "RIGHT", 8, 0)
-    local saveMark = Button(panel, "Save here", 84, function()
+    Label(panel, "Bookmark", "GameFontNormalSmall", 10, -236)
+    local bookmarkBox = Edit(panel, 130, 74, -234)
+    Button(panel, "Save here", 94, 216, -232, function()
         local name = F.Trim(bookmarkBox:GetText())
         if name == "" then return F.Warn("name the bookmark first") end
         F.Forge:SaveBookmark(name)
         bookmarkBox:SetText("")
     end)
-    saveMark:SetPoint("LEFT", bookmarkBox, "RIGHT", 8, 0)
-
-    panel.markList = ScrollList(panel, 270, 100, function(row, item)
-        row.text:SetText(string.format("%s |cffaaaaaa%.0f %.0f %.0f|r", item.mark.name,
+    Label(panel, "Click to travel, shift-click to delete.", "GameFontDisableSmall", 10, -262)
+    panel.markList = ScrollList(panel, 6, -280, 360, 130, function(row, item)
+        row.text:SetText(string.format("%s   |cffaaaaaa%.0f %.0f %.0f|r", item.mark.name,
             item.mark.x, item.mark.y, item.mark.z))
         row:SetScript("OnClick", function()
             if IsShiftKeyDown() then
@@ -536,10 +604,8 @@ local function BuildQuestTab(panel)
             end
         end)
     end)
-    panel.markList:SetPoint("TOPLEFT", bookmarkLabel, "BOTTOMLEFT", 0, -26)
 
-    local testLabel = Label(panel, "Test helpers")
-    testLabel:SetPoint("TOPLEFT", 300, -230)
+    Label(panel, "Test helpers", "GameFontNormalSmall", 390, -236)
     local helpers = {
         { "Respawn nearby", "respawn all" },
         { "Revive me", "revive" },
@@ -548,15 +614,12 @@ local function BuildQuestTab(panel)
         { "Fly on", "gm fly on" },
         { "Fly off", "gm fly off" },
     }
-    local last
     for index, entry in ipairs(helpers) do
-        local button = Button(panel, entry[1], 130, function() F.Rpc:Send(entry[2]) end)
-        if index == 1 then
-            button:SetPoint("TOPLEFT", testLabel, "BOTTOMLEFT", 0, -6)
-        else
-            button:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -2)
-        end
-        last = button
+        local column = (index - 1) % 2
+        local rowIndex = math.floor((index - 1) / 2)
+        Button(panel, entry[1], 168, 390 + column * 176, -256 - rowIndex * 26, function()
+            F.Rpc:Send(entry[2])
+        end)
     end
 
     panel.Update = function()
@@ -572,36 +635,56 @@ end
 
 local function BuildBrowseTab(panel)
     local kinds = { "creature", "object", "item", "spell", "quest" }
+    local actions = {
+        creature = "clicking a row spawns that creature at your cursor",
+        object = "clicking a row spawns that gameobject at your cursor",
+        item = "clicking a row prints the item id",
+        spell = "clicking a row applies that spell to your target as a visual effect",
+        quest = "clicking a row adds that quest to your log",
+    }
     local kindIndex = 1
 
-    local kindButton
-    kindButton = Button(panel, kinds[kindIndex], 90, function()
+    local kindButton = Button(panel, kinds[kindIndex], 96, 10, -12, nil)
+    local searchBox = Edit(panel, 250, 112, -14)
+    local status = Label(panel, "", "GameFontDisableSmall", 10, -42)
+    status:SetWidth(730)
+    status:SetJustifyH("LEFT")
+
+    local function describe()
+        status:SetText("Searches the live server database with .lookup " .. kinds[kindIndex] ..
+            ". Type part of a name and press Enter. Then " .. actions[kinds[kindIndex]] .. ".")
+    end
+
+    kindButton:SetScript("OnClick", function()
         kindIndex = (kindIndex % #kinds) + 1
         kindButton:SetText(kinds[kindIndex])
+        describe()
     end)
-    kindButton:SetPoint("TOPLEFT", 12, -14)
-
-    local searchBox = Edit(panel, 240)
-    searchBox:SetPoint("LEFT", kindButton, "RIGHT", 10, 0)
 
     local function run()
         local text = F.Trim(searchBox:GetText())
-        if text == "" then return F.Warn("type something to search for") end
+        if text == "" then
+            status:SetText("|cffff8844Type part of a name first.|r " ..
+                "This searches the server, so an empty search returns nothing.")
+            return
+        end
+        status:SetText("searching the server for " .. text .. " ...")
         F.Forge:Lookup(kinds[kindIndex], text, function(results)
             panel.list:SetData(results)
-            F.Print(#results .. " result(s) for " .. text)
+            if #results == 0 then
+                status:SetText("|cffff8844No " .. kinds[kindIndex] .. " matched " .. text ..
+                    ".|r The server caps results, so try a more specific word.")
+            else
+                status:SetText(#results .. " " .. kinds[kindIndex] .. " result(s) for " .. text ..
+                    ". " .. actions[kinds[kindIndex]] .. ".")
+            end
         end)
     end
     searchBox:SetScript("OnEnterPressed", function(self) self:ClearFocus() run() end)
+    Button(panel, "Search", 76, 374, -12, run)
 
-    local go = Button(panel, "Search", 70, run)
-    go:SetPoint("LEFT", searchBox, "RIGHT", 10, 0)
-
-    local hint = Label(panel, "Searches the live server database. Click a row to use it.", "GameFontDisableSmall")
-    hint:SetPoint("TOPLEFT", kindButton, "BOTTOMLEFT", 0, -8)
-
-    panel.list = ScrollList(panel, 560, 300, function(row, item)
-        row.text:SetText(string.format("|cffffd100%s|r  %s", item.id, item.name or ""))
+    panel.list = ScrollList(panel, 6, -66, 736, 430, function(row, item)
+        row.text:SetText(string.format("|cffffd100%s|r   %s", item.id, item.name or ""))
         row:SetScript("OnClick", function()
             local kind = kinds[kindIndex]
             if kind == "creature" then
@@ -609,7 +692,7 @@ local function BuildBrowseTab(panel)
             elseif kind == "object" then
                 F.Forge:SpawnObject(item.id)
             elseif kind == "spell" then
-                F.Forge:PreviewAura(item.id)
+                F.Forge:AddAura(item.id)
             elseif kind == "quest" then
                 F.Forge:Quest("add", item.id)
             else
@@ -617,17 +700,17 @@ local function BuildBrowseTab(panel)
             end
         end)
     end)
-    panel.list:SetPoint("TOPLEFT", hint, "BOTTOMLEFT", 0, -8)
 
-    panel.Update = function() end
+    describe()
+    panel.Update = describe
 end
 
 local function BuildChangesTab(panel)
-    local hint = Label(panel, "History. Click a row to jump the undo cursor there.", "GameFontDisableSmall")
-    hint:SetPoint("TOPLEFT", 12, -12)
+    Label(panel, "History. Click a row to move the undo cursor to that point.",
+        "GameFontDisableSmall", 10, -12)
 
-    panel.list = ScrollList(panel, 560, 200, function(row, item)
-        local marker = item.index == CoAForgeDB.cursor and "|cff00ff00>|r " or "  "
+    panel.list = ScrollList(panel, 6, -30, 736, 250, function(row, item)
+        local marker = item.index == CoAForgeDB.cursor and "|cff00ff00>|r " or "   "
         local colour = item.index <= CoAForgeDB.cursor and "|cffffffff" or "|cff777777"
         row.text:SetText(marker .. colour .. tostring(item.entry.label) .. "|r")
         row:SetScript("OnClick", function()
@@ -639,26 +722,24 @@ local function BuildChangesTab(panel)
             end
         end)
     end)
-    panel.list:SetPoint("TOPLEFT", hint, "BOTTOMLEFT", 0, -6)
 
-    local exportButton = Button(panel, "Build export", 100, function()
+    Button(panel, "Build export", 110, 6, -288, function()
         panel.text.box:SetText(F.Forge:Export())
         panel.text.box:HighlightText()
         panel.text.box:SetFocus()
     end)
-    exportButton:SetPoint("TOPLEFT", panel.list, "BOTTOMLEFT", 0, -8)
-
-    local flush = Button(panel, "Save to disk (reloads UI)", 170, function()
+    Button(panel, "Save to disk (reloads UI)", 176, 122, -288, function()
         CoAForgeDB.dirty = 0
         ReloadUI()
     end)
-    flush:SetPoint("LEFT", exportButton, "RIGHT", 6, 0)
+    Button(panel, "Clear history", 116, 304, -288, function() F.Journal:Clear() end)
+    Button(panel, "Clear export log", 128, 426, -288, function()
+        CoAForgeDB.log = {}
+        CoAForgeDB.pending = {}
+        F.Print("export log cleared")
+    end)
 
-    local clear = Button(panel, "Clear history", 110, function() F.Journal:Clear() end)
-    clear:SetPoint("LEFT", flush, "RIGHT", 6, 0)
-
-    panel.text = TextArea(panel, 560, 110)
-    panel.text:SetPoint("TOPLEFT", exportButton, "BOTTOMLEFT", 0, -8)
+    panel.text = TextArea(panel, 6, -316, 736, 180)
 
     panel.Update = function()
         local rows = {}
@@ -672,18 +753,18 @@ end
 
 local function UpdateHeader()
     if not window then return end
-    local undoLabel = F.Journal:UndoLabel()
-    local redoLabel = F.Journal:RedoLabel()
-    undoButton:SetText("Undo")
-    redoButton:SetText("Redo")
     if F.Journal:CanUndo() then undoButton:Enable() else undoButton:Disable() end
     if F.Journal:CanRedo() then redoButton:Enable() else redoButton:Disable() end
-    statusText:SetText(undoLabel and ("last: " .. undoLabel) or "no changes yet")
+    local label = F.Journal:UndoLabel()
+    statusText:SetText(label and ("last: " .. label) or "no changes yet")
     local dirty = CoAForgeDB.dirty or 0
-    if dirty > 0 then
-        dirtyText:SetText("|cffffcc00" .. dirty .. " unsaved|r")
+    dirtyText:SetText(dirty > 0 and ("|cffffcc00" .. dirty .. " unsaved|r") or "")
+    if not F.Rpc.ready then
+        linkText:SetText("|cffff4444server link: not connected|r")
+    elseif F.Server.forge then
+        linkText:SetText("|cff44ff44server link: " .. tostring(F.Rpc.channel) .. ", full toolset|r")
     else
-        dirtyText:SetText("")
+        linkText:SetText("|cffffcc00server link: " .. tostring(F.Rpc.channel) .. ", basic commands only|r")
     end
 end
 
@@ -708,8 +789,8 @@ end
 
 local function BuildWindow()
     window = CreateFrame("Frame", "CoAForgeWindow", UIParent)
-    window:SetWidth(620)
-    window:SetHeight(560)
+    window:SetWidth(WINDOW_WIDTH)
+    window:SetHeight(WINDOW_HEIGHT)
     window:SetPoint("CENTER")
     window:SetBackdrop(BACKDROP)
     window:SetMovable(true)
@@ -729,35 +810,29 @@ local function BuildWindow()
     close:SetPoint("TOPRIGHT", -6, -6)
     close:SetScript("OnClick", function() UI:SetEditing(false) end)
 
-    undoButton = Button(window, "Undo", 70, function() F.Journal:Undo() end)
-    undoButton:SetPoint("TOPLEFT", 16, -40)
-    redoButton = Button(window, "Redo", 70, function() F.Journal:Redo() end)
-    redoButton:SetPoint("LEFT", undoButton, "RIGHT", 4, 0)
+    undoButton = Button(window, "Undo", 76, 16, -40, function() F.Journal:Undo() end)
+    redoButton = Button(window, "Redo", 76, 96, -40, function() F.Journal:Redo() end)
 
     statusText = window:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-    statusText:SetPoint("LEFT", redoButton, "RIGHT", 10, 0)
+    statusText:SetPoint("TOPLEFT", 180, -46)
 
     dirtyText = window:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     dirtyText:SetPoint("TOPRIGHT", -30, -46)
 
+    linkText = window:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    linkText:SetPoint("TOPRIGHT", -30, -24)
+
     local body = CreateFrame("Frame", nil, window)
-    body:SetPoint("TOPLEFT", 14, -92)
+    body:SetPoint("TOPLEFT", 14, -96)
     body:SetPoint("BOTTOMRIGHT", -14, 14)
     body:SetBackdrop(INSET)
     body:SetBackdropColor(0, 0, 0, 0.25)
 
     window.tabs = {}
     tabPanels = {}
-    local previous
-    for _, name in ipairs(TABS) do
-        local tab = Button(window, name, 96, function() UI:SelectTab(name) end)
+    for index, name in ipairs(TABS) do
+        local tab = Button(window, name, 108, 16 + (index - 1) * 112, -68, function() UI:SelectTab(name) end)
         tab.tabName = name
-        if previous then
-            tab:SetPoint("LEFT", previous, "RIGHT", 2, 0)
-        else
-            tab:SetPoint("TOPLEFT", 16, -66)
-        end
-        previous = tab
         window.tabs[#window.tabs + 1] = tab
         tabPanels[name] = Panel(body)
     end
@@ -770,6 +845,7 @@ local function BuildWindow()
 
     F.Events:Register("JOURNAL", UpdateHeader)
     F.Events:Register("TARGET", UpdateHeader)
+    F.Events:Register("STATUS", UpdateHeader)
 end
 
 local function BuildHiddenButtons()
@@ -873,9 +949,12 @@ loader:SetScript("OnEvent", function(_, event, addon)
         BuildWindow()
         BuildMinimapButton()
         F.Catalog:Init()
-        F.Rpc:Probe()
+        F.Rpc:Probe(function()
+            F.Forge:ProbeServer()
+            UpdateHeader()
+        end)
         UpdateHeader()
-        F.Print("loaded. Click the minimap gear or type /forge.")
+        F.Print("loaded. Click the minimap gear or type /forge. Catalog: " .. F.Catalog:Summary())
     elseif event == "PLAYER_TARGET_CHANGED" then
         if CoAForgeDB.editing then F.Forge:RefreshTarget() end
     end
@@ -889,6 +968,9 @@ SlashCmdList["COAFORGE"] = function(message)
         F.Journal:Undo()
     elseif message == "redo" then
         F.Journal:Redo()
+    elseif message == "test" then
+        F.Rpc.ready = false
+        F.Rpc:Probe(function() F.Forge:ProbeServer() end)
     elseif message == "export" then
         UI:SetEditing(true)
         UI:SelectTab("Changes")

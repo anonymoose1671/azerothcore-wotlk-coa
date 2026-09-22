@@ -1,6 +1,12 @@
 /* Copyright (C) 2016+ AzerothCore, GNU AGPL v3. */
 #include "Chat.h"
 #include "CommandScript.h"
+#include "Creature.h"
+#include "DatabaseEnv.h"
+#include "GameObject.h"
+#include "MapMgr.h"
+#include "MotionMaster.h"
+#include "ObjectMgr.h"
 #include "Player.h"
 #include "PlayerScript.h"
 #include "ScriptMgr.h"
@@ -11,6 +17,8 @@
 namespace
 {
 using namespace Acore::ChatCommands;
+
+constexpr uint32 ForgeMaxAuraLength = 200;
 
 struct ForgeCursor
 {
@@ -28,6 +36,62 @@ std::unordered_map<ObjectGuid, ForgeCursor>& CursorStore()
     return store;
 }
 
+Player* CommandPlayer(ChatHandler* handler)
+{
+    return handler->GetSession() ? handler->GetSession()->GetPlayer() : nullptr;
+}
+
+bool IsAuraList(std::string_view text)
+{
+    if (text.empty() || text.size() > ForgeMaxAuraLength)
+        return false;
+
+    bool digitSeen = false;
+    for (char character : text)
+    {
+        if (character >= '0' && character <= '9')
+        {
+            digitSeen = true;
+            continue;
+        }
+
+        if (character == ' ' || character == ',')
+        {
+            if (!digitSeen)
+                return false;
+
+            digitSeen = false;
+            continue;
+        }
+
+        return false;
+    }
+
+    return digitSeen;
+}
+
+std::string NormalizeAuraList(std::string_view text)
+{
+    std::string normalized;
+    bool pending = false;
+    for (char character : text)
+    {
+        if (character >= '0' && character <= '9')
+        {
+            if (pending && !normalized.empty())
+                normalized += ' ';
+
+            normalized += character;
+            pending = false;
+            continue;
+        }
+
+        pending = !normalized.empty();
+    }
+
+    return normalized;
+}
+
 class AscensionForgeCursorPlayer final : public PlayerScript
 {
 public:
@@ -38,7 +102,7 @@ public:
         if (!player || !spell || !player->GetSession())
             return;
 
-        if (player->GetSession()->GetSecurity() < SEC_GAMEMASTER)
+        if (player->GetSession()->GetSecurity() < SEC_ADMINISTRATOR)
             return;
 
         if (!spell->m_targets.HasDst())
@@ -64,16 +128,22 @@ public:
     }
 };
 
-class AscensionForgeCursorCommands final : public CommandScript
+class AscensionForgeCommands final : public CommandScript
 {
 public:
-    AscensionForgeCursorCommands() : CommandScript("AscensionForgeCursorCommands") { }
+    AscensionForgeCommands() : CommandScript("AscensionForgeCommands") { }
 
     ChatCommandTable GetCommands() const override
     {
         static ChatCommandTable const forgeCommands = {
-            { "cursor", HandleCursorCommand, SEC_GAMEMASTER, Console::No },
-            { "clearcursor", HandleClearCursorCommand, SEC_GAMEMASTER, Console::No }
+            { "cursor",   HandleCursorCommand,   SEC_ADMINISTRATOR, Console::No },
+            { "npcpos",   HandleNpcPosCommand,   SEC_ADMINISTRATOR, Console::No },
+            { "gopos",    HandleGoPosCommand,    SEC_ADMINISTRATOR, Console::No },
+            { "select",   HandleSelectCommand,   SEC_ADMINISTRATOR, Console::No },
+            { "scale",    HandleScaleCommand,    SEC_ADMINISTRATOR, Console::Yes },
+            { "aura",     HandleAuraCommand,     SEC_ADMINISTRATOR, Console::Yes },
+            { "npcinfo",  HandleNpcInfoCommand,  SEC_ADMINISTRATOR, Console::Yes },
+            { "goinfo",   HandleGoInfoCommand,   SEC_ADMINISTRATOR, Console::Yes }
         };
         static ChatCommandTable const commands = {
             { "coa", forgeCommands }
@@ -83,7 +153,7 @@ public:
 
     static bool HandleCursorCommand(ChatHandler* handler)
     {
-        Player* player = handler->GetSession() ? handler->GetSession()->GetPlayer() : nullptr;
+        Player* player = CommandPlayer(handler);
         if (!player)
             return false;
 
@@ -101,14 +171,193 @@ public:
         return true;
     }
 
-    static bool HandleClearCursorCommand(ChatHandler* handler)
+    static bool HandleNpcPosCommand(ChatHandler* handler, uint32 guid, float x, float y, float z, float o)
     {
-        Player* player = handler->GetSession() ? handler->GetSession()->GetPlayer() : nullptr;
+        Player* player = CommandPlayer(handler);
         if (!player)
             return false;
 
-        CursorStore().erase(player->GetGUID());
-        handler->SendSysMessage("Ground target cursor cleared.");
+        CreatureData const* data = sObjectMgr->GetCreatureData(guid);
+        if (!data)
+        {
+            handler->SendErrorMessage("No creature spawn with guid {}.", guid);
+            return false;
+        }
+
+        if (player->GetMapId() != data->mapid)
+        {
+            handler->SendErrorMessage("Creature {} is on map {}, you are on map {}.",
+                guid, data->mapid, player->GetMapId());
+            return false;
+        }
+
+        if (!MapMgr::IsValidMapCoord(data->mapid, x, y, z, o))
+        {
+            handler->SendErrorMessage("{} {} {} is not a valid position on map {}.", x, y, z, data->mapid);
+            return false;
+        }
+
+        const_cast<CreatureData*>(data)->posX = x;
+        const_cast<CreatureData*>(data)->posY = y;
+        const_cast<CreatureData*>(data)->posZ = z;
+        const_cast<CreatureData*>(data)->orientation = o;
+
+        if (Creature* creature = handler->GetCreatureFromPlayerMapByDbGuid(guid))
+        {
+            creature->SetPosition(x, y, z, o);
+            creature->GetMotionMaster()->Initialize();
+            if (creature->IsAlive())
+            {
+                creature->setDeathState(DeathState::JustDied);
+                creature->Respawn();
+            }
+        }
+
+        WorldDatabase.Execute("UPDATE creature SET position_x = {}, position_y = {}, position_z = {}, "
+            "orientation = {} WHERE guid = {}", x, y, z, o, guid);
+        handler->PSendSysMessage("Creature {} moved to {} {} {} facing {}.", guid, x, y, z, o);
+        return true;
+    }
+
+    static bool HandleGoPosCommand(ChatHandler* handler, uint32 guid, float x, float y, float z, float o)
+    {
+        Player* player = CommandPlayer(handler);
+        if (!player)
+            return false;
+
+        GameObject* object = handler->GetObjectFromPlayerMapByDbGuid(guid);
+        if (!object)
+        {
+            handler->SendErrorMessage("Gameobject {} is not loaded in your map.", guid);
+            return false;
+        }
+
+        Map* map = object->GetMap();
+        if (!MapMgr::IsValidMapCoord(object->GetMapId(), x, y, z, o))
+        {
+            handler->SendErrorMessage("{} {} {} is not a valid position on map {}.", x, y, z, object->GetMapId());
+            return false;
+        }
+
+        Position position(x, y, z, o);
+        object->Relocate(position);
+        object->SetWorldRotationAngles(o, 0.0f, 0.0f);
+
+        sObjectMgr->RemoveGameobjectFromGrid(guid, object->GetGameObjectData());
+        object->SaveToDB();
+        sObjectMgr->AddGameobjectToGrid(guid, object->GetGameObjectData());
+
+        object->Delete();
+        object = new GameObject();
+        if (!object->LoadGameObjectFromDB(guid, map, true))
+        {
+            delete object;
+            handler->SendErrorMessage("Gameobject {} could not be reloaded after the move.", guid);
+            return false;
+        }
+
+        handler->PSendSysMessage("Gameobject {} moved to {} {} {} facing {}.", guid, x, y, z, o);
+        return true;
+    }
+
+    static bool HandleSelectCommand(ChatHandler* handler, uint32 guid)
+    {
+        Player* player = CommandPlayer(handler);
+        if (!player)
+            return false;
+
+        Creature* creature = handler->GetCreatureFromPlayerMapByDbGuid(guid);
+        if (!creature)
+        {
+            handler->SendErrorMessage("Creature {} is not loaded in your map.", guid);
+            return false;
+        }
+
+        player->SetSelection(creature->GetGUID());
+        handler->PSendSysMessage("Selected creature {}.", guid);
+        return true;
+    }
+
+    static bool HandleScaleCommand(ChatHandler* handler, uint32 entry, float scale)
+    {
+        if (!sObjectMgr->GetCreatureTemplate(entry))
+        {
+            handler->SendErrorMessage("No creature template with entry {}.", entry);
+            return false;
+        }
+
+        if (scale <= 0.0f || scale > 20.0f)
+        {
+            handler->SendErrorMessage("Scale must be greater than 0 and at most 20.");
+            return false;
+        }
+
+        WorldDatabase.Execute("UPDATE creature_template_model SET DisplayScale = {} WHERE CreatureID = {}",
+            scale, entry);
+        handler->PSendSysMessage("Stored DisplayScale {} for creature {}. Reload the template to apply it.",
+            scale, entry);
+        return true;
+    }
+
+    static bool HandleAuraCommand(ChatHandler* handler, uint32 entry, Tail auras)
+    {
+        if (!sObjectMgr->GetCreatureTemplate(entry))
+        {
+            handler->SendErrorMessage("No creature template with entry {}.", entry);
+            return false;
+        }
+
+        std::string_view text(auras);
+        if (text == "none")
+        {
+            WorldDatabase.Execute("UPDATE creature_template_addon SET auras = NULL WHERE entry = {}", entry);
+            handler->PSendSysMessage("Cleared stored auras for creature {}.", entry);
+            return true;
+        }
+
+        if (!IsAuraList(text))
+        {
+            handler->SendErrorMessage("Give spell ids separated by spaces or commas, or none.");
+            return false;
+        }
+
+        std::string normalized = NormalizeAuraList(text);
+        WorldDatabase.Execute("INSERT INTO creature_template_addon (entry, auras) VALUES ({}, '{}') "
+            "ON DUPLICATE KEY UPDATE auras = VALUES(auras)", entry, normalized);
+        handler->PSendSysMessage("Stored auras '{}' for creature {}. Reload the template to apply them.",
+            normalized, entry);
+        return true;
+    }
+
+    static bool HandleNpcInfoCommand(ChatHandler* handler, uint32 guid)
+    {
+        CreatureData const* data = sObjectMgr->GetCreatureData(guid);
+        if (!data)
+        {
+            handler->SendErrorMessage("No creature spawn with guid {}.", guid);
+            return false;
+        }
+
+        Creature* creature = handler->GetCreatureFromPlayerMapByDbGuid(guid);
+        uint32 display = creature ? creature->GetDisplayId() : 0;
+        handler->PSendSysMessage("COAINFO npc {} {} {} {} {} {} {} {} {} {} {} {}",
+            guid, data->id, data->mapid, data->posX, data->posY, data->posZ, data->orientation,
+            data->phaseMask, display, data->wander_distance, uint32(data->movementType), data->spawntimesecs);
+        return true;
+    }
+
+    static bool HandleGoInfoCommand(ChatHandler* handler, uint32 guid)
+    {
+        GameObjectData const* data = sObjectMgr->GetGameObjectData(guid);
+        if (!data)
+        {
+            handler->SendErrorMessage("No gameobject spawn with guid {}.", guid);
+            return false;
+        }
+
+        handler->PSendSysMessage("COAINFO go {} {} {} {} {} {} {} {} {} {} {} {}",
+            guid, data->id, data->mapid, data->posX, data->posY, data->posZ, data->orientation,
+            data->phaseMask, 0, 0.0f, 0, data->spawntimesecs);
         return true;
     }
 };
@@ -117,5 +366,5 @@ public:
 void AddSC_AscensionForgeCursor()
 {
     new AscensionForgeCursorPlayer();
-    new AscensionForgeCursorCommands();
+    new AscensionForgeCommands();
 }

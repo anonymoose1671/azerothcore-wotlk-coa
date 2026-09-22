@@ -12,9 +12,11 @@ end
 
 local function scan(blob, text, limit)
     local results = {}
-    if not blob or blob == "" then return results end
+    local total = 0
+    if not blob or blob == "" then return results, total end
     local needle = F.Trim(tostring(text or "")):lower()
     local wantedId = tonumber(needle)
+    limit = limit or 300
     for line in blob:gmatch("[^\n]+") do
         local id, label = line:match("^(%d+)\t(.*)$")
         if id then
@@ -27,12 +29,14 @@ local function scan(blob, text, limit)
                 keep = label:lower():find(needle, 1, true) ~= nil
             end
             if keep then
-                results[#results + 1] = { id = tonumber(id), label = label }
-                if #results >= (limit or 200) then break end
+                total = total + 1
+                if #results < limit then
+                    results[#results + 1] = { id = tonumber(id), label = label }
+                end
             end
         end
     end
-    return results
+    return results, total
 end
 
 function Catalog:SearchDisplays(text, limit)
@@ -47,12 +51,6 @@ function Catalog:SearchAuras(text, limit)
     return scan(CoAForgeData.visualAuras, text, limit)
 end
 
-function Catalog:Counts()
-    local function count(blob)
-        local total = 0
-        for _ in (blob or ""):gmatch("[^\n]+") do total = total + 1 end
-        return total
-    end
-    return count(CoAForgeData.creatureDisplays), count(CoAForgeData.objectDisplays),
-           count(CoAForgeData.visualAuras)
+function Catalog:Summary()
+    return CoAForgeData.generated or "no catalog generated"
 end

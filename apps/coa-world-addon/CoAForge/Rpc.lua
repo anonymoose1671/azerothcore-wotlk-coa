@@ -82,17 +82,23 @@ local function advanceChannel()
     return true
 end
 
-function Rpc:Probe()
-    if self.ready then return end
+function Rpc:Probe(onReady)
+    if self.ready then
+        if onReady then onReady(true) end
+        return
+    end
     self.probing = true
     channelIndex = 1
     self.channel = CHANNELS[1]
-    self:Send("gps", function(ok)
+    self:Send("gps " .. UnitName("player"), function(ok)
         if ok then
             self.probing = false
             self.ready = true
             F.Print("connected over " .. tostring(self.channel))
+        else
+            F.Warn("could not reach the server command channel; check your account security level")
         end
+        if onReady then onReady(ok) end
     end)
 end
 

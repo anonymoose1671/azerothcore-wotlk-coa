@@ -5,9 +5,7 @@ local Forge = {}
 F.Forge = Forge
 
 F.Selection = nil
-F.Cursor = { source = "player" }
-
-local aoeCursorState = "unknown"
+F.Server = { forge = false, cursor = false, probed = false }
 
 local function coords(position)
     return F.Coord(position.x) .. " " .. F.Coord(position.y) .. " " .. F.Coord(position.z)
@@ -17,6 +15,34 @@ local function teleport(position)
     return "go xyz " .. coords(position) .. " " .. tostring(position.map or 0) .. " " .. F.Coord(position.o or 0)
 end
 
+local function withSelect(guid, commands)
+    if not F.Server.forge or not guid then return commands end
+    local out = { "coa select " .. guid }
+    for _, command in ipairs(commands) do out[#out + 1] = command end
+    return out
+end
+
+local function missingCommand(lines)
+    local text = F.Strip(F.Join(lines)):lower()
+    return text:find("no such command", 1, true) ~= nil
+        or text:find("possible subcommands", 1, true) ~= nil
+        or text:find("usage: .coa", 1, true) ~= nil
+end
+
+function Forge:ProbeServer()
+    F.Rpc:Send("coa cursor", function(ok, lines)
+        F.Server.probed = true
+        F.Server.forge = ok or not missingCommand(lines)
+        F.Server.cursor = ok
+        if F.Server.forge then
+            F.Print("server toolset present: exact placement, selection and saved appearance are available")
+        else
+            F.Print("server toolset absent: falling back to teleport placement and preview-only appearance")
+        end
+        F.Events:Fire("STATUS")
+    end)
+end
+
 function Forge:ReadPlayerPosition(callback)
     F.Rpc:Send("gps " .. UnitName("player"), function(ok, lines)
         callback(ok and F.ParseGps(lines) or nil)
@@ -24,29 +50,22 @@ function Forge:ReadPlayerPosition(callback)
 end
 
 function Forge:ReadCursor(callback)
-    if aoeCursorState == "absent" or not CoAForgeDB.useAoeCursor then
+    if not CoAForgeDB.useAoeCursor or not F.Server.forge then
         return self:ReadPlayerPosition(function(position)
             if position then position.source = "player" end
             callback(position)
         end)
     end
     F.Rpc:Send("coa cursor", function(ok, lines)
-        if ok then
-            aoeCursorState = "present"
-            local position = F.ParseGps(lines)
-            if position then
-                position.source = "aoe"
-                F.Cursor = position
-                return callback(position)
-            end
+        local position = ok and F.ParseGps(lines) or nil
+        if position then
+            position.source = "aoe"
+            F.Server.cursor = true
+            return callback(position)
         end
-        if aoeCursorState == "unknown" then
-            aoeCursorState = "absent"
-            F.Print("ground-target cursor not available on this server; using your own position")
-        end
-        self:ReadPlayerPosition(function(position)
-            if position then position.source = "player" end
-            callback(position)
+        self:ReadPlayerPosition(function(fallback)
+            if fallback then fallback.source = "player" end
+            callback(fallback)
         end)
     end)
 end
@@ -68,30 +87,85 @@ function Forge:RefreshTarget(callback)
             if callback then callback(nil) end
             return
         end
-        F.Rpc:Send("gps", function(gpsOk, gpsLines)
-            local position = gpsOk and F.ParseGps(gpsLines) or nil
-            F.Selection = {
-                kind = "creature",
-                guid = info.guid,
-                entry = info.entry,
-                name = UnitName("target"),
-                display = info.display,
-                nativeDisplay = info.nativeDisplay,
-                faction = info.faction,
-                x = position and position.x or info.x,
-                y = position and position.y or info.y,
-                z = position and position.z or info.z,
-                o = position and position.o or 0,
-                map = position and position.map or 0,
-                groundZ = position and position.groundZ,
-            }
-            F.Events:Fire("TARGET")
-            if callback then callback(F.Selection) end
+        self:LoadCreature(info.guid, info, callback)
+    end)
+end
+
+function Forge:LoadCreature(guid, info, callback)
+    if F.Server.forge then
+        F.Rpc:Send("coa npcinfo " .. guid, function(ok, lines)
+            local row = ok and F.ParseForgeInfo(lines) or nil
+            if row then
+                row.name = UnitName("target") or ("creature " .. guid)
+                row.display = (info and info.display) or row.display
+                row.nativeDisplay = info and info.nativeDisplay
+                F.Selection = row
+                F.Events:Fire("TARGET")
+                if callback then callback(row) end
+                return
+            end
+            self:LoadCreatureByGps(guid, info, callback)
         end)
+        return
+    end
+    self:LoadCreatureByGps(guid, info, callback)
+end
+
+function Forge:LoadCreatureByGps(guid, info, callback)
+    F.Rpc:Send("gps", function(gpsOk, gpsLines)
+        local position = gpsOk and F.ParseGps(gpsLines) or nil
+        F.Selection = {
+            kind = "creature",
+            guid = guid,
+            entry = info and info.entry,
+            name = UnitName("target") or ("creature " .. tostring(guid)),
+            display = info and info.display,
+            nativeDisplay = info and info.nativeDisplay,
+            x = position and position.x or (info and info.x),
+            y = position and position.y or (info and info.y),
+            z = position and position.z or (info and info.z),
+            o = position and position.o or 0,
+            map = position and position.map or 0,
+            groundZ = position and position.groundZ,
+        }
+        F.Events:Fire("TARGET")
+        if callback then callback(F.Selection) end
+    end)
+end
+
+function Forge:Select(guid, callback)
+    if not F.Server.forge then
+        F.Warn("server toolset absent; target the creature in game and press Refresh")
+        return
+    end
+    F.Rpc:Send("coa select " .. guid, function(ok, lines)
+        if not ok then
+            F.Warn(F.Strip(F.Join(lines)))
+            return
+        end
+        self:LoadCreature(guid, nil, callback)
     end)
 end
 
 function Forge:SelectGameObject(guid, callback)
+    if F.Server.forge then
+        F.Rpc:Send("coa goinfo " .. guid, function(ok, lines)
+            local row = ok and F.ParseForgeInfo(lines) or nil
+            if row then
+                row.name = "object " .. guid
+                F.Selection = row
+                F.Events:Fire("TARGET")
+                if callback then callback(row) end
+                return
+            end
+            self:SelectGameObjectByInfo(guid, callback)
+        end)
+        return
+    end
+    self:SelectGameObjectByInfo(guid, callback)
+end
+
+function Forge:SelectGameObjectByInfo(guid, callback)
     F.Rpc:Send("gobject info guid " .. guid, function(ok, lines)
         if not ok then
             F.Warn("gameobject " .. guid .. " is not loaded nearby")
@@ -122,7 +196,15 @@ function Forge:ScanNear(distance, callback)
     end)
 end
 
-local function creaturePlacement(guid, position)
+local function placementCommands(kind, guid, position)
+    if F.Server.forge then
+        local verb = kind == "gameobject" and "coa gopos " or "coa npcpos "
+        return { verb .. guid .. " " .. coords(position) .. " " .. F.Coord(position.o or 0) }
+    end
+    if kind == "gameobject" then
+        return { "gobject move " .. guid .. " " .. coords(position),
+                 "gobject turn " .. guid .. " " .. F.Coord(position.o or 0) }
+    end
     return { teleport(position), "npc move " .. guid }
 end
 
@@ -135,23 +217,15 @@ function Forge:PlaceSelection(position, label, coalesce)
     position.map = position.map or selection.map
     local before = { x = selection.x, y = selection.y, z = selection.z, o = selection.o, map = selection.map }
     local after = { x = position.x, y = position.y, z = position.z, o = position.o or selection.o, map = position.map }
-    local redo, undo
-    if selection.kind == "gameobject" then
-        redo = { "gobject move " .. selection.guid .. " " .. coords(after),
-                 "gobject turn " .. selection.guid .. " " .. F.Coord(after.o) }
-        undo = { "gobject move " .. selection.guid .. " " .. coords(before),
-                 "gobject turn " .. selection.guid .. " " .. F.Coord(before.o) }
-    else
-        redo = creaturePlacement(selection.guid, after)
-        undo = creaturePlacement(selection.guid, before)
-    end
     selection.x, selection.y, selection.z, selection.o = after.x, after.y, after.z, after.o
     F.Journal:Apply({
         label = label or "move",
         kind = "place",
         coalesce = coalesce,
         target = { kind = selection.kind, guid = selection.guid, entry = selection.entry, name = selection.name },
-        redo = redo, undo = undo, before = before, after = after,
+        redo = placementCommands(selection.kind, selection.guid, after),
+        undo = placementCommands(selection.kind, selection.guid, before),
+        before = before, after = after,
     })
     F.Events:Fire("TARGET")
 end
@@ -168,6 +242,8 @@ end
 function Forge:Face(orientation)
     local selection = F.Selection
     if not selection then return F.Warn("nothing selected") end
+    while orientation < 0 do orientation = orientation + math.pi * 2 end
+    while orientation >= math.pi * 2 do orientation = orientation - math.pi * 2 end
     self:PlaceSelection({
         x = selection.x, y = selection.y, z = selection.z, o = orientation, map = selection.map,
     }, "turn " .. (selection.name or "spawn"), "turn:" .. selection.kind .. ":" .. selection.guid)
@@ -201,33 +277,39 @@ end
 function Forge:SpawnCreature(entry, properties, onSpawned)
     self:ReadCursor(function(position)
         if not position then return F.Warn("could not read a placement position") end
-        self:ScanNear(6, function(before)
+        self:ScanNear(8, function(before)
             local known = {}
             for _, row in ipairs(before.creatures) do known[row.guid] = true end
-            F.Rpc:SendSequence({ teleport(position), "npc add " .. entry }, function(ok, lines)
+            local setup = F.Server.forge and { "npc add " .. entry }
+                or { teleport(position), "npc add " .. entry }
+            F.Rpc:SendSequence(setup, function(ok, lines)
                 if not ok then
                     return F.Warn("spawn failed: " .. F.Strip(F.Join(lines)))
                 end
-                self:ScanNear(6, function(after)
+                self:ScanNear(8, function(after)
                     local guid
                     for _, row in ipairs(after.creatures) do
                         if not known[row.guid] and row.entry == entry then guid = row.guid end
                     end
                     if not guid then
-                        return F.Warn("spawned, but could not identify the new guid; use Scan to find it")
+                        return F.Warn("spawned, but could not identify the new guid; press Scan to find it")
+                    end
+                    if F.Server.forge then
+                        F.Rpc:Send("coa npcpos " .. guid .. " " .. coords(position) ..
+                            " " .. F.Coord(position.o or 0))
                     end
                     F.Journal:Record({
                         label = "spawn " .. entry,
                         kind = "spawn",
                         target = { kind = "creature", guid = guid, entry = entry },
-                        redo = { teleport(position), "npc add " .. entry },
+                        redo = { "npc add " .. entry },
                         undo = { "npc delete " .. guid },
                         after = { x = position.x, y = position.y, z = position.z, o = position.o, map = position.map },
                     })
                     F.Print("spawned " .. entry .. " as guid " .. guid)
                     if properties then self:ApplyProperties(guid, properties) end
                     if onSpawned then onSpawned(guid) end
-                    F.Events:Fire("TARGET")
+                    if F.Server.forge then self:Select(guid) end
                 end)
             end)
         end)
@@ -237,21 +319,26 @@ end
 function Forge:SpawnObject(entry, onSpawned)
     self:ReadCursor(function(position)
         if not position then return F.Warn("could not read a placement position") end
-        F.Rpc:SendSequence({ teleport(position) }, function()
+        local setup = F.Server.forge and {} or { teleport(position) }
+        F.Rpc:SendSequence(setup, function()
             F.Rpc:Send("gobject add " .. entry, function(ok, lines)
                 if not ok then return F.Warn("spawn failed: " .. F.Strip(F.Join(lines))) end
                 local guid = F.ParseAddedGameObject(lines)
                 if not guid then return F.Warn("spawned, but the server did not report a guid") end
+                if F.Server.forge then
+                    F.Rpc:Send("coa gopos " .. guid .. " " .. coords(position) .. " " .. F.Coord(position.o or 0))
+                end
                 F.Journal:Record({
                     label = "spawn object " .. entry,
                     kind = "spawn",
                     target = { kind = "gameobject", guid = guid, entry = entry },
-                    redo = { teleport(position), "gobject add " .. entry },
+                    redo = { "gobject add " .. entry },
                     undo = { "gobject delete " .. guid },
                     after = { x = position.x, y = position.y, z = position.z, o = position.o, map = position.map },
                 })
                 F.Print("spawned object " .. entry .. " as guid " .. guid)
                 if onSpawned then onSpawned(guid) end
+                self:SelectGameObject(guid)
             end)
         end)
     end)
@@ -287,53 +374,64 @@ function Forge:SetDisplay(displayId)
         label = "display " .. displayId .. " on " .. (selection.name or selection.guid),
         kind = "display",
         target = { kind = "creature", guid = selection.guid, entry = selection.entry, name = selection.name },
-        redo = { "npc set model " .. displayId },
-        undo = { "npc set model " .. tostring(previous or selection.nativeDisplay or 0) },
+        redo = withSelect(selection.guid, { "npc set model " .. displayId }),
+        undo = withSelect(selection.guid, { "npc set model " .. tostring(previous or selection.nativeDisplay or 0) }),
         before = { display = previous }, after = { display = displayId },
     })
     selection.display = displayId
     F.Events:Fire("TARGET")
 end
 
-function Forge:PreviewScale(scale)
+function Forge:SetScale(scale)
     local selection = F.Selection
     if not selection then return F.Warn("nothing selected") end
     local key = "creature:" .. tostring(selection.entry)
     local previous = (CoAForgeDB.pending[key] or {}).scale or 1
     CoAForgeDB.pending[key] = CoAForgeDB.pending[key] or { entry = selection.entry, name = selection.name }
     CoAForgeDB.pending[key].scale = scale
-    F.Journal:Record({
-        label = "scale " .. scale .. " on " .. (selection.name or selection.guid) .. " (preview)",
+    local saved = F.Server.forge and selection.entry
+    local redo = withSelect(selection.guid, { "modify scale " .. F.Coord(scale) })
+    local undo = withSelect(selection.guid, { "modify scale " .. F.Coord(previous) })
+    if saved then
+        redo[#redo + 1] = "coa scale " .. selection.entry .. " " .. F.Coord(scale)
+        undo[#undo + 1] = "coa scale " .. selection.entry .. " " .. F.Coord(previous)
+    end
+    F.Journal:Apply({
+        label = "scale " .. scale .. " on " .. (selection.name or selection.guid) .. (saved and "" or " (preview)"),
         kind = "scale",
-        persistent = false,
+        persistent = saved and true or false,
         coalesce = "scale:" .. tostring(selection.entry),
         target = { kind = "creature", guid = selection.guid, entry = selection.entry, name = selection.name },
-        redo = { "modify scale " .. F.Coord(scale) },
-        undo = { "modify scale " .. F.Coord(previous) },
+        redo = redo, undo = undo,
         before = { scale = previous }, after = { scale = scale },
     })
-    F.Rpc:Send("modify scale " .. F.Coord(scale))
     F.Events:Fire("PENDING")
 end
 
-function Forge:PreviewAura(spellId)
+function Forge:AddAura(spellId)
     local selection = F.Selection
     if not selection then return F.Warn("nothing selected") end
     local key = "creature:" .. tostring(selection.entry)
     CoAForgeDB.pending[key] = CoAForgeDB.pending[key] or { entry = selection.entry, name = selection.name }
     local auras = CoAForgeDB.pending[key].auras or {}
+    local previous = table.concat(auras, " ")
     auras[#auras + 1] = spellId
     CoAForgeDB.pending[key].auras = auras
-    F.Journal:Record({
-        label = "aura " .. spellId .. " on " .. (selection.name or selection.guid) .. " (preview)",
+    local saved = F.Server.forge and selection.entry
+    local redo = withSelect(selection.guid, { "aura " .. spellId })
+    local undo = withSelect(selection.guid, { "unaura " .. spellId })
+    if saved then
+        redo[#redo + 1] = "coa aura " .. selection.entry .. " " .. table.concat(auras, " ")
+        undo[#undo + 1] = "coa aura " .. selection.entry .. " " .. (previous == "" and "none" or previous)
+    end
+    F.Journal:Apply({
+        label = "effect " .. spellId .. " on " .. (selection.name or selection.guid) .. (saved and "" or " (preview)"),
         kind = "aura",
-        persistent = false,
+        persistent = saved and true or false,
         target = { kind = "creature", guid = selection.guid, entry = selection.entry, name = selection.name },
-        redo = { "aura " .. spellId },
-        undo = { "unaura " .. spellId },
-        after = { aura = spellId },
+        redo = redo, undo = undo,
+        after = { auras = table.concat(auras, " ") },
     })
-    F.Rpc:Send("aura " .. spellId)
     F.Events:Fire("PENDING")
 end
 
@@ -341,28 +439,49 @@ function Forge:ClearAuras()
     local selection = F.Selection
     if not selection then return F.Warn("nothing selected") end
     local key = "creature:" .. tostring(selection.entry)
+    local auras = (CoAForgeDB.pending[key] or {}).auras
+    local previous = auras and table.concat(auras, " ") or ""
     if CoAForgeDB.pending[key] then CoAForgeDB.pending[key].auras = nil end
-    F.Rpc:Send("unaura all")
+    local redo = withSelect(selection.guid, { "unaura all" })
+    local undo = {}
+    if F.Server.forge and selection.entry then
+        redo[#redo + 1] = "coa aura " .. selection.entry .. " none"
+        if previous ~= "" then
+            undo[#undo + 1] = "coa aura " .. selection.entry .. " " .. previous
+        end
+    end
+    F.Journal:Apply({
+        label = "clear effects on " .. (selection.name or selection.guid),
+        kind = "aura",
+        persistent = F.Server.forge and true or false,
+        target = { kind = "creature", guid = selection.guid, entry = selection.entry, name = selection.name },
+        redo = redo, undo = undo, after = { auras = "" },
+    })
     F.Events:Fire("PENDING")
 end
 
 function Forge:ApplyProperties(guid, properties)
     local commands = {}
+    if F.Server.forge then commands[#commands + 1] = "coa select " .. guid end
     if properties.display then commands[#commands + 1] = "npc set model " .. properties.display end
     if properties.phase then commands[#commands + 1] = "npc set phase " .. properties.phase end
-    if #commands > 0 then F.Rpc:SendSequence(commands) end
-    if properties.scale or properties.auras or properties.wander or properties.spawntime or properties.movetype then
-        CoAForgeDB.queued = {
-            guid = guid,
-            scale = properties.scale,
-            auras = properties.auras,
-            wander = properties.wander,
-            spawntime = properties.spawntime,
-            movetype = properties.movetype,
-        }
-        F.Print("target the new spawn and click Apply queued to finish the paste")
+    if properties.wander then commands[#commands + 1] = "npc set wanderdistance " .. F.Coord(properties.wander) end
+    if properties.movetype then commands[#commands + 1] = "npc set movetype " .. guid .. " " .. properties.movetype end
+    if properties.spawntime then commands[#commands + 1] = "npc set spawntime " .. properties.spawntime end
+    if properties.scale then commands[#commands + 1] = "modify scale " .. F.Coord(properties.scale) end
+    for _, spell in ipairs(properties.auras or {}) do commands[#commands + 1] = "aura " .. spell end
+    if #commands == 0 then return end
+    if not F.Server.forge then
+        CoAForgeDB.queued = { guid = guid, scale = properties.scale, auras = properties.auras,
+                              wander = properties.wander, spawntime = properties.spawntime,
+                              movetype = properties.movetype }
+        F.Print("target the new spawn and press Apply queued to finish the paste")
         F.Events:Fire("PENDING")
+        return
     end
+    F.Rpc:SendSequence(commands, function(ok)
+        if ok then F.Print("pasted properties applied") end
+    end)
 end
 
 function Forge:ApplyQueued()
@@ -386,13 +505,17 @@ function Forge:SetWander(distance)
     local selection = F.Selection
     if not selection or selection.kind ~= "creature" then return F.Warn("target a creature first") end
     local previous = selection.wander or 0
+    local prefix = F.Server.forge and { "coa select " .. selection.guid } or {}
+    local redo, undo = {}, {}
+    for index, command in ipairs(prefix) do redo[index] = command undo[index] = command end
+    redo[#redo + 1] = "npc set wanderdistance " .. F.Coord(distance)
+    undo[#undo + 1] = "npc set wanderdistance " .. F.Coord(previous)
     F.Journal:Apply({
         label = "wander " .. distance .. " on " .. (selection.name or selection.guid),
         kind = "wander",
         coalesce = "wander:" .. selection.guid,
         target = { kind = "creature", guid = selection.guid, entry = selection.entry, name = selection.name },
-        redo = { "npc set wanderdistance " .. F.Coord(distance) },
-        undo = { "npc set wanderdistance " .. F.Coord(previous) },
+        redo = redo, undo = undo,
         before = { wander = previous }, after = { wander = distance },
     })
     selection.wander = distance
@@ -417,12 +540,16 @@ function Forge:SetSpawnTime(seconds)
     local selection = F.Selection
     if not selection or selection.kind ~= "creature" then return F.Warn("target a creature first") end
     local previous = selection.spawntime or 300
+    local prefix = F.Server.forge and ("coa select " .. selection.guid) or nil
+    local redo, undo = {}, {}
+    if prefix then redo[1] = prefix undo[1] = prefix end
+    redo[#redo + 1] = "npc set spawntime " .. seconds
+    undo[#undo + 1] = "npc set spawntime " .. previous
     F.Journal:Apply({
         label = "respawn " .. seconds .. "s on " .. (selection.name or selection.guid),
         kind = "spawntime",
         target = { kind = "creature", guid = selection.guid, entry = selection.entry, name = selection.name },
-        redo = { "npc set spawntime " .. seconds },
-        undo = { "npc set spawntime " .. previous },
+        redo = redo, undo = undo,
         before = { spawntime = previous }, after = { spawntime = seconds },
     })
     selection.spawntime = seconds
@@ -476,7 +603,12 @@ end
 
 function Forge:Lookup(kind, text, callback)
     F.Rpc:Send("lookup " .. kind .. " " .. text, function(ok, lines)
-        callback(ok and F.ParseLookup(lines) or {})
+        if not ok then
+            F.Warn("lookup failed: " .. F.Strip(F.Join(lines)))
+            callback({})
+            return
+        end
+        callback(F.ParseLookup(lines))
     end)
 end
 
@@ -499,21 +631,19 @@ end
 function Forge:Export()
     local out = {}
     out[#out + 1] = "# CoA Forge change log"
-    out[#out + 1] = "# columns: op<TAB>kind<TAB>guid<TAB>entry<TAB>fields"
+    out[#out + 1] = "# op\tkind\tguid\tentry\tfields"
     for _, row in ipairs(CoAForgeDB.log) do
         local target = row.target or {}
         local fields = {}
-        for _, source in ipairs({ row.after or {} }) do
-            for key, value in pairs(source) do
-                fields[#fields + 1] = key .. "=" .. tostring(value)
-            end
+        for key, value in pairs(row.after or {}) do
+            fields[#fields + 1] = key .. "=" .. tostring(value)
         end
         out[#out + 1] = table.concat({
             row.kind or "?", target.kind or "?", tostring(target.guid or ""),
             tostring(target.entry or ""), table.concat(fields, ","),
         }, "\t")
     end
-    for key, row in pairs(CoAForgeDB.pending) do
+    for _, row in pairs(CoAForgeDB.pending) do
         local fields = {}
         if row.scale then fields[#fields + 1] = "scale=" .. row.scale end
         if row.auras then fields[#fields + 1] = "auras=" .. table.concat(row.auras, "|") end

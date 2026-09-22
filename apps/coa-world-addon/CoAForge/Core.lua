@@ -74,6 +74,29 @@ function F.ParseNpcInfo(lines)
     }
 end
 
+F.MOVEMENT_NAMES = { [0] = "stay", [1] = "random", [2] = "way" }
+
+function F.ParseForgeInfo(lines)
+    for _, line in ipairs(lines or {}) do
+        local kind, rest = line:match("COAINFO%s+(%a+)%s+(.+)$")
+        if kind then
+            local values = {}
+            for token in rest:gmatch("%S+") do values[#values + 1] = tonumber(token) end
+            if #values >= 12 then
+                return {
+                    kind = kind == "go" and "gameobject" or "creature",
+                    guid = values[1], entry = values[2], map = values[3],
+                    x = values[4], y = values[5], z = values[6], o = values[7],
+                    phase = values[8], display = values[9] ~= 0 and values[9] or nil,
+                    wander = values[10], movetype = F.MOVEMENT_NAMES[values[11]] or "stay",
+                    spawntime = values[12],
+                }
+            end
+        end
+    end
+    return nil
+end
+
 function F.ParseGameObjectInfo(lines)
     local text = F.Join(lines)
     local guid = text:match("GUID:%s*(%d+)")
