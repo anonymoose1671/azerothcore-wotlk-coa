@@ -2,6 +2,7 @@
 #include "Chat.h"
 #include "CommandScript.h"
 #include "Creature.h"
+#include "DBCStores.h"
 #include "DatabaseEnv.h"
 #include "GameObject.h"
 #include "MapMgr.h"
@@ -11,6 +12,8 @@
 #include "PlayerScript.h"
 #include "ScriptMgr.h"
 #include "Spell.h"
+#include "SpellMgr.h"
+#include "Transport.h"
 
 #include <unordered_map>
 
@@ -19,6 +22,7 @@ namespace
 using namespace Acore::ChatCommands;
 
 constexpr uint32 ForgeMaxAuraLength = 200;
+constexpr uint32 ForgePickSpell = 257464;
 
 struct ForgeCursor
 {
@@ -137,9 +141,12 @@ public:
     {
         static ChatCommandTable const forgeCommands = {
             { "cursor",   HandleCursorCommand,   SEC_ADMINISTRATOR, Console::No },
+            { "pickspell", HandlePickSpellCommand, SEC_ADMINISTRATOR, Console::No },
             { "npcpos",   HandleNpcPosCommand,   SEC_ADMINISTRATOR, Console::No },
             { "gopos",    HandleGoPosCommand,    SEC_ADMINISTRATOR, Console::No },
             { "select",   HandleSelectCommand,   SEC_ADMINISTRATOR, Console::No },
+            { "spawnnpc", HandleSpawnNpcCommand, SEC_ADMINISTRATOR, Console::No },
+            { "spawngo",  HandleSpawnGoCommand,  SEC_ADMINISTRATOR, Console::No },
             { "scale",    HandleScaleCommand,    SEC_ADMINISTRATOR, Console::Yes },
             { "aura",     HandleAuraCommand,     SEC_ADMINISTRATOR, Console::Yes },
             { "npcinfo",  HandleNpcInfoCommand,  SEC_ADMINISTRATOR, Console::Yes },
@@ -171,6 +178,26 @@ public:
         return true;
     }
 
+    static bool HandlePickSpellCommand(ChatHandler* handler)
+    {
+        Player* player = CommandPlayer(handler);
+        if (!player)
+            return false;
+
+        SpellInfo const* spell = sSpellMgr->GetSpellInfo(ForgePickSpell);
+        if (!spell)
+        {
+            handler->SendErrorMessage("Placement spell {} is missing from this client's data.", ForgePickSpell);
+            return false;
+        }
+
+        if (!player->HasSpell(ForgePickSpell))
+            player->learnSpell(ForgePickSpell);
+
+        handler->PSendSysMessage("COAPICKSPELL {} {}", ForgePickSpell, spell->SpellName[0]);
+        return true;
+    }
+
     static bool HandleNpcPosCommand(ChatHandler* handler, uint32 guid, float x, float y, float z, float o)
     {
         Player* player = CommandPlayer(handler);
@@ -197,25 +224,34 @@ public:
             return false;
         }
 
+        sObjectMgr->RemoveCreatureFromGrid(guid, data);
         const_cast<CreatureData*>(data)->posX = x;
         const_cast<CreatureData*>(data)->posY = y;
         const_cast<CreatureData*>(data)->posZ = z;
         const_cast<CreatureData*>(data)->orientation = o;
+        sObjectMgr->AddCreatureToGrid(guid, data);
 
-        if (Creature* creature = handler->GetCreatureFromPlayerMapByDbGuid(guid))
+        Creature* creature = handler->GetCreatureFromPlayerMapByDbGuid(guid);
+        if (creature)
         {
-            creature->SetPosition(x, y, z, o);
+            creature->SetHomePosition(x, y, z, o);
+            creature->NearTeleportTo(x, y, z, o);
             creature->GetMotionMaster()->Initialize();
-            if (creature->IsAlive())
+        }
+        else
+        {
+            creature = new Creature();
+            if (!creature->LoadCreatureFromDB(guid, player->GetMap(), true, true))
             {
-                creature->setDeathState(DeathState::JustDied);
-                creature->Respawn();
+                delete creature;
+                creature = nullptr;
             }
         }
 
         WorldDatabase.Execute("UPDATE creature SET position_x = {}, position_y = {}, position_z = {}, "
             "orientation = {} WHERE guid = {}", x, y, z, o, guid);
-        handler->PSendSysMessage("Creature {} moved to {} {} {} facing {}.", guid, x, y, z, o);
+        handler->PSendSysMessage("Creature {} moved to {} {} {} facing {}.{}", guid, x, y, z, o,
+            creature ? "" : " The spawn is saved but is not loaded in your map.");
         return true;
     }
 
@@ -257,6 +293,108 @@ public:
         }
 
         handler->PSendSysMessage("Gameobject {} moved to {} {} {} facing {}.", guid, x, y, z, o);
+        return true;
+    }
+
+    static bool HandleSpawnNpcCommand(ChatHandler* handler, uint32 entry, float x, float y, float z, float o)
+    {
+        Player* player = CommandPlayer(handler);
+        if (!player)
+            return false;
+
+        if (!sObjectMgr->GetCreatureTemplate(entry))
+        {
+            handler->SendErrorMessage("No creature template with entry {}.", entry);
+            return false;
+        }
+
+        Map* map = player->GetMap();
+        if (!MapMgr::IsValidMapCoord(map->GetId(), x, y, z, o))
+        {
+            handler->SendErrorMessage("{} {} {} is not a valid position on map {}.", x, y, z, map->GetId());
+            return false;
+        }
+
+        Creature* creature = new Creature();
+        if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, player->GetPhaseMaskForSpawn(),
+                              entry, 0, x, y, z, o))
+        {
+            delete creature;
+            handler->SendErrorMessage("Creature {} could not be created; check its model data.", entry);
+            return false;
+        }
+
+        creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), player->GetPhaseMaskForSpawn());
+        ObjectGuid::LowType spawnId = creature->GetSpawnId();
+        creature->CleanupsBeforeDelete();
+        delete creature;
+
+        creature = new Creature();
+        if (!creature->LoadCreatureFromDB(spawnId, map, true, true))
+        {
+            delete creature;
+            handler->SendErrorMessage("Spawn {} was saved but could not be loaded into the world.", spawnId);
+            return false;
+        }
+
+        sObjectMgr->AddCreatureToGrid(spawnId, sObjectMgr->GetCreatureData(spawnId));
+        player->SetSelection(creature->GetGUID());
+        handler->PSendSysMessage("COASPAWN npc {} {}", spawnId, entry);
+        return true;
+    }
+
+    static bool HandleSpawnGoCommand(ChatHandler* handler, uint32 entry, float x, float y, float z, float o)
+    {
+        Player* player = CommandPlayer(handler);
+        if (!player)
+            return false;
+
+        GameObjectTemplate const* info = sObjectMgr->GetGameObjectTemplate(entry);
+        if (!info)
+        {
+            handler->SendErrorMessage("No gameobject template with entry {}.", entry);
+            return false;
+        }
+
+        if (info->displayId && !sGameObjectDisplayInfoStore.LookupEntry(info->displayId))
+        {
+            handler->SendErrorMessage("Gameobject {} has display {}, which the client does not have.",
+                entry, info->displayId);
+            return false;
+        }
+
+        Map* map = player->GetMap();
+        if (!MapMgr::IsValidMapCoord(map->GetId(), x, y, z, o))
+        {
+            handler->SendErrorMessage("{} {} {} is not a valid position on map {}.", x, y, z, map->GetId());
+            return false;
+        }
+
+        bool transport = sObjectMgr->IsGameObjectStaticTransport(entry);
+        GameObject* object = transport ? new StaticTransport() : new GameObject();
+        G3D::Quat rotation = G3D::Quat::fromAxisAngleRotation(G3D::Vector3::unitZ(), o);
+        if (!object->Create(map->GenerateLowGuid<HighGuid::GameObject>(), entry, map,
+                            player->GetPhaseMaskForSpawn(), x, y, z, o, rotation, 0, GO_STATE_READY))
+        {
+            delete object;
+            handler->SendErrorMessage("Gameobject {} could not be created.", entry);
+            return false;
+        }
+
+        object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), player->GetPhaseMaskForSpawn());
+        ObjectGuid::LowType spawnId = object->GetSpawnId();
+        delete object;
+
+        object = transport ? new StaticTransport() : new GameObject();
+        if (!object->LoadGameObjectFromDB(spawnId, map, true))
+        {
+            delete object;
+            handler->SendErrorMessage("Spawn {} was saved but could not be loaded into the world.", spawnId);
+            return false;
+        }
+
+        sObjectMgr->AddGameobjectToGrid(spawnId, sObjectMgr->GetGameObjectData(spawnId));
+        handler->PSendSysMessage("COASPAWN go {} {}", spawnId, entry);
         return true;
     }
 

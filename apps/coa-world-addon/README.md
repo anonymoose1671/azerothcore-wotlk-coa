@@ -35,6 +35,9 @@ placement is exact and appearance is saved, without it the addon falls back and 
 | Command | Purpose |
 |---|---|
 | `.coa cursor` | Reports where the GM last aimed a ground-targeted spell, in `.gps` format |
+| `.coa pickspell` | Teaches the caster the inert spell the Pick spot button casts |
+| `.coa spawnnpc <entry> <x> <y> <z> <o>` | Creates a creature spawn at exact coordinates and reports its guid |
+| `.coa spawngo <entry> <x> <y> <z> <o>` | Same for a gameobject |
 | `.coa npcpos <guid> <x> <y> <z> <o>` | Moves a creature spawn to exact coordinates and saves it |
 | `.coa gopos <guid> <x> <y> <z> <o>` | Same for a gameobject spawn, including rotation |
 | `.coa select <guid>` | Targets a spawn server-side, so selection-only commands can be scripted |
@@ -42,13 +45,31 @@ placement is exact and appearance is saved, without it the addon falls back and 
 | `.coa aura <entry> <ids\|none>` | Writes `creature_template_addon.auras` |
 | `.coa npcinfo <guid>` / `.coa goinfo <guid>` | One machine-readable `COAINFO` line for the addon to parse |
 
-`.coa cursor` is what makes the ground-target reticle usable as a placement cursor. The core has
-no such concept: the hook records the destination of the last ground-targeted cast, which is the
-only place the client's aim reaches the server.
+`.coa spawnnpc` exists because `.npc add` writes the spawn row before it tries to put the creature
+in the world, so a failure there leaves a database row with nothing standing on it. It also gives
+no guid back, which forced the addon to diff two `.npc near` listings to work out what it had just
+created. The one-step command creates, saves, loads and reports the guid, or fails without leaving
+anything behind.
 
-`.coa npcpos` exists because `.npc move` has no coordinate form and always moves a spawn to
-wherever the GM is standing. Without it the addon has to teleport you first, which works but is
-jarring and makes undo a two-step dance.
+`.coa npcpos` moves a creature with `NearTeleportTo` rather than the kill-and-respawn that `.npc
+move` uses. Killing a freshly created spawn can leave it dead and out of the map, which looks
+exactly like the spawn never happened.
+
+## Picking a spot
+
+The core has no concept of where a GM is pointing. The one place the client's aim reaches the
+server is the destination of a ground-targeted spell cast, so that is what the editor uses.
+
+Pressing **Pick spot** casts spell 257464, chosen because it is inert: a dummy effect with no
+second or third effect, no cost, no cooldown, instant, unlimited range, no attribute flags, no
+script and no DBC override, and a name unique in `Spell.dbc` so a secure cast button can name it.
+It shows a small impact where you click, which is useful feedback. `OnPlayerSpellCast` records the
+destination and `.coa cursor` reports it. With **move on pick** enabled the selected spawn goes
+there immediately; otherwise the spot is remembered and Move to spot, Spawn and Paste all use it.
+
+The button has to be a `SecureActionButtonTemplate`, because casting is a protected action that an
+addon cannot perform directly. That template can only cast by name, which is why the spell's name
+must be unique.
 
 `.coa select` exists because `.npc set wanderdistance` and `.npc set spawntime` act only on the
 current target, which an addon cannot set. With it, pasting a creature applies every copied
@@ -61,7 +82,8 @@ Ctrl-Z undo and Ctrl-Y redo, and releases them when you close the window.
 
 **Place** — target a creature and press Refresh, or press Scan and click a row. Nudge on each
 axis at a selectable step, set facing on a 0 to 360 slider or type the degrees, drop to ground,
-move to cursor, delete, copy, paste. Movement type, wander distance and respawn time sit below.
+move to the picked spot, delete, copy, paste. Movement type, wander distance and respawn
+time sit below.
 
 **Look** — search creature displays by the name of anything that uses them. Hovering a row shows
 the model in a 3D preview you can drag to rotate; clicking applies it. Scale and visual effects
@@ -84,7 +106,7 @@ With the server toolset present, everything the editor does is written to the da
 | Edit | Command behind it | Table |
 |---|---|---|
 | Position and orientation | `.coa npcpos`, `.coa gopos` | `creature`, `gameobject` |
-| Spawn and delete | `.npc add`, `.gobject add`, `.npc delete` | `creature`, `gameobject` |
+| Spawn and delete | `.coa spawnnpc`, `.coa spawngo`, `.npc delete` | `creature`, `gameobject` |
 | Display | `.npc set model` | `creature.modelid` |
 | Wander, movement type, respawn, phase | `.npc set ...` | `creature` |
 | Size | `.coa scale` | `creature_template_model.DisplayScale` |

@@ -74,6 +74,17 @@ function F.ParseNpcInfo(lines)
     }
 end
 
+F.PICK_SPELL_ID = 257464
+F.PICK_SPELL_NAME = "Missile Impact Visual"
+
+function F.ParseSpawnResult(lines)
+    for _, line in ipairs(lines or {}) do
+        local guid = line:match("COASPAWN%s+%a+%s+(%d+)")
+        if guid then return tonumber(guid) end
+    end
+    return nil
+end
+
 F.MOVEMENT_NAMES = { [0] = "stay", [1] = "random", [2] = "way" }
 
 function F.ParseForgeInfo(lines)

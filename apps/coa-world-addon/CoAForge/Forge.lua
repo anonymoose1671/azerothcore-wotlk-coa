@@ -35,6 +35,7 @@ function Forge:ProbeServer()
         F.Server.forge = ok or not missingCommand(lines)
         F.Server.cursor = ok
         if F.Server.forge then
+            F.Rpc:Send("coa pickspell")
             F.Print("server toolset present: exact placement, selection and saved appearance are available")
         else
             F.Print("server toolset absent: falling back to teleport placement and preview-only appearance")
@@ -277,39 +278,54 @@ end
 function Forge:SpawnCreature(entry, properties, onSpawned)
     self:ReadCursor(function(position)
         if not position then return F.Warn("could not read a placement position") end
+        if F.Server.forge then
+            local command = "coa spawnnpc " .. entry .. " " .. coords(position) ..
+                " " .. F.Coord(position.o or 0)
+            F.Rpc:Send(command, function(ok, lines)
+                if not ok then return F.Warn("spawn failed: " .. F.Strip(F.Join(lines))) end
+                local guid = F.ParseSpawnResult(lines)
+                if not guid then return F.Warn("spawned, but the server reported no guid") end
+                F.Journal:Record({
+                    label = "spawn " .. entry .. " as " .. guid,
+                    kind = "spawn",
+                    target = { kind = "creature", guid = guid, entry = entry },
+                    redo = { command },
+                    undo = { "npc delete " .. guid },
+                    after = { x = position.x, y = position.y, z = position.z,
+                              o = position.o, map = position.map },
+                })
+                F.Print("spawned " .. entry .. " as guid " .. guid)
+                if properties then self:ApplyProperties(guid, properties) end
+                if onSpawned then onSpawned(guid) end
+                self:LoadCreature(guid, nil)
+            end)
+            return
+        end
         self:ScanNear(8, function(before)
             local known = {}
             for _, row in ipairs(before.creatures) do known[row.guid] = true end
-            local setup = F.Server.forge and { "npc add " .. entry }
-                or { teleport(position), "npc add " .. entry }
-            F.Rpc:SendSequence(setup, function(ok, lines)
-                if not ok then
-                    return F.Warn("spawn failed: " .. F.Strip(F.Join(lines)))
-                end
+            F.Rpc:SendSequence({ teleport(position), "npc add " .. entry }, function(ok, lines)
+                if not ok then return F.Warn("spawn failed: " .. F.Strip(F.Join(lines))) end
                 self:ScanNear(8, function(after)
                     local guid
                     for _, row in ipairs(after.creatures) do
                         if not known[row.guid] and row.entry == entry then guid = row.guid end
                     end
                     if not guid then
-                        return F.Warn("spawned, but could not identify the new guid; press Scan to find it")
-                    end
-                    if F.Server.forge then
-                        F.Rpc:Send("coa npcpos " .. guid .. " " .. coords(position) ..
-                            " " .. F.Coord(position.o or 0))
+                        return F.Warn("spawned, but could not identify the new guid; press Scan")
                     end
                     F.Journal:Record({
-                        label = "spawn " .. entry,
+                        label = "spawn " .. entry .. " as " .. guid,
                         kind = "spawn",
                         target = { kind = "creature", guid = guid, entry = entry },
-                        redo = { "npc add " .. entry },
+                        redo = { teleport(position), "npc add " .. entry },
                         undo = { "npc delete " .. guid },
-                        after = { x = position.x, y = position.y, z = position.z, o = position.o, map = position.map },
+                        after = { x = position.x, y = position.y, z = position.z,
+                                  o = position.o, map = position.map },
                     })
                     F.Print("spawned " .. entry .. " as guid " .. guid)
                     if properties then self:ApplyProperties(guid, properties) end
                     if onSpawned then onSpawned(guid) end
-                    if F.Server.forge then self:Select(guid) end
                 end)
             end)
         end)
@@ -319,28 +335,69 @@ end
 function Forge:SpawnObject(entry, onSpawned)
     self:ReadCursor(function(position)
         if not position then return F.Warn("could not read a placement position") end
-        local setup = F.Server.forge and {} or { teleport(position) }
-        F.Rpc:SendSequence(setup, function()
-            F.Rpc:Send("gobject add " .. entry, function(ok, lines)
+        if F.Server.forge then
+            local command = "coa spawngo " .. entry .. " " .. coords(position) ..
+                " " .. F.Coord(position.o or 0)
+            F.Rpc:Send(command, function(ok, lines)
                 if not ok then return F.Warn("spawn failed: " .. F.Strip(F.Join(lines))) end
-                local guid = F.ParseAddedGameObject(lines)
-                if not guid then return F.Warn("spawned, but the server did not report a guid") end
-                if F.Server.forge then
-                    F.Rpc:Send("coa gopos " .. guid .. " " .. coords(position) .. " " .. F.Coord(position.o or 0))
-                end
+                local guid = F.ParseSpawnResult(lines)
+                if not guid then return F.Warn("spawned, but the server reported no guid") end
                 F.Journal:Record({
-                    label = "spawn object " .. entry,
+                    label = "spawn object " .. entry .. " as " .. guid,
                     kind = "spawn",
                     target = { kind = "gameobject", guid = guid, entry = entry },
-                    redo = { "gobject add " .. entry },
+                    redo = { command },
                     undo = { "gobject delete " .. guid },
-                    after = { x = position.x, y = position.y, z = position.z, o = position.o, map = position.map },
+                    after = { x = position.x, y = position.y, z = position.z,
+                              o = position.o, map = position.map },
                 })
                 F.Print("spawned object " .. entry .. " as guid " .. guid)
                 if onSpawned then onSpawned(guid) end
                 self:SelectGameObject(guid)
             end)
+            return
+        end
+        F.Rpc:SendSequence({ teleport(position) }, function()
+            F.Rpc:Send("gobject add " .. entry, function(ok, lines)
+                if not ok then return F.Warn("spawn failed: " .. F.Strip(F.Join(lines))) end
+                local guid = F.ParseAddedGameObject(lines)
+                if not guid then return F.Warn("spawned, but the server reported no guid") end
+                F.Journal:Record({
+                    label = "spawn object " .. entry .. " as " .. guid,
+                    kind = "spawn",
+                    target = { kind = "gameobject", guid = guid, entry = entry },
+                    redo = { teleport(position), "gobject add " .. entry },
+                    undo = { "gobject delete " .. guid },
+                    after = { x = position.x, y = position.y, z = position.z,
+                              o = position.o, map = position.map },
+                })
+                F.Print("spawned object " .. entry .. " as guid " .. guid)
+                self:SelectGameObject(guid)
+            end)
         end)
+    end)
+end
+
+function Forge:OnPicked()
+    F.Rpc:Send("coa cursor", function(ok, lines)
+        local position = ok and F.ParseGps(lines) or nil
+        if not position then
+            return F.Warn("the server did not record that ground target")
+        end
+        position.source = "aoe"
+        F.Cursor = position
+        F.Events:Fire("CURSOR")
+        F.Print(string.format("spot picked at %.1f %.1f %.1f", position.x, position.y, position.z))
+        local action = self.pendingPick
+        self.pendingPick = nil
+        if action then
+            action(position)
+        elseif CoAForgeDB.pickMoves and F.Selection then
+            self:PlaceSelection({
+                x = position.x, y = position.y, z = position.z,
+                o = F.Selection.o, map = position.map,
+            }, "place " .. (F.Selection.name or "spawn") .. " at picked spot")
+        end
     end)
 end
 

@@ -13,6 +13,7 @@ local DEFAULTS = {
     useAoeCursor = true,
     scanRange = 30,
     minimapAngle = 200,
+    pickMoves = true,
     editing = false,
 }
 
@@ -314,15 +315,41 @@ local function BuildPlaceTab(panel)
         if F.Selection then applyFacing((F.Selection.o or 0) * 180 / math.pi + 15) end
     end)
 
-    Button(panel, "Move to cursor", 116, 6, -172, function() F.Forge:MoveToCursor() end)
-    Button(panel, "Drop to ground", 116, 126, -172, function() F.Forge:DropToGround() end)
-    Button(panel, "Copy", 76, 246, -172, function() F.Forge:Copy() end)
-    Button(panel, "Paste", 76, 326, -172, function() F.Forge:Paste() end)
-    Button(panel, "Delete", 76, 406, -172, function() F.Forge:DeleteSelection() end)
-    Button(panel, "Apply queued", 110, 486, -172, function() F.Forge:ApplyQueued() end)
+    local pick = CreateFrame("Button", "CoAForgePickSpotButton", panel,
+        "SecureActionButtonTemplate,UIPanelButtonTemplate")
+    pick:SetWidth(104)
+    pick:SetHeight(22)
+    pick:SetText("Pick spot")
+    pick:SetPoint("TOPLEFT", 6, -172)
+    pick:SetAttribute("type", "spell")
+    pick:SetAttribute("spell", F.PICK_SPELL_NAME)
+    pick:RegisterForClicks("AnyUp")
+    pick:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddLine("Pick spot")
+        GameTooltip:AddLine("Click this, then click the ground.", 1, 1, 1)
+        GameTooltip:AddLine("The targeting circle marks where things go.", 0.7, 0.7, 0.7)
+        GameTooltip:Show()
+    end)
+    pick:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-    Label(panel, "Movement", "GameFontNormalSmall", 10, -206)
-    local moveType = Button(panel, "stay", 72, 76, -202, nil)
+    Button(panel, "Move to spot", 104, 114, -172, function() F.Forge:MoveToCursor() end)
+    Button(panel, "Drop to ground", 110, 222, -172, function() F.Forge:DropToGround() end)
+    Button(panel, "Copy", 66, 336, -172, function() F.Forge:Copy() end)
+    Button(panel, "Paste", 66, 406, -172, function() F.Forge:Paste() end)
+    Button(panel, "Delete", 70, 476, -172, function() F.Forge:DeleteSelection() end)
+    Button(panel, "Apply queued", 104, 550, -172, function() F.Forge:ApplyQueued() end)
+
+    panel.spotText = Label(panel, "", "GameFontDisableSmall", 10, -200)
+    local autoMove
+    autoMove = Button(panel, "", 150, 550, -196, function()
+        CoAForgeDB.pickMoves = not CoAForgeDB.pickMoves
+        autoMove:SetText(CoAForgeDB.pickMoves and "move on pick: on" or "move on pick: off")
+    end)
+    autoMove:SetText(CoAForgeDB.pickMoves and "move on pick: on" or "move on pick: off")
+
+    Label(panel, "Movement", "GameFontNormalSmall", 10, -230)
+    local moveType = Button(panel, "stay", 72, 76, -226, nil)
     moveType:SetScript("OnClick", function()
         local order = { "stay", "random", "way" }
         local index = 1
@@ -334,33 +361,33 @@ local function BuildPlaceTab(panel)
         F.Forge:SetMoveType(nextType)
     end)
 
-    Label(panel, "Wander", "GameFontNormalSmall", 162, -206)
-    local wander = Edit(panel, 56, 210, -204, function(text)
+    Label(panel, "Wander", "GameFontNormalSmall", 162, -230)
+    local wander = Edit(panel, 56, 210, -228, function(text)
         local value = tonumber(text)
         if value then F.Forge:SetWander(value) end
     end)
 
-    Label(panel, "Respawn s", "GameFontNormalSmall", 284, -206)
-    local respawn = Edit(panel, 64, 348, -204, function(text)
+    Label(panel, "Respawn s", "GameFontNormalSmall", 284, -230)
+    local respawn = Edit(panel, 64, 348, -228, function(text)
         local value = tonumber(text)
         if value then F.Forge:SetSpawnTime(math.floor(value)) end
     end)
 
-    Label(panel, "Entry", "GameFontNormalSmall", 10, -240)
-    local spawnEntry = Edit(panel, 84, 50, -238)
-    Button(panel, "Spawn NPC", 100, 146, -236, function()
+    Label(panel, "Entry", "GameFontNormalSmall", 10, -262)
+    local spawnEntry = Edit(panel, 84, 50, -260)
+    Button(panel, "Spawn NPC", 100, 146, -258, function()
         local entry = tonumber(spawnEntry:GetText())
         if entry then F.Forge:SpawnCreature(entry) else F.Warn("enter a creature entry") end
     end)
-    Button(panel, "Spawn object", 108, 250, -236, function()
+    Button(panel, "Spawn object", 108, 250, -258, function()
         local entry = tonumber(spawnEntry:GetText())
         if entry then F.Forge:SpawnObject(entry) else F.Warn("enter a gameobject entry") end
     end)
 
-    Label(panel, "Nearby spawns", "GameFontNormalSmall", 10, -274)
-    local range = Edit(panel, 44, 96, -272)
+    Label(panel, "Nearby spawns", "GameFontNormalSmall", 10, -294)
+    local range = Edit(panel, 44, 96, -292)
     range:SetText(tostring(CoAForgeDB.scanRange))
-    Button(panel, "Scan", 64, 152, -270, function()
+    Button(panel, "Scan", 64, 152, -290, function()
         CoAForgeDB.scanRange = tonumber(range:GetText()) or 30
         F.Forge:ScanNear(CoAForgeDB.scanRange, function(result)
             local rows = {}
@@ -376,9 +403,9 @@ local function BuildPlaceTab(panel)
             panel.scanCount:SetText(#rows .. " found")
         end)
     end)
-    panel.scanCount = Label(panel, "", "GameFontDisableSmall", 224, -274)
+    panel.scanCount = Label(panel, "", "GameFontDisableSmall", 224, -294)
 
-    panel.list = ScrollList(panel, 6, -296, 736, 212, function(row, item)
+    panel.list = ScrollList(panel, 6, -316, 736, 196, function(row, item)
         local tag = item.kind == "gameobject" and "|cffffcc66OBJ|r" or "|cff88ff88NPC|r"
         row.text:SetText(string.format("%s  %s   |cffaaaaaaguid %s  entry %s|r", tag, tostring(item.name),
             tostring(item.guid), tostring(item.entry)))
@@ -408,9 +435,20 @@ local function BuildPlaceTab(panel)
             position:SetText("target a creature and press Refresh, or press Scan and click a row")
         end
     end
+    local function updateSpot()
+        local cursor = F.Cursor
+        if cursor and cursor.x then
+            panel.spotText:SetText(string.format("picked spot  %.1f  %.1f  %.1f   map %s",
+                cursor.x, cursor.y, cursor.z, tostring(cursor.map or 0)))
+        else
+            panel.spotText:SetText("no spot picked; placement falls back to where you stand")
+        end
+    end
     F.Events:Register("TARGET", update)
+    F.Events:Register("CURSOR", updateSpot)
     panel.Update = function()
         update()
+        updateSpot()
         panel.RefreshSteps()
     end
 end
@@ -938,7 +976,8 @@ local loader = CreateFrame("Frame")
 loader:RegisterEvent("ADDON_LOADED")
 loader:RegisterEvent("PLAYER_LOGIN")
 loader:RegisterEvent("PLAYER_TARGET_CHANGED")
-loader:SetScript("OnEvent", function(_, event, addon)
+loader:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+loader:SetScript("OnEvent", function(_, event, addon, spellName)
     if event == "ADDON_LOADED" and addon == "CoAForge" then
         CoAForgeDB = CoAForgeDB or {}
         F.Defaults(CoAForgeDB, DEFAULTS)
@@ -957,6 +996,10 @@ loader:SetScript("OnEvent", function(_, event, addon)
         F.Print("loaded. Click the minimap gear or type /forge. Catalog: " .. F.Catalog:Summary())
     elseif event == "PLAYER_TARGET_CHANGED" then
         if CoAForgeDB.editing then F.Forge:RefreshTarget() end
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+        if addon == "player" and spellName == F.PICK_SPELL_NAME then
+            F.Forge:OnPicked()
+        end
     end
 end)
 
