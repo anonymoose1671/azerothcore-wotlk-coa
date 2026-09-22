@@ -20,6 +20,7 @@ GAMEPLAY = 'apps/coa-gameplay-test/'
 DBC = 'apps/coa-dbc/'
 MECHANICS = 'apps/coa-mechanics/'
 CONTENT = 'apps/coa-world-content/'
+ADDON = 'apps/coa-world-addon/'
 MODULE = 'modules/mod-ascension-compat/'
 CONTROL_FILES = {'tools/check_source.py', 'tools/test_source.py', '.github/workflows/quality.yml'}
 SUITES = {
@@ -52,6 +53,10 @@ SUITES = {
     'world-content': {
         'paths': [CONTENT + '*.py'],
         'commands': [[CONTENT + 'test_validate_content.py'], [CONTENT + 'test_archive.py']],
+    },
+    'world-addon': {
+        'paths': [ADDON + '*.py', ADDON + 'CoAForge/*.lua', ADDON + 'CoAForge/*.toc'],
+        'commands': [[ADDON + 'test_check_addon.py']],
     },
     'registrations': {
         'paths': [MODULE + 'src/*.cpp', MODULE + 'src/*.h', MODULE + 'include.sh', 'tools/*registrations.py'],

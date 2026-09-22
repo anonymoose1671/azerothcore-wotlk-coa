@@ -7,7 +7,8 @@ import tokenize
 
 
 OWNED_ROOTS = ('modules/mod-ascension-compat/', 'apps/coa-dbc/', 'apps/coa-gameplay-test/',
-               'apps/coa-mechanics/', 'apps/coa-world-content/', 'tools/', '.github/scripts/')
+               'apps/coa-mechanics/', 'apps/coa-world-content/',
+    'apps/coa-world-addon/', 'tools/', '.github/scripts/')
 CPP_SUFFIXES = {'.c', '.cc', '.cpp', '.h', '.hpp'}
 CPP_PARTS = re.compile(
     r'(?P<raw>(?:u8|u|U|L)?R"(?P<delimiter>[^ ()\\\t\r\n]{0,16})\([\s\S]*?\)(?P=delimiter)")'

@@ -1,0 +1,14 @@
+## Interface: 30300
+## Title: CoA Forge
+## Notes: World editing toolkit for the Conquest of Azeroth server.
+## Author: CoA
+## Version: 1.0
+## SavedVariables: CoAForgeDB
+
+Core.lua
+Rpc.lua
+Journal.lua
+Data\Displays.lua
+Catalog.lua
+Forge.lua
+UI.lua
