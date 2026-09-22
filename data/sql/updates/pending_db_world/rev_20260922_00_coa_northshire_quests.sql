@@ -19,6 +19,12 @@
 --     a default human. CoA hands its custom NPCs their look over the mirror-image channel from
 --     creature_display_preset, which no source we hold carries. Until a capture supplies it they use
 --     resolvable stock displays: Bianca 3344, Moroi 3253, the Theologian and its images 5001.
+--   spider look  STAND-IN. No source records an aura on the Shadewell Spider: the client cache has
+--     no aura column at all, and the exil.es export leaves its spells and texture empty. Its display
+--     955 is an ordinary MineSpider at 0.7 scale, fully opaque, so nothing in the data makes it dark.
+--     It is reported as small, with a blue wispy shadow overlay, so it takes DisplayScale 0.33 and
+--     aura 17327 Spirit Particles: a dummy-aura visual of infinite duration whose siblings are named
+--     green, purple and red, leaving the unmarked one blue. It changes nothing but appearance.
 --   quest givers  INFERRED except one. Quest 1660000 names them itself: "Speak with Seminarian Moroi,
 --     brother of Bianca Spada", so Bianca starts it and Moroi ends it. The rest are assigned to Moroi
 --     because he is the seminarian the storyline follows. No source records a giver for any of them.
@@ -78,7 +84,7 @@ VALUES
 (161716, 0, 757, 1, 1),
 (161717, 0, 1079, 1, 1),
 (161736, 0, 4418, 1, 1),
-(161707, 0, 955, 1, 1),
+(161707, 0, 955, 0.33, 1),
 (161712, 0, 7555, 1, 1),
 (161713, 0, 5001, 1, 1),
 (161904, 0, 5001, 1, 1),
@@ -89,6 +95,11 @@ VALUES
 (161824, 0, 11686, 1, 1),
 (161825, 0, 11686, 1, 1),
 (161826, 0, 11686, 1, 1);
+
+DELETE FROM `creature_template_addon` WHERE `entry` = 161707;
+INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
+VALUES
+(161707, 0, 0, 0, 1, 0, 0, '17327');
 
 -- ---------------------------------------------------------------------------
 -- 3. World objects
