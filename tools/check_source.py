@@ -19,6 +19,7 @@ from check_change_boundaries import ROOT, changed_paths
 GAMEPLAY = 'apps/coa-gameplay-test/'
 DBC = 'apps/coa-dbc/'
 MECHANICS = 'apps/coa-mechanics/'
+CONTENT = 'apps/coa-world-content/'
 MODULE = 'modules/mod-ascension-compat/'
 CONTROL_FILES = {'tools/check_source.py', 'tools/test_source.py', '.github/workflows/quality.yml'}
 SUITES = {
@@ -47,6 +48,10 @@ SUITES = {
         'paths': [GAMEPLAY + '*.py', GAMEPLAY + '*.json', MODULE + 'src/CoAGameplayTest*'],
         'commands': [[GAMEPLAY + 'test_runner.py'], [GAMEPLAY + 'test_world_cache.py'],
                      [GAMEPLAY + 'test_verification.py'], [GAMEPLAY + 'catalog.py', '--check']],
+    },
+    'world-content': {
+        'paths': [CONTENT + '*.py'],
+        'commands': [[CONTENT + 'test_validate_content.py']],
     },
     'registrations': {
         'paths': [MODULE + 'src/*.cpp', MODULE + 'src/*.h', MODULE + 'include.sh', 'tools/*registrations.py'],
