@@ -6,19 +6,25 @@
 -- WHERE EACH VALUE COMES FROM
 --   quests, objects, items, reward items  the realm's own client cache (data-cache-945cd3b8b0ce4a496586).
 --     Every quest and reward item already exists in item_template, so no item is written here.
---   object positions  SOURCED where the archive atlas saw them (Maclure Supplies, the Supply Cache, one
---     Mirror Lake Harvest, one crate of Stolen Goods, the Crocolisk Egg); the rest are INFERRED on terrain.
+--   object positions  SOURCED from the QuestSuperTrack objective points (Maclure Supplies, the Supply
+--     Cache, one Mirror Lake Harvest, the Crocolisk Egg) and the archive atlas (one Harvest, one crate of
+--     Stolen Goods); the rest are placed by hand at a named landmark, each on the server floor.
 --   quest givers  SOURCED where the quest text names them; the rest INFERRED from the voice of the text.
 --   new NPCs  Guard Jacob, Esyra and Sinter Wive come from the creature cache. Agent Serina Vale (996114 in
 --     Goldshire, 996115 at the Bastion) is in no source; two entries keep each copy's quests apart. Displays
---     the client cannot resolve use stock stand-ins. All their positions are INFERRED.
---   drop chances  INFERRED (spider silk 50%, Mother Fang 100%, mana gem 66%, gnoll weapons 40%).
---   credits  Slimy Solution: the vial spell hitting a murloc corpse credits it and removes the corpse.
+--     the client cannot resolve use stock stand-ins. Givers and enders stand at their QuestSuperTrack
+--     turn-in points; Esyra stands 1.9 yd from hers because Servant of Azora 80924 occupies it.
+--   mobs  stock Defias, beasts, gnolls and spiders are added by hand to fill each objective area; the
+--     Mirror Lake Orchard's Defias Cutpurses follow the Exiles export's stock spawns, which this world
+--     lacks; its Defias Bandits come from the relocations migration.
+--   drop chances  SOURCED from the Exiles export creature_loot (100% for every quest drop here).
+--   credits  Slimy Solution: the vial spell hitting a murloc corpse credits it and removes the corpse;
+--     a condition refuses the vial on a living murloc, as its spell description says (corpse only).
 --     Unexpected Results: the enchanted fragment credits once per beast per ten minutes. Final Dig: a new
 --     gossip option on Innkeeper Farley, shown only with the quest, gives him away; the line is authored.
 --   not restored  quests 254039 and 254040 are in no source, so 254041 and 254095 follow 254038 directly.
 --
--- Spawn guid blocks: creature 9002200-9002499, gameobject 6911200-6911499. Quest 17005 starts from the
+-- Spawn guid blocks: creature 9002200-9002599, gameobject 6911200-6911599. Quest 17005 starts from the
 -- Smudged Note that rev_20260922_00_coa_northshire_quests.sql spawns.
 
 -- ---------------------------------------------------------------------------
@@ -151,27 +157,27 @@ VALUES
 DELETE FROM `quest_request_items` WHERE `ID` IN (17000, 17001, 17002, 17003, 17004, 17005, 17006, 17007, 17008, 100071, 100073, 100074, 254038, 254041, 254051, 254095, 254098, 254099, 254106, 254107, 254108);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
-(17000, 'Return to Pa Maclure at the Maclure Vinyards.'),
-(17001, 'Return 4 Gem Encrusted Spider Silk to Tharynn Bouden.'),
-(17002, 'Recover 10 Depleted Mana Gems and return to the Tower of Azora.'),
-(17003, 'Retrieve 10 Slimy Murloc Spittle Samples and return to the Tower of Azora.'),
-(17004, 'Retrieve 6 Gnoll Blades and 10 Gnoll Axes and retun to Guard Thomas at the east Elwynn bridge.'),
-(17005, 'Return the Smudged Note to Imelda in Stormwind.'),
-(17006, 'Slay 8 Defias Bandits and return the Supply Cache to Guard Jacob at Ridgepoint Tower.'),
-(17007, 'Deliver the Supply Cache to Magistrate Solomon in Lakeshire.'),
-(17008, 'Retrieve 8 Mirror Lake Apples and return them to Sergeant De Vries in Westbrook Garrison.'),
-(100071, 'Return to Melika Isenstrider at Goldshire in Elwynn Forest.'),
-(100073, 'Return to Remy "Two Times" at Goldshire in Elwynn Forest.'),
-(100074, 'Return to Marshal Dughan at Goldshire in Elwynn Forest.'),
-(254038, 'Report to Agent Serina Vale near The Bandit''s Bastion in Elwynn Forest.'),
-(254041, 'Report to General Marcus Johnathan at Valley of Heroes in Stormwind.'),
-(254051, 'Report to Sinter Wive in Loch Modan.'),
-(254095, 'Deliver the Mineral Fragment to a Mage at the Tower of Azora in Elwynn Forest.'),
+(17000, ''),
+(17001, ''),
+(17002, ''),
+(17003, ''),
+(17004, ''),
+(17005, ''),
+(17006, ''),
+(17007, ''),
+(17008, ''),
+(100071, ''),
+(100073, ''),
+(100074, ''),
+(254038, ''),
+(254041, ''),
+(254051, ''),
+(254095, ''),
 (254098, ''),
 (254099, ''),
 (254106, ''),
-(254107, 'Report your findings back to Agent Serina Vale at Goldshire in Elwynn Forest.'),
-(254108, 'Report back to Agent Serina Vale at Goldshire in Elwynn Forest.');
+(254107, ''),
+(254108, '');
 
 -- ---------------------------------------------------------------------------
 -- 4. Who offers and who takes them back
@@ -235,11 +241,11 @@ VALUES
 DELETE FROM `creature_loot_template` WHERE (`Entry`, `Item`) IN ((43, 157001), (471, 157001), (474, 157002), (97, 157007), (478, 157008), (996119, 5055565));
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
 VALUES
-(43, 157001, 0, 50, 1, 1, 0, 1, 1, 'Mine Spider - Gem Encrusted Spider Silk (creaturecache questItem1)'),
-(471, 157001, 0, 100, 1, 1, 0, 1, 1, 'Mother Fang - Gem Encrusted Spider Silk (creaturecache questItem1)'),
-(474, 157002, 0, 66, 1, 1, 0, 1, 1, 'Defias Rogue Wizard - Depleted Mana Gem (creaturecache questItem3)'),
-(97, 157007, 0, 40, 1, 1, 0, 1, 1, 'Riverpaw Runt - Gnoll Sword (creaturecache questItem2)'),
-(478, 157008, 0, 40, 1, 1, 0, 1, 1, 'Riverpaw Outrunner - Gnoll Axe (creaturecache questItem2)'),
+(43, 157001, 0, 100, 1, 1, 0, 1, 1, 'Mine Spider - Gem Encrusted Spider Silk (creaturecache, Exiles creature_loot 100%)'),
+(471, 157001, 0, 100, 1, 1, 0, 1, 1, 'Mother Fang - Gem Encrusted Spider Silk (creaturecache, Exiles creature_loot 100%)'),
+(474, 157002, 0, 100, 1, 1, 0, 1, 1, 'Defias Rogue Wizard - Depleted Mana Gem (creaturecache, Exiles creature_loot 100%)'),
+(97, 157007, 0, 100, 1, 1, 0, 1, 1, 'Riverpaw Runt - Gnoll Sword (creaturecache, Exiles creature_loot 100%)'),
+(478, 157008, 0, 100, 1, 1, 0, 1, 1, 'Riverpaw Outrunner - Gnoll Axe (creaturecache, Exiles creature_loot 100%)'),
 (996119, 5055565, 0, 100, 0, 1, 0, 1, 1, 'Defias Sentry - Tattered Orders (inferred carrier)');
 
 DELETE FROM `creature_questitem` WHERE (`CreatureEntry`, `Idx`) IN ((43, 0), (471, 0), (474, 2), (97, 1), (478, 1));
@@ -272,55 +278,159 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 6. Spawns
 -- ---------------------------------------------------------------------------
-DELETE FROM `creature` WHERE `guid` IN (9002200, 9002201, 9002202, 9002203, 9002204, 9002205, 9002206, 9002207, 9002208, 9002209, 9002210, 9002211, 9002212, 9002213, 9002214, 9002215, 9002216, 9002217, 9002218);
+DELETE FROM `creature` WHERE `guid` IN (9002200, 9002201, 9002202, 9002203, 9002204, 9002205, 9002206, 9002207, 9002208, 9002209, 9002210, 9002211, 9002212, 9002213, 9002214, 9002215, 9002216, 9002217, 9002218, 9002219, 9002220, 9002221, 9002222, 9002223, 9002224, 9002225, 9002226, 9002227, 9002228, 9002229, 9002230, 9002231, 9002232, 9002233, 9002234, 9002235, 9002236, 9002237, 9002240, 9002241, 9002242, 9002243, 9002244, 9002245, 9002246, 9002247, 9002248, 9002249, 9002250, 9002251, 9002252, 9002253, 9002254, 9002255, 9002260, 9002261, 9002262, 9002263, 9002264, 9002265, 9002266, 9002267, 9002268, 9002269, 9002270, 9002271, 9002272, 9002277, 9002279, 9002282, 9002290, 9002291, 9002292, 9002300, 9002301, 9002302, 9002303, 9002304, 9002305, 9002306, 9002307, 9002308, 9002309, 9002310, 9002320, 9002321, 9002322, 9002323, 9002324, 9002325, 9002326, 9002327, 9002328, 9002330, 9002331, 9002332, 9002333, 9002334, 9002335, 9002336, 9002337, 9002338, 9002339, 9002340, 9002341, 9002342, 9002343, 9002344, 9002345, 9002346, 9002347) OR `guid` BETWEEN 9002200 AND 9002599;
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
-(9002200, 157000, 0, 0, 0, 1, 1, 0, -9761.05, -1373.04, 59.11, 0.97, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Ridgepoint Tower, between the two guards on the north-west approach'),
-(9002201, 900017, 0, 0, 0, 1, 1, 0, -9561, -709.5, 64.7386, 4.84, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Tower of Azora ground floor, beside the Servants of Azora'),
-(9002202, 996114, 0, 0, 0, 1, 1, 0, -9458.5, -18, 56.882, 3.1, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Goldshire, outside between the moved Lion''s Pride Inn and the orchard fence'),
-(9002203, 996115, 0, 0, 0, 1, 1, 0, -9694, -405, 51.1, 3.53, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, rendezvous on the north rim of the Bandit''s Bastion'),
-(9002204, 764542, 0, 0, 0, 1, 1, 0, -5206, -3518, 303.9, 5.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Loch Modan west shore, beside Sinter Wive''s Rope'),
-(9002205, 996119, 0, 0, 0, 1, 1, 1, -9790, -484, 30.6, 1.794, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion farm building, carries the Tattered Orders'),
-(9002206, 116, 0, 0, 0, 1, 1, 1, -9760, -430, 33.04, 3.882, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002207, 116, 0, 0, 0, 1, 1, 1, -9790, -445, 30.07, 4.426, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002208, 116, 0, 0, 0, 1, 1, 1, -9803, -445, 29.92, 5.152, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002209, 116, 0, 0, 0, 1, 1, 1, -9830, -490, 29.71, 0.675, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002210, 116, 0, 0, 0, 1, 1, 1, -9812, -492, 30.91, 1.055, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002211, 116, 0, 0, 0, 1, 1, 1, -9795, -515, 31.2, 1.571, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002212, 116, 0, 0, 0, 1, 1, 1, -9840, -455, 30.86, 6.129, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002213, 116, 0, 0, 0, 1, 1, 1, -9745.8, -426.5, 44.49, 0.346, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion gate lookout'),
-(9002214, 474, 0, 0, 0, 1, 1, 1, -9786, -451, 30.53, 4.027, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002215, 474, 0, 0, 0, 1, 1, 1, -9796, -466, 29.05, 1.326, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002216, 474, 0, 0, 0, 1, 1, 1, -9790, -510, 32.16, 1.675, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002217, 474, 0, 0, 0, 1, 1, 1, -9838, -480, 30.26, 0.396, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp'),
-(9002218, 474, 0, 0, 0, 1, 1, 1, -9765, -437, 32.33, 3.836, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: inferred placement, Bandit''s Bastion camp');
+(9002200, 157000, 0, 0, 0, 1, 1, 0, -9769.75, -1379.84, 62.78, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Ridgepoint Tower first floor at the 17006 SuperTrack turn-in point, facing east toward the Defias camp'),
+(9002201, 900017, 0, 0, 0, 1, 1, 0, -9562.33, -722.93, 64.74, 0.82, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Tower of Azora ground floor at the 17002/17003 SuperTrack turn-in point, the Servant of Azora post CoA gave her'),
+(9002202, 996114, 0, 0, 0, 1, 1, 0, -9451.46, 79.9, 57.49, 4.37, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Goldshire lane outside the smithy at the 254107 SuperTrack turn-in point, facing down the lane to the inn'),
+(9002203, 996115, 0, 0, 0, 1, 1, 0, -9783.61, -404.56, 60.29, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: 254038 SuperTrack turn-in point: the rendezvous on the west cliff above the Bastion''s mine, overlooking the camp'),
+(9002204, 764542, 0, 0, 0, 1, 1, 0, -5200.66, -3521.83, 303.97, 0.17, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Loch Modan shore at the 254051 SuperTrack turn-in point, facing the trogg island'),
+(9002205, 996119, 0, 0, 0, 1, 1, 1, -9790, -484, 30.6, 4.99, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, inside the farmhouse at the desk by the book stack, deep in the camp; carries the Tattered Orders'),
+(9002206, 116, 0, 0, 0, 1, 1, 1, -9746.5, -427.5, 44.6, 0, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, gate walkway above the north ravine, watching the approach over the barricade'),
+(9002207, 116, 0, 0, 0, 1, 1, 1, -9756, -430, 33.27, 0, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, foot of the gate stairs, guarding the ravine path'),
+(9002208, 116, 0, 0, 0, 1, 1, 1, -9776, -432, 33.4, 1.19, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, training yard, sparring with the west dummy'),
+(9002209, 116, 0, 0, 0, 1, 1, 1, -9768, -427, 33.8, 1.05, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, training yard, sparring with the north dummy'),
+(9002210, 116, 0, 0, 0, 1, 1, 1, -9772.5, -446, 31.61, 5.5, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, loot deck, working at the lockpicking table'),
+(9002211, 116, 0, 0, 0, 1, 1, 1, -9761, -441, 32.4, 4.02, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, north end of the far loot table, sorting stolen goods'),
+(9002212, 116, 0, 0, 0, 1, 1, 1, -9786, -441.5, 30.06, 2.58, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, beside the ore carts at the mine mouth'),
+(9002213, 116, 0, 0, 0, 1, 1, 1, -9801, -429.5, 31.84, 1.57, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, inside the mine entrance, facing the tunnel'),
+(9002214, 116, 0, 0, 0, 1, 1, 1, -9801.5, -447.8, 29.61, 5.3, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, behind the west bench at the bonfire, facing the fire'),
+(9002215, 116, 0, 0, 0, 1, 1, 1, -9804.5, -455, 29.3, 0.08, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, behind the south bench at the bonfire, facing the fire'),
+(9002216, 116, 0, 0, 0, 1, 1, 1, -9788.5, -463.5, 30.18, 0.24, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, under the storehouse crane, stacking crates'),
+(9002217, 116, 0, 0, 0, 1, 1, 1, -9811.5, -450.5, 29.3, 3.7, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, bunk shed, resting between the bunks'),
+(9002218, 116, 0, 0, 0, 1, 1, 1, -9800, -472, 28.8, 5.37, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, farmyard at the farmhouse''s west wall, by the planter'),
+(9002219, 116, 0, 0, 0, 1, 1, 1, -9817, -459.5, 36.8, 3.14, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, east end of the south boardwalk, watching the south approach over the barricades'),
+(9002220, 116, 0, 0, 0, 1, 1, 1, -9822, -428, 38.34, 3.14, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, west end of the south boardwalk, watching the south approach'),
+(9002221, 116, 0, 0, 0, 1, 1, 1, -9838, -466, 30.3, 1.57, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, outside the south wall, patrolling the approach under the big oak'),
+(9002222, 116, 0, 0, 0, 1, 1, 1, -9784, -497, 32.84, 1.57, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, east campsite between the tent and the supply wagon'),
+(9002223, 116, 0, 0, 0, 1, 1, 1, -9760, -472, 57.74, 3.8, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, lookout on the hill above the camp, watching the loot deck'),
+(9002224, 474, 0, 0, 0, 1, 1, 1, -9744.5, -433, 44.6, 0.3, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, gate walkway, beside the lookout behind the barricade'),
+(9002225, 474, 0, 0, 0, 1, 1, 1, -9768, -435, 32.5, 5.5, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, path between the training yard and the loot deck'),
+(9002226, 474, 0, 0, 0, 1, 1, 1, -9779, -449.5, 31.16, 4.71, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, west side of the long loot table, reading the mission board'),
+(9002227, 474, 0, 0, 0, 1, 1, 1, -9799, -435, 30.82, 4.79, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, mine mouth beside the rake cart, looking over the camp'),
+(9002228, 474, 0, 0, 0, 1, 1, 1, -9792.3, -454.5, 29.6, 3.14, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, north side of the bonfire, facing the fire'),
+(9002229, 474, 0, 0, 0, 1, 1, 1, -9805, -459.5, 29.14, 3.14, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, shed, mixing vials at the poison table'),
+(9002230, 474, 0, 0, 0, 1, 1, 1, -9807, -464.5, 28.9, 1.2, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, shed, at the lockbox table'),
+(9002231, 474, 0, 0, 0, 1, 1, 1, -9825, -439, 36.3, 3.14, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, middle of the south boardwalk behind the barricades'),
+(9002232, 474, 0, 0, 0, 1, 1, 1, -9817, -436, 29.6, 0.5, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, below the boardwalk by the hay piles'),
+(9002233, 474, 0, 0, 0, 1, 1, 1, -9838, -438, 32.42, 1.57, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, outside the south wall on the west approach'),
+(9002234, 474, 0, 0, 0, 1, 1, 1, -9791, -500, 32.1, 0.4, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, east campsite, south-west of the supply wagon'),
+(9002235, 474, 0, 0, 0, 1, 1, 1, -9793, -478.5, 30.6, 5, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, inside the farmhouse, guarding the Sentry''s quarters'),
+(9002236, 116, 0, 0, 0, 1, 1, 1, -9751, -434, 33.5, 0.2, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, ravine path at the foot of the east stairs, below the gate'),
+(9002237, 474, 0, 0, 0, 1, 1, 1, -9814, -444, 29.7, 3.9, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, south yard between the bunk shed and the boardwalk stairs'),
+(9002240, 116, 0, 0, 0, 1, 1, 1, -9761.5, -1571.5, 41.78, 1.57, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, east of the crates, guarding Dead-Tooth''s strongbox'),
+(9002241, 116, 0, 0, 0, 1, 1, 1, -9781, -1557, 41.54, 1.2, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, west edge of the hollow, facing the road from the tower'),
+(9002242, 116, 0, 0, 0, 1, 1, 1, -9779.5, -1581, 41.54, 5.5, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, resting against the east end of the fallen log'),
+(9002243, 116, 0, 0, 0, 1, 1, 1, -9759, -1549, 46.86, 0.8, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, north-west rim of the hollow'),
+(9002244, 116, 0, 0, 0, 1, 1, 1, -9740, -1560, 50.9, 0, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, lookout on the north ridge'),
+(9002245, 116, 0, 0, 0, 1, 1, 1, -9738, -1590, 49.17, 0.3, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, north-east ridge'),
+(9002246, 116, 0, 0, 0, 1, 1, 1, -9760, -1603, 47.58, 4.7, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, east slope above the camp'),
+(9002247, 116, 0, 0, 0, 1, 1, 1, -9776, -1608, 43.98, 4.7, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, east, under the big oak'),
+(9002248, 116, 0, 0, 0, 1, 1, 1, -9793.5, -1598.5, 37.65, 3.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, south-east by the tree stumps'),
+(9002249, 116, 0, 0, 0, 1, 1, 1, -9808, -1580, 34.92, 3.14, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, south slope below the fallen log'),
+(9002250, 116, 0, 0, 0, 1, 1, 1, -9805, -1552, 38.99, 2.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, south-west slope'),
+(9002251, 116, 0, 0, 0, 1, 1, 1, -9795, -1535, 41.3, 1.57, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, west approach from the tower road'),
+(9002252, 116, 0, 0, 0, 1, 1, 1, -9775, -1530, 46.47, 1.57, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, west, watching the road to Ridgepoint Tower'),
+(9002253, 116, 0, 0, 0, 1, 1, 1, -9755, -1530, 48.9, 1.2, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, north-west slope'),
+(9002254, 116, 0, 0, 0, 1, 1, 1, -9814, -1572, 33.5, 3.14, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, south, lower ground below the camp'),
+(9002255, 116, 0, 0, 0, 1, 1, 1, -9748, -1570, 48.24, 0, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Defias camp east of Ridgepoint Tower, north slope between the ridge guards'),
+(9002260, 1922, 0, 0, 0, 1, 1, 0, -9365, -715, 66.35, 3.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, between the two northern oaks'),
+(9002261, 1922, 0, 0, 0, 1, 1, 0, -9352, -740, 69.08, 4, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, north-east edge'),
+(9002262, 1922, 0, 0, 0, 1, 1, 0, -9440, -695, 64.64, 2, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, open grass west of the southern oaks'),
+(9002263, 1922, 0, 0, 0, 1, 1, 0, -9470, -705, 62.85, 1, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, south-west edge toward the tower'),
+(9002264, 1922, 0, 0, 0, 1, 1, 0, -9395, -760, 64.73, 5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, east clearing'),
+(9002265, 1922, 0, 0, 0, 1, 1, 0, -9470, -785, 61.02, 0.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, south-east clearing'),
+(9002266, 822, 0, 0, 0, 1, 1, 0, -9410, -675, 65.58, 2, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, west edge'),
+(9002267, 822, 0, 0, 0, 1, 1, 0, -9445, -735, 65.09, 4, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, under the southern oak'),
+(9002268, 822, 0, 0, 0, 1, 1, 0, -9380, -775, 63.66, 5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, beside the eastern oak'),
+(9002269, 822, 0, 0, 0, 1, 1, 0, -9425, -775, 65.01, 4.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, south-east grass'),
+(9002330, 1922, 0, 0, 0, 1, 1, 0, -9383, -800, 66.36, 0.8, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, north-east, past the eastern oak'),
+(9002331, 822, 0, 0, 0, 1, 1, 0, -9352, -712, 66.43, 3.9, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, north edge, beyond the northern oaks'),
+(9002332, 1922, 0, 0, 0, 1, 1, 0, -9383, -684, 67.72, 4.3, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, north-west, between the north-west oak and the path'),
+(9002333, 1922, 0, 0, 0, 1, 1, 0, -9442, -668, 64.94, 5.2, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, west edge of the grass'),
+(9002334, 822, 0, 0, 0, 1, 1, 0, -9482, -732, 60.97, 0.2, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, south-west, beside the south-west oak'),
+(9002335, 1922, 0, 0, 0, 1, 1, 0, -9484, -757, 61.78, 0.6, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, south, toward the tower grounds'),
+(9002336, 822, 0, 0, 0, 1, 1, 0, -9447, -798, 62.13, 1.1, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, south-east, under the south-east oak'),
+(9002337, 1922, 0, 0, 0, 1, 1, 0, -9405, -797, 66.58, 1.9, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, east, between the two eastern clearings'),
+(9002338, 1922, 0, 0, 0, 1, 1, 0, -9420, -757, 65.14, 3, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, middle of the wood, south of the central oak'),
+(9002339, 822, 0, 0, 0, 1, 1, 0, -9380, -742, 68.64, 2.4, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, north-east clearing below the eastern oak'),
+(9002340, 1922, 0, 0, 0, 1, 1, 0, -9412, -698, 67.36, 4.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, clearing between the western oaks'),
+(9002341, 822, 0, 0, 0, 1, 1, 0, -9462, -720, 63.31, 5.8, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, north side of the south-west oak'),
+(9002342, 1922, 0, 0, 0, 1, 1, 0, -9362, -757, 67.23, 2.9, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, north-east, below the eastern oak'),
+(9002343, 1922, 0, 0, 0, 1, 1, 0, -9462, -800, 60.17, 1.3, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: wood north of the Tower of Azora, south-east clearing, with the pair by the oak'),
+(9002270, 94, 0, 0, 0, 1, 1, 1, -9479.78, 470.42, 51.67, 1.57, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Mirror Lake Orchard, Exiles spawn 80401, among the trees'),
+(9002271, 94, 0, 0, 0, 1, 1, 1, -9462, 486, 53.94, 3.14, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Mirror Lake Orchard, Exiles spawn 80396 moved 6 yd north-west, clear of relocated Defias Bandit 80385 and the oak roots'),
+(9002272, 94, 0, 0, 0, 1, 1, 1, -9495.64, 457.06, 52.12, 0, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Mirror Lake Orchard, Exiles spawn 80400, south rows'),
+(9002277, 94, 0, 0, 0, 1, 1, 1, -9517.96, 494.38, 52.09, 0, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Mirror Lake Orchard, Exiles spawn 80405, south-west of the orchard'),
+(9002279, 94, 0, 0, 0, 1, 1, 1, -9453.23, 512.81, 56.13, 3.9, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Mirror Lake Orchard, Exiles spawn 80397, north-west of the orchard'),
+(9002282, 94, 0, 0, 0, 1, 1, 1, -9459.9, 426.18, 52.62, 2.4, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Mirror Lake Orchard, Exiles spawn 80402, north-east of the orchard'),
+(9002290, 43, 0, 0, 0, 1, 1, 0, -9030, -591, 56.38, 1.57, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Jasperlode Mine spider chamber, upper east lobe between the webbed spiders'),
+(9002291, 43, 0, 0, 0, 1, 1, 0, -9045, -610, 52.5, 3.9, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Jasperlode Mine spider chamber, lower east lobe on the way to Mother Fang''s den'),
+(9002292, 43, 0, 0, 0, 1, 1, 0, -9030, -558, 55.16, 4.7, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Jasperlode Mine spider chamber, west lobe'),
+(9002300, 97, 0, 0, 0, 1, 1, 1, -8993, -826, 69.67, 5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, between the west tent and the stores'),
+(9002301, 97, 0, 0, 0, 1, 1, 1, -8970, -845, 68.77, 1.6, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, behind the east tent'),
+(9002302, 97, 0, 0, 0, 1, 1, 1, -9000, -860, 70.23, 3.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, south of the tents toward the shore'),
+(9002303, 97, 0, 0, 0, 1, 1, 1, -8965, -825, 68.83, 0.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, north-east edge under the oak'),
+(9002304, 97, 0, 0, 0, 1, 1, 1, -9030, -835, 69.14, 3, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, south-west, toward the north-west end of the lake'),
+(9002305, 478, 0, 0, 0, 1, 1, 1, -8970, -805, 69.68, 0.3, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, north, on the trail to the upper camp'),
+(9002306, 478, 0, 0, 0, 1, 1, 1, -9005, -800, 69.62, 1.6, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, west of the camp'),
+(9002307, 478, 0, 0, 0, 1, 1, 1, -8958, -860, 70.03, 4.5, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, east, toward the lake'),
+(9002308, 478, 0, 0, 0, 1, 1, 1, -9010, -880, 69.17, 3.8, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, south, along the north shore'),
+(9002309, 478, 0, 0, 0, 1, 1, 1, -8935, -830, 68.64, 0.8, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, north-east, between the oaks'),
+(9002310, 478, 0, 0, 0, 1, 1, 1, -9043, -817, 69.5, 2.8, 180, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Riverpaw camp on the north shore of Stone Cairn Lake, south-west, above the west end of the lake'),
+(9002320, 474, 0, 0, 0, 1, 1, 1, -9170, -1040, 71.8, 6.2, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, west of the stones, on the path from the 17002 point'),
+(9002321, 474, 0, 0, 0, 1, 1, 1, -9160, -1075, 70.85, 0.8, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, south of the stone ring'),
+(9002322, 474, 0, 0, 0, 1, 1, 1, -9120, -1080, 72.22, 2.2, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, north-east of the stone ring'),
+(9002323, 474, 0, 0, 0, 1, 1, 1, -9100, -1030, 72.75, 3.6, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, north-west of the stone ring'),
+(9002324, 474, 0, 0, 0, 1, 1, 1, -9195, -1025, 73.2, 5.9, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, south-west, facing the stones'),
+(9002325, 474, 0, 0, 0, 1, 1, 1, -9172, -1092, 72.11, 0.6, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, south, under the big oak'),
+(9002326, 474, 0, 0, 0, 1, 1, 1, -9206, -1036, 70.66, 0.2, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, south-west edge'),
+(9002327, 474, 0, 0, 0, 1, 1, 1, -9110, -990, 72.81, 4, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, north-west, between the stones and the lone wizards'),
+(9002328, 474, 0, 0, 0, 1, 1, 1, -9165, -1015, 69.93, 5.2, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, west, between the stones and the northern group'),
+(9002344, 474, 0, 0, 0, 1, 1, 1, -9200, -1065, 70.85, 0.23, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, south, clearing at the north-west edge of the south oak canopy, facing the stones'),
+(9002345, 474, 0, 0, 0, 1, 1, 1, -9238, -1078, 68.03, 0.27, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, far south, lakeside meadow above the shore, murloc huts 80 yd east-south-east, facing the stones'),
+(9002346, 474, 0, 0, 0, 1, 1, 1, -9064, -1005, 71.18, 3.71, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, north-west, open rise at the east edge of the north oak grove, facing the stones'),
+(9002347, 474, 0, 0, 0, 1, 1, 1, -9095, -1075, 73.8, 2.58, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, north-east, at the foot of the Earthroot knoll, facing the stones');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6911200, 6911201, 6911202, 6911203, 6911204, 6911205, 6911206, 6911207, 6911208, 6911209, 6911210, 6911211, 6911212, 6911213, 6911214, 6911215, 6911216, 6911217, 6911218, 6911219, 6911220, 6911221, 6911222);
+DELETE FROM `gameobject` WHERE `guid` IN (6911200, 6911201, 6911202, 6911203, 6911204, 6911205, 6911206, 6911207, 6911208, 6911209, 6911210, 6911211, 6911212, 6911213, 6911214, 6911215, 6911216, 6911217, 6911218, 6911219, 6911220, 6911221, 6911230, 6911231, 6911232, 6911233, 6911234, 6911235, 6911236, 6911237, 6911238, 6911239, 6911240, 6911241, 6911250) OR `guid` BETWEEN 6911200 AND 6911599;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6911200, 96000, 0, 0, 0, 1, 1, -9949.9, -132.053, 25.369, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: observed atlas position, Jerod''s Landing'),
-(6911201, 96002, 0, 0, 0, 1, 1, -9767, -1560.54, 41.485, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: observed atlas position, Defias camp east of Ridgepoint Tower'),
-(6911202, 96003, 0, 0, 0, 1, 1, -9482.9, 441.862, 53.107, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: observed atlas position, Mirror Lake Orchard'),
-(6911203, 96003, 0, 0, 0, 1, 1, -9491, 567, 52.79, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911204, 96003, 0, 0, 0, 1, 1, -9440, 507, 55.49, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911205, 96003, 0, 0, 0, 1, 1, -9527, 501, 51.02, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911206, 96003, 0, 0, 0, 1, 1, -9527, 402, 51.88, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911207, 96003, 0, 0, 0, 1, 1, -9482, 489, 51.74, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911208, 96003, 0, 0, 0, 1, 1, -9527, 453, 53.2, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911209, 96003, 0, 0, 0, 1, 1, -9476, 402, 51.85, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911210, 96003, 0, 0, 0, 1, 1, -9452, 468, 52.61, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911211, 96003, 0, 0, 0, 1, 1, -9500, 525, 54.5, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911212, 96003, 0, 0, 0, 1, 1, -9464, 531, 54.83, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911213, 96003, 0, 0, 0, 1, 1, -9509, 426, 52.99, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: inferred orchard node, Mirror Lake Orchard'),
-(6911214, 5055563, 0, 0, 0, 1, 1, -9757.68, -442.04, 32.669, 3.633, 0, 0, 0.969966, -0.243239, 120, 100, 1, '', 'CoA Elwynn: observed atlas position, Bandit''s Bastion'),
-(6911215, 5055563, 0, 0, 0, 1, 1, -9798, -472, 28.9, 1.279, 0, 0, 0.596794, 0.802394, 120, 100, 1, '', 'CoA Elwynn: inferred crate beside the camp''s stores, Bandit''s Bastion'),
-(6911216, 5055563, 0, 0, 0, 1, 1, -9817.5, -441, 29.71, 5.532, 0, 0, 0.366824, -0.93029, 120, 100, 1, '', 'CoA Elwynn: inferred crate beside the camp''s stores, Bandit''s Bastion'),
-(6911217, 5055563, 0, 0, 0, 1, 1, -9800.5, -452, 29.52, 5.215, 0, 0, 0.50906, -0.860731, 120, 100, 1, '', 'CoA Elwynn: inferred crate beside the camp''s stores, Bandit''s Bastion'),
-(6911218, 5055563, 0, 0, 0, 1, 1, -9779, -508, 32.26, 1.906, 0, 0, 0.815157, 0.57924, 120, 100, 1, '', 'CoA Elwynn: inferred crate beside the camp''s stores, Bandit''s Bastion'),
-(6911219, 5055563, 0, 0, 0, 1, 1, -9788, -480, 30.6, 1.942, 0, 0, 0.825451, 0.564474, 120, 100, 1, '', 'CoA Elwynn: inferred crate beside the camp''s stores, Bandit''s Bastion'),
-(6911220, 5055563, 0, 0, 0, 1, 1, -9791.5, -434.5, 29.59, 4.586, 0, 0, 0.750351, -0.66104, 120, 100, 1, '', 'CoA Elwynn: inferred crate beside the camp''s stores, Bandit''s Bastion'),
-(6911221, 5055563, 0, 0, 0, 1, 1, -9808, -436, 29.85, 5.176, 0, 0, 0.525747, -0.850641, 120, 100, 1, '', 'CoA Elwynn: inferred crate beside the camp''s stores, Bandit''s Bastion'),
-(6911222, 25428, 0, 0, 0, 1, 1, -4983.2, -3483.83, 305.486, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: observed atlas position, trogg island in north Loch Modan');
+(6911200, 96000, 0, 0, 0, 1, 1, -9950.16, -132.37, 25.37, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: 17000 SuperTrack objective point, inside the farmhouse at Jerod''s Landing (atlas sighting 0.4 yd away)'),
+(6911201, 96002, 0, 0, 0, 1, 1, -9766.9, -1560.26, 41.48, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: Defias camp east of Ridgepoint Tower, 17006 SuperTrack objective point beside the camp crates (atlas sighting 0.3 yd away)'),
+(6911202, 96003, 0, 0, 0, 1, 1, -9491.41, 475.9, 50.96, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, 17008 SuperTrack objective point, between three trees'),
+(6911203, 96003, 0, 0, 0, 1, 1, -9482.9, 441.86, 53.11, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, atlas sighting, east rows'),
+(6911204, 96003, 0, 0, 0, 1, 1, -9488, 493, 51.97, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the west fence'),
+(6911205, 96003, 0, 0, 0, 1, 1, -9478, 495, 52.63, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-west corner'),
+(6911206, 96003, 0, 0, 0, 1, 1, -9474.5, 483.5, 52.12, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the north fence'),
+(6911207, 96003, 0, 0, 0, 1, 1, -9481.5, 487, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the west rows'),
+(6911208, 96003, 0, 0, 0, 1, 1, -9478, 474.5, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows'),
+(6911209, 96003, 0, 0, 0, 1, 1, -9479, 467.5, 51.53, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, north side'),
+(6911210, 96003, 0, 0, 0, 1, 1, -9486, 467, 51.4, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, south side'),
+(6911211, 96003, 0, 0, 0, 1, 1, -9492.5, 465, 51.2, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the south fence'),
+(6911212, 96003, 0, 0, 0, 1, 1, -9477.5, 458, 51.56, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows, north side'),
+(6911213, 96003, 0, 0, 0, 1, 1, -9486.5, 458, 51.55, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows'),
+(6911214, 96003, 0, 0, 0, 1, 1, -9490, 454.5, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-east rows'),
+(6911215, 96003, 0, 0, 0, 1, 1, -9476.5, 452.5, 51.95, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-east rows'),
+(6911216, 96003, 0, 0, 0, 1, 1, -9492, 447.5, 52.73, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-east corner'),
+(6911217, 96003, 0, 0, 0, 1, 1, -9473, 448, 52.47, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-east corner'),
+(6911218, 96003, 0, 0, 0, 1, 1, -9481.5, 449, 52.28, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows, middle'),
+(6911219, 96003, 0, 0, 0, 1, 1, -9494, 482.5, 51.24, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-west rows'),
+(6911220, 96003, 0, 0, 0, 1, 1, -9484, 473, 51.4, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, west side'),
+(6911221, 96003, 0, 0, 0, 1, 1, -9485.5, 482.5, 51.6, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the west rows, middle'),
+(6911230, 5055563, 0, 0, 0, 1, 1, -9757.68, -442.04, 32.79, 3.63, 0, 0, 0.97033, -0.241784, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, atlas sighting, ravine by the crate stacks'),
+(6911231, 5055563, 0, 0, 0, 1, 1, -9784.5, -452, 30.77, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, south end of the long loot table'),
+(6911232, 5055563, 0, 0, 0, 1, 1, -9789, -467, 29.37, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, under the storehouse crane beside the crate stacks'),
+(6911233, 5055563, 0, 0, 0, 1, 1, -9793, -438, 29.57, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, beside the ore carts at the mine mouth'),
+(6911234, 5055563, 0, 0, 0, 1, 1, -9803.5, -429, 31.49, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, inside the mine entrance'),
+(6911235, 5055563, 0, 0, 0, 1, 1, -9804, -465, 28.9, 2, 0, 0, 0.841471, 0.540302, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, shed, beside the lockbox table'),
+(6911236, 5055563, 0, 0, 0, 1, 1, -9818, -457, 30.56, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, bunk shed, at the foot of the bunks'),
+(6911237, 5055563, 0, 0, 0, 1, 1, -9795, -470.5, 28.9, 0.5, 0, 0, 0.247404, 0.968912, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, farmyard by the farmhouse''s west wall'),
+(6911238, 5055563, 0, 0, 0, 1, 1, -9786, -481.5, 30.6, 4.7, 0, 0, 0.711473, -0.702713, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, inside the farmhouse by the coal piles'),
+(6911239, 5055563, 0, 0, 0, 1, 1, -9781.5, -497, 33, 5, 0, 0, 0.598472, -0.801144, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, east campsite, at the tent'),
+(6911240, 5055563, 0, 0, 0, 1, 1, -9762, -436, 32.54, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, ravine path below the gate stairs'),
+(6911241, 5055563, 0, 0, 0, 1, 1, -9823, -431, 38.4, 3.14, 0, 0, 1, 0.000796, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, west end of the south boardwalk'),
+(6911250, 25428, 0, 0, 0, 1, 1, -4980.27, -3483, 305.61, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: 254051 SuperTrack objective point on the trogg island, beside the troggs'' cauldron (atlas sighting 3 yd away)');
 
 -- ---------------------------------------------------------------------------
 -- 7. Scripts
@@ -360,6 +470,8 @@ VALUES
 (1291, 4, 0, 'What do you know about the Defias?', 0, 1, 1, 0, 0, 0, 0, '', 0);
 
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 15 AND `SourceGroup` = 1291 AND `SourceEntry` = 4;
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 17 AND `SourceEntry` = 966240;
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`)
 VALUES
-(15, 1291, 4, 0, 0, 9, 0, 254108, 0, 0, 0, 0, 0, '', 'Innkeeper Farley - mole question only while Final Dig is taken');
+(15, 1291, 4, 0, 0, 9, 0, 254108, 0, 0, 0, 0, 0, '', 'Innkeeper Farley - mole question only while Final Dig is taken'),
+(17, 0, 966240, 0, 0, 36, 1, 0, 0, 0, 1, 0, 0, '', 'Collect Slimy Murloc Spittle - only on a corpse, never a living murloc');
