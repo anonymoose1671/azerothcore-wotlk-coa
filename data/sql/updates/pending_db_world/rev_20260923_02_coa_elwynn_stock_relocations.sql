@@ -410,6 +410,9 @@ UPDATE `creature` SET `position_x` = -9780, `position_y` = -522, `position_z` = 
 -- Rockhide Boar (80796): boar against an oak trunk on a terrain step of the raised Bastion hill; 1.5 yd off the
 --   trunk on level ground
 UPDATE `creature` SET `position_x` = -9706.5, `position_y` = -450, `position_z` = 51.89, `orientation` = 2.7737 WHERE `guid` = 80796 AND `id` = 524;
+-- Mailbox (26784): Lion's Pride Inn mailbox; the inn's move would put it inside CoA's entrance barrels, so it
+--   stands 2 yd north-west of them at the moved front door, keeping its stock facing turned with the inn
+UPDATE `gameobject` SET `position_x` = -9474.5, `position_y` = 14, `position_z` = 56.574, `orientation` = 1.506, `rotation2` = 0.683831, `rotation3` = 0.729641 WHERE `guid` = 26784 AND `id` = 142075;
 -- Rabbit (79644): Goldshire: CoA lowered the ground 2.18 yd; same spot, CoA floor
 UPDATE `creature` SET `position_x` = -9455.02, `position_y` = -29.2894, `position_z` = 57.33, `orientation` = 3.34436 WHERE `guid` = 79644 AND `id` = 721;
 -- Diseased Young Wolf (79648): Goldshire: CoA lowered the ground 0.88 yd; same spot, CoA floor
@@ -436,8 +439,6 @@ UPDATE `gameobject` SET `position_x` = -9582.88, `position_y` = 16.6436, `positi
 UPDATE `gameobject` SET `position_x` = -9500.53, `position_y` = 81.368, `position_z` = 56.93, `orientation` = 0.017453 WHERE `guid` = 32313 AND `id` = 3658;
 -- Food Crate (32754): Goldshire, south of the melon plot: CoA lowered the ground 0.53 yd; same spot, CoA floor
 UPDATE `gameobject` SET `position_x` = -9500.53, `position_y` = 81.368, `position_z` = 56.93, `orientation` = 0.017453 WHERE `guid` = 32754 AND `id` = 3719;
--- Mailbox (26784): Goldshire market plaza: CoA raised the ground 0.33 yd; same spot, CoA floor
-UPDATE `gameobject` SET `position_x` = -9455.99, `position_y` = 45.8229, `position_z` = 56.77, `orientation` = 1.40499 WHERE `guid` = 26784 AND `id` = 142075;
 -- Sheep (80366): Goldshire: CoA raised the ground 1.51 yd; same spot, CoA floor
 UPDATE `creature` SET `position_x` = -9574.03, `position_y` = 2.28607, `position_z` = 63.22, `orientation` = 1.8693 WHERE `guid` = 80366 AND `id` = 1933;
 -- Rabbit (80699): Goldshire refugee camp: CoA lowered the ground 0.77 yd; same spot, CoA floor
