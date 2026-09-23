@@ -45,14 +45,14 @@
 -- seed that has never existed in game takes its inferred placement. Each Comment says which.
 --
 -- Re-applying this file rewrites only the spawns it lists, so an older copy puts back the placements it
--- recorded. Regenerate before the next worldserver start after any git operation that changes this file,
--- and after starting the worldserver on a branch without it, which deletes its row in `updates`.
+-- recorded. Regenerate before the next worldserver start after any git operation that changes this file.
+-- Regenerate and commit before starting the worldserver on a branch without this file: that start deletes
+-- its row in `updates`, and the next start here applies the file again.
 --
 -- Spawn guid blocks: creature 9001000-9001999, gameobject 6910000-6910999. The worldserver hands
 -- a new in-game spawn the next guid above the highest in use, which lands inside these blocks. Everything
 -- below 6901527 is spoken for, and the Worldforged module deletes 6900001-6901526 outright.
 -- Seed spawns deleted in game: creature none; gameobject none.
--- Spawns made in game and deleted in game: creature none; gameobject none.
 
 -- ---------------------------------------------------------------------------
 -- 1. Items
