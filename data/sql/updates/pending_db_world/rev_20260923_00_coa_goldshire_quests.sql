@@ -10,8 +10,11 @@
 --     (AreaTable 10217) on the hill above Mirror Lake, the town hall on the old faire ground with a refugee
 --     camp against it, a market plaza where the Lion's Pride Inn stood (the inn moved 39 yards south-east),
 --     and crop plots for melons, pumpkins and apples. Floors come from the server collision data.
---     Which NPC stands where inside those places is INFERRED; no source records their spawns.
---   kobold warrens  INFERRED: a ring around the village, since no source places them.
+--   who stands where  the client's QuestSuperTrack points place Dulcinea, Aldia Crayon (the manor's top
+--     floor), Clara the Mad (the refugee camp), Eldor Hammer, Aliscar Lend (the east entrance arch), his
+--     projection (on top of the arch) and the four vendors. The rest is INFERRED from the places.
+--   shards, warrens, crops  INFERRED: hand-placed at landmarks of the places the quest texts name; each
+--     spawn's Comment gives the landmark.
 --   vendors  the four market sellers and their ingredients are tied together by the cache (questItem).
 --   appearance  STAND-IN displays: every CoA display of this cast is missing from the client.
 --   credits  the Mirror Shard and Kobold Warren objects credit their hidden markers when used, then
@@ -191,12 +194,12 @@ VALUES
 DELETE FROM `quest_request_items` WHERE `ID` IN (1660055, 1660056, 1660057, 1660058, 1660059, 1660060);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
-(1660055, 'Speak with Dulcinea.'),
-(1660056, 'Speak with Aldia Crayon, butler to the Spadas, at the family manor.'),
-(1660057, 'Return to the butler.'),
-(1660058, 'Return to Clara the Mad.'),
-(1660059, 'Deliver the basket of food to Eldor Hammer.'),
-(1660060, 'Say goodbye to Aliscar Lend.');
+(1660055, ''),
+(1660056, ''),
+(1660057, ''),
+(1660058, ''),
+(1660059, ''),
+(1660060, '');
 
 DELETE FROM `creature_queststarter` WHERE `quest` IN (1660055, 1660056, 1660057, 1660058, 1660059, 1660060);
 INSERT INTO `creature_queststarter` (`id`, `quest`)
@@ -221,73 +224,116 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 5. Spawns
 -- ---------------------------------------------------------------------------
-DELETE FROM `creature` WHERE `guid` IN (9002000, 9002001, 9002002, 9002003, 9002004, 9002005, 9002006, 9002007, 9002008, 9002009, 9002010, 9002011, 9002012, 9002013, 9002014, 9002015, 9002016, 9002017, 9002018, 9002019);
+DELETE FROM `creature` WHERE `guid` IN (9002000, 9002001, 9002002, 9002003, 9002004, 9002005, 9002006, 9002007, 9002008, 9002009, 9002010, 9002011, 9002012, 9002013, 9002014, 9002015, 9002016, 9002017, 9002018, 9002019, 9002020);
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
-(9002000, 162800, 0, 0, 0, 1, 1, 0, -9468, 40, 56.53, 3.34, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, market plaza, at the signpost'),
-(9002001, 162802, 0, 0, 0, 1, 1, 0, -9284, 456.5, 82.27, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, Spada Family Manor, in the foyer inside the east door'),
-(9002002, 162803, 0, 0, 0, 1, 1, 0, -9273.4, 470, 90.91, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, Spada Family Manor, abed upstairs'),
-(9002003, 162805, 0, 0, 0, 1, 1, 0, -9447.5, -20.5, 57.98, 4.85, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, the apple orchard, facing the fruit trees'),
-(9002004, 162806, 0, 0, 0, 1, 1, 0, -9497, -34.5, 58.07, 5.58, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, the garden gazebo beside the open book'),
-(9002005, 162807, 0, 0, 0, 1, 1, 0, -9558.4, 62.8, 62.17, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, town hall, behind the podium on the dais'),
-(9002006, 162801, 0, 0, 0, 1, 1, 0, -9556.5, 13, 58.81, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, refugee camp, at the first pavilion'),
-(9002007, 162817, 0, 0, 0, 1, 1, 0, -9565, 12, 59.05, 2.29, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, refugee camp'),
-(9002008, 162818, 0, 0, 0, 1, 1, 0, -9577.5, 20, 59.43, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, refugee camp, by the beds'),
-(9002009, 162819, 0, 0, 0, 1, 1, 0, -9581, 12, 59.62, 0.73, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, refugee camp, by the tent'),
-(9002010, 162820, 0, 0, 0, 1, 1, 0, -9583.5, 31.5, 59.02, 5.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, refugee camp, by the campsite tent'),
-(9002011, 162809, 0, 0, 0, 1, 1, 0, -9490, 35.6, 56.65, 0.23, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, market, behind the pumpkin stall counter'),
-(9002012, 162811, 0, 0, 0, 1, 1, 0, -9462.5, 53, 56.71, 4.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, market, at the bottle-laden wagon'),
-(9002013, 162826, 0, 0, 0, 1, 1, 0, -9460.3, 30.6, 56.79, 1.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, market, in the food tent by the fishing box'),
-(9002014, 162814, 0, 0, 0, 1, 1, 0, -9387, 22.5, 58.97, 2.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, in front of the flower cart'),
-(9002015, 162808, 0, 0, 0, 1, 1, 0, -9552, 50, 60.81, 1.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, town hall floor, across from the mayor'),
-(9002016, 162821, 0, 0, 0, 1, 1, 0, -9500.5, 86.5, 57.008, 1.2, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, the melon plot west of the blacksmith'),
-(9002017, 162822, 0, 0, 0, 1, 1, 0, -9413, -41, 64.459, 3.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, the pumpkin garden'),
-(9002018, 162823, 0, 0, 0, 1, 1, 0, -9445, -49.5, 60.197, 1.6, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, the apple orchard'),
-(9002019, 162824, 0, 0, 0, 1, 1, 0, -9506, 112, 57.549, 0.4, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: inferred placement, by the barn west of the melon plot');
+(9002000, 162800, 0, 0, 0, 1, 1, 0, -9464.47, 39.14, 56.53, 3.34, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack turn-in of 1660055: the market plaza signpost, facing the pumpkin stall'),
+(9002001, 162802, 0, 0, 0, 1, 1, 0, -9275.25, 469.16, 89.87, 0.43, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack turn-in of 1660056 and 1660057: Spada Family Manor top floor, at Lady Agria''s bedside, facing her'),
+(9002002, 162803, 0, 0, 0, 1, 1, 0, -9273.4, 470, 90.91, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: Spada Family Manor top floor, lying on the large bed'),
+(9002003, 162805, 0, 0, 0, 1, 1, 0, -9579.2, 35.4, 58.74, 2.32, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack turn-in of 1660058, 0.7 yd out of the shack wall: at her shack in the refugee camp, facing the south meadow'),
+(9002004, 162806, 0, 0, 0, 1, 1, 0, -9397.41, -12.37, 62.13, 2.61, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack turn-in of 1660060: the book stall under the east entrance arch, facing the arch'),
+(9002005, 162807, 0, 0, 0, 1, 1, 0, -9558.4, 62.8, 62.17, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: town hall dais behind the podium, facing east down the hall'),
+(9002006, 162801, 0, 0, 0, 1, 1, 0, -9565.48, 9.73, 59.18, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack turn-in of 1660059: refugee camp between the two pavilions, facing the way in from the village'),
+(9002007, 162817, 0, 0, 0, 1, 1, 0, -9556.5, 13, 58.81, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: refugee camp, at the table of the pavilion nearest the hall'),
+(9002008, 162818, 0, 0, 0, 1, 1, 0, -9577.5, 20, 59.43, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: refugee camp, by the beds beside the middle tent'),
+(9002009, 162819, 0, 0, 0, 1, 1, 0, -9581, 12, 59.62, 0.73, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: refugee camp, by the south tent'),
+(9002010, 162820, 0, 0, 0, 1, 1, 0, -9583.5, 31.5, 59.02, 5.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: refugee camp, by the campsite tent'),
+(9002011, 162809, 0, 0, 0, 1, 1, 0, -9486.8, 36.2, 56.66, 0.23, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 3 of 1660056, 0.5 yd off the counter: the pumpkin juice counter under the tent, facing the plaza'),
+(9002012, 162811, 0, 0, 0, 1, 1, 0, -9465.3, 60.6, 56.11, 4.77, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 2 of 1660056, 1.0 yd out of the wagon: beside the bottle-laden gypsy wagon, facing the plaza'),
+(9002013, 162826, 0, 0, 0, 1, 1, 0, -9450.54, -81.71, 58.44, 1.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 4 of 1660056: the fish stall on the dock boardwalk, facing the shore'),
+(9002014, 162814, 0, 0, 0, 1, 1, 0, -9387.92, 23.72, 59.5, 2.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 1 of 1660056: in front of the flower cart, facing the plaza'),
+(9002015, 162808, 0, 0, 0, 1, 1, 0, -9558, 52, 60.81, 1.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: town hall floor below the dais, facing the mayor'),
+(9002016, 162821, 0, 0, 0, 1, 1, 0, -9500.5, 86.5, 57.01, 1.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: east corner of the melon plot by the fence, facing the melons'),
+(9002017, 162822, 0, 0, 0, 1, 1, 0, -9413, -41, 64.46, 5.14, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: pumpkin garden, inside the east fence, facing the patches'),
+(9002018, 162823, 0, 0, 0, 1, 1, 0, -9445, -36.5, 60.23, 3.93, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: apple orchard, by the fruit buckets, facing the south trees'),
+(9002019, 162824, 0, 0, 0, 1, 1, 0, -9506, 112, 57.55, 0.4, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: by the barn west of the melon plot'),
+(9002020, 162943, 0, 0, 0, 1, 1, 0, -9406.46, -7.11, 78.22, 5.76, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective of 1660060: on top of the east entrance arch, facing Aliscar''s book stall');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6911000, 6911001, 6911002, 6911003, 6911004, 6911005, 6911006, 6911007, 6911008, 6911020, 6911021, 6911022, 6911023, 6911024, 6911025, 6911040, 6911041, 6911042, 6911043, 6911044, 6911045, 6911060, 6911061, 6911062, 6911063, 6911064, 6911065, 6911080, 6911081, 6911082, 6911083, 6911084, 6911085, 6911086, 6911087, 6911088, 6911089, 6911090, 6911091, 6911092);
+DELETE FROM `gameobject` WHERE `guid` IN (6911000, 6911001, 6911002, 6911003, 6911004, 6911005, 6911006, 6911007, 6911008, 6911009, 6911010, 6911011, 6911012, 6911013, 6911014, 6911015, 6911016, 6911020, 6911021, 6911022, 6911023, 6911024, 6911025, 6911026, 6911027, 6911028, 6911029, 6911030, 6911031, 6911032, 6911033, 6911034, 6911035, 6911036, 6911037, 6911040, 6911041, 6911042, 6911043, 6911044, 6911045, 6911046, 6911047, 6911048, 6911049, 6911050, 6911060, 6911061, 6911062, 6911063, 6911064, 6911065, 6911066, 6911067, 6911068, 6911069, 6911070, 6911071, 6911080, 6911081, 6911082, 6911083, 6911084, 6911085, 6911086, 6911087, 6911088, 6911089, 6911090, 6911091, 6911092, 6911093, 6911094, 6911095, 6911096, 6911097, 6911098, 6911099, 6911100, 6911101, 6911102, 6911103);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6911000, 2300546, 0, 0, 0, 1, 1, -9274.5, 457.8, 82.27, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911001, 2300546, 0, 0, 0, 1, 1, -9279, 467.5, 89.87, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911002, 2300546, 0, 0, 0, 1, 1, -9297, 461, 86.05, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911003, 2300546, 0, 0, 0, 1, 1, -9285.8, 482.8, 77.74, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911004, 2300546, 0, 0, 0, 1, 1, -9306, 490, 77.65, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911005, 2300546, 0, 0, 0, 1, 1, -9283.5, 431.5, 78.7, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911006, 2300546, 0, 0, 0, 1, 1, -9287.5, 465, 82.27, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911007, 2300546, 0, 0, 0, 1, 1, -9283, 495, 77.77, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911008, 2300546, 0, 0, 0, 1, 1, -9262.5, 437.5, 79.99, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, Spada Family Manor and grounds'),
-(6911020, 2300579, 0, 0, 0, 1, 1, -9420, 130, 60.03, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, around Goldshire'),
-(6911021, 2300579, 0, 0, 0, 1, 1, -9365, 90, 62.43, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, around Goldshire'),
-(6911022, 2300579, 0, 0, 0, 1, 1, -9560, 110, 58.98, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, around Goldshire'),
-(6911023, 2300579, 0, 0, 0, 1, 1, -9610, 46, 60.86, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, around Goldshire'),
-(6911024, 2300579, 0, 0, 0, 1, 1, -9560, -40, 59.84, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, around Goldshire'),
-(6911025, 2300579, 0, 0, 0, 1, 1, -9420, -75, 61.64, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, around Goldshire'),
-(6911040, 2300548, 0, 0, 0, 1, 1, -9497.5, 91.5, 56.9, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the melon plot'),
-(6911041, 2300548, 0, 0, 0, 1, 1, -9503.5, 96, 56.99, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the melon plot'),
-(6911042, 2300548, 0, 0, 0, 1, 1, -9497, 99.5, 56.92, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the melon plot'),
-(6911043, 2300548, 0, 0, 0, 1, 1, -9503, 101.5, 56.97, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the melon plot'),
-(6911044, 2300548, 0, 0, 0, 1, 1, -9498.5, 105, 56.95, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the melon plot'),
-(6911045, 2300548, 0, 0, 0, 1, 1, -9504.5, 106, 56.99, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the melon plot'),
-(6911060, 2300547, 0, 0, 0, 1, 1, -9402.9, -39, 64.9, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the pumpkin garden'),
-(6911061, 2300547, 0, 0, 0, 1, 1, -9410.3, -45.7, 64.53, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the pumpkin garden'),
-(6911062, 2300547, 0, 0, 0, 1, 1, -9417.3, -52.5, 64.4, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the pumpkin garden'),
-(6911063, 2300547, 0, 0, 0, 1, 1, -9408.7, -53.7, 64.46, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the pumpkin garden'),
-(6911064, 2300547, 0, 0, 0, 1, 1, -9407.2, -61.9, 64.46, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the pumpkin garden'),
-(6911065, 2300547, 0, 0, 0, 1, 1, -9399, -52.2, 64.42, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the pumpkin garden'),
-(6911080, 2300549, 0, 0, 0, 1, 1, -9443, -35.3, 60.22, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911081, 2300549, 0, 0, 0, 1, 1, -9443, -37.9, 60.22, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911082, 2300549, 0, 0, 0, 1, 1, -9443.3, -43.6, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911083, 2300549, 0, 0, 0, 1, 1, -9443.2, -46, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911084, 2300549, 0, 0, 0, 1, 1, -9443.3, -27.1, 60.19, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911085, 2300549, 0, 0, 0, 1, 1, -9443.4, -29.6, 60.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911086, 2300549, 0, 0, 0, 1, 1, -9448.8, -46.9, 60.19, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911087, 2300549, 0, 0, 0, 1, 1, -9445.7, -39.8, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911088, 2300549, 0, 0, 0, 1, 1, -9448.8, -37.8, 60.17, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911089, 2300549, 0, 0, 0, 1, 1, -9446, -31, 60.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911090, 2300549, 0, 0, 0, 1, 1, -9448.9, -28.8, 60.14, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911091, 2300549, 0, 0, 0, 1, 1, -9445, -42.3, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard'),
-(6911092, 2300549, 0, 0, 0, 1, 1, -9446.2, -34.5, 60.21, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: inferred placement, the apple orchard');
+(6911000, 2300546, 0, 0, 0, 1, 1, -9274.5, 457.8, 82.27, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, ground floor dining hall, by the bookshelf'),
+(6911001, 2300546, 0, 0, 0, 1, 1, -9287.5, 465, 82.27, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, ground floor, between the weapon rack and the jars'),
+(6911002, 2300546, 0, 0, 0, 1, 1, -9279, 467.5, 89.87, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, top floor bedroom, by the wardrobe'),
+(6911003, 2300546, 0, 0, 0, 1, 1, -9271, 460, 89.87, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, top floor study, beside the desk and the loom'),
+(6911004, 2300546, 0, 0, 0, 1, 1, -9285.5, 463, 89.87, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, top floor west room, under the window planter'),
+(6911005, 2300546, 0, 0, 0, 1, 1, -9297, 461, 86.05, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, south room, before the pew and the funerary banners'),
+(6911006, 2300546, 0, 0, 0, 1, 1, -9285.8, 482.8, 77.74, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, grounds, beside the well'),
+(6911007, 2300546, 0, 0, 0, 1, 1, -9271.5, 480.5, 78.79, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, grounds, by the fruit bucket under the tree north of the house'),
+(6911008, 2300546, 0, 0, 0, 1, 1, -9263, 466, 79.73, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, grounds, by the stump and axe north-east of the house'),
+(6911009, 2300546, 0, 0, 0, 1, 1, -9278, 489, 78.73, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, gazebo floor, beside the round table'),
+(6911010, 2300546, 0, 0, 0, 1, 1, -9306, 490, 77.66, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, hedge garden, between the two lion statues'),
+(6911011, 2300546, 0, 0, 0, 1, 1, -9313, 502, 77.71, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, hedge garden, among the benches and busts'),
+(6911012, 2300546, 0, 0, 0, 1, 1, -9262.5, 437.5, 79.99, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, training yard, by the archery target'),
+(6911013, 2300546, 0, 0, 0, 1, 1, -9283.5, 431.5, 78.7, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, just inside the gate'),
+(6911014, 2300546, 0, 0, 0, 1, 1, -9265.5, 446, 79.48, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, beside the hearse by the front door'),
+(6911015, 2300546, 0, 0, 0, 1, 1, -9291, 447, 78.35, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, beside the stone fence of the front path'),
+(6911016, 2300546, 0, 0, 0, 1, 1, -9304.5, 447.5, 78.56, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, by the bust at the south hedge corner'),
+(6911020, 2300579, 0, 0, 0, 1, 1, -9410, 138, 58.8, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow north of the blacksmith, between the children''s play spot and Elder Stormbrow'),
+(6911021, 2300579, 0, 0, 0, 1, 1, -9404, 122, 59.93, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow at the edge of the big tree north of the blacksmith'),
+(6911022, 2300579, 0, 0, 0, 1, 1, -9428, 134, 59.03, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow above the pond''s east bank, behind the blacksmith'),
+(6911023, 2300579, 0, 0, 0, 1, 1, -9365, 90, 62.28, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, north meadow beyond the two-story house'),
+(6911024, 2300579, 0, 0, 0, 1, 1, -9352, 76, 60.54, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, north meadow, east of the big tree'),
+(6911025, 2300579, 0, 0, 0, 1, 1, -9380, 104, 60.11, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, north meadow, west of the split-rail fence'),
+(6911026, 2300579, 0, 0, 0, 1, 1, -9570, 126, 59.42, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow west of the town hall, under the oak at its south-west'),
+(6911027, 2300579, 0, 0, 0, 1, 1, -9558, 140, 58.88, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow west of the town hall, beyond the haystacks at its west edge'),
+(6911028, 2300579, 0, 0, 0, 1, 1, -9575, 100, 58.93, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow west of the town hall, by its south end'),
+(6911029, 2300579, 0, 0, 0, 1, 1, -9598, 58, 59.98, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow south-west of the refugee campsite tent'),
+(6911030, 2300579, 0, 0, 0, 1, 1, -9610, 46, 60.86, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow south of the refugee camp'),
+(6911031, 2300579, 0, 0, 0, 1, 1, -9588, 58, 59.4, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, behind the town hall''s south end, beside the camp where Clara hears them digging'),
+(6911032, 2300579, 0, 0, 0, 1, 1, -9560, -40, 59.84, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, south-east meadow beyond the tree nursery'),
+(6911033, 2300579, 0, 0, 0, 1, 1, -9556, -62, 58.12, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow below the nursery fence corner'),
+(6911034, 2300579, 0, 0, 0, 1, 1, -9548, -54, 56.83, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow outside the nursery''s east fence'),
+(6911035, 2300579, 0, 0, 0, 1, 1, -9420, -75, 61.64, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, below the pumpkin garden fence, under the oak'),
+(6911036, 2300579, 0, 0, 0, 1, 1, -9434, -66, 61.62, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, below the pumpkin garden''s south corner, by the south wall'),
+(6911037, 2300579, 0, 0, 0, 1, 1, -9404, -84, 62.74, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, lakeside meadow east of the pumpkin garden'),
+(6911040, 2300548, 0, 0, 0, 1, 1, -9496, 90, 56.83, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, north-east corner, inside the fence post'),
+(6911041, 2300548, 0, 0, 0, 1, 1, -9495.8, 95, 56.82, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, along the north fence, opposite the scarecrow'),
+(6911042, 2300548, 0, 0, 0, 1, 1, -9496.5, 100, 56.91, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, along the north fence, by the lamppost'),
+(6911043, 2300548, 0, 0, 0, 1, 1, -9498, 106.5, 56.95, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, north-west corner, beside the harness'),
+(6911044, 2300548, 0, 0, 0, 1, 1, -9500, 89.5, 57.01, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, east edge, past the end of the fence'),
+(6911045, 2300548, 0, 0, 0, 1, 1, -9500, 97.5, 56.96, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, middle row, just west of the scarecrow, by the SuperTrack point'),
+(6911046, 2300548, 0, 0, 0, 1, 1, -9501.5, 102.5, 56.95, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, middle row, west end'),
+(6911047, 2300548, 0, 0, 0, 1, 1, -9504.5, 90.5, 57.02, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, south-east corner'),
+(6911048, 2300548, 0, 0, 0, 1, 1, -9505, 96.5, 57.01, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, south edge, behind the scarecrow'),
+(6911049, 2300548, 0, 0, 0, 1, 1, -9505.5, 101, 57.03, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, south edge, middle'),
+(6911050, 2300548, 0, 0, 0, 1, 1, -9504.5, 106.5, 56.99, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, south-west corner, by the barn yard'),
+(6911060, 2300547, 0, 0, 0, 1, 1, -9502.6, 67.6, 56.55, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, west plot, south end of the patch below the scarecrow'),
+(6911061, 2300547, 0, 0, 0, 1, 1, -9503, 71.5, 56.67, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, west plot, between the scarecrow and the plow at the SuperTrack point'),
+(6911062, 2300547, 0, 0, 0, 1, 1, -9503.5, 75, 56.73, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, west plot, north end of the patch by the fence'),
+(6911063, 2300547, 0, 0, 0, 1, 1, -9402.9, -39, 64.9, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, north-west corner patch'),
+(6911064, 2300547, 0, 0, 0, 1, 1, -9410.3, -45.7, 64.53, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, west row'),
+(6911065, 2300547, 0, 0, 0, 1, 1, -9405, -47, 64.52, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, north row'),
+(6911066, 2300547, 0, 0, 0, 1, 1, -9417.3, -52.5, 64.4, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, south corner patch'),
+(6911067, 2300547, 0, 0, 0, 1, 1, -9412.5, -52, 64.45, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, centre south'),
+(6911068, 2300547, 0, 0, 0, 1, 1, -9408.7, -53.7, 64.46, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, centre, at the SuperTrack point'),
+(6911069, 2300547, 0, 0, 0, 1, 1, -9399, -52.2, 64.42, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, by the north fence'),
+(6911070, 2300547, 0, 0, 0, 1, 1, -9413.5, -58, 64.44, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, south-east row'),
+(6911071, 2300547, 0, 0, 0, 1, 1, -9407.2, -61.9, 64.45, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Pumpkin, pumpkin garden, east corner patch'),
+(6911080, 2300549, 0, 0, 0, 1, 1, -9443.5, -27, 60.19, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the north-west tree, south-west side'),
+(6911081, 2300549, 0, 0, 0, 1, 1, -9443.2, -29.9, 60.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the north-west tree, south-east side'),
+(6911082, 2300549, 0, 0, 0, 1, 1, -9446, -28.2, 60.16, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, between the two western trees'),
+(6911083, 2300549, 0, 0, 0, 1, 1, -9448.4, -28.6, 60.14, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the south-west tree, west side by the south fence'),
+(6911084, 2300549, 0, 0, 0, 1, 1, -9448.4, -31.6, 60.14, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the south-west tree, east side'),
+(6911085, 2300549, 0, 0, 0, 1, 1, -9446.5, -31.9, 60.19, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the south-west tree, north-east side'),
+(6911086, 2300549, 0, 0, 0, 1, 1, -9445.6, -33.9, 60.22, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, beside the fruit buckets'),
+(6911087, 2300549, 0, 0, 0, 1, 1, -9447.9, -34.6, 60.17, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, between the south-west and middle south trees'),
+(6911088, 2300549, 0, 0, 0, 1, 1, -9443.1, -36.9, 60.22, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the middle north tree, south side'),
+(6911089, 2300549, 0, 0, 0, 1, 1, -9443, -39, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the middle north tree, south-east side'),
+(6911090, 2300549, 0, 0, 0, 1, 1, -9448.4, -37.2, 60.17, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the middle south tree, west side'),
+(6911091, 2300549, 0, 0, 0, 1, 1, -9445.4, -39.3, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, between the two middle trees'),
+(6911092, 2300549, 0, 0, 0, 1, 1, -9447.5, -41, 60.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the middle south tree, east side'),
+(6911093, 2300549, 0, 0, 0, 1, 1, -9443.4, -43.2, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the north-east tree, south-west side'),
+(6911094, 2300549, 0, 0, 0, 1, 1, -9445.6, -43.8, 60.21, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, between the two eastern trees'),
+(6911095, 2300549, 0, 0, 0, 1, 1, -9443.3, -46.2, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the north-east tree, south-east side'),
+(6911096, 2300549, 0, 0, 0, 1, 1, -9441.4, -47, 60.18, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the north-east tree, toward the fence post'),
+(6911097, 2300549, 0, 0, 0, 1, 1, -9448.5, -44.2, 60.21, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the south-east tree, west side by its fruit bucket'),
+(6911098, 2300549, 0, 0, 0, 1, 1, -9446.4, -37.3, 60.21, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, at the farmer''s feet, between the fruit buckets and the middle south tree'),
+(6911099, 2300549, 0, 0, 0, 1, 1, -9444.8, -41.5, 60.23, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, centre aisle between the middle and eastern trees'),
+(6911100, 2300549, 0, 0, 0, 1, 1, -9441.4, -40.4, 60.24, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, along the farmhouse wall, between the middle and north-east trees'),
+(6911101, 2300549, 0, 0, 0, 1, 1, -9441.3, -42.7, 60.25, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, under the north-east tree, west side by the farmhouse wall'),
+(6911102, 2300549, 0, 0, 0, 1, 1, -9443, -49, 60.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, inside the east fence, north of the wheelbarrow'),
+(6911103, 2300549, 0, 0, 0, 1, 1, -9445.8, -45.8, 60.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Apple, orchard, spilled beside the wheelbarrow');
 
 -- ---------------------------------------------------------------------------
 -- 6. Scripts
