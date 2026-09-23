@@ -44,9 +44,9 @@
 -- position, facing, wander, movement, respawn time, phase, and spawns added or deleted in game. Only a
 -- seed that has never existed in game takes its inferred placement. Each Comment says which.
 --
--- Re-applying this file rewrites only the spawns it lists, so an older copy cannot delete spawns made
--- after it, but it does put back the placements it recorded. After any git operation that changes this
--- file, regenerate it before the next worldserver start.
+-- Re-applying this file rewrites only the spawns it lists, so an older copy puts back the placements it
+-- recorded. Regenerate before the next worldserver start after any git operation that changes this file,
+-- and after starting the worldserver on a branch without it, which deletes its row in `updates`.
 --
 -- Spawn guid blocks: creature 9001000-9001999, gameobject 6910000-6910999. The worldserver hands
 -- a new in-game spawn the next guid above the highest in use, which lands inside these blocks. Everything
