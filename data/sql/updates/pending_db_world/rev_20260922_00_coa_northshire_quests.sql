@@ -52,6 +52,7 @@
 -- a new in-game spawn the next guid above the highest in use, which lands inside these blocks. Everything
 -- below 6901527 is spoken for, and the Worldforged module deletes 6900001-6901526 outright.
 -- Seed spawns deleted in game: creature none; gameobject none.
+-- Spawns made in game and deleted in game: creature none; gameobject none.
 
 -- ---------------------------------------------------------------------------
 -- 1. Items
