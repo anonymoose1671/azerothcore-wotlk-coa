@@ -24,9 +24,9 @@
 --     (each CompletedText "Take the commission to <name> at <town>"), and Quithas 16652 is objective 2
 --     (ObjectiveText2 "Quithas", count 1) of 254018 "Secrets to Keep". CoA's creaturecache keeps all four.
 --     Migration 05 already took the trainer flags, title, default trainer and train options from 17 of
---     them; this file does the same for Vindicator Aesom, whose paladin trainer role 05 did not cover. His
---     title "Triumvirate of the Hand" names the draenei paladin order, so it goes with the role (INFERRED;
---     no CoA cache record). They stay where they stand, except Thotar, who moves to the turn-in point of
+--     them; this file takes the trainer role from Vindicator Aesom, whose role 05 did not cover. His title
+--     "Triumvirate of the Hand" is not a trainer title (Vindicator Kuros beside him carries it too), so it
+--     stays (user, 2026-09-24). They stay where they stand, except Thotar, who moves to the turn-in point of
 --     his quests (section 1). After the retirement none of them is within 1.5 yd of another creature or
 --     1.0 yd of an object (Rukua 137653 beside Emissary Valustraa and Dink 7312 beside Bink are deleted
 --     here).
@@ -55,7 +55,7 @@
 -- ---------------------------------------------------------------------------
 -- 1. Vindicator Aesom loses the paladin trainer role; Thotar stands at his CoA turn-in point
 -- ---------------------------------------------------------------------------
-UPDATE `creature_template` SET `npcflag` = `npcflag` & ~48, `subname` = '' WHERE `entry` = 17844;
+UPDATE `creature_template` SET `npcflag` = `npcflag` & ~48, `subname` = 'Triumvirate of the Hand' WHERE `entry` = 17844;
 DELETE FROM `creature_default_trainer` WHERE `CreatureId` = 17844;
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 15 AND `SourceGroup` = 7517 AND `SourceEntry` = 0;
 DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 7517 AND `OptionID` = 0;
