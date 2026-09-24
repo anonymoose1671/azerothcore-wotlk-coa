@@ -13,8 +13,11 @@
 --   who stands where  the client's QuestSuperTrack points place Dulcinea, Aldia Crayon (the manor's top
 --     floor), Clara the Mad (the refugee camp), Eldor Hammer, Aliscar Lend (the east entrance arch), his
 --     projection (on top of the arch) and the four vendors. The rest is INFERRED from the places.
---   shards, warrens, crops  INFERRED: hand-placed at landmarks of the places the quest texts name; each
+--   shards, crops  INFERRED: hand-placed at landmarks of the places the quest texts name; each
 --     spawn's Comment gives the landmark.
+--   warrens  the Kobold Warren sightings of Questie-X-AscensionDB (Bronzebeard), zone percent converted
+--     with WorldMapArea 30: the spur, flanks and terrace from the refugee camp down toward Fargodeep
+--     Mine. One sighting lies inside an oak's trunk; that warren stands just east of the tree.
 --   vendors  the four market sellers and their ingredients are tied together by the cache (questItem).
 --   appearance  STAND-IN displays: every CoA display of this cast is missing from the client.
 --   credits  the Mirror Shard and Kobold Warren objects credit their hidden markers when used, then
@@ -269,24 +272,24 @@ VALUES
 (6911014, 2300546, 0, 0, 0, 1, 1, -9265.5, 446, 79.48, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, beside the hearse by the front door'),
 (6911015, 2300546, 0, 0, 0, 1, 1, -9291, 447, 78.35, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, beside the stone fence of the front path'),
 (6911016, 2300546, 0, 0, 0, 1, 1, -9304.5, 447.5, 78.56, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Mirror Shard, Spada manor, by the bust at the south hedge corner'),
-(6911020, 2300579, 0, 0, 0, 1, 1, -9410, 138, 58.8, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow north of the blacksmith, between the children''s play spot and Elder Stormbrow'),
-(6911021, 2300579, 0, 0, 0, 1, 1, -9404, 122, 59.93, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow at the edge of the big tree north of the blacksmith'),
-(6911022, 2300579, 0, 0, 0, 1, 1, -9428, 134, 59.03, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow above the pond''s east bank, behind the blacksmith'),
-(6911023, 2300579, 0, 0, 0, 1, 1, -9365, 90, 62.28, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, north meadow beyond the two-story house'),
-(6911024, 2300579, 0, 0, 0, 1, 1, -9352, 76, 60.54, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, north meadow, east of the big tree'),
-(6911025, 2300579, 0, 0, 0, 1, 1, -9380, 104, 60.11, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, north meadow, west of the split-rail fence'),
-(6911026, 2300579, 0, 0, 0, 1, 1, -9570, 126, 59.42, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow west of the town hall, under the oak at its south-west'),
-(6911027, 2300579, 0, 0, 0, 1, 1, -9558, 140, 58.88, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow west of the town hall, beyond the haystacks at its west edge'),
-(6911028, 2300579, 0, 0, 0, 1, 1, -9575, 100, 58.93, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow west of the town hall, by its south end'),
-(6911029, 2300579, 0, 0, 0, 1, 1, -9598, 58, 59.98, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow south-west of the refugee campsite tent'),
-(6911030, 2300579, 0, 0, 0, 1, 1, -9610, 46, 60.86, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow south of the refugee camp'),
-(6911031, 2300579, 0, 0, 0, 1, 1, -9588, 58, 59.4, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, behind the town hall''s south end, beside the camp where Clara hears them digging'),
-(6911032, 2300579, 0, 0, 0, 1, 1, -9560, -40, 59.84, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, south-east meadow beyond the tree nursery'),
-(6911033, 2300579, 0, 0, 0, 1, 1, -9556, -62, 58.12, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow below the nursery fence corner'),
-(6911034, 2300579, 0, 0, 0, 1, 1, -9548, -54, 56.83, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, meadow outside the nursery''s east fence'),
-(6911035, 2300579, 0, 0, 0, 1, 1, -9420, -75, 61.64, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, below the pumpkin garden fence, under the oak'),
-(6911036, 2300579, 0, 0, 0, 1, 1, -9434, -66, 61.62, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, below the pumpkin garden''s south corner, by the south wall'),
-(6911037, 2300579, 0, 0, 0, 1, 1, -9404, -84, 62.74, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, lakeside meadow east of the pumpkin garden'),
+(6911020, 2300579, 0, 0, 0, 1, 1, -9633.58, 133.12, 45.93, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, terrace at the foot of the plateau''s south-west escarpment, tree stump 34 yd SSW (sighting 40.4,73.2)'),
+(6911021, 2300579, 0, 0, 0, 1, 1, -9712.29, 209.46, 49.91, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, open terrace north of the Fargodeep knoll, bare tree 24 yd S (sighting 38.2,76.6)'),
+(6911022, 2300579, 0, 0, 0, 1, 1, -9723.86, 171.29, 50.96, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, north foot of the Fargodeep knoll, bare tree 10 yd SE (sighting 39.3,77.1)'),
+(6911023, 2300579, 0, 0, 0, 1, 1, -9721.55, -47.32, 37.45, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, east flank of the spur above the Maclure lowland, ruined catapult 41 yd NE (sighting 45.6,77.0)'),
+(6911024, 2300579, 0, 0, 0, 1, 1, -9730.81, -12.62, 36.74, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, east flank slope below the spur, oak 15 yd N (sighting 44.6,77.4)'),
+(6911025, 2300579, 0, 0, 0, 1, 1, -9763.22, -16.09, 31.68, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, foot of the east flank on the lowland, crates 36 yd E (sighting 44.7,78.8)'),
+(6911026, 2300579, 0, 0, 0, 1, 1, -9772.48, 32.49, 33.76, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, lower slope south of the spur, between oaks 26 yd NNE and SSW (sighting 43.3,79.2)'),
+(6911027, 2300579, 0, 0, 0, 1, 1, -9638.21, 67.19, 61.15, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, spur crest south-south-west of the refugee camp, oak 14 yd SE (sighting 42.3,73.4)'),
+(6911028, 2300579, 0, 0, 0, 1, 1, -9745, 57, 38.8, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, mine approach below the spur''s tail, just east of the big oak (sighting 42.3,78.0 is inside its trunk)'),
+(6911029, 2300579, 0, 0, 0, 1, 1, -9749.33, 129.65, 49.4, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, terrace at the knoll''s north-east foot above the mine galleries, oak 13 yd NE (sighting 40.5,78.2)'),
+(6911030, 2300579, 0, 0, 0, 1, 1, -9763.22, 67.19, 38.95, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, mine-approach slope below the spur''s south end, oak 12 yd SSE (sighting 42.3,78.8)'),
+(6911031, 2300579, 0, 0, 0, 1, 1, -9797.94, 129.65, 49.74, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, east shoulder of the Fargodeep knoll over the mine galleries (sighting 40.5,80.3)'),
+(6911032, 2300579, 0, 0, 0, 1, 1, -9661.36, 105.36, 45.52, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, foot of the spur''s west flank on the terrace, tree stump 35 yd W (sighting 41.2,74.4)'),
+(6911033, 2300579, 0, 0, 0, 1, 1, -9714.6, 25.55, 40.96, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, east flank of the spur''s south end (sighting 43.5,76.7)'),
+(6911034, 2300579, 0, 0, 0, 1, 1, -9698.4, 164.35, 50.26, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, terrace between the fallen log 30 yd NNE and the knoll (sighting 39.5,76.0)'),
+(6911035, 2300579, 0, 0, 0, 1, 1, -9647.47, 202.52, 49.3, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, terrace 53 yd east of the Westfall road, oak 22 yd W (sighting 38.4,73.8)'),
+(6911036, 2300579, 0, 0, 0, 1, 1, -9714.6, 112.3, 46.25, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, foot of the spur''s south-west end (sighting 41.0,76.7)'),
+(6911037, 2300579, 0, 0, 0, 1, 1, -9698.4, 63.72, 56.75, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Kobold Warren, south end of the spur crest, the last high ground before the mine approach (sighting 42.4,76.0)'),
 (6911040, 2300548, 0, 0, 0, 1, 1, -9496, 90, 56.83, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, north-east corner, inside the fence post'),
 (6911041, 2300548, 0, 0, 0, 1, 1, -9495.8, 95, 56.82, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, along the north fence, opposite the scarecrow'),
 (6911042, 2300548, 0, 0, 0, 1, 1, -9496.5, 100, 56.91, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Goldshire: Melon, melon plot, along the north fence, by the lamppost'),
