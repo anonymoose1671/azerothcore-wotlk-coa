@@ -241,7 +241,7 @@ VALUES
 (9002011, 162809, 0, 0, 0, 1, 1, 0, -9486.8, 36.2, 56.66, 0.23, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 3 of 1660056, 0.5 yd off the counter: the pumpkin juice counter under the tent, facing the plaza'),
 (9002012, 162811, 0, 0, 0, 1, 1, 0, -9465.3, 60.6, 56.11, 4.77, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 2 of 1660056, 1.0 yd out of the wagon: beside the bottle-laden gypsy wagon, facing the plaza'),
 (9002013, 162826, 0, 0, 0, 1, 1, 0, -9450.54, -81.71, 58.44, 3.14, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 4 of 1660056: the fish stall on the dock boardwalk, facing out of its open west side onto the boardwalk'),
-(9002014, 162814, 0, 0, 0, 1, 1, 0, -9387.92, 23.72, 59.5, 2.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 1 of 1660056: in front of the flower cart, facing the plaza'),
+(9002014, 162814, 0, 0, 0, 1, 1, 0, -9387.92, 23.72, 59.5, 4.37, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: SuperTrack objective 1 of 1660056: in front of the flower cart, facing away from it toward the road'),
 (9002015, 162808, 0, 0, 0, 1, 1, 0, -9558, 52, 60.81, 1.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: town hall floor below the dais, facing the mayor'),
 (9002016, 162821, 0, 0, 0, 1, 1, 0, -9500.5, 86.5, 57.01, 1.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: east corner of the melon plot by the fence, facing the melons'),
 (9002017, 162822, 0, 0, 0, 1, 1, 0, -9413, -41, 64.46, 5.14, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Goldshire: pumpkin garden, inside the east fence, facing the patches'),
