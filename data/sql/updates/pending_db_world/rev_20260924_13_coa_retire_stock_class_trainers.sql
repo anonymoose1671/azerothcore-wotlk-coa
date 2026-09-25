@@ -38,8 +38,8 @@
 --     waypoint paths go only when no creature or template addon still uses them. Pools, formations, linked
 --     respawns, spawn groups, movement overrides, guid SmartAI and vehicle accessories hold none of them.
 --     Moves of these spawns by migrations 02, 03, 05 and 11 become moot; no later file re-inserts them.
---   orphaned class quests  58 stock class quests would stay available (ExpandLegacyClassMask,
---     SharedDefines.h:203, QuestDef.cpp:176 offers them to the CoA classes mapped onto the stock class)
+--   orphaned class quests  58 stock class quests would stay offered to stock
+--     classes (CoA classes cannot take stock class quests: QuestDef.cpp loads the class mask as written)
 --     with no spawned ender left. The creature and gameobject giver rows of 56 of them are deleted by
 --     exact (id, quest). That also ends the RewardNextQuest offers that lead to them: Player::GetNextQuest
 --     offers the next quest only from the rewarding NPC's own giver rows (PlayerQuest.cpp:231-258). The
