@@ -643,7 +643,7 @@ VALUES
 (161784, 0, 28, 29, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161907, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Despawn her tornadoes'),
 (161784, 0, 29, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 45, 2, 1, 0, 0, 0, 0, 19, 161727, 100, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Tell Lady Aegya the communion is over'),
 (161847, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 29, 2, 0, 161848, 161847, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Butterfly - On Just Summoned - Follow the summoner; within 5.5 yd of Eldya credit Butterflies delivered and despawn'),
-(161905, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 85, 256739, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <MoonFire Zone> - On Just Summoned - Cast Moonfire (2 s ground ring, then the burst)'),
+(161905, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 256739, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <MoonFire Zone> - On Just Summoned - Cast Moonfire (2 s ground ring, then the burst)'),
 (161907, 0, 0, 1, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 75, 256758, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <Tornado> - On Just Summoned - Tornado model'),
 (161907, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 75, 256759, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <Tornado> - Linked - Winds that strike and knock back every second'),
 (161907, 0, 2, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 89, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <Tornado> - Linked - Drift within 10 yd'),

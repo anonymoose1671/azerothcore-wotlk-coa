@@ -429,7 +429,7 @@ VALUES
 (161713, 0, 21, 22, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161704, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On aggro - Credit the ruined estate'),
 (161713, 0, 22, 23, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 1 (unshielded)'),
 (161713, 0, 23, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say pull'),
-(161713, 0, 24, 25, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161713, 0, 0, 0, 0, 0, 18, 0, 30, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On death - Credit the confrontation to players within 30 yards'),
+(161713, 0, 24, 25, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161713, 0, 0, 0, 0, 0, 18, 30, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On death - Credit the confrontation to players within 30 yards'),
 (161713, 0, 25, 26, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161904, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Despawn the images'),
 (161713, 0, 26, 27, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
 (161713, 0, 27, 28, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
