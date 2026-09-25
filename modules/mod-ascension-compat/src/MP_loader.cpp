@@ -224,6 +224,7 @@ void AddSC_AscensionBankVoucher();
 void AddSC_AscensionForgeCursor();
 void AddSC_AscensionFeatherOfAncients();
 void AddSC_AscensionVultureCultQuests();
+void AddSC_AscensionCaravanCarts();
 void AddSC_AscensionReaperRuin();
 void AddSC_AscensionReaperRedshade();
 void AddSC_AscensionReaperSpellContracts();
@@ -453,6 +454,7 @@ void Addmod_ascension_compatScripts()
     AddSC_AscensionForgeCursor();
     AddSC_AscensionFeatherOfAncients();
     AddSC_AscensionVultureCultQuests();
+    AddSC_AscensionCaravanCarts();
     AddSC_AscensionReaperRuin();
     AddSC_AscensionReaperRedshade();
     AddSC_AscensionReaperSpellContracts();
