@@ -305,13 +305,13 @@ VALUES
 DELETE FROM `quest_offer_reward` WHERE `ID` IN (1660074, 1660075);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)
 VALUES
-(1660074, ''),
-(1660075, '');
+(1660074, 'Well fought, $C.$B$BMy sisters acknowledge your merits with admiration… and a touch of envy.$B$BWe Sentinels will see to exterminating the rest.'),
+(1660075, '<Alenna’s gaze darkens. It seems the beauty of Dolanaar isn’t enough to chase off the dread conjured by that cult’s name.>');
 
 DELETE FROM `quest_request_items` WHERE `ID` IN (1660074, 1660075);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
-(1660074, ''),
+(1660074, 'Have you finished off the termites? Did they give you much trouble?'),
 (1660075, '');
 
 DELETE FROM `creature_queststarter` WHERE `quest` IN (1660074, 1660075);

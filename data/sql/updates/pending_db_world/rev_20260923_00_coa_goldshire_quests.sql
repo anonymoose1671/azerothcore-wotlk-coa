@@ -187,21 +187,21 @@ VALUES
 DELETE FROM `quest_offer_reward` WHERE `ID` IN (1660055, 1660056, 1660057, 1660058, 1660059, 1660060);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)
 VALUES
-(1660055, ''),
-(1660056, ''),
-(1660057, ''),
-(1660058, ''),
-(1660059, ''),
-(1660060, '');
+(1660055, 'Did my lady Bianca send you?$B$B<Dulcinea dips into an awkward curtsy.>$B$BSo she’ll be delayed… I swear, that brother of hers is nothing but trouble.$B$BEither way, her mother’s medicine can’t wait. Would you be so kind as to help me with my errands?'),
+(1660056, 'Another errand-runner?$B$BI don’t know what Lady Bianca and Moroi think they’re playing at, but their mother,my lady Agria, doesn’t have much time left…$B$B<Aldia gives the old woman a pitying look. Swaddled in layers of sheets and shawls, she looks half-buried already.>$B$BThe ingredients… Do you have them? Good. I’ll see they’re handed to the alchemist.'),
+(1660057, 'So my instincts were right.$B$BThere’s no cure for old age, but with the curse broken, at least Lady Agria’s terrible pains should ease.$B$B<As he speaks, the years show: furrows cut deep in a lean face, watery eyes spent; he’s hardly younger than the lady he serves.>$B$BThank you for your diligent service.'),
+(1660058, '<Clara the Mad holds an apple in her right hand, admiring it as if it were her most prized possession.>$B$BGoldshire is like this apple.$B$B<Slowly, she turns it to show a bite; inside—despite appearances—it’s rotten, worm-eaten.>'),
+(1660059, 'My people won’t forget Goldshire’s kindness.$B$BI trust that one day we’ll repay it in full.'),
+(1660060, 'I hope I didn’t bore you too much!');
 
 DELETE FROM `quest_request_items` WHERE `ID` IN (1660055, 1660056, 1660057, 1660058, 1660059, 1660060);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
 (1660055, ''),
-(1660056, ''),
-(1660057, ''),
-(1660058, ''),
-(1660059, ''),
+(1660056, 'Yes? What business brings you to the Spada estate?'),
+(1660057, 'Did you find the mirror shards?'),
+(1660058, 'Leave none of those vermin alive, or Goldshire will cave in under their tunnels.'),
+(1660059, 'Can I help you?'),
 (1660060, '');
 
 DELETE FROM `creature_queststarter` WHERE `quest` IN (1660055, 1660056, 1660057, 1660058, 1660059, 1660060);
