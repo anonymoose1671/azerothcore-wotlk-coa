@@ -10,15 +10,16 @@
 --     the stock API. The in-world arrow and minimap pin come from CoA's QuestSuperTrack.dbc on the client and are
 --     not affected by this file.
 --   research  research/trainers-guards-markers/quest-markers.md (+ .json), re-checked on coa_poi.
---   turn-in moves (47 markers of 21 enders)  SOURCED-CLIENT: each new point is the quest's QuestSuperTrack turn-in
+--   turn-in moves (50 markers of 24 enders)  SOURCED-CLIENT: each new point is the quest's QuestSuperTrack turn-in
 --     point (tools/supertrack.py), and the ender's spawn after every other pending file stands within 1 yd of it;
 --     the old marker lies 3-130 yd away at the stock spot, where the ender stood before a sourced move onto that
---     point (files 20260923_02, 20260923_03, 20260924_11). Every moved marker has a single point; the row keeps
---     its map and WorldMapAreaId (same zone map).
+--     point (files 20260923_02, 20260923_03, 20260924_11, 20260925_11, 20260925_12); Sten Stoutarm did not move,
+--     his 179 marker was 22 yd off in stock data. Every moved marker has a single point; the row keeps its map and
+--     WorldMapAreaId (same zone map).
 --   objective moves (2)  SOURCED-CLIENT: QuestSuperTrack objective point; DERIVED: the only source of the item (a
 --     chest or a vendor) moved with a verified building transform.
---   turn-in adds (136 quests)  SOURCED-CLIENT: CoA quests with no quest_poi row at all get one turn-in marker at
---     the QuestSuperTrack turn-in point, where their ender's spawn stands (0.0-1.0 yd). The new row is
+--   turn-in adds (154 quests)  SOURCED-CLIENT: CoA quests with no quest_poi row at all get one turn-in marker at
+--     the QuestSuperTrack turn-in point, where their ender's spawn stands (0.0-1.6 yd). The new row is
 --     (ObjectiveIndex -1, Floor 0, Priority 0, Flags 1), the most common stock turn-in pattern; poi id 0 because
 --     the quest has no other POI.
 --   WorldMapAreaId  INFERRED: the stock convention of the area (the parent zone map), like the 301 existing rows
@@ -48,11 +49,11 @@
 --     are stock data).
 --   - Objective markers whose QuestSuperTrack point has no source spawn near it or would only add a second blob
 --     (167, 168, 176, 387, 434, 489, 543, 932, 2746, 17001, 254108).
---   - 178 quests with no turn-in marker and no sourced turn-in point (175 CoA class-trainer quests in the
---     capitals, Ammen Vale and Sunstrider Isle, 254041, 254108, 1660075), and 45 sourced objective markers for CoA
---     quests that have none (research table B2): this file adds turn-in markers only.
+--   - 179 quests with no turn-in marker and no sourced turn-in point (175 CoA class-trainer quests in the
+--     capitals, Ammen Vale and Sunstrider Isle, 254041, 254108, 1660075, 1660080), and 45 sourced objective
+--     markers for CoA quests that have none (research table B2): this file adds turn-in markers only.
 --
--- Counts: 47 turn-in markers and 2 objective markers moved; 136 quest_poi rows and 136 quest_poi_points rows added.
+-- Counts: 50 turn-in markers and 2 objective markers moved; 154 quest_poi rows and 154 quest_poi_points rows added.
 -- Exact-key updates and deletes only; re-applying the file is a no-op. It runs after every other pending file.
 
 -- ---------------------------------------------------------------------------
@@ -157,6 +158,18 @@ UPDATE `quest_poi_points` SET `X` = -9391, `Y` = 142 WHERE (`QuestID`, `Idx1`, `
 UPDATE `quest_poi_points` SET `X` = -9449, `Y` = 52 WHERE (`QuestID`, `Idx1`, `Idx2`) IN (
     (11816, 0, 0));
 
+-- Yori Crackhelm 11941 (guid 348): -5581, -541 -> -5593, -530 = QuestSuperTrack 3811. 5841 Welcome!.
+UPDATE `quest_poi_points` SET `X` = -5593, `Y` = -530 WHERE (`QuestID`, `Idx1`, `Idx2`) IN (
+    (5841, 0, 0));
+
+-- Mountaineer Thalos 1965 (guid 331): -6236, 153 -> -6240, 137 = QuestSuperTrack 2264. 282 Senir's Observations.
+UPDATE `quest_poi_points` SET `X` = -6240, `Y` = 137 WHERE (`QuestID`, `Idx1`, `Idx2`) IN (
+    (282, 0, 0));
+
+-- Sten Stoutarm 658 (guid 351): -6215, 328 -> -6237, 331 = QuestSuperTrack 46. 179 Dwarven Outfitters.
+UPDATE `quest_poi_points` SET `X` = -6237, `Y` = 331 WHERE (`QuestID`, `Idx1`, `Idx2`) IN (
+    (179, 1, 0));
+
 -- ---------------------------------------------------------------------------
 -- 2. Objective markers of moved objects
 -- ---------------------------------------------------------------------------
@@ -236,6 +249,24 @@ UPDATE `quest_poi_points` SET `X` = -9478, `Y` = -26 WHERE `QuestID` = 116 AND `
 --   51012 Hunter's Mandate: Yiro the Vanquisher 9300150, QuestSuperTrack 8991
 --   51013 Primal Codex: Katho Hammerfist 50342, QuestSuperTrack 8988
 --   51014 Death Manual: Zipak Cogweight 9300151, QuestSuperTrack 9001
+--   254000 A Small Mistake: Efry Cogspark 254000, QuestSuperTrack 51
+--   254001 We Found Her!: Efry Cogspark 254000, QuestSuperTrack 50
+--   254002 The Scout's Favor: Mountaineer Tagnur 254002, QuestSuperTrack 53
+--   254003 Old Mirsinth: Mirsinth the Exile 254003, QuestSuperTrack 314
+--   254004 A Brother's Betrayal: Mirsinth the Exile 254003, QuestSuperTrack 98
+--   500005 Timber for the Coldhewn: Brunna Ironhew 765556, QuestSuperTrack 32495
+--   500006 Icehide the Unbroken: Old Kargan Stouthew 764536, QuestSuperTrack 32494
+--   1660006 Smoke on the Wind: Dead Crewman 161719, QuestSuperTrack 32525
+--   1660007 A Promising Path: Arathror 161720, QuestSuperTrack 32526
+--   1660008 A Fitting Disguise: Arathror 161720, QuestSuperTrack 32527
+--   1660009 His Radiant Majesty: Groldha 161718, QuestSuperTrack 32528
+--   1660010 Deciphering Radiation: Redna 161820, QuestSuperTrack 32550
+--   1660011 Soaking the Masses: Lahud 161839, QuestSuperTrack 32551
+--   1660039 Sever the Right Hand: Redna 161820, QuestSuperTrack 32560
+--   1660076 A Growing Business: Eyma Thunderbrew 162883, QuestSuperTrack 32576
+--   1660077 Thunderbrew's Hop: Eyma Thunderbrew 162883, QuestSuperTrack 32577
+--   1660078 Bots on Strike: Ikoras 162884, QuestSuperTrack 32578
+--   1660079 Live-Fire Demo: Gornarn 162891, QuestSuperTrack 32579
 -- Elwynn Forest (WorldMapAreaId 30):
 --   17000 Stolen Supplies: Pa Maclure 250, QuestSuperTrack 3303
 --   17002 The Master's Orders: Esyra 900017, QuestSuperTrack 3304
@@ -327,14 +358,16 @@ DELETE FROM `quest_poi` WHERE (`QuestID`, `id`) IN (
     (52015, 0), (52016, 0), (53000, 0), (53001, 0), (53002, 0), (53003, 0), (53004, 0), (53005, 0), (53006, 0),
     (53007, 0), (53008, 0), (53009, 0), (53010, 0), (53011, 0), (53012, 0), (53013, 0), (53014, 0), (53015, 0),
     (53017, 0), (53201, 0), (55101, 0), (55102, 0), (55103, 0), (55104, 0), (55105, 0), (55106, 0), (55107, 0),
-    (55108, 0), (100071, 0), (100073, 0), (100074, 0), (200107, 0), (254038, 0), (254051, 0), (254095, 0),
-    (254098, 0), (254106, 0), (254107, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0),
-    (650146, 0), (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0),
-    (650154, 0), (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0),
-    (1660002, 0), (1660003, 0), (1660004, 0), (1660005, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015,
-    0), (1660016, 0), (1660017, 0), (1660038, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0),
-    (1660058, 0), (1660059, 0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660085,
-    0));
+    (55108, 0), (100071, 0), (100073, 0), (100074, 0), (200107, 0), (254000, 0), (254001, 0), (254002, 0),
+    (254003, 0), (254004, 0), (254038, 0), (254051, 0), (254095, 0), (254098, 0), (254106, 0), (254107, 0),
+    (500005, 0), (500006, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0), (650146, 0),
+    (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0), (650154, 0),
+    (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0), (1660002, 0),
+    (1660003, 0), (1660004, 0), (1660005, 0), (1660006, 0), (1660007, 0), (1660008, 0), (1660009, 0), (1660010,
+    0), (1660011, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015, 0), (1660016, 0), (1660017, 0),
+    (1660038, 0), (1660039, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0), (1660058, 0), (1660059,
+    0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660076, 0), (1660077, 0),
+    (1660078, 0), (1660079, 0), (1660085, 0));
 INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`)
 VALUES
 (17000, 0, -1, 0, 30, 0, 0, 1),
@@ -423,12 +456,19 @@ VALUES
 (100073, 0, -1, 0, 30, 0, 0, 1),
 (100074, 0, -1, 0, 30, 0, 0, 1),
 (200107, 0, -1, 1, 4, 0, 0, 1),
+(254000, 0, -1, 0, 27, 0, 0, 1),
+(254001, 0, -1, 0, 27, 0, 0, 1),
+(254002, 0, -1, 0, 27, 0, 0, 1),
+(254003, 0, -1, 0, 27, 0, 0, 1),
+(254004, 0, -1, 0, 27, 0, 0, 1),
 (254038, 0, -1, 0, 30, 0, 0, 1),
 (254051, 0, -1, 0, 35, 0, 0, 1),
 (254095, 0, -1, 0, 30, 0, 0, 1),
 (254098, 0, -1, 0, 30, 0, 0, 1),
 (254106, 0, -1, 0, 30, 0, 0, 1),
 (254107, 0, -1, 0, 30, 0, 0, 1),
+(500005, 0, -1, 0, 27, 0, 0, 1),
+(500006, 0, -1, 0, 27, 0, 0, 1),
 (650141, 0, -1, 1, 41, 0, 0, 1),
 (650142, 0, -1, 1, 41, 0, 0, 1),
 (650143, 0, -1, 1, 41, 0, 0, 1),
@@ -454,6 +494,12 @@ VALUES
 (1660003, 0, -1, 0, 30, 0, 0, 1),
 (1660004, 0, -1, 0, 30, 0, 0, 1),
 (1660005, 0, -1, 0, 30, 0, 0, 1),
+(1660006, 0, -1, 0, 27, 0, 0, 1),
+(1660007, 0, -1, 0, 27, 0, 0, 1),
+(1660008, 0, -1, 0, 27, 0, 0, 1),
+(1660009, 0, -1, 0, 27, 0, 0, 1),
+(1660010, 0, -1, 0, 27, 0, 0, 1),
+(1660011, 0, -1, 0, 27, 0, 0, 1),
 (1660012, 0, -1, 1, 41, 0, 0, 1),
 (1660013, 0, -1, 1, 41, 0, 0, 1),
 (1660014, 0, -1, 1, 41, 0, 0, 1),
@@ -461,6 +507,7 @@ VALUES
 (1660016, 0, -1, 1, 41, 0, 0, 1),
 (1660017, 0, -1, 1, 41, 0, 0, 1),
 (1660038, 0, -1, 0, 30, 0, 0, 1),
+(1660039, 0, -1, 0, 27, 0, 0, 1),
 (1660040, 0, -1, 1, 41, 0, 0, 1),
 (1660055, 0, -1, 0, 30, 0, 0, 1),
 (1660056, 0, -1, 0, 30, 0, 0, 1),
@@ -472,6 +519,10 @@ VALUES
 (1660072, 0, -1, 1, 41, 0, 0, 1),
 (1660073, 0, -1, 1, 41, 0, 0, 1),
 (1660074, 0, -1, 1, 41, 0, 0, 1),
+(1660076, 0, -1, 0, 27, 0, 0, 1),
+(1660077, 0, -1, 0, 27, 0, 0, 1),
+(1660078, 0, -1, 0, 27, 0, 0, 1),
+(1660079, 0, -1, 0, 27, 0, 0, 1),
 (1660085, 0, -1, 1, 41, 0, 0, 1);
 DELETE FROM `quest_poi_points` WHERE (`QuestID`, `Idx1`) IN (
     (17000, 0), (17002, 0), (17003, 0), (17004, 0), (17005, 0), (17006, 0), (17007, 0), (17008, 0), (49976, 0),
@@ -483,14 +534,16 @@ DELETE FROM `quest_poi_points` WHERE (`QuestID`, `Idx1`) IN (
     (52015, 0), (52016, 0), (53000, 0), (53001, 0), (53002, 0), (53003, 0), (53004, 0), (53005, 0), (53006, 0),
     (53007, 0), (53008, 0), (53009, 0), (53010, 0), (53011, 0), (53012, 0), (53013, 0), (53014, 0), (53015, 0),
     (53017, 0), (53201, 0), (55101, 0), (55102, 0), (55103, 0), (55104, 0), (55105, 0), (55106, 0), (55107, 0),
-    (55108, 0), (100071, 0), (100073, 0), (100074, 0), (200107, 0), (254038, 0), (254051, 0), (254095, 0),
-    (254098, 0), (254106, 0), (254107, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0),
-    (650146, 0), (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0),
-    (650154, 0), (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0),
-    (1660002, 0), (1660003, 0), (1660004, 0), (1660005, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015,
-    0), (1660016, 0), (1660017, 0), (1660038, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0),
-    (1660058, 0), (1660059, 0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660085,
-    0));
+    (55108, 0), (100071, 0), (100073, 0), (100074, 0), (200107, 0), (254000, 0), (254001, 0), (254002, 0),
+    (254003, 0), (254004, 0), (254038, 0), (254051, 0), (254095, 0), (254098, 0), (254106, 0), (254107, 0),
+    (500005, 0), (500006, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0), (650146, 0),
+    (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0), (650154, 0),
+    (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0), (1660002, 0),
+    (1660003, 0), (1660004, 0), (1660005, 0), (1660006, 0), (1660007, 0), (1660008, 0), (1660009, 0), (1660010,
+    0), (1660011, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015, 0), (1660016, 0), (1660017, 0),
+    (1660038, 0), (1660039, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0), (1660058, 0), (1660059,
+    0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660076, 0), (1660077, 0),
+    (1660078, 0), (1660079, 0), (1660085, 0));
 INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`)
 VALUES
 (17000, 0, 0, -10005, 53),
@@ -579,12 +632,19 @@ VALUES
 (100073, 0, 0, -9496, 73),
 (100074, 0, 0, -9462, 44),
 (200107, 0, 0, -638, -4234),
+(254000, 0, 0, -6111, 370),
+(254001, 0, 0, -6111, 370),
+(254002, 0, 0, -5924, 18),
+(254003, 0, 0, -5584, -8),
+(254004, 0, 0, -5584, -8),
 (254038, 0, 0, -9784, -405),
 (254051, 0, 0, -5201, -3522),
 (254095, 0, 0, -9553, -728),
 (254098, 0, 0, -9541, -717),
 (254106, 0, 0, -9576, -718),
 (254107, 0, 0, -9451, 80),
+(500005, 0, 0, -5765, -1275),
+(500006, 0, 0, -5773, -1246),
 (650141, 0, 0, 10412, 783),
 (650142, 0, 0, 10485, 817),
 (650143, 0, 0, 10445, 784),
@@ -610,6 +670,12 @@ VALUES
 (1660003, 0, 0, -8749, -283),
 (1660004, 0, 0, -8901, -197),
 (1660005, 0, 0, -8852, -369),
+(1660006, 0, 0, -6169, 772),
+(1660007, 0, 0, -6011, 681),
+(1660008, 0, 0, -6011, 681),
+(1660009, 0, 0, -6094, 405),
+(1660010, 0, 0, -5997, 752),
+(1660011, 0, 0, -5897, 499),
 (1660012, 0, 0, 10695, 594),
 (1660013, 0, 0, 10797, 481),
 (1660014, 0, 0, 10797, 481),
@@ -617,6 +683,7 @@ VALUES
 (1660016, 0, 0, 10797, 481),
 (1660017, 0, 0, 10690, 528),
 (1660038, 0, 0, -8749, -283),
+(1660039, 0, 0, -5997, 752),
 (1660040, 0, 0, 10712, 447),
 (1660055, 0, 0, -9464, 39),
 (1660056, 0, 0, -9275, 469),
@@ -628,4 +695,8 @@ VALUES
 (1660072, 0, 0, 10056, 911),
 (1660073, 0, 0, 10056, 911),
 (1660074, 0, 0, 9804, 939),
+(1660076, 0, 0, -5607, -530),
+(1660077, 0, 0, -5607, -530),
+(1660078, 0, 0, -5712, -604),
+(1660079, 0, 0, -5641, -622),
 (1660085, 0, 0, 10376, 745);
