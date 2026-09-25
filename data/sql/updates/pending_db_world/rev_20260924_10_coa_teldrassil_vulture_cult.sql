@@ -83,6 +83,16 @@
 -- 162932 Tortured Ghost: the talk credit of 1660085 ("Speak with Thariel Wingstroke"). Name and type 6
 --   SOURCED-CACHE (CoA reused the id); unspawned, so the Tormented Spirit ghost 9534 stands in for the missing
 --   652459 and it carries the trigger flags of a marker
+-- 161905 Elydna's MoonFire Zone: summoned under a random player during her fight; it casts 256739 (a 2 s ground
+--   ring, then a 2-yd Arcane burst and DoT), the cast MobSpells.lua captured from 161905 in Shadowglen
+--   (SOURCED-ARCHIVE); level 7 as Elydna (the spell scales with the caster level), rooted, untargetable but able
+--   to hit players; flags_extra 8322 (trigger 128, civilian 2, cannot enter combat 0x2000): it never aggroes,
+--   melees or chases (Creature.cpp:688, CombatManager.cpp:60; a civilian never starts an attack,
+--   Creature.cpp:1948, SmartAI.cpp:810) and its spells still hit
+-- 161907 Elydna's Tornado: two appear when her 4 s Tornado cast 256757 completes; they drift for 20 s wearing
+--   256758 (tornado model) and 256759 (every 1 s 256760: damage and a knock-back within 4 yd, once per 3.8 s per
+--   target); the pairing with 256757 is INFERRED from the spell block; flags_extra 8322 as the MoonFire Zone, so
+--   it drifts and never chases a player
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `detection_range`, `rank`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `type_flags`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `KillCredit1`, `ScriptName`)
 VALUES
 (161725, 'Thariel Wingstroke', NULL, 932000, 11, 11, 0, 12, 3, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, 'SmartAI', 0, 0.98, 1, 1, 1, 1, 2, 0, ''),
@@ -114,10 +124,12 @@ VALUES
 (161799, '[KC] Flesh sanctified at the Moonwell', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 10, 0, 0, '', 0, 1, 1, 1, 1, 1, 130, 0, ''),
 (161846, '[KC] Newborns saved', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 10, 0, 0, '', 0, 1, 1, 1, 1, 1, 130, 0, ''),
 (162924, '[KC] Theren-Dion Sentinel defeated', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 10, 0, 0, '', 0, 1, 1, 1, 1, 1, 130, 0, ''),
-(162932, 'Tortured Ghost', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 6, 0, 0, '', 0, 1, 1, 1, 1, 1, 130, 0, '')
+(162932, 'Tortured Ghost', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 6, 0, 0, '', 0, 1, 1, 1, 1, 1, 130, 0, ''),
+(161905, 'Elydna Wingstroke', 'MoonFire Zone', 0, 7, 7, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33554434, 2048, 9, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 1, 8322, 0, ''),
+(161907, 'Elydna Wingstroke', 'Tornado', 0, 7, 7, 0, 14, 0, 0.8, 1.14286, 20, 0, 2000, 2000, 1, 33554434, 2048, 9, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 1, 8322, 0, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `DamageModifier` = VALUES(`DamageModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `KillCredit1` = VALUES(`KillCredit1`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161905, 161907, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (161725, 0, 19180, 1, 1),
@@ -152,9 +164,11 @@ VALUES
 (161799, 0, 11686, 1, 1),
 (161846, 0, 11686, 1, 1),
 (162924, 0, 11686, 1, 1),
-(162932, 0, 9534, 1, 1);
+(162932, 0, 9534, 1, 1),
+(161905, 0, 11686, 1, 1),
+(161907, 0, 11686, 1, 1);
 
-DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
+DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161905, 161907, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`)
 VALUES
 (162880, 1, 5598, 0, 2550),
@@ -165,10 +179,11 @@ VALUES
 (162872, 1, 5598, 0, 2550),
 (162873, 1, 5598, 0, 2550);
 
-DELETE FROM `creature_template_movement` WHERE `CreatureId` = 162925;
+DELETE FROM `creature_template_movement` WHERE `CreatureId` IN (161905, 162925);
 INSERT INTO `creature_template_movement` (`CreatureId`, `Ground`, `Swim`, `Flight`, `Rooted`, `Chase`, `Random`, `InteractionPauseTimer`)
 VALUES
-(162925, 1, 1, 0, 1, 0, 0, NULL);
+(162925, 1, 1, 0, 1, 0, 0, NULL),
+(161905, 1, 1, 0, 1, 0, 0, NULL);
 
 -- Three CoA displays resolve in CreatureDisplayInfo.dbc but had no creature_model_info row, without which
 -- the creature cannot load (Creature.cpp:519-532). Values from stock creatures of the same build:
@@ -255,13 +270,14 @@ VALUES
 -- 2300512 Fallen Aspirant: the corpse chest of 1660014 (type 3, lock 1689, loot 2300512, consumable, quest
 --   1660014), every data column SOURCED-CACHE
 -- 2300513 Offering Bowl: the goober of 1660016 objective 1 (Data1 1660016 SOURCED-CACHE)
--- 2300526 Baby Night Elf: the goober of 1660017 objective 1 (Data1 1660017 SOURCED-CACHE)
-INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `castBarCaption`, `size`, `AIName`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`)
+-- 2300526 Baby Night Elf: the goober of 1660017 objective 1 (Data1 1660017 SOURCED-CACHE); a click runs
+--   go_coa_baby_night_elf in mod-ascension-compat (section 9)
+INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `castBarCaption`, `size`, `AIName`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `ScriptName`)
 VALUES
-(2300512, 3, 84863, 'Fallen Aspirant', '', 1, '', 1689, 2300512, 0, 1, 0, 0, 0, 0, 1660014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2300513, 10, 87025, 'Offering Bowl', '', 1, 'SmartGameObjectAI', 0, 1660016, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2300526, 10, 7336, 'Baby Night Elf', '', 1, 'SmartGameObjectAI', 0, 1660017, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `AIName` = VALUES(`AIName`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`);
+(2300512, 3, 84863, 'Fallen Aspirant', '', 1, '', 1689, 2300512, 0, 1, 0, 0, 0, 0, 1660014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
+(2300513, 10, 87025, 'Offering Bowl', '', 1, 'SmartGameObjectAI', 0, 1660016, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
+(2300526, 10, 7336, 'Baby Night Elf', '', 1, '', 0, 1660017, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'go_coa_baby_night_elf')
+ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `AIName` = VALUES(`AIName`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`), `ScriptName` = VALUES(`ScriptName`);
 
 -- Cut of Good Meat from the corpses (SOURCED-EXILES gameobject_loot 2300512); the Blessed Good Flesh
 -- Amalgam from the Aberrant Flesh Remnant (INFERRED: "slay whatever shadow rises from its depths").
@@ -318,35 +334,39 @@ VALUES
 (1660072, 0, 0, 1660071, 0, 0),
 (1660073, 0, 0, 1660072, 0, 0);
 
+-- Progress and completion texts: SOURCED-ARCHIVE, the English quest-window texts of the AscensionES
+-- translation addon (questdata_parsed.json pEN / cEN). Its Details and Objectives of these 11 quests are
+-- identical to the realm's quest cache (checked by the generator). 1660071 has no progress text (no
+-- objective); 1660016's progress text repeats 1660015's in the archive.
 DELETE FROM `quest_offer_reward` WHERE `ID` IN (1660012, 1660013, 1660014, 1660015, 1660016, 1660017, 1660040, 1660071, 1660072, 1660073, 1660085);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)
 VALUES
-(1660012, ''),
-(1660013, ''),
-(1660014, ''),
-(1660015, ''),
-(1660016, ''),
-(1660017, ''),
-(1660085, ''),
-(1660040, ''),
-(1660071, ''),
-(1660072, ''),
-(1660073, '');
+(1660012, 'Stop.$b$bI can feel you. I know you’re there. And I know you’re not one of us.$b$bWhat business brings you to the Vulture Cult Eyrie?'),
+(1660013, 'Communion is the most sacred moment for any initiate. In hers, Elydna will stake her very life. She must fight for her right to stand as a Druid of the Vulture… or else end as sacrificial carrion.$b$bBut there are still… preparations to be made. If what you seek, out of pity for her brother, is to see her survive the rite, well… perhaps you can be of use.'),
+(1660014, 'Ahh… I can almost taste it. And you’ve brought five? Yes… intact. I don’t know how you resisted sneaking a bite.$b$b<Aegya runs her tongue across her lips, slowly and obscenely: a black slug slick with slime.>$b$bThe Great Vulture… will feast tonight.'),
+(1660015, 'Rotten flesh… sanctified. The Great Vulture will savor this offering.$b$bThe time has come. Elydna Wingstroke’s communion begins.'),
+(1660016, 'A sublime fight. The Great Vulture is pleased.$b$bOh, don’t tell me you pity Elydna. <Aegya pouts mockingly.> Didn’t I warn you of the risks of the communion?$b$bYou either triumph, and rise as one of us… or you fail, only to rot in the Moonlit Ossuary.$b$bElydna had her chance. You simply proved the stronger. Consider your own “communion” a success. From this moment, you may choose: join us… or walk away.'),
+(1660017, '<The elf breathes in, catching the scent of the flower crown.>$b$bThey followed. Good.$b$bThe Great Vulture teaches many lessons, but to sacrifice such tender lives to the cruelty of its beak… that is a depravity I could never forgive myself.$b$bWhatever it takes, I will see these children safe.'),
+(1660085, '<You open your hand, revealing Elydna''s pendant. At the sight of it, Thariel''s grief-stricken expression eases ever so slightly.>$b$bI suppose... in the absence of a body to mourn, this will have to do.$b$b<He takes the pendant with trembling hands and presses it to his chest.>$b$bElydna... what madness drove you to join those degenerates?'),
+(1660040, 'The abomination… is it dead?$b$b<The elf glances over your garb, splattered with bits of bloody mucus.>$b$bThe abomination is dead.$b$bSplendid.'),
+(1660071, 'Yes, $c? What business brings you to Dolanaar?$b$b<The druid gives your account his full attention. As your tale unfolds, his face darkens and the lines at the corners of his eyes deepen.>$b$bAegya… A name I''d hoped never to hear again. So they''re here, then. In Teldrassil.$b$bThe audacity…$b$bForget the Cult, $n, and rest easy. I''ll see to dismantling them myself.'),
+(1660072, 'So, the Vulture Cult…$b$b<Her eyes are deep wells of memory. Far below, an ancient rancor ferments.>$b$bI''ll ready my Sentinels, impertinence or no from Tallonkai. He forgets that in politics—as in religion, in war, and in nearly everything that matters—it''s the women who give the orders.'),
+(1660073, 'Is it done?$b$bGood work. My Sentinels will see to the rest, and they''ll be ready to strike the Vulture Cult''s nest and bring Lady Aegya to justice, once and for all.');
 
 DELETE FROM `quest_request_items` WHERE `ID` IN (1660012, 1660013, 1660014, 1660015, 1660016, 1660017, 1660040, 1660071, 1660072, 1660073, 1660085);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
-(1660012, ''),
-(1660013, ''),
-(1660014, ''),
-(1660015, ''),
-(1660016, ''),
-(1660017, ''),
-(1660085, ''),
-(1660040, ''),
+(1660012, '<The elf shows you a mouthful of yellow, jagged teeth. Let that be warning enough.>$b$bOnly those who survive the Carrion Path are welcome in the Nest of the Vulture’s Cult.'),
+(1660013, '<The empty sockets of Aegya’s eyes fix on you with a gaze that cuts deeper than any blade.>'),
+(1660014, 'Time is short, and the Great Vulture grows restless. Even now he circles overhead, watching you…'),
+(1660015, 'The communion is about to begin. You have yet to sanctify the flesh of tribute?'),
+(1660016, 'The communion is about to begin. You have yet to sanctify the flesh of tribute?'),
+(1660017, 'Did you reach them in time? Were they still alive?'),
+(1660085, '<The elf''s eyes wander, clouded with worry.>'),
+(1660040, 'The abomination… is it dead?'),
 (1660071, ''),
-(1660072, ''),
-(1660073, '');
+(1660072, 'Yes, $c?'),
+(1660073, 'Have you dealt with the vultures?');
 
 -- Tallonkai Swiftroot (stock 3567) takes 1660071 and gives 1660072; his spawn belongs to tel-dolanaar.
 DELETE FROM `creature_queststarter` WHERE `quest` IN (1660012, 1660013, 1660014, 1660015, 1660016, 1660017, 1660040, 1660071, 1660072, 1660073, 1660085);
@@ -577,16 +597,56 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 9. Scripts
 -- ---------------------------------------------------------------------------
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161725, 161727, 161784, 161847, 162856, 162870, 162871, 162872, 162873, 162925) AND `source_type` = 0;
+-- Elydna's communion (1660016). The Offering Bowl wakes her once: she keeps the offering player, walks
+-- to the bowl, kneels and calls on the Great Vulture, rises after 5 s and fights: Moonfire 256721 on her
+-- victim, a MoonFire Zone (161905, spell 256739) under a random player every 14-18 s, and at half health
+-- her 4 s Tornado cast 256757, which raises two tornadoes (161907). A bowl use during the rite is ignored.
+-- Evading or dying despawns her helpers; she runs back to ST8672 and waits again. Lady Aegya announces the
+-- start and the end. The walk-in, the helpers placement and timings, and her lines are INFERRED; the
+-- helpers and their spells are CoA data (creature cache, Spell.dbc, MobSpells.lua).
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161725, 161727, 161784, 161847, 161905, 161907, 162856, 162870, 162871, 162872, 162873, 162925) AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (161725, 0, 0, 0, 62, 0, 100, 0, 932000, 0, 0, 0, 0, 0, 33, 162932, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Thariel Wingstroke - On Gossip Option 0 Selected - Quest Credit Speak with Thariel Wingstroke'),
 (161725, 0, 1, 0, 62, 0, 100, 0, 932000, 1, 0, 0, 0, 0, 33, 162932, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Thariel Wingstroke - On Gossip Option 1 Selected - Quest Credit Speak with Thariel Wingstroke'),
 (161727, 0, 0, 0, 62, 0, 100, 0, 932003, 0, 0, 0, 0, 0, 33, 161797, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Lady Aegya - On Gossip Option 0 Selected - Quest Credit Speak with Lady Aegya'),
-(161784, 0, 0, 1, 38, 0, 100, 0, 1, 1, 0, 0, 0, 0, 2, 14, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Data Set 1 1 - Turn hostile'),
-(161784, 0, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Attack the offering player'),
-(161784, 0, 2, 0, 7, 0, 100, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Evade - Restore her friendly faction'),
+(161727, 0, 1, 0, 38, 0, 100, 0, 1, 1, 30000, 30000, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lady Aegya - On Data Set 1 1 from Elydna - Yell: the communion begins'),
+(161727, 0, 2, 0, 38, 0, 100, 0, 2, 1, 30000, 30000, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lady Aegya - On Data Set 2 1 from the dying Elydna - Yell: the Great Vulture is pleased'),
+(161784, 0, 0, 1, 25, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Reset - Wait for an offering'),
+(161784, 0, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Stand'),
+(161784, 0, 2, 3, 38, 1, 100, 0, 1, 1, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Data Set 1 1 from the Offering Bowl while waiting - Begin the communion (a bowl use during it is ignored)'),
+(161784, 0, 3, 4, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 64, 2, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Keep the offering player (the bowl overwrites list 1 on every use)'),
+(161784, 0, 4, 5, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 12, 2, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Say line 0 to the offering player'),
+(161784, 0, 5, 6, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 45, 1, 1, 0, 0, 0, 0, 19, 161727, 100, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Tell Lady Aegya the communion begins'),
+(161784, 0, 6, 7, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Walk'),
+(161784, 0, 7, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 1, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 10834, 443, 1386.288, 5.4, 'Elydna Wingstroke - Linked - Walk to the Offering Bowl (terrain between the meat piles, 2.9 yd from the Offering Bowl and 17.4 yd from her post on ST8672, on the Shadowglen-start navmesh; faces 5.40 onto the bowl)'),
+(161784, 0, 8, 9, 34, 2, 100, 0, 8, 1, 0, 0, 0, 0, 17, 68, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On reaching the Offering Bowl - Kneel'),
+(161784, 0, 9, 10, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Yell line 1'),
+(161784, 0, 10, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 67, 1, 5000, 5000, 0, 0, 100, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Rise in 5 seconds'),
+(161784, 0, 11, 12, 59, 2, 100, 0, 1, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Timed Event 1 - Stand'),
+(161784, 0, 12, 13, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - The duel begins'),
+(161784, 0, 13, 14, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 2, 14, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Turn hostile'),
+(161784, 0, 14, 15, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 12, 2, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Attack the offering player'),
+(161784, 0, 15, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 12, 2, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Say line 2 to the offering player'),
+(161784, 0, 16, 0, 1, 4, 100, 0, 10000, 10000, 10000, 10000, 0, 0, 24, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Out of Combat 10 s after turning hostile (the offering player is gone) - Evade home'),
+(161784, 0, 17, 0, 0, 0, 100, 0, 3000, 5000, 9000, 12000, 0, 0, 11, 256721, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - In Combat - Cast Moonfire on the victim'),
+(161784, 0, 18, 0, 0, 0, 100, 1, 8000, 8000, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - In Combat, once - Say line 4 with the first MoonFire Zone'),
+(161784, 0, 19, 0, 0, 0, 100, 0, 8000, 8000, 14000, 18000, 0, 0, 12, 161905, 3, 5000, 0, 0, 0, 5, 40, 1, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - In Combat - Summon a MoonFire Zone under a random player'),
+(161784, 0, 20, 21, 2, 0, 100, 1, 0, 50, 0, 0, 0, 0, 11, 256757, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - At 50% Health - Cast Tornado (4 s)'),
+(161784, 0, 21, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Yell line 3'),
+(161784, 0, 22, 0, 8, 0, 100, 0, 256757, 0, 0, 0, 0, 0, 12, 161907, 3, 20000, 0, 0, 0, 202, 8, 2, 1, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Tornado completed - Summon two tornadoes within 8 yd'),
+(161784, 0, 23, 24, 7, 0, 100, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Evade - Restore her friendly faction'),
+(161784, 0, 24, 25, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161905, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Despawn her MoonFire Zones'),
+(161784, 0, 25, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161907, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Despawn her tornadoes'),
+(161784, 0, 26, 27, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Death - Say line 5'),
+(161784, 0, 27, 28, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161905, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Despawn her MoonFire Zones'),
+(161784, 0, 28, 29, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161907, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Despawn her tornadoes'),
+(161784, 0, 29, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 45, 2, 1, 0, 0, 0, 0, 19, 161727, 100, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Tell Lady Aegya the communion is over'),
 (161847, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 29, 2, 0, 161848, 161847, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Butterfly - On Just Summoned - Follow the summoner; within 5.5 yd of Eldya credit Butterflies delivered and despawn'),
+(161905, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 85, 256739, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <MoonFire Zone> - On Just Summoned - Cast Moonfire (2 s ground ring, then the burst)'),
+(161907, 0, 0, 1, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 75, 256758, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <Tornado> - On Just Summoned - Tornado model'),
+(161907, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 75, 256759, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <Tornado> - Linked - Winds that strike and knock back every second'),
+(161907, 0, 2, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 89, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke <Tornado> - Linked - Drift within 10 yd'),
 (162856, 0, 0, 1, 62, 0, 100, 0, 932010, 0, 0, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Theren-Dion Sentinel - On Gossip Option 0 Selected - Close Gossip'),
 (162856, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 64, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Theren-Dion Sentinel - Linked - Store the challenger'),
 (162856, 0, 2, 3, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 2, 14, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Theren-Dion Sentinel - Linked - Turn hostile for the bout'),
@@ -653,20 +713,59 @@ VALUES
 (2300513, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161798, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Offering Bowl - On Use - Quest Credit Sanctified flesh offered'),
 (2300513, 1, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 64, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Offering Bowl - Linked - Store the offering player'),
 (2300513, 1, 2, 3, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 100, 1, 0, 0, 0, 0, 0, 19, 161784, 40, 0, 0, 0, 0, 0, 0, 'Offering Bowl - Linked - Send the offering player to Elydna Wingstroke'),
-(2300513, 1, 3, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 45, 1, 1, 0, 0, 0, 0, 19, 161784, 40, 0, 0, 0, 0, 0, 0, 'Offering Bowl - Linked - Wake Elydna Wingstroke for her communion'),
-(2300526, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161846, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Baby Night Elf - On Use - Quest Credit Newborns saved'),
-(2300526, 1, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161847, 3, 600000, 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Baby Night Elf - Linked - The user summons a Butterfly here, seen by the user only'),
-(2300526, 1, 2, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Baby Night Elf - Linked - Despawn until it respawns');
+(2300513, 1, 3, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 45, 1, 1, 0, 0, 0, 0, 19, 161784, 40, 0, 0, 0, 0, 0, 0, 'Offering Bowl - Linked - Wake Elydna Wingstroke for her communion');
 
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 6138 AND `source_type` = 2;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (6138, 2, 0, 0, 46, 0, 100, 0, 6138, 0, 0, 0, 0, 0, 33, 161729, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Areatrigger 6138 - On Trigger - Quest Credit Carrion Path traversed');
 
-DELETE FROM `spell_script_names` WHERE `spell_id` = 256707;
+-- 161784 line 0: INFERRED: as she leaves her post for the bowl
+-- 161784 line 1: INFERRED: kneeling at the bowl; echoes Aegya (1660013 completion: "fight for her right ... or
+--   else end as sacrificial carrion")
+-- 161784 line 2: INFERRED: as she rises and attacks
+-- 161784 line 3: INFERRED: with her Tornado cast
+-- 161784 line 4: INFERRED: with her first MoonFire Zone; echoes 1660015 ("The face of Elune you know is only one
+--   among many")
+-- 161784 line 5: INFERRED: her death; her pendant goes back to her brother in 1660085
+-- 161727 line 0: text SOURCED-ARCHIVE, speaker and timing INFERRED: the 1660015 completion text, Gilgaen's
+--   turn-in line (he ends 1660015); Aegya ends 1660013 and 1660016
+-- 161727 line 1: text SOURCED-ARCHIVE, timing INFERRED: the 1660016 completion text (Aegya ends 1660016)
+-- 161783 line 0: DERIVED: from the 1660015 Details ("slay whatever shadow rises from its depths"); a boss
+--   whisper to its summoner, the only player who sees it
+DELETE FROM `creature_text` WHERE `CreatureID` IN (161727, 161783, 161784);
+INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Language`, `Probability`, `Emote`, `Duration`, `Sound`, `BroadcastTextId`, `TextRange`, `comment`)
+VALUES
+(161784, 0, 0, 'So you are the one who brought the offering. The Great Vulture watches us both, $n.', 12, 0, 100, 0, 0, 0, 0, 0, 'Elydna Wingstroke - INFERRED'),
+(161784, 1, 0, 'Great Vulture! Take the flesh we offer, and take the weaker of us!', 14, 0, 100, 0, 0, 0, 0, 0, 'Elydna Wingstroke - INFERRED'),
+(161784, 2, 0, 'Only one of us leaves this nest.', 12, 0, 100, 0, 0, 0, 0, 0, 'Elydna Wingstroke - INFERRED'),
+(161784, 3, 0, 'Winds of the moon, tear them from my nest!', 14, 0, 100, 0, 0, 0, 0, 0, 'Elydna Wingstroke - INFERRED'),
+(161784, 4, 0, 'Feel the light of Elune''s other face!', 12, 0, 100, 0, 0, 0, 0, 0, 'Elydna Wingstroke - INFERRED'),
+(161784, 5, 0, 'The Great Vulture… has chosen. Thariel… forgive me…', 12, 0, 100, 0, 0, 0, 0, 0, 'Elydna Wingstroke - INFERRED'),
+(161727, 0, 0, 'The time has come. Elydna Wingstroke’s communion begins.', 14, 0, 100, 0, 0, 0, 0, 0, 'Lady Aegya - text SOURCED-ARCHIVE, speaker and timing INFERRED'),
+(161727, 1, 0, 'A sublime fight. The Great Vulture is pleased.', 14, 0, 100, 0, 0, 0, 0, 0, 'Lady Aegya - text SOURCED-ARCHIVE, timing INFERRED'),
+(161783, 0, 0, '%s rises from the depths of the Moonwell!', 42, 0, 100, 0, 0, 0, 0, 0, 'Aberrant Flesh Remnant - DERIVED');
+
+-- A Trail of Petals (1660017). Clicking a Baby Night Elf starts the 3 s "Rescuing a newborn" cast
+-- (256715) on it (go_coa_baby_night_elf); when it completes, spell_coa_rescuing_a_newborn credits the
+-- newborn, summons a Butterfly that only the rescuer sees and that follows the rescuer to Eldya, and
+-- despawns the baby until its 60 s respawn. How CoA triggered the cast is INFERRED; the spell is CoA
+-- data. Spell 256707 (Good Flesh Amalgam) raises each player's own Aberrant Flesh Remnant, seen only by
+-- that player and whispering its rise line to that player.
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (256707, 256715);
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
 VALUES
-(256707, 'spell_coa_channeling_blessing_of_the_moon');
+(256707, 'spell_coa_channeling_blessing_of_the_moon'),
+(256715, 'spell_coa_rescuing_a_newborn');
+
+-- Eldya's flower crown (256730, a hidden self aura, Spell.dbc): worn in Shadowglen while 1660017 is
+-- incomplete or complete, taken at turn-in or abandon (the quest-end status mask removes it,
+-- PlayerQuest.cpp SendQuestUpdate). "I have enchanted this flower crown; its fragrance will be...
+-- irresistible" (1660017 Details).
+DELETE FROM `spell_area` WHERE `spell` = 256730;
+INSERT INTO `spell_area` (`spell`, `area`, `quest_start`, `quest_start_status`, `quest_end`, `quest_end_status`, `aura_spell`, `racemask`, `gender`, `autocast`)
+VALUES
+(256730, 10143, 1660017, 10, 1660017, 10, 0, 0, 2, 1);
 
 -- ---------------------------------------------------------------------------
 -- 10. Stock herb node on the CoA Carrion Path
