@@ -49,6 +49,8 @@
 -- 161735 Rotworm: the vermin the rot draws into the ossuary (1660014, 1660040 texts); display 9906 SOURCED-CACHE
 -- 161832 Rotting Flesh Spawn: the monstrosity of the ossuary tunnels (1660040): rank 1, HealthModifier 2.79 and
 --   display 11138 SOURCED-CACHE
+-- 161782 Fallen Aspirant: rises from an opened corpse (1660014); type 6 and health SOURCED-CACHE; CoA displays
+--   652035/36/48/49 are missing, so the undead night elf Tortured Sentinel 12270 stands in
 -- 161847 Butterfly: a transformed newborn that follows its rescuer to Eldya (1660017 objective 2); display 86531
 --   SOURCED-CACHE
 -- 161789 Sacred Vulture: the cult's sacred birds perched over the Great Nest ("When the vultures spoke of you",
@@ -106,6 +108,7 @@ VALUES
 (161787, 'Fretful Withered Treant', NULL, 0, 3, 3, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 4, 0, 0, '', 0, 0.93, 1, 1, 1, 1, 0, 0, ''),
 (161735, 'Rotworm', NULL, 0, 1, 2, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 0, 0, '', 0, 0.4, 1, 1, 1, 1, 0, 0, ''),
 (161832, 'Rotting Flesh Spawn', NULL, 0, 4, 4, 0, 14, 0, 1, 1.14286, 20, 1, 2000, 2000, 1, 0, 2048, 0, 0, 0, '', 0, 2.79, 1, 1, 1, 1, 0, 0, ''),
+(161782, 'Fallen Aspirant', NULL, 0, 5, 6, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 6, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 1, 0, 0, ''),
 (161847, 'Butterfly', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 770, 2048, 0, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 1, 0, 0, ''),
 (161789, 'Sacred Vulture', NULL, 0, 7, 7, 0, 35, 0, 1, 1.14286, 20, 1, 2000, 2000, 1, 770, 2048, 1, 0, 0, '', 0, 0.98, 1, 1, 1, 1, 0, 0, ''),
 (162880, 'Adrilia Soultemper', NULL, 0, 27, 27, 0, 12, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
@@ -129,7 +132,7 @@ VALUES
 (161907, 'Elydna Wingstroke', 'Tornado', 0, 7, 7, 0, 14, 0, 0.8, 1.14286, 20, 0, 2000, 2000, 1, 33554434, 2048, 9, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 1, 8322, 0, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `DamageModifier` = VALUES(`DamageModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `KillCredit1` = VALUES(`KillCredit1`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161905, 161907, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161782, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161905, 161907, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (161725, 0, 19180, 1, 1),
@@ -143,6 +146,7 @@ VALUES
 (161787, 0, 6351, 1, 1),
 (161735, 0, 9906, 1, 1),
 (161832, 0, 11138, 1, 1),
+(161782, 0, 12270, 1, 1),
 (161847, 0, 86531, 1, 1),
 (161789, 0, 137311, 1, 1),
 (162880, 0, 12931, 1, 1),
@@ -168,7 +172,7 @@ VALUES
 (161905, 0, 11686, 1, 1),
 (161907, 0, 11686, 1, 1);
 
-DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161905, 161907, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
+DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (161725, 161726, 161727, 161728, 161729, 161735, 161782, 161783, 161784, 161787, 161789, 161797, 161798, 161799, 161832, 161846, 161847, 161848, 161905, 161907, 161916, 162856, 162870, 162871, 162872, 162873, 162874, 162880, 162924, 162925, 162931, 162932, 162970);
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`)
 VALUES
 (162880, 1, 5598, 0, 2550),
@@ -274,7 +278,7 @@ VALUES
 --   go_coa_baby_night_elf in mod-ascension-compat (section 9)
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `castBarCaption`, `size`, `AIName`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `ScriptName`)
 VALUES
-(2300512, 3, 84863, 'Fallen Aspirant', '', 1, '', 1689, 2300512, 0, 1, 0, 0, 0, 0, 1660014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
+(2300512, 3, 84863, 'Fallen Aspirant', '', 1, 'SmartGameObjectAI', 1689, 2300512, 0, 1, 0, 0, 0, 0, 1660014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
 (2300513, 10, 87025, 'Offering Bowl', '', 1, 'SmartGameObjectAI', 0, 1660016, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
 (2300526, 10, 7336, 'Baby Night Elf', '', 1, '', 0, 1660017, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'go_coa_baby_night_elf')
 ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `AIName` = VALUES(`AIName`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`), `ScriptName` = VALUES(`ScriptName`);
@@ -604,7 +608,7 @@ VALUES
 -- Evading or dying despawns her helpers; she runs back to ST8672 and waits again. Lady Aegya announces the
 -- start and the end. The walk-in, the helpers placement and timings, and her lines are INFERRED; the
 -- helpers and their spells are CoA data (creature cache, Spell.dbc, MobSpells.lua).
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161725, 161727, 161784, 161847, 161905, 161907, 162856, 162870, 162871, 162872, 162873, 162925) AND `source_type` = 0;
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161725, 161727, 161782, 161784, 161847, 161905, 161907, 162856, 162870, 162871, 162872, 162873, 162925) AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (161725, 0, 0, 0, 62, 0, 100, 0, 932000, 0, 0, 0, 0, 0, 33, 162932, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Thariel Wingstroke - On Gossip Option 0 Selected - Quest Credit Speak with Thariel Wingstroke'),
@@ -612,6 +616,7 @@ VALUES
 (161727, 0, 0, 0, 62, 0, 100, 0, 932003, 0, 0, 0, 0, 0, 33, 161797, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Lady Aegya - On Gossip Option 0 Selected - Quest Credit Speak with Lady Aegya'),
 (161727, 0, 1, 0, 38, 0, 100, 0, 1, 1, 30000, 30000, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lady Aegya - On Data Set 1 1 from Elydna - Yell: the communion begins'),
 (161727, 0, 2, 0, 38, 0, 100, 0, 2, 1, 30000, 30000, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lady Aegya - On Data Set 2 1 from the dying Elydna - Yell: the Great Vulture is pleased'),
+(161782, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Fallen Aspirant - On Just Summoned - Attack the player who opened its corpse'),
 (161784, 0, 0, 1, 25, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Reset - Wait for an offering'),
 (161784, 0, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - Linked - Stand'),
 (161784, 0, 2, 3, 38, 1, 100, 0, 1, 1, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elydna Wingstroke - On Data Set 1 1 from the Offering Bowl while waiting - Begin the communion (a bowl use during it is ignored)'),
@@ -707,9 +712,10 @@ VALUES
 (162925, 0, 2, 0, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 162874, 4, 60000, 1, 0, 0, 202, 3, 1, 1, 0, 0, 0, 0, 0, 'Vulture Egg - On Death - Summon a Frenzied Vulture beside the egg to attack the killer'),
 (162925, 0, 3, 0, 6, 0, 50, 0, 0, 0, 0, 0, 0, 0, 12, 162874, 4, 60000, 1, 0, 0, 202, 3, 1, 1, 0, 0, 0, 0, 0, 'Vulture Egg - On Death - 50% a second Frenzied Vulture to attack the killer');
 
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300513, 2300526) AND `source_type` = 1;
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300512, 2300513, 2300526) AND `source_type` = 1;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
+(2300512, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161782, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Fallen Aspirant - On Opened, once per spawn - Summon a Fallen Aspirant for the opener'),
 (2300513, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161798, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Offering Bowl - On Use - Quest Credit Sanctified flesh offered'),
 (2300513, 1, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 64, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Offering Bowl - Linked - Store the offering player'),
 (2300513, 1, 2, 3, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 100, 1, 0, 0, 0, 0, 0, 19, 161784, 40, 0, 0, 0, 0, 0, 0, 'Offering Bowl - Linked - Send the offering player to Elydna Wingstroke'),
