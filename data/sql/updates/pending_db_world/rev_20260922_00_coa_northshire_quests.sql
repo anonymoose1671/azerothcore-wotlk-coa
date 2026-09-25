@@ -22,7 +22,10 @@
 --     Alma 652002, the injured guard 652079 and the Theologian 652003, and none of those display ids
 --     exists in the client. Until a capture supplies CoA's own looks they use resolvable stock displays:
 --     Bianca 3344, Moroi 3253, Sister Alma 10909 (a translucent human woman, the Darrowshire Spirit),
---     the guard 3167 (Northshire Guard) sitting injured, the Theologian and its images 5001.
+--     the guard 3167 (Northshire Guard) sitting injured. The Theologian and his images are a human man
+--     (display 49) dressed through creature_display_preset in the black priest robe and cowl of display
+--     23655, restyled to a player skin and face: a dark priest for a follower of the abbess who taught "the
+--     nature of the Shadow". No capture of his look exists, so race, gender and outfit are INFERRED.
 --   spider look  STAND-IN. No source records an aura on the Shadewell Spider: the client cache has
 --     no aura column at all, and the exil.es export leaves its spells and texture empty. Its display
 --     955 is an ordinary MineSpider at 0.7 scale, fully opaque, so nothing in the data makes it dark.
@@ -44,10 +47,10 @@
 -- stand alone.
 --
 -- The Wayward Theologian is the questline miniboss. The cache carries the fight as four entries: 161713
--- the elite at 5.76x health, 161904 an elite duplicate at 1.0x, and 161908/161909 invisible markers of the
--- kind CoA uses for zone effects. That matches the reported fight, where the boss splits into low-health
--- mirror images around the ruined estate and cannot be harmed until they are cleared. The split is scripted
--- below from that shape. The spells it casts are in no source we hold and are not invented here.
+-- the elite at 5.76x health, 161904 an elite image at 1.0x, and the invisible portals 161908/161909 (their
+-- old subnames were "Portal 01" and "Portal 02"). His spells come from the archived MobSpells combat log
+-- (zone Shadewell): Shadow Bolt 256737, Shadowfury 256486, Dark Reality 256762 and Shadow Shield 256763;
+-- the images cast Shadow Bolt 256738 and the portals Portal 256761. Section 8 scripts the fight.
 --
 -- PLACEMENT IS OWNED BY THE GAME. This file is generated, and the generator reads the live world back
 -- before it writes: every spawn in the blocks below, and the DisplayScale and auras of these creatures.
@@ -95,17 +98,19 @@ VALUES
 (161712, 'Accursed Censor', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 6, 0, '', 0, 2.79, 1, 1, 1, 0),
 (161708, 'Accursed Judge', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 6, 0, '', 0, 0.93, 1, 1, 1, 0),
 (161713, 'Wayward Theologian', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 5.76, 1, 1, 1, 0),
-(161904, 'Wayward Theologian', NULL, 6, 6, 0, 14, 0, 1, 1, 0, 7, 0, '', 0, 1.0, 1, 1, 1, 0),
+(161904, 'Wayward Theologian', NULL, 6, 6, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 1.0, 1, 1, 1, 64),
 (161703, '[KC] Hidden Path', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
 (161704, '[KC] Ruined Estate', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
 (161714, '[KC] Dungeon Entrance', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, 'SmartAI', 0, 1, 1, 1, 1, 130),
 (161715, '[KC] Purify Relics', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
 (161824, '[KC] Purify Staff', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
 (161825, '[KC] Purify Idol', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(161826, '[KC] Purify Jewel', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130)
+(161826, '[KC] Purify Jewel', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
+(161908, 'Wayward Theologian', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 9, 0, 'SmartAI', 0, 1, 1, 1, 1, 130),
+(161909, 'Wayward Theologian', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 9, 0, 'SmartAI', 0, 1, 1, 1, 1, 130)
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161700, 161701, 161702, 161705, 161716, 161717, 161736, 161707, 161712, 161708, 161713, 161904, 161703, 161704, 161714, 161715, 161824, 161825, 161826);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161700, 161701, 161702, 161705, 161716, 161717, 161736, 161707, 161712, 161708, 161713, 161904, 161703, 161704, 161714, 161715, 161824, 161825, 161826, 161908, 161909);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (161700, 0, 3344, 1, 1),
@@ -118,8 +123,8 @@ VALUES
 (161707, 0, 955, 0.33, 1),
 (161712, 0, 7555, 1, 1),
 (161708, 0, 4629, 1, 1),
-(161713, 0, 5001, 1, 1),
-(161904, 0, 5001, 1, 1),
+(161713, 0, 49, 1, 1),
+(161904, 0, 49, 1, 1),
 (161736, 1, 4419, 1, 1),
 (161703, 0, 11686, 1, 1),
 (161704, 0, 11686, 1, 1),
@@ -127,7 +132,15 @@ VALUES
 (161715, 0, 11686, 1, 1),
 (161824, 0, 11686, 1, 1),
 (161825, 0, 11686, 1, 1),
-(161826, 0, 11686, 1, 1);
+(161826, 0, 11686, 1, 1),
+(161908, 0, 11686, 1, 1),
+(161909, 0, 11686, 1, 1);
+
+DELETE FROM `creature_display_preset` WHERE `entry` IN (161713, 161904);
+INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, `class`, `skin`, `face`, `hair`, `haircolor`, `facialhair`, `guild_id`, `item_head`, `item_shoulders`, `item_body`, `item_chest`, `item_waist`, `item_legs`, `item_feet`, `item_wrists`, `item_hands`, `item_back`, `item_tabard`)
+VALUES
+(161713, 49, 1, 0, 1, 1, 4, 4, 9, 3, 0, 145663, 146782, 147800, 149777, 0, 3238, 155842, 0, 0, 0, 0),
+(161904, 49, 1, 0, 1, 1, 4, 4, 9, 3, 0, 145663, 146782, 147800, 149777, 0, 3238, 155842, 0, 0, 0, 0);
 
 DELETE FROM `creature_template_addon` WHERE `entry` IN (161705, 161707);
 INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
@@ -183,16 +196,26 @@ VALUES
 DELETE FROM `quest_offer_reward` WHERE `ID` IN (1660000, 1660001, 1660002, 1660003, 1660004, 1660005, 1660036, 1660038);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)
 VALUES
-(1660000, ''),
-(1660001, ''),
-(1660002, ''),
-(1660003, ''),
-(1660004, ''),
-(1660005, ''),
-(1660036, ''),
-(1660038, '');
+(1660000, 'Did my sister send you, by any chance?$B$BI already told her this isn’t a good time; although honestly, there’s never a good time to deal with her.$B$BAnyway, I’m in the middle of a discovery that… has me completely absorbed. Maybe you’d be interested in lending a hand?'),
+(1660001, 'Well, what do we have here?$B$B<Moroi eagerly inspects the pages you’ve brought him.>$B$BThat clears up a few gaps: the abbess accused of heresy was tried by the Inquisition and excommunicated. No wonder the Church wanted the whole thing wiped from the records. It’s almost a miracle they forgot to burn this book.$B$BMakes you wonder what she did to earn such a punishment, doesn’t it?'),
+(1660002, 'The way is shut, mortal.$B$BThe dungeon is home to the Dead, and the Dead keep it so.$B$BJailers in life, prisoners in death… all of us, victims of her curse.$B$BThe way is shut.'),
+(1660003, 'The curse…$B$BThe way has opened. I can feel it; a warm light calling my spirit elsewhere.$B$B<The priestess seems more awake, more aware than before.>$B$BI was once called Sister Alma, priestess of Northshire Abbey.$B$BYou came down here seeking knowledge. You’re not the first. But I trust you’ll be the last.$B$BVery well. I will tell you about Sitis.'),
+(1660004, '<Moroi listens to your account intently.>$B$BThey say the pen is mightier than the sword, and Sitis... fitting name. It means “thirst.” From what you’ve told me, she was a woman thirsty for truth and knowledge.$B$BI hardly think that’s a sin.$B$BHere’s my plan, $N: I’ll go with my sister, say my goodbyes to my mother, and on my way back to the abbey, I’ll stop by that place you spoke of, where Sitis held her most daring gatherings.$B$B“There is no darkness but ignorance.” I thank you for the warning, but my mind won’t rest until I uncover the truth... no matter the risks you’ve mentioned.'),
+(1660005, 'You did it… <he gasps for breath.>$B$BIt shames the uniform I wear with such pride that I had to turn to someone outside the army.$B$BIt should have been my duty to see it done, but, as you can see, I haven’t the strength to even limp back to the Abbey.$B$BStormwind owes you thanks, $C… and so do I.'),
+(1660036, '<The priest listens intently as you recount the events.>$B$BAn interesting discovery.$B$BIt is curious… almost every saint to whom we ascribe visions suffered some form of blindness.$B$BIn any case <he tosses the murloc eyes into the waste bin> only the Light knows what the future holds.$B$BWhatever you think you saw in these heretical creatures was nothing but deception. Murlocs are an insult to the human spirit. Best you put this curiosity of yours to rest.'),
+(1660038, 'The fire cannot burn forever without someone to indulge its whims.$B$BBy killing him, you’ve set him free. Now the flames must content themselves with licking his bones until both are dust and ash.$B$BBut these chambers hold more than dust and ash… Choose your reward, mortal.');
 
 DELETE FROM `quest_request_items` WHERE `ID` IN (1660000, 1660001, 1660002, 1660003, 1660004, 1660005, 1660036, 1660038);
+INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
+VALUES
+(1660000, ''),
+(1660001, 'Have you found the pages?'),
+(1660002, 'The way is shut…'),
+(1660003, 'The way is still shut, mortal...$B$BAn eternal Dark Night of the Soul.'),
+(1660004, 'Learned anything?'),
+(1660005, 'Don’t worry about me; I can’t follow, but I can still hold my ground.'),
+(1660036, 'Can I help you with something, child?'),
+(1660038, 'Have you granted the censor both death and freedom?');
 
 -- ---------------------------------------------------------------------------
 -- 5. Who offers and who takes them back
@@ -368,30 +391,53 @@ VALUES
 (6910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall');
 
 -- ---------------------------------------------------------------------------
--- 8. The Wayward Theologian splits
+-- 8. The Wayward Theologian
 -- ---------------------------------------------------------------------------
--- At 30% health the boss becomes unselectable and three mirror images appear on the ground within
--- 8 yards of him. Each image that dies adds one to a counter; at three he can be targeted again. An
--- evade or his death clears the images and the counter, so a wipe never leaves him untouchable.
--- The reported fight hung a rope for images on the estate's upper floors; these images are summoned
--- on the ground, so no rope is needed. Engaging him also credits the ruined estate, for a player who
--- reached the estate without crossing the ridge trigger.
-DELETE FROM `smart_scripts` WHERE `entryorguid` = 161713 AND `source_type` = 0;
+-- He melees, casts Shadow Bolt at his target and Shadowfury, a 5 second cast that stuns everyone within
+-- 8 yards of him for 3 seconds. Every 30-60 seconds while unshielded he casts Dark Reality (4 seconds,
+-- interruptible). When it completes he takes Shadow Shield (all damage taken -100%), two portals open in
+-- the estate's yard and an image of him steps out of each, casting Shadow Bolt; killing both images
+-- removes the shield and closes the portals, and the cycle can repeat. Repeat intervals follow the observed
+-- casts (Shadowfury 5-32 s, Dark Reality 29-64 s); first casts and the Shadow Bolt pace are INFERRED. An
+-- evade or his death clears the shield, portals, images and counter. Engaging him credits the ruined
+-- estate, for a player who reached it without crossing the ridge trigger; his death credits players
+-- within 30 yards.
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161713, 161904, 161908, 161909) AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
-(161713, 0, 0, 1, 2, 0, 100, 1, 1, 30, 0, 0, 0, 0, 18, 33554432, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Between 1-30% Health - Set UNIT_FLAG_NOT_SELECTABLE (No Repeat)'),
-(161713, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 202, 8, 3, 1, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Summon 3 mirror images on the ground within 8 yards'),
-(161713, 0, 2, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say split'),
-(161713, 0, 3, 0, 82, 0, 100, 0, 161904, 0, 0, 0, 0, 0, 63, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On mirror image died - Add 1 to counter 1'),
-(161713, 0, 4, 5, 77, 0, 100, 0, 1, 3, 0, 0, 0, 0, 19, 33554432, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On counter 1 = 3 - Remove UNIT_FLAG_NOT_SELECTABLE'),
-(161713, 0, 5, 6, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
-(161713, 0, 6, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say reform'),
-(161713, 0, 7, 8, 7, 0, 100, 0, 0, 0, 0, 0, 0, 0, 19, 33554432, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On evade - Remove UNIT_FLAG_NOT_SELECTABLE'),
-(161713, 0, 8, 9, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161904, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Despawn the mirror images'),
-(161713, 0, 9, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
-(161713, 0, 10, 0, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161704, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On aggro - Credit the ruined estate'),
-(161713, 0, 11, 12, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161713, 0, 0, 0, 0, 0, 18, 30, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On death - Credit the confrontation to players within 30 yards'),
-(161713, 0, 12, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161904, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Despawn the mirror images');
+(161713, 0, 0, 0, 0, 0, 100, 0, 2000, 4000, 5000, 8000, 0, 0, 11, 256737, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat - Cast Shadow Bolt on his target'),
+(161713, 0, 1, 0, 0, 0, 100, 0, 8000, 12000, 5000, 32000, 0, 0, 11, 256486, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat - Cast Shadowfury around himself'),
+(161713, 0, 2, 0, 0, 1, 100, 0, 25000, 30000, 30000, 60000, 0, 0, 11, 256762, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Cast Dark Reality'),
+(161713, 0, 3, 4, 8, 0, 100, 0, 256762, 0, 0, 0, 0, 0, 11, 256763, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On Dark Reality completed - Cast Shadow Shield'),
+(161713, 0, 4, 5, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 2 (shielded)'),
+(161713, 0, 5, 6, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8619, -557, 145.744, 5.573, 'Wayward Theologian - Linked - Open Portal 01 in the yard south-west of the estate door, between the door lamp and the tree stump'),
+(161713, 0, 6, 7, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161909, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8586, -584, 145.101, 2.474, 'Wayward Theologian - Linked - Open Portal 02 in the yard north-east of the ruin, inside the broken gate under the oak'),
+(161713, 0, 7, 8, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8619, -557, 145.744, 5.573, 'Wayward Theologian - Linked - Summon an image at Portal 01'),
+(161713, 0, 8, 9, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8586, -584, 145.101, 2.474, 'Wayward Theologian - Linked - Summon an image at Portal 02'),
+(161713, 0, 9, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say shield'),
+(161713, 0, 10, 0, 82, 0, 100, 0, 161904, 0, 0, 0, 0, 0, 63, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On image died - Add 1 to counter 1'),
+(161713, 0, 11, 12, 77, 0, 100, 0, 1, 2, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On counter 1 = 2 - Remove Shadow Shield'),
+(161713, 0, 12, 13, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
+(161713, 0, 13, 14, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 1 (unshielded)'),
+(161713, 0, 14, 15, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
+(161713, 0, 15, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
+(161713, 0, 16, 17, 7, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On evade - Remove Shadow Shield'),
+(161713, 0, 17, 18, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161904, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Despawn the images'),
+(161713, 0, 18, 19, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
+(161713, 0, 19, 20, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
+(161713, 0, 20, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
+(161713, 0, 21, 22, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161704, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On aggro - Credit the ruined estate'),
+(161713, 0, 22, 23, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 1 (unshielded)'),
+(161713, 0, 23, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say pull'),
+(161713, 0, 24, 25, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161713, 0, 0, 0, 0, 0, 18, 0, 30, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On death - Credit the confrontation to players within 30 yards'),
+(161713, 0, 25, 26, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161904, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Despawn the images'),
+(161713, 0, 26, 27, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
+(161713, 0, 27, 28, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
+(161713, 0, 28, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say death'),
+(161904, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 25, 60, 1, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - On summoned - Attack the closest player within 60 yards'),
+(161904, 0, 1, 0, 0, 0, 100, 0, 0, 1000, 5000, 5500, 0, 0, 11, 256738, 1088, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - In combat - Cast Shadow Bolt on its target from range'),
+(161908, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 256761, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian Portal 01 - On summoned - Cast Portal'),
+(161909, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 256761, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian Portal 02 - On summoned - Cast Portal');
 
 -- ---------------------------------------------------------------------------
 -- 9. Discovery and purify credit
@@ -431,8 +477,10 @@ VALUES
 (2300522, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161825, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300522 - On use - Credit purifying the idol'),
 (2300523, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161826, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300523 - On use - Credit purifying the jewel');
 
+-- His lines are INFERRED: no source records any speech or voice for him, so they carry no sound.
 DELETE FROM `creature_text` WHERE `CreatureID` = 161713;
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Probability`, `comment`)
 VALUES
-(161713, 0, 0, 'The word is many! Strike at one and the rest endure!', 16, 100, 'Wayward Theologian - split'),
-(161713, 1, 0, 'The echoes fade... and I remain.', 16, 100, 'Wayward Theologian - reform');
+(161713, 0, 0, 'You walk where the abbess taught. The Inquisition never found us all.', 12, 100, 'Wayward Theologian - pull (INFERRED)'),
+(161713, 1, 0, 'Her word has many voices! Silence them, if you can.', 14, 100, 'Wayward Theologian - Shadow Shield (INFERRED)'),
+(161713, 2, 0, 'The echoes fade... but her teaching remains.', 12, 100, 'Wayward Theologian - death (INFERRED)');
