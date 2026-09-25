@@ -236,9 +236,6 @@ DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((658, 3107), (658,
 -- ---------------------------------------------------------------------------
 -- 4. Chain NPCs
 -- ---------------------------------------------------------------------------
--- 254000 Efry Cogspark: creaturecache 254000 (display 254001 does not resolve); a gnome woman and inventor
---   (npccache 58058 "Efry's the brightest gnome"); unarmed because 200118 asks for a weapon; look gnome female
---   from Gnome Pit Crewman 4430 (goggles, overalls), changed changed hair and face (INFERRED stand-in)
 -- 9300154 Gyrothor Turbospark: new NPC named by quest 200199 ("a gnome who is near his end, Gyrothor
 --   Turbospark"); INFERRED look; look gnome male from Doctor Draxlegauge 2774 (monocle, coat), changed aged
 --   face, pale hair, long beard (INFERRED stand-in)
@@ -248,6 +245,9 @@ DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((658, 3107), (658,
 -- 299326 Kali: fixed quest entry 299326 of 200105 ("They're known as Kali. Kill her"); INFERRED dwarf rookie;
 --   look dwarf female from Bael'dun Digger 2989 (rough leathers), changed changed hair and face (INFERRED stand-
 --   in)
+-- 254000 Efry Cogspark: creaturecache 254000 with its CoA display 254001 (model info in rev_20260925_11); a
+--   gnome woman and inventor (npccache 58058 "Efry's the brightest gnome"); unarmed because 200118 asks for a
+--   weapon
 -- 299236 Bromos Grummner: fixed quest entry 299236 of 200072; the stock paladin trainer 926 look (display 3393)
 --   and mace 1903; neutral faction 7 so the Anvilmar guards stay out of it
 -- 9300152 Talos: new NPC named by quest 200002 ("my falcon, Talos"); display 25103 is the small eagle (scale
@@ -256,10 +256,10 @@ DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((658, 3107), (658,
 --   fire elemental
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `detection_range`, `rank`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `type_flags`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`, `ScriptName`)
 VALUES
-(254000, 'Efry Cogspark', '', 0, 10, 10, 0, 55, 2, 1, 1.14286, 20, 0, 2000, 2000, 8, 0, 2048, 7, 134217728, 0, '', 0, 1.225, 1, 1, 1, 2, ''),
 (9300154, 'Gyrothor Turbospark', '', 930251, 8, 8, 0, 55, 1, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, 'SmartAI', 0, 1, 1, 1, 1, 2, ''),
 (9300155, 'Hulda Frostwhisper', '', 0, 5, 5, 0, 55, 0, 1, 1.14286, 20, 0, 2000, 2000, 8, 0, 2048, 7, 134217728, 0, 'SmartAI', 0, 1, 1, 1, 1, 2, ''),
 (299326, 'Kali', '', 0, 4, 4, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 134217728, 0, 'SmartAI', 0, 1.2, 1, 1, 1, 0, ''),
+(254000, 'Efry Cogspark', '', 0, 10, 10, 0, 55, 2, 1, 1.14286, 20, 0, 2000, 2000, 8, 0, 2048, 7, 134217728, 0, '', 0, 1.225, 1, 1, 1, 2, ''),
 (299236, 'Bromos Grummner', '', 0, 5, 5, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 2, 0, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 0, ''),
 (9300152, 'Talos', 'Baruhr''s Falcon', 0, 3, 3, 0, 35, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 1, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 2, ''),
 (9300153, 'Scorch', '', 0, 5, 5, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 8, 0, 2048, 4, 0, 9300153, '', 0, 1.5, 1, 1, 1, 0, '')
@@ -268,10 +268,10 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), 
 DELETE FROM `creature_template_model` WHERE `CreatureID` IN (254000, 299236, 299326, 9300152, 9300153, 9300154, 9300155);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
-(254000, 0, 1564, 1, 1),
 (9300154, 0, 1563, 1, 1),
 (9300155, 0, 54, 1, 1),
 (299326, 0, 54, 1, 1),
+(254000, 0, 254001, 1, 1),
 (299236, 0, 3393, 1, 1),
 (9300152, 0, 25103, 1, 1),
 (9300153, 0, 1405, 1, 1);
@@ -279,7 +279,6 @@ VALUES
 DELETE FROM `creature_display_preset` WHERE `entry` IN (254000, 299326, 9300154, 9300155);
 INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, `class`, `skin`, `face`, `hair`, `haircolor`, `facialhair`, `guild_id`, `item_head`, `item_shoulders`, `item_body`, `item_chest`, `item_waist`, `item_legs`, `item_feet`, `item_wrists`, `item_hands`, `item_back`, `item_tabard`)
 VALUES
-(254000, 1564, 7, 1, 1, 2, 4, 7, 3, 0, 0, 8730, 0, 12127, 6805, 12129, 12128, 11003, 0, 5389, 0, 0),
 (9300154, 1563, 7, 0, 1, 0, 11, 1, 6, 6, 0, 2330, 0, 8475, 8476, 5398, 2848, 3382, 0, 8478, 0, 0),
 (9300155, 54, 3, 1, 1, 4, 11, 10, 8, 0, 0, 0, 0, 3254, 0, 3255, 3256, 3257, 0, 0, 0, 0),
 (299326, 54, 3, 1, 1, 3, 6, 9, 2, 0, 0, 0, 0, 147258, 148641, 3408, 152272, 1246, 0, 156939, 0, 0);
@@ -457,86 +456,86 @@ VALUES
 DELETE FROM `quest_offer_reward` WHERE `ID` IN (51000, 51001, 51002, 51003, 51004, 51005, 51006, 51007, 51008, 51009, 51010, 51011, 51012, 51013, 51014, 200002, 200003, 200004, 200043, 200044, 200045, 200060, 200066, 200072, 200083, 200089, 200090, 200091, 200105, 200110, 200117, 200118, 200119, 200143, 200160, 200166, 200199, 200255);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)
 VALUES
-(51000, ''),
-(51001, ''),
-(51002, ''),
-(51003, ''),
-(51004, ''),
-(51005, ''),
-(51006, ''),
-(51007, ''),
-(51008, ''),
-(51009, ''),
-(51010, ''),
-(51011, ''),
-(51012, ''),
-(51013, ''),
-(51014, ''),
+(51000, 'Excellent, $N! You have heeded the mountain storm''s call and proven yourself worthy. The power of wind and lightning flows through you now like the eternal tempests that crown our peaks. As a Stormbringer, you will command the very forces that shape the mountains themselves.$B$BWelcome to the path of the mountain tempest. Let your enemies tremble before your elemental fury!'),
+(51001, 'Well done, $N! You understand the sacred duty that comes with this calling. A mountain Guardian stands as immovable as the peaks themselves, never yielding, never breaking, like the very stone beneath our feet.$B$BYour training begins now. Remember - your life belongs to those you protect. Honor that trust with the strength of the mountain itself.'),
+(51002, 'The Light shines brightly within you, $N! You have embraced the Templar''s path and dedicated your soul to divine service in these sacred halls. Through faith and devotion, you will become an instrument of holy justice, burning bright as forge-fire.$B$BYour sacred duty begins this day. May your conviction be as enduring as mountain stone, and your faith burn eternal.'),
+(51003, 'The mountain wilds have chosen well, $N. You carry the spirit of the high places within you, and the ancient ways call to your blood. As a mountain Ranger, you will be the bridge between the stone halls and the untamed peaks.$B$BWelcome to the brotherhood of the mountain wild. May your aim be true and your path lead to the freedom of the heights.'),
+(51004, 'Fascinating, $N. You perceive the flow of time itself, a gift granted to very few mortals at this altitude. As a Chronomancer, you will learn to bend causality to your will and walk between the moments that echo through these ancient peaks.$B$BTime is your ally now. Use this power wisely, for the consequences of temporal manipulation echo across all the mountain''s ages.'),
+(51005, 'You have potential, $N. Death holds no fear for you in these halls where so many ancients rest, and that is... refreshing. As a Necromancer, you will learn to work with the mountain''s death rather than against it.$B$BYour education in the ancient arts begins now. Remember - death is not evil, merely inevitable. Guide it well through these sacred stone halls.'),
+(51006, 'Magnificent, $N! The flames dance eagerly around you, drawn to the forge-fire in your dwarven soul. As a Pyromancer, you will learn that destruction and creation are merely two sides of the same hammer.$B$BLet the mountain fire burn within you! From the ashes of the old world, we will forge something new and beautiful in the dwarven way.'),
+(51007, 'Yesss, $N... the mountain whispers told me you would come. You have been marked by powers beyond mortal comprehension, chosen to serve truths that echo through these ancient stone halls. The Old Gods smile upon you from the deep places.$B$BMadness is merely clarity unbound, young cultist. Embrace the chaos that sleeps beneath the mountain, and let it reshape you into something... greater.'),
+(51008, 'Blessed are you, $N! The sun''s radiance flows through your very being, marking you as one chosen for healing and renewal in these pure heights. As a Sun Cleric, you will bring hope to the hopeless and light to the deepest mountain halls.$B$BYour path of healing begins now. May your light never dim, and may you always bring dawn to those lost in the mountain''s darkness.'),
+(51009, 'Brilliant, $N! I can practically hear the gears turning in that clever dwarven mind of yours. As a Tinker, you will learn to blend the precision of mountain engineering with the wonder of magic - a fusion that will make even Ironforge jealous.$B$BYour apprenticeship in innovation begins today! Together, we will build wonders that will amaze the world and make our mountain ancestors proud.'),
+(51010, 'Ancient power recognizes ancient power, $N. You possess the rare gift to read the first language of magic - the runes carved by the Titans into the very bones of this mountain. This is knowledge from the dawn of the world itself.$B$BYour study of runic magic begins today. The old ways endure because they are as eternal as the mountain stone. May you prove worthy of such trust.'),
+(51011, 'Aye, that''s the spirit, $N! You have the heart of a true mountain warrior, as fierce and unbreakable as the peaks themselves. As a Barbarian, you will learn to fight with the raw power of the mountain - no fancy techniques, just pure dwarven strength.$B$BYour training begins now. Remember - the mountain doesn''t negotiate, it doesn''t compromise, and it never yields. Neither should you!'),
+(51012, 'The Light has guided you to me, $N.$B$BThese frozen peaks may seem peaceful, but evil lurks in every shadow, every cave, every forgotten ruin. As a Witch Hunter, you will be the Light''s weapon against corruption. You will track down cultists, destroy demonic influences, and purge the darkness wherever it festers.$B$BYour righteous fury will burn through the coldest mountain air. Your blessed weapons will strike down the unholy. In these harsh lands, you will become the vanquisher of all that corrupts and destroys.$B$BWelcome to the eternal hunt. Let evil tremble at your approach!'),
+(51013, 'Raw power flows through you, $N! You understand that the elements in their purest form care nothing for civilization''s rules. As a Primalist, you will wield earth, air, fire, and water as the mountain itself does - wild, untamed, unstoppable.$B$BYour training in primal magic begins now. Remember - the mountain is your teacher, and it shows no mercy to the weak.'),
+(51014, 'You understand the truth, $N. Good. Death comes for all who walk these mountain paths, but through your work, it need not be feared. As a Reaper, you will guide souls to their proper rest and maintain the balance in these ancient halls.$B$BYour service to the eternal cycle begins now. The mountain dead are patient teachers - learn from them well.'),
 (200105, ''),
-(200166, ''),
+(200166, 'Welcome back, $N. I knew you would find my wand in time. Literally.$B$BThis wand is for you. I hope it serves you well. In fact, I know it will.'),
 (200072, ''),
 (200117, ''),
 (200118, ''),
 (200119, ''),
-(200043, ''),
-(200044, ''),
-(200045, ''),
-(200160, ''),
+(200043, '<The ritual circle pulsates with necromantic energy>'),
+(200044, '<The ritual circle begins to erupt. The monster is being summoned>'),
+(200045, 'Well, that''s exactly what I thought would happen.$B$BBut, hey, you didn''t die. You''re a better Necromancer already!$B$BHere, I sent my other apprentices to gather the scraps from your battle, they made this.$B$BTake it and get out of my sight.'),
+(200160, 'Aha! You have shown me that you are truly powerful. For this, I reward you with a symbol of the Bear itself. May it guide you on your journeys and give you strength over your foes.'),
 (200143, ''),
-(200002, ''),
-(200003, ''),
-(200004, ''),
-(200199, ''),
+(200002, 'This seems to be the falcon in question, and it seems injured.'),
+(200003, 'The falcon seems distraught. It must have been the suspicious creature who attacked it!'),
+(200004, 'Thank you for finding Talos. He has already returned to me, healthy as ever.$B$BI''ve already sent him on yet another scouting mission.$B$B... you''re saying a strange creature was seen near Talos and that it attacked you? That must have been the creature that injured my boy.$B$BI''ll have to look into this more. Based on your description, whatever this is, it''s not native to Dun Morogh.'),
+(200199, 'You may not have expected such a task, $N. But it is important to understand that the Shadowlands call for those who are ready, and knowing when to claim a soul can be just as important as the reclamation of the soul itself.$B$BFor helping our friend out here, I will reward you with these boots. May they serve you well, as they are enchanted to allow you to walk on the surface of water itself.'),
 (200110, ''),
 (200089, ''),
 (200090, ''),
 (200091, ''),
-(200060, ''),
+(200060, '<The pendant glimmers. It gives off a strong holy presence>$B$BYou have done well, $N. This pendant, I will give to you.$B$BKeep it close, for someday, you may need it again and I may teach you how to unlock far more of its powers.'),
 (200083, ''),
-(200066, ''),
-(200255, '');
+(200066, 'Well, this is perfect!$B$BI was able to use this metal to finish a new gun for me and, guess what, I made you one too!$B$BTake it and have a great day!'),
+(200255, 'Yet another evil creature banished from our world.$B$B... and yet.$B$BStill so many others to destroy. Be vigilant.$B$BHere, take these, let them guide you in your battles with evil.');
 
 DELETE FROM `quest_request_items` WHERE `ID` IN (51000, 51001, 51002, 51003, 51004, 51005, 51006, 51007, 51008, 51009, 51010, 51011, 51012, 51013, 51014, 200002, 200003, 200004, 200043, 200044, 200045, 200060, 200066, 200072, 200083, 200089, 200090, 200091, 200105, 200110, 200117, 200118, 200119, 200143, 200160, 200166, 200199, 200255);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
-(51000, ''),
-(51001, ''),
-(51002, ''),
-(51003, ''),
-(51004, ''),
-(51005, ''),
-(51006, ''),
-(51007, ''),
-(51008, ''),
-(51009, ''),
-(51010, ''),
-(51011, ''),
-(51012, ''),
-(51013, ''),
-(51014, ''),
+(51000, 'I can sense the storm''s energy crackling around you, $N. Have you brought the Storm Codex? The mountain tempests call to those who would master their power.'),
+(51001, 'Stand tall, $N. Do you carry the Guardian''s Oath? A true mountain guardian must understand the weight of their sacred duty.'),
+(51002, 'The Light shines upon you, $N. Have you brought the Templar''s Vow? Only through absolute devotion can one serve the divine will in these sacred peaks.'),
+(51003, 'The wild mountain air speaks of you, $N. Have you brought the Ranger''s Guide? Nature recognizes its own, and calls you to the ancient ways of the high places.'),
+(51004, 'Time flows strangely around you, $N. Do you possess the Temporal Manuscript? The streams of chronos move differently at this altitude.'),
+(51005, 'The mountain dead whisper of you, $N. Have you brought the Necromantic Journal? Death magic chooses its practitioners carefully in these ancient halls.'),
+(51006, 'I feel the forge-fire radiating from you, $N. Do you carry the Flame Codex? Fire seeks those with the passion to wield its destructive beauty like the dwarven smiths of old.'),
+(51007, 'The mountain voices grow louder when you approach, $N. Have you brought the Forbidden Treatise? The Old Gods echo through these stone halls.'),
+(51008, 'Your presence brings warmth to this sacred place, $N. Do you have the Solar Scripture? The sun''s blessing flows strongest at these pure heights.'),
+(51009, 'I hear the sound of gears turning and steam hissing, $N. Have you brought the Engineering Manual? Innovation calls to minds capable of true dwarven engineering.'),
+(51010, 'Ancient power resonates within you, $N. Have you brought the Runic Inscription? The first magic carved into these very mountain bones recognizes one worthy of its secrets.'),
+(51011, 'You carry the scent of battle, $N. Have you brought the Ancient Tablet? The mountain breeds only the strongest warriors.'),
+(51012, 'You carry the hunter''s spirit, $N. Have you brought the Hunter''s Mandate? Evil awaits judgment.'),
+(51013, 'Raw elemental forces swirl around you, $N. Do you carry the Primal Codex? The untamed elements of the mountain call to their chosen.'),
+(51014, 'The veil grows thin around you, $N. Do you carry the Death Manual? Those who serve the natural order understand death''s place in the mountain cycle.'),
 (200105, ''),
-(200166, ''),
+(200166, 'Ahh, you''ve returned.'),
 (200072, ''),
 (200117, ''),
 (200118, ''),
 (200119, ''),
 (200043, ''),
-(200044, ''),
+(200044, '<You place the ingredients on the ritual circle>'),
 (200045, ''),
 (200160, ''),
 (200143, ''),
-(200002, ''),
+(200002, 'An'' you''ve brought my vial back. I know what this means. Thank you lad.'),
 (200003, ''),
-(200004, ''),
+(200004, 'Aye lad, Talos has already returned. Thank you.'),
 (200199, ''),
 (200110, ''),
 (200089, ''),
 (200090, ''),
 (200091, ''),
-(200060, ''),
+(200060, 'Aye, lad. You''ve done it.'),
 (200083, ''),
-(200066, ''),
-(200255, '');
+(200066, 'Have you found the scrap yet?'),
+(200255, 'You have returned, wow!');
 
 DELETE FROM `creature_queststarter` WHERE `quest` IN (51000, 51001, 51002, 51003, 51004, 51005, 51006, 51007, 51008, 51009, 51010, 51011, 51012, 51013, 51014, 200002, 200003, 200004, 200043, 200044, 200045, 200060, 200066, 200072, 200083, 200089, 200090, 200091, 200105, 200110, 200117, 200118, 200119, 200143, 200160, 200166, 200199, 200255);
 INSERT INTO `creature_queststarter` (`id`, `quest`)
@@ -677,7 +676,7 @@ VALUES
 (9003313, 50342, 0, 0, 0, 1, 1, 1, -6217.5, 384.67, 388.619, 4.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: Katho Hammerfist, Coldridge: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 51013, z from surface.floor; Coldridge Valley, by the fallen tree on the path, faces the path and the start clearing'),
 (9003314, 9300151, 0, 0, 0, 1, 1, 1, -5597.9, -607.87, 452.097, 1.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: Zipak Cogweight, Coldridge: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 51014, z from surface.floor; Kharanos grave scene (CoA-only dirt mound, lampposts and candles), at the head of the fresh grave, turned toward the path from Kharanos'),
 (9003320, 299236, 0, 0, 0, 1, 1, 1, -6120.68, 382.09, 395.543, 6.161, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: Anvilmar, Bromos Grummner''s stock post in the entrance hall, stock facing north into the hall; replaces stock guid 403'),
-(9003321, 254000, 0, 0, 0, 1, 1, 0, -6078, 390.5, 393.6, 4.06, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: Anvilmar, middle room (393.6) west side by the powder kegs, faces the arch from the main hall'),
+(9003321, 254000, 0, 0, 0, 1, 1, 0, -6111.03, 369.59, 395.542, 1.02, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: Anvilmar, main hall (395.54) at the Coldridge Mountaineer post by the powder kegs and cargo: the turn-in point ST1088 of 254000/254001 (SOURCED-CLIENT, Questie 1.0 yd), moved there by dm-coldridge-misc; faces north-west into the hall toward the anvils'),
 (9003322, 9300154, 0, 0, 0, 1, 1, 0, -6061.45, 395.092, 392.76, 1.815, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: Anvilmar, north room, seated on Wooden Chair 1447 with its facing, the old gnome near his end'),
 (9003323, 9300155, 0, 0, 0, 1, 1, 0, -6068, 392, 392.762, 4.3, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: Anvilmar, north room west end by the candle-lit tables, faces the ramp and doorway from the middle room where players come in; the witch of 200255'),
 (9003324, 299326, 0, 0, 0, 1, 1, 1, -6108, 706, 433.593, 4.48, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Coldridge: shelf above the crash site, brooding by her campfire, faces the ramp that climbs from the south-east'),
