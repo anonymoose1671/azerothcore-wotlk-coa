@@ -413,8 +413,8 @@ VALUES
 (161713, 0, 5, 6, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8619, -557, 145.744, 5.573, 'Wayward Theologian - Linked - Open Portal 01 in the yard south-west of the estate door, between the door lamp and the tree stump'),
 (161713, 0, 6, 7, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161909, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8586, -584, 145.101, 2.474, 'Wayward Theologian - Linked - Open Portal 02 in the yard north-east of the ruin, inside the broken gate under the oak'),
 (161713, 0, 7, 8, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8619, -557, 145.744, 5.573, 'Wayward Theologian - Linked - Summon an image at Portal 01'),
-(161713, 0, 8, 9, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8586, -584, 145.101, 2.474, 'Wayward Theologian - Linked - Summon an image at Portal 02'),
-(161713, 0, 9, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say shield'),
+(161713, 0, 8, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8586, -584, 145.101, 2.474, 'Wayward Theologian - Linked - Summon an image at Portal 02'),
+(161713, 0, 9, 0, 0, 1, 100, 0, 15000, 20000, 60000, 75000, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Say mercy'),
 (161713, 0, 10, 0, 82, 0, 100, 0, 161904, 0, 0, 0, 0, 0, 63, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On image died - Add 1 to counter 1'),
 (161713, 0, 11, 12, 77, 0, 100, 0, 1, 2, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On counter 1 = 2 - Remove Shadow Shield'),
 (161713, 0, 12, 13, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
@@ -481,6 +481,6 @@ VALUES
 DELETE FROM `creature_text` WHERE `CreatureID` = 161713;
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Probability`, `comment`)
 VALUES
-(161713, 0, 0, 'You walk where the abbess taught. The Inquisition never found us all.', 12, 100, 'Wayward Theologian - pull (INFERRED)'),
-(161713, 1, 0, 'Her word has many voices! Silence them, if you can.', 14, 100, 'Wayward Theologian - Shadow Shield (INFERRED)'),
-(161713, 2, 0, 'The echoes fade... but her teaching remains.', 12, 100, 'Wayward Theologian - death (INFERRED)');
+(161713, 0, 0, 'You''ve come for Sitis, haven''t you? Then you''ve already gone too far... I''m sorry for what must follow.', 12, 100, 'Wayward Theologian - pull (INFERRED)'),
+(161713, 1, 0, 'I am sorry. Truly. But your death is a mercy, compared to the dark path you would have walked.', 12, 100, 'Wayward Theologian - in combat between shield phases (INFERRED)'),
+(161713, 2, 0, 'I beg you... Don''t speak her name... Don''t read her words... Her philosophy... will be your end...', 12, 100, 'Wayward Theologian - death (INFERRED)');
