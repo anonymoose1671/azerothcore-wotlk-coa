@@ -15,47 +15,103 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SharedDefines.h"
-#include "gtest/gtest.h"
+#include "Field.h"
+#include "IntegrationTestFixture.h"
+#include "ItemTemplate.h"
+#include "QuestDef.h"
+#include <array>
 
-TEST(QuestClassMaskTest, LegacyClassQuestsAllowMatchingCustomClasses)
+namespace
 {
-    // Quest 397 uses the Warlock mask; Necromancers share that class family.
-    EXPECT_EQ(ExpandLegacyClassMask(256), 256u | (uint32(1) << (CLASS_NECROMANCER - 1)));
-
-    // Quest 63 uses the Shaman mask, including Runemaster's unsigned class-32 bit after expansion.
-    uint32 shamanFamily = 64u | (uint32(1) << (CLASS_WITCH_DOCTOR - 1)) |
-        (uint32(1) << (CLASS_STORMBRINGER - 1)) | (uint32(1) << (CLASS_PROPHET - 1)) |
-        (uint32(1) << (CLASS_SPIRIT_MAGE - 1));
-    EXPECT_EQ(ExpandLegacyClassMask(64), shamanFamily);
-
-    // There is no custom class mapped to Death Knight.
-    EXPECT_EQ(ExpandLegacyClassMask(32), 32u);
+constexpr uint32 ClassMask(Classes playerClass)
+{
+    return uint32(1) << (playerClass - 1);
 }
 
-TEST(QuestClassMaskTest, MultiClassQuestsKeepAllAndOnlyTheirClassFamilies)
+class AuthoredClassQuest : public Quest
 {
-    // Quest 9238 permits Priest, Mage and Warlock (400).
-    uint32 expected = 400u | (uint32(1) << (CLASS_CHRONOMANCER - 1)) |
-        (uint32(1) << (CLASS_SUN_CLERIC - 1)) | (uint32(1) << (CLASS_PYROMANCER - 1)) |
-        (uint32(1) << (CLASS_NECROMANCER - 1));
-    EXPECT_EQ(ExpandLegacyClassMask(400), expected);
+public:
+    AuthoredClassQuest(::Field* questRecord, uint32 authoredClassMask) : Quest(questRecord)
+    {
+        RequiredClasses = authoredClassMask;
+    }
+};
+
+class QuestClassMaskTest : public IntegrationTestFixture
+{
+protected:
+    AuthoredClassQuest MakeQuest(uint32 authoredClassMask)
+    {
+        std::array<::Field, 106> emptyQuestRecord;
+        return AuthoredClassQuest(emptyQuestRecord.data(), authoredClassMask);
+    }
+
+    bool CanTakeQuest(Classes playerClass, Quest const& quest)
+    {
+        TestPlayer* player = CreateTestPlayer(++_guid);
+        player->SetByteValue(UNIT_FIELD_BYTES_0, 1, uint8(playerClass));
+        return player->SatisfyQuestClass(&quest, false);
+    }
+
+private:
+    ObjectGuid::LowType _guid = 0;
+};
 }
 
-TEST(QuestClassMaskTest, UnrestrictedQuestsStayUnrestricted)
+TEST_F(QuestClassMaskTest, StockClassQuestsStayClosedToMappedCustomClasses)
 {
-    // SatisfyQuestClass treats zero as no class restriction.
-    EXPECT_EQ(ExpandLegacyClassMask(0), 0u);
-    EXPECT_EQ(ExpandLegacyClassMask(1535), CLASSMASK_ALL_PLAYABLE);
-    EXPECT_EQ(ExpandLegacyClassMask(CLASSMASK_ALL_PLAYABLE), CLASSMASK_ALL_PLAYABLE);
-    EXPECT_EQ(ExpandLegacyClassMask(uint32(-1)), uint32(-1));
+    struct StockClassQuest
+    {
+        Classes stockClass;
+        Classes mappedCustomClass;
+    };
+
+    for (StockClassQuest const& stockQuest : {
+             StockClassQuest{CLASS_PALADIN, CLASS_CULTIST},
+             StockClassQuest{CLASS_DRUID, CLASS_SON_OF_ARUGAL},
+             StockClassQuest{CLASS_DRUID, CLASS_STARCALLER},
+             StockClassQuest{CLASS_WARLOCK, CLASS_NECROMANCER},
+             StockClassQuest{CLASS_SHAMAN, CLASS_SPIRIT_MAGE},
+             StockClassQuest{CLASS_ROGUE, CLASS_MONK}})
+    {
+        AuthoredClassQuest quest = MakeQuest(ClassMask(stockQuest.stockClass));
+
+        EXPECT_TRUE(CanTakeQuest(stockQuest.stockClass, quest)) << uint32(stockQuest.stockClass);
+        EXPECT_FALSE(CanTakeQuest(stockQuest.mappedCustomClass, quest)) << uint32(stockQuest.mappedCustomClass);
+    }
 }
 
-TEST(QuestClassMaskTest, ExplicitCustomQuestMasksStayUnchanged)
+TEST_F(QuestClassMaskTest, MultiClassStockQuestsAdmitNoCustomClass)
 {
-    uint32 necromancer = uint32(1) << (CLASS_NECROMANCER - 1);
-    uint32 runemaster = uint32(1) << (CLASS_SPIRIT_MAGE - 1);
-    EXPECT_EQ(ExpandLegacyClassMask(necromancer), necromancer);
-    EXPECT_EQ(ExpandLegacyClassMask(runemaster), runemaster);
-    EXPECT_EQ(ExpandLegacyClassMask(necromancer | 64u), necromancer | 64u);
+    AuthoredClassQuest quest = MakeQuest(ClassMask(CLASS_PRIEST) | ClassMask(CLASS_MAGE) | ClassMask(CLASS_WARLOCK));
+
+    for (uint8 classId = CLASS_BARBARIAN; classId < MAX_CLASSES; ++classId)
+        EXPECT_FALSE(CanTakeQuest(Classes(classId), quest)) << uint32(classId);
+}
+
+TEST_F(QuestClassMaskTest, AuthoredCustomClassQuestsAdmitOnlyTheirClasses)
+{
+    AuthoredClassQuest cultistQuest = MakeQuest(ClassMask(CLASS_CULTIST));
+    EXPECT_TRUE(CanTakeQuest(CLASS_CULTIST, cultistQuest));
+    EXPECT_FALSE(CanTakeQuest(CLASS_PALADIN, cultistQuest));
+
+    AuthoredClassQuest runemasterQuest = MakeQuest(ClassMask(CLASS_SPIRIT_MAGE));
+    EXPECT_TRUE(CanTakeQuest(CLASS_SPIRIT_MAGE, runemasterQuest));
+    EXPECT_FALSE(CanTakeQuest(CLASS_SHAMAN, runemasterQuest));
+}
+
+TEST_F(QuestClassMaskTest, UnrestrictedQuestsAdmitEveryCustomClass)
+{
+    AuthoredClassQuest quest = MakeQuest(0);
+
+    for (uint8 classId = CLASS_BARBARIAN; classId < MAX_CLASSES; ++classId)
+        EXPECT_TRUE(CanTakeQuest(Classes(classId), quest)) << uint32(classId);
+}
+
+TEST_F(QuestClassMaskTest, ItemsKeepExpandingTheMasksQuestsDoNot)
+{
+    uint32 paladinMask = ClassMask(CLASS_PALADIN);
+
+    EXPECT_EQ(GetItemAllowableClassMask(paladinMask), paladinMask | ClassMask(CLASS_CULTIST));
+    EXPECT_FALSE(CanTakeQuest(CLASS_CULTIST, MakeQuest(paladinMask)));
 }

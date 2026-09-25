@@ -199,7 +199,7 @@ constexpr Classes GetLegacyClassForCustomClass(Classes playerClass)
     }
 }
 
-// Expand legacy item/quest restrictions without widening explicitly authored custom-class masks.
+// Expand legacy item restrictions without widening explicitly authored custom-class masks.
 constexpr uint32 ExpandLegacyClassMask(uint32 classMask)
 {
     if (classMask & 0xFFFFF800u)
