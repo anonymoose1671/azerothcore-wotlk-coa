@@ -25,7 +25,7 @@
 --     hold the line without clearing the den or the forest around the crater.
 --   appearance  STAND-IN displays for Kaladir and Alenna: their CoA displays are missing from the client.
 --
--- Spawn guid block: creature 9007400-9007599. 60 stock rows moved, 31 termites, 5 critters, 3 barricade sentinels.
+-- Spawn guid block: creature 9007400-9007599. 62 stock rows moved, 31 termites, 5 critters, 3 barricade sentinels.
 -- Each UPDATE matches guid and entry, so a row something else has changed is left alone.
 
 -- ---------------------------------------------------------------------------
@@ -115,6 +115,10 @@ UPDATE `creature` SET `position_x` = 9827.4, `position_y` = 931.9, `position_z` 
 -- Mailbox (49531): mailboxes move with their building: the inn transform of its stock spot, on the ground beside
 --   the inn front, clear of the door
 UPDATE `gameobject` SET `position_x` = 9831.95, `position_y` = 935.15, `position_z` = 1306.097, `orientation` = 4.769, `rotation0` = 0, `rotation1` = 0, `rotation2` = 0.686811, `rotation3` = -0.726836 WHERE `guid` = 49531 AND `id` = 142109;
+-- Teldrassil Sentinel (49847): stationary guard by the west moonwell: her stock spot clips a CoA
+--   Kalidarstonerune02 rune stone (0.5 yd, on a 39-degree edge); 1.7 yd east on the level ground beside it, clear
+--   of the stone, same facing
+UPDATE `creature` SET `position_x` = 9729, `position_y` = 949, `position_z` = 1294.508, `orientation` = 4.76475 WHERE `guid` = 49847 AND `id` = 3571;
 
 -- ---------------------------------------------------------------------------
 -- 5. Signpost arms, moved with the post
@@ -130,12 +134,19 @@ UPDATE `gameobject_template` SET `size` = 1.0703125 WHERE `entry` IN (12358, 123
 -- ---------------------------------------------------------------------------
 -- 6. Wildlife, Fel Cones and herbs off the new walls, water and ground
 -- ---------------------------------------------------------------------------
--- Webwood Lurker (47523): CoA raised the ground 2.7 yd over it; same spot on the CoA ground
-UPDATE `creature` SET `position_x` = 9816.3, `position_y` = 784.38, `position_z` = 1303.98, `orientation` = 4.43142 WHERE `guid` = 47523 AND `id` = 1998;
+-- Webwood Lurker (47523): its 33-yd stock wander covers the corner where Alenna Whisperbough meditates: on the
+--   open bank south of the Kalidartree03 on the same shore, 45 yd from her, wandering 12 yd like its neighbour
+--   47520
+UPDATE `creature` SET `position_x` = 9796, `position_y` = 764, `position_z` = 1302.151, `orientation` = 4.43142, `wander_distance` = 12 WHERE `guid` = 47523 AND `id` = 1998;
 -- Webwood Lurker (47520): CoA raised the ground 4.9 yd over it; same spot on the CoA ground
 UPDATE `creature` SET `position_x` = 9850.49, `position_y` = 750.5, `position_z` = 1309.226, `orientation` = 5.70224 WHERE `guid` = 47520 AND `id` = 1998;
--- Nightsaber (49900): CoA lowered the ground 3.2 yd under it; same spot on the CoA ground
-UPDATE `creature` SET `position_x` = 9976.46, `position_y` = 882.66, `position_z` = 1323.383, `orientation` = 0.0977 WHERE `guid` = 49900 AND `id` = 2042;
+-- Nightsaber (49900): CoA moved the druid tower onto its spot, 20 yd from Byancie: on the open ground at the foot
+--   of the giant root (Kalidargiantroot02) south-east of the village, its wander outside Dolanaar (area 186)
+UPDATE `creature` SET `position_x` = 9962, `position_y` = 783, `position_z` = 1323.952, `orientation` = 0.0977 WHERE `guid` = 49900 AND `id` = 2042;
+-- Webwood Lurker (47527): its spot is the front garden of CoA house A under a Kalidarroots01 arch, and its 23-yd
+--   wander reached Malorne and Cyndra: on the Webwood Lurker ground south-east of the village, toward Lurkers
+--   47516 and 47518, its wander outside Dolanaar (area 186)
+UPDATE `creature` SET `position_x` = 9950, `position_y` = 775, `position_z` = 1321.25, `orientation` = 4.80137 WHERE `guid` = 47527 AND `id` = 1998;
 -- Peacebloom (10242): CoA lowered the ground 0.8 yd under it; same spot on the CoA ground
 UPDATE `gameobject` SET `position_x` = 9969.02, `position_y` = 874.03, `position_z` = 1322.48, `orientation` = 3.49066, `rotation0` = 0, `rotation1` = 0, `rotation2` = 0.984808, `rotation3` = -0.173649 WHERE `guid` = 10242 AND `id` = 1618;
 -- Webwood Lurker (47511): its spot on the south slope of the termite crater is 28 yd from the barricade sentinels,

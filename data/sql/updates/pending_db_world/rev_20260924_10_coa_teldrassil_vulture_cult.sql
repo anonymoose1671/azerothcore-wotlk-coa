@@ -667,3 +667,11 @@ DELETE FROM `spell_script_names` WHERE `spell_id` = 256707;
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
 VALUES
 (256707, 'spell_coa_channeling_blessing_of_the_moon');
+
+-- ---------------------------------------------------------------------------
+-- 10. Stock herb node on the CoA Carrion Path
+-- ---------------------------------------------------------------------------
+-- DERIVED: surface.check on CoA data. The UPDATE matches guid and entry and keeps the pool and the facing.
+-- 49876 (152094): Hyacinth Mushroom of pool 377: its stock spot clips the Kalidartree03 CoA added on the path
+-- (0.45 yd); moved 2.1 yd north-west onto the open slope beside the trunk, clear of it.
+UPDATE `gameobject` SET `position_x` = 10611.2, `position_y` = 608.4, `position_z` = 1338.212 WHERE `guid` = 49876 AND `id` = 152094;

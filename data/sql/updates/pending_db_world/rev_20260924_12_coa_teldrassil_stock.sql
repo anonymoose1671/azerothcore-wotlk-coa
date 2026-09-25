@@ -19,7 +19,7 @@
 --     each moves to the nearest open forest outside the walls (INFERRED spot, reason in the comment).
 --
 -- Blocks: creature guid 9007600-9007699. 7 next-quest links, 1 objective slot fix, 13 graveyard links, 6
--- Ambushers, 12 Mystics, 3 creature and 2 object moves.
+-- Ambushers, 12 Mystics, 3 creature and 4 object moves.
 
 -- ---------------------------------------------------------------------------
 -- 1. Quest rows
@@ -114,3 +114,14 @@ UPDATE `gameobject` SET `position_x` = 10315, `position_y` = 1392, `position_z` 
 -- Silverleaf (10360): floating 3.4 over the druid-cat statue base at the east moongate; moved outside the
 -- enclave's east wall, 37 yd north-east of the moongate and 15 yd from the moved Mageroyal.
 UPDATE `gameobject` SET `position_x` = 10300, `position_y` = 1392, `position_z` = 1341.407 WHERE `guid` = 10360 AND `id` = 1617;
+
+-- ---------------------------------------------------------------------------
+-- 5. Herb nodes clipped by CoA's new trees
+-- ---------------------------------------------------------------------------
+-- Each UPDATE matches guid and entry and keeps the pool and the facing.
+-- Silverleaf (10357): pool 427; its stock spot is inside the trunk of a Kalidartree01 CoA added (0.35 yd); moved
+-- 1.7 yd south-west to the open slope beside the trunk, clear of it.
+UPDATE `gameobject` SET `position_x` = 9431.5, `position_y` = 956.1, `position_z` = 1267.303 WHERE `guid` = 10357 AND `id` = 1617;
+-- Silverleaf (10391): pool 426; its stock spot sits on a root of a CoA Kalidartree01, 0.2 yd from the trunk;
+-- moved 2.4 yd south onto the open ground below the trunk, clear of the roots.
+UPDATE `gameobject` SET `position_x` = 9997.5, `position_y` = 1541, `position_z` = 1304.222 WHERE `guid` = 10391 AND `id` = 1617;
