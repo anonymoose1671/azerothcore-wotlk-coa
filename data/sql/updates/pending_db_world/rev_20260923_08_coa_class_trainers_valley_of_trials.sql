@@ -1,5 +1,5 @@
--- Conquest of Azeroth class trainers in the Valley of Trials: the seventeen CoA class trainers on their
--- own posts, the seventeen "seek your trainer" letters that Gornek hands out after Cutting Teeth, and the
+-- Conquest of Azeroth class trainers in the Valley of Trials: the eighteen CoA class trainers on their
+-- own posts, the eighteen "seek your trainer" letters that Gornek hands out after Cutting Teeth, and the
 -- first class chains with every target, helper, object and drop they need.
 --
 -- WHERE EACH VALUE COMES FROM
@@ -20,9 +20,12 @@
 --     server floor, headroom and navmesh; drop chances SOURCED-EXILES.
 --   stock trainers  every one stays standing as a plain NPC (core 05), except Frang (guid 7651), 2.0 yd from
 --     Omogulg's turn-in point, and Ken'jai (guid 4912), whose post the Cultist kill copy takes.
+--   Reaper  Zul’raja the Harvester is CoA's unspawned trainer record 501296; CoA shipped no Valley Reaper
+--     letter or chain, so his post, letter 9302430, page and "Call of the Shadowlands" copy 9302431 are INFERRED.
 --
 -- Blocks: creature guid 9003500-9003699, gameobject guid 7912300-7912399, creature
--- entries 9300200-9300205, gameobject entries 9301200-9301204, menus 930300-930302.
+-- entries 9300200-9300206, gameobject entries 9301200-9301204, menus 930300-930304,
+-- quest and item 9302430-9302431, page_text 931430.
 
 -- ---------------------------------------------------------------------------
 -- 1. Trainers
@@ -61,6 +64,8 @@
 --   look: orc male (orcish name); Durkot Wolfbrother 23502 in hides, hair and colour changed; axe
 -- Zina Glyphreader: name and subname from creaturecache 502912 (SOURCED-CACHE)
 --   look: orc female: orc per her other name "Mog'or" and her chain text's "Zug zug"; female is an INFERRED design choice for variety, no source gives her sex; Frostwolf Shaman 13410 in robes and hood, hair and colour changed; runed staff
+-- Zul’raja the Harvester: name and subname from creaturecache 501296 (SOURCED-CACHE)
+--   look: troll male (troll name); Uzo Deathcaller 26222 in Zul'Aman plate, hair and colour changed, Horde war helm added for "looking at my helmet" (200037); Zulian Scythe and Deepscythe
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `detection_range`, `rank`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `type_flags`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`, `ScriptName`)
 VALUES
 (502953, 'Mu''kaka', 'Barbarian Trainer', 930302, 10, 10, 0, 29, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
@@ -79,10 +84,11 @@ VALUES
 (502872, 'Mekboy Parod', 'Tinker Trainer', 930028, 10, 10, 0, 29, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (50288, 'Qwi''spe the Wise', 'Venomancer Trainer', 930029, 10, 10, 0, 29, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (50290, 'Krull Rocksmash', 'Primalist Trainer', 930031, 10, 10, 0, 29, 51, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
-(502912, 'Zina Glyphreader', 'Runemaster Trainer', 930032, 10, 10, 0, 29, 51, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, '')
+(502912, 'Zina Glyphreader', 'Runemaster Trainer', 930032, 10, 10, 0, 29, 51, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
+(501296, 'Zul’raja the Harvester', 'Reaper Trainer', 930030, 10, 10, 0, 29, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (50277, 50278, 50288, 50290, 50296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (50277, 50278, 50288, 50290, 50296, 501296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (502953, 0, 1478, 1, 1),
@@ -101,9 +107,10 @@ VALUES
 (502872, 0, 51, 1, 1),
 (50288, 0, 1479, 1, 1),
 (50290, 0, 51, 1, 1),
-(502912, 0, 52, 1, 1);
+(502912, 0, 52, 1, 1),
+(501296, 0, 1478, 1, 1);
 
-DELETE FROM `creature_display_preset` WHERE `entry` IN (50277, 50278, 50288, 50290, 50296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
+DELETE FROM `creature_display_preset` WHERE `entry` IN (50277, 50278, 50288, 50290, 50296, 501296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
 INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, `class`, `skin`, `face`, `hair`, `haircolor`, `facialhair`, `guild_id`, `item_head`, `item_shoulders`, `item_body`, `item_chest`, `item_waist`, `item_legs`, `item_feet`, `item_wrists`, `item_hands`, `item_back`, `item_tabard`)
 VALUES
 (502953, 1478, 8, 0, 1, 1, 0, 4, 5, 6, 0, 0, 0, 0, 147398, 0, 152436, 154636, 156255, 0, 0, 0),
@@ -122,9 +129,10 @@ VALUES
 (502872, 51, 2, 0, 1, 4, 4, 1, 0, 1, 0, 145369, 146352, 147945, 149129, 151015, 153067, 1554, 0, 157589, 0, 0),
 (50288, 1479, 8, 1, 1, 5, 1, 6, 5, 2, 0, 0, 0, 3836, 5512, 9017, 8114, 8115, 0, 8386, 0, 0),
 (50290, 51, 2, 0, 1, 3, 1, 2, 5, 2, 0, 0, 27525, 0, 7101, 0, 13319, 41595, 0, 0, 0, 0),
-(502912, 52, 2, 1, 1, 6, 1, 8, 1, 3, 0, 145349, 146326, 23429, 23430, 150989, 153039, 155191, 156430, 157562, 0, 0);
+(502912, 52, 2, 1, 1, 6, 1, 8, 1, 3, 0, 145349, 146326, 23429, 23430, 150989, 153039, 155191, 156430, 157562, 0, 0),
+(501296, 1478, 8, 0, 1, 17, 1, 4, 3, 7, 0, 25493, 40115, 43881, 7106, 45358, 45359, 0, 45360, 0, 0, 49860);
 
-DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (50277, 50278, 50288, 50290, 50296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
+DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (50277, 50278, 50288, 50290, 50296, 501296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`)
 VALUES
 (502953, 1, 5289, 0, 0),
@@ -143,9 +151,10 @@ VALUES
 (502872, 1, 1902, 0, 0),
 (50288, 1, 2184, 5283, 0),
 (50290, 1, 27850, 0, 0),
-(502912, 1, 39743, 0, 0);
+(502912, 1, 39743, 0, 0),
+(501296, 1, 41764, 42933, 0);
 
-DELETE FROM `creature_default_trainer` WHERE `CreatureId` IN (50277, 50278, 50288, 50290, 50296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
+DELETE FROM `creature_default_trainer` WHERE `CreatureId` IN (50277, 50278, 50288, 50290, 50296, 501296, 502760, 502791, 502810, 502832, 502872, 502912, 502921, 502925, 502953, 503402, 9300200, 9300201);
 INSERT INTO `creature_default_trainer` (`CreatureId`, `TrainerId`)
 VALUES
 (502953, 900012),
@@ -164,7 +173,8 @@ VALUES
 (502872, 900028),
 (50288, 900029),
 (50290, 900031),
-(502912, 900032);
+(502912, 900032),
+(501296, 900030);
 
 -- ---------------------------------------------------------------------------
 -- 2. Named trainer menus
@@ -172,7 +182,8 @@ VALUES
 -- 930302 Mu'kaka: greeting 87574, refusal 287574 (npccache, the trainer's own voice)
 -- 930300 Zim'chein: greeting 502155, refusal 602155 (npccache, the trainer's own voice)
 -- 930301 Wolfrider Yara: greeting 25007, refusal 125007 (npccache, the trainer's own voice)
-DELETE FROM `npc_text` WHERE `ID` IN (25007, 87574, 125007, 287574, 502155, 602155);
+-- 930303 Old Brokthar: his words and the reply to the Reaper (INFERRED), the option only while 9302431 is taken
+DELETE FROM `npc_text` WHERE `ID` IN (25007, 87574, 125007, 287574, 502155, 602155, 930303, 930304);
 INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `BroadcastTextID0`, `lang0`, `Probability0`, `em0_0`, `em0_1`, `em0_2`, `em0_3`, `em0_4`, `em0_5`)
 VALUES
 (25007, 'Greetings, fellow ranger. I am Yara, tracker of the deep wilds and master hunter.$B$BFor years I have walked silent paths through ancient forests, learning the secrets of beast and blade.$B$BThe wilderness speaks to those who know how to listen - I can hear your ranger''s heart in the way you move through these lands.$B$BCome, let me teach you the ways of fang and claw, bow and blade.', 'Greetings, fellow ranger. I am Yara, tracker of the deep wilds and master hunter.$B$BFor years I have walked silent paths through ancient forests, learning the secrets of beast and blade.$B$BThe wilderness speaks to those who know how to listen - I can hear your ranger''s heart in the way you move through these lands.$B$BCome, let me teach you the ways of fang and claw, bow and blade.', 0, 0, 1, 1, 1, 0, 0, 0, 0),
@@ -180,7 +191,9 @@ VALUES
 (125007, 'The wilds speak only to Rangers, $C. Your footsteps are too heavy for the forest paths I teach.', 'The wilds speak only to Rangers, $C. Your footsteps are too heavy for the forest paths I teach.', 0, 0, 1, 0, 0, 0, 0, 0, 0),
 (287574, 'Ay mon, you be lackin'' da brutal personality of da Barbarian. Come back when you got some fight in ya bones, $C.', 'Ay mon, you be lackin'' da brutal personality of da Barbarian. Come back when you got some fight in ya bones, $C.', 0, 0, 1, 0, 0, 0, 0, 0, 0),
 (502155, 'The storms have brought you to me, $C. I am Zim''chein, and I have learned to speak with thunder itself.$B$BWhen lightning splits the sky and winds howl with ancient fury, that is when a Stormbringer''s power reaches its peak.$B$BI have walked through tempests that would scatter lesser beings and called down bolts that crack mountains.$B$BThe elements recognize your potential... let me teach you to command the very forces of nature.', 'The storms have brought you to me, $C. I am Zim''chein, and I have learned to speak with thunder itself.$B$BWhen lightning splits the sky and winds howl with ancient fury, that is when a Stormbringer''s power reaches its peak.$B$BI have walked through tempests that would scatter lesser beings and called down bolts that crack mountains.$B$BThe elements recognize your potential... let me teach you to command the very forces of nature.', 0, 0, 1, 0, 0, 0, 0, 0, 0),
-(602155, 'The storms ignore your call, $C. You lack the necessary connection to the tempest.', 'The storms ignore your call, $C. You lack the necessary connection to the tempest.', 0, 0, 1, 0, 0, 0, 0, 0, 0);
+(602155, 'The storms ignore your call, $C. You lack the necessary connection to the tempest.', 'The storms ignore your call, $C. You lack the necessary connection to the tempest.', 0, 0, 1, 0, 0, 0, 0, 0, 0),
+(930303, '<Old Brokthar sits apart from the camp, watching the troll dead.>$B$BI stood at Hyjal and in a dozen fights before it, $c. No blade ever finished me. Now my own breath will. Tell me... what waits for an old warrior when it does?', '<Old Brokthar sits apart from the camp, watching the troll dead.>$B$BI stood at Hyjal and in a dozen fights before it, $c. No blade ever finished me. Now my own breath will. Tell me... what waits for an old warrior when it does?', 0, 0, 1, 0, 0, 0, 0, 0, 0),
+(930304, 'The Shadowlands... so there is somewhere to go. Good. I was afraid it would only be dark.$B$BTell the Harvester I will not keep him waiting long.', 'The Shadowlands... so there is somewhere to go. Good. I was afraid it would only be dark.$B$BTell the Harvester I will not keep him waiting long.', 0, 0, 1, 0, 0, 0, 0, 0, 0);
 
 DELETE FROM `gossip_menu` WHERE `MenuID` IN (930300, 930301, 930302);
 INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
@@ -212,6 +225,22 @@ VALUES
 (14, 930301, 125007, 0, 0, 15, 0, 1048576, 0, 0, 1, 0, 0, '', 'Show gossip text if player is not a Ranger'),
 (15, 930301, 0, 0, 0, 15, 0, 1048576, 0, 0, 0, 0, 0, '', 'Show gossip option if player is a Ranger');
 
+DELETE FROM `gossip_menu` WHERE `MenuID` IN (930303, 930304);
+INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
+VALUES
+(930303, 930303),
+(930304, 930304);
+
+DELETE FROM `gossip_menu_option` WHERE `MenuID` = 930303;
+INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`)
+VALUES
+(930303, 0, 0, 'Zul’raja the Harvester sent me. I can tell you what lies beyond.', 0, 1, 1, 930304, 0, 0, 0, '', 0);
+
+DELETE FROM `conditions` WHERE `SourceGroup` = 930303 AND `SourceTypeOrReferenceId` = 15;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`)
+VALUES
+(15, 930303, 0, 0, 0, 9, 0, 9302431, 0, 0, 0, 0, 0, '', 'Old Brokthar - Show gossip option only while Call of the Shadowlands is taken');
+
 -- ---------------------------------------------------------------------------
 -- 3. Chain creatures
 -- ---------------------------------------------------------------------------
@@ -223,6 +252,7 @@ VALUES
 -- 9300203: Witch Doctor "The Doctor Is In!" (200029-200030): the injured friend "out in da desert", name from the objective; troll look Vel'rin Fang 4074 (stand-in); can-assist type flag so a player may heal him (Unit.cpp:11529-11537), no regeneration so he stays wounded until healed
 -- 9300204: Bloodmage "Blood Is Power" (200020): the "odd Troll" in the imp cave who carries the Tome of Blood; name from the objective, Hexed Troll look 4079 (stand-in); neutral like the cave's imps
 -- 9300205: Pyromancer "The Way of the Pyromancer" (200144): the fire elemental bound to a campfire near the Burning Blade Coven; name from the text, Minor Manifestation of Fire look 2172; hostile
+-- 9300206: Reaper "Call of the Shadowlands" (9302431): the dying veteran of the valley copy (name INFERRED, as the other copies' Old Man Jenkins, Dalin Soft and Gyrothor Turbospark); Old Orok look 18909 (grey-haired orc, a stand-in); friendly and immune
 -- 685018 [KC] Splash Pangajo Sunseer: Poisoning the World (200026) credit, given when the concoction hits the trainer
 -- 685019 [KC] Splash Nekai the Reanimator: Poisoning the World (200026) credit, given when the concoction hits the trainer
 -- 685020 [KC] Splash Omogulg the Truthbearer: Poisoning the World (200026) credit, given when the concoction hits the trainer
@@ -236,12 +266,13 @@ VALUES
 (9300203, 'Hi''bi Ja''min', NULL, 0, 5, 5, 0, 29, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 4096, 0, 'SmartAI', 0, 1, 1, 1, 0, 0, ''),
 (9300204, 'Mysterious Troll', NULL, 0, 4, 4, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 9300204, '', 0, 1, 1, 1, 1, 0, ''),
 (9300205, 'Scorch', NULL, 0, 5, 5, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 8, 0, 2048, 0, 4, 0, 9300205, '', 0, 1, 1, 1, 1, 0, ''),
+(9300206, 'Old Brokthar', NULL, 930303, 5, 5, 0, 29, 1, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 0, 7, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 0, ''),
 (685018, '[KC] Splash Pangajo Sunseer', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 0, 10, 0, 0, '', 0, 1, 1, 1, 1, 130, ''),
 (685019, '[KC] Splash Nekai the Reanimator', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 0, 10, 0, 0, '', 0, 1, 1, 1, 1, 130, ''),
 (685020, '[KC] Splash Omogulg the Truthbearer', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 0, 10, 0, 0, '', 0, 1, 1, 1, 1, 130, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `family` = VALUES(`family`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (299224, 299225, 299239, 299328, 685018, 685019, 685020, 9300202, 9300203, 9300204, 9300205);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (299224, 299225, 299239, 299328, 685018, 685019, 685020, 9300202, 9300203, 9300204, 9300205, 9300206);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (299328, 0, 5729, 1, 1),
@@ -252,6 +283,7 @@ VALUES
 (9300203, 0, 4074, 1, 1),
 (9300204, 0, 4079, 1, 1),
 (9300205, 0, 2172, 1, 1),
+(9300206, 0, 18909, 1, 1),
 (685018, 0, 11686, 1, 1),
 (685019, 0, 11686, 1, 1),
 (685020, 0, 11686, 1, 1);
@@ -282,7 +314,7 @@ ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId
 -- ---------------------------------------------------------------------------
 -- 5. Letter and runestone pages
 -- ---------------------------------------------------------------------------
--- Pages of the letter items 54000-54016 and of the Riddlestone; the world database has none of them.
+-- Pages of the letter items 54000-54016 and 9302430 and of the Riddlestone; the world database has none of them.
 -- 8000: SOURCED-CACHE pagetextcache
 -- 8001: SOURCED-CACHE pagetextcache
 -- 8002: SOURCED-CACHE pagetextcache
@@ -300,8 +332,9 @@ ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId
 -- 8013: INFERRED: the cached Templar pages (5003, 6003) are signed by other trainers
 -- 8014: INFERRED: the only cached Tinker page (15014) is written for the undead
 -- 8015: INFERRED: the only cached Venomancer page (15015) is written for the undead
+-- 931430: INFERRED: CoA shipped no Valley Reaper letter; its Reaper letter pages (6015, 7011, 15000) are not cached
 -- 27577: the Riddlestone 661332 of Runes of Power (200112), which only the Valley uses; INFERRED: no source has the page; the riddle of ct-deathknell's page 27575 (its answer, the Eye of the Beholder, is this quest's objective), closed with Zina's hint "within the den. Not without."
-DELETE FROM `page_text` WHERE `ID` IN (8000, 8001, 8002, 8003, 8004, 8005, 8006, 8007, 8008, 8009, 8010, 8011, 8012, 8013, 8014, 8015, 8016, 27577);
+DELETE FROM `page_text` WHERE `ID` IN (8000, 8001, 8002, 8003, 8004, 8005, 8006, 8007, 8008, 8009, 8010, 8011, 8012, 8013, 8014, 8015, 8016, 27577, 931430);
 INSERT INTO `page_text` (`ID`, `Text`, `NextPageID`)
 VALUES
 (8000, 'Lok''tar! The ancient rage flows through your veins, young warrior. The path of the barbarian calls to those who embrace the fury of battle over the discipline of traditional combat.$B$BAs a barbarian, you will learn to channel your inner beast, letting primal rage guide your strikes while the spirits of the wild lend you strength. Your enemies will flee before your berserker fury.$B$BSeek out Mu''kaka in the Valley of Trials. He will teach you to harness the savage power that burns within your soul.', 0),
@@ -321,7 +354,14 @@ VALUES
 (8014, 'Gears turn, pistons pump, and something always explodes. Welcome to the good part!$B$BAs a tinker, you will build your own weapons, patch together contraptions from scrap, and prove that a clever mind hits as hard as any axe.$B$BMekboy Parod works his inventions in the Valley of Trials. Find him, and bring your own spare parts.', 0),
 (8015, 'Every sting, every fang, every bitter root holds a lesson for those patient enough to learn it.$B$BAs a venomancer, you will brew toxins that wither your foes and remedies that turn death away, for poison and cure are two sides of one blade.$B$BQwi''spe the Wise studies venoms and antidotes in the Valley of Trials. Learn from her, carefully.', 0),
 (8016, 'The loa whisper your name! The ancestral spirits recognize one worthy of serving as bridge between the world of the living and the realm of the dead.$B$BAs a witch doctor, you will master both healing and hexing, blessing and cursing, always in service of your tribal community and the greater good.$B$BRol''joku practices these ancient arts in the Valley of Trials. His connection to the loa and ancestral spirits runs deeper than most can comprehend.', 0),
-(27577, 'I have no lid, yet I never sleep.$BI judge what is fair without a word.$BBeauty, they say, was never in the thing at all, but always in me.$B$BWhat am I? Seek me within the den, not without.', 0);
+(27577, 'I have no lid, yet I never sleep.$BI judge what is fair without a word.$BBeauty, they say, was never in the thing at all, but always in me.$B$BWhat am I? Seek me within the den, not without.', 0),
+(931430, 'Every life is a season, and every season ends. Some fear the harvest; the reaper tends it.$B$BAs a reaper, you will cut through your foes with blade and scythe and gather the strength of the fallen to carry you through the fight.$B$BZul’raja the Harvester keeps watch over the troll dead in the Valley of Trials. Seek him at the burial ground east of the camp.', 0);
+
+-- 9302430 Soul Harvest: the Reaper letter item, with the name, look and description of CoA's Reaper letter 650151 and the item fields of the Valley letter 54016 (SOURCED-CACHE itemcache).
+INSERT INTO `item_template` (`entry`, `class`, `subclass`, `name`, `displayid`, `Quality`, `Flags`, `ItemLevel`, `maxcount`, `stackable`, `bonding`, `description`, `PageText`, `Material`)
+VALUES
+(9302430, 12, 0, 'Soul Harvest', 142197, 1, 0, 0, 1, 1, 1, 'A grim letter bound in black leather that seems to drain light from its surroundings and carries the scent of autumn''s end.', 931430, 0)
+ON DUPLICATE KEY UPDATE `class` = VALUES(`class`), `subclass` = VALUES(`subclass`), `name` = VALUES(`name`), `displayid` = VALUES(`displayid`), `Quality` = VALUES(`Quality`), `Flags` = VALUES(`Flags`), `ItemLevel` = VALUES(`ItemLevel`), `maxcount` = VALUES(`maxcount`), `stackable` = VALUES(`stackable`), `bonding` = VALUES(`bonding`), `description` = VALUES(`description`), `PageText` = VALUES(`PageText`), `Material` = VALUES(`Material`);
 
 -- ---------------------------------------------------------------------------
 -- 6. Quests
@@ -348,6 +388,7 @@ VALUES
 (52014, 2, 2, 2, -520, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 54014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Mechanical Innovation', 'Seek out Mekboy Parod in the Valley of Trials.', 'I was asked to bring this to your attention, young tinker. It appears to be technical blueprints filled with mechanical designs, accompanied by the sound of ticking gears. It seems to be from Mekboy Parod, the tinker who works in the Valley of Trials. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Mekboy Parod in the Valley of Trials.', 0, 0, 0, 0, 0, 0, 0, 0, 54014, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (52015, 2, 2, 2, -515, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 54015, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Toxic Arts', 'Seek out Qwi''spe the Wise in the Valley of Trials.', 'I was asked to bring this to your attention, young venomancer. It appears to be a dangerous tome reeking of exotic toxins, with green vapors seeping from between its pages. It seems to be from Qwi''spe the Wise, who studies venoms and antidotes in the Valley of Trials. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Qwi''spe the Wise in the Valley of Trials.', 0, 0, 0, 0, 0, 0, 0, 0, 54015, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (52016, 2, 2, 2, -523, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 54016, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Ancestral Wisdom', 'Seek out Rol''joku in the Valley of Trials.', 'I was asked to bring this to your attention, young witch doctor. It appears to be an ancient scroll decorated with tribal fetishes, humming with ancestral power and loa magic. It seems to be from Rol''joku, who practices these ancient arts in the Valley of Trials. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Rol''joku in the Valley of Trials.', 0, 0, 0, 0, 0, 0, 0, 0, 54016, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
+(9302430, 2, 2, 2, -508, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 9302430, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Soul Harvest', 'Seek out Zul’raja the Harvester in the Valley of Trials.', 'I was asked to bring this to your attention, young reaper. It appears to be a grim letter bound in black leather that seems to drain light from its surroundings. It seems to be from Zul’raja the Harvester, who teaches the reaper''s way in the Valley of Trials. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Zul’raja the Harvester in the Valley of Trials.', 0, 0, 0, 0, 0, 0, 0, 0, 9302430, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (200107, 2, 3, 3, -526, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 532805, 1, 532806, 1, 395861, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Welcome to the Warband', 'Kill Gok and return back to your trainer.', 'Aye, $N. Good to see you could join da Warband.  What is da Warband, you might be wonderin''? Considering your arrival, I would have assumed you''d already know. Well, little $c, this is about to be a rude awakening.  Da Warband is where all barbarians, brutes, and strongmen alike come together to compete to see who is the strongest, most brutal, and most powerful individual of them all.  That''s the only way we can TRULY test our mettle. THIS IS IT! You may be new to this, but absolutely nobody will go easy on you.  Your first test will be the same as all the other rookies. There''s an individual who has been mucking things up and spreading rumors just because they couldn''t cut it and were denied access to da Warband.  They''re known as Gok. Kill him, hahaha! I will reward you with a weapon well-suited for a noob like yourself if you are capable of such a task.  Come back to me alive, or die.', '', 'Return to your trainer.', 299328, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', ''),
 (200020, 2, 3, 3, -516, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 661317, 1, 1505015, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Blood Is Power', 'Collect the Tome of Blood from the mysterious Troll.', 'Ahh, $C. Your day has finally come.  Blood. Something you should be well acquainted with at this point, in some way or another. Blood is life. But blood, as you will soon learn, is also power.  I want you to imagine what you can be capable of in a world in which you can control the very life essence of another beings body. To simply crush their insides with the flick of a wrist...  Intoxicating.  In due time, you will learn more. For now, I require your assistance in pursuing my own studies and through this I will also be able to help you learn.   Nearby is a tome, in da cave where the imps roam, held by an odd Troll, and one of which I require for my studies. Collect it for me, I''m sure one of them has it on them.', '', 'Return to your trainer.', 0, 0, 0, 0, 0, 0, 0, 0, 661316, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (200074, 2, 3, 3, -522, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 532803, 1, 532804, 1, 532881, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Going MAD!', 'Kill Ken''jai.', 'Zug, zug, you have arrived at the most opportune time, $N.  I have heard the whispers of the great beyond. It tells me of a particularly dangerous individual to our cause. I need you to destroy them, swiftly.  If you do this I will reward you with a weapon fit for a follower of the Old Gods themselves.  The individual you''re looking for lays outside the den. Somewhere near the witch doctor. They go by the name of "Ken''jai". End him.', '', 'Return to your trainer.', 299239, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', ''),
@@ -372,10 +413,11 @@ VALUES
 (200068, 2, 3, 3, -520, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 415000, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Ingenuity At It''s Finest!', 'Collect 3 Scrap Metal.', 'Zug, zug, $N.  Today, I will prove the ingenuity of the Orcs. Lok''tar ogar! I will create a gun for me, and if you help me, for you!  There is some metal out there in the imp cave that could be used to create a gun for you and me. Collect me some and I build gun.', '', 'Return to your trainer.', 0, 0, 0, 0, 0, 0, 0, 0, 663320, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, '', '', '', ''),
 (200026, 2, 3, 3, -515, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 662217, 0, 0, 292200, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Poisoning the World', 'Splash the mysterious concoction on nearby citizens.', 'Welcome, $C. Have you come to poison da well, so to speak?  I am always willing to teach new and aspiring masters of the venomous arts, but in return, I sometimes require a favor. Dis fine, yes?  Look around you. There are citizens of every shade. But they are pure, which is good, they are untainted. Here I have a concoction that I have made. What it does, should not be of concern to you.  What I need is for you to splash it on three people in particular; first, Pangajo Sunseer, second, Omogulg the Truthbearerr, and third, Nekai the Reanimator.  Return to me when you have done this and I will make it worth your time.', '', 'Return to your trainer.', 685018, 685019, 685020, 0, 1, 1, 1, 0, 662217, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 'Pangajo Sunseer', 'Nekai the Reanimator', 'Omogulg the Truthbearer', ''),
 (200029, 2, 3, 3, -523, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 16, 0, 375250, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'The Doctor Is In!', 'Heal the injured friend of your trainer with rank 1 Loa''s Brew.', 'Zug zug, $C. I can see you''ve already become well acquainted with the powers of Sseratus.  Let me guide you, mon. I have a task, a critical one at that. I have a friend out in da desert who, according to our scouts, has been injured by the scorpids. I only just got word of it and would have been on my way, but I believe this is a task that would be perfect for one such as yourself.  He''s a strong troll. A troll''s troll. And in all honesty, many be gettin'' injured by those damn scorpids. But regardless, stay diligent.  Find my friend, heal him with the power of your Loa''s Brew, and then return to me.', '', 'Return to your trainer.', 685021, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Save Hi''bi Ja''min', '', '', ''),
-(200030, 2, 3, 3, -523, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 292202, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Who Called For Da Docta?', 'Slay the Scorpid Stalker.', 'My brethren be out here tryin'' to deal wit da scorpid situation. It be more dangerous than it look.  I am not da first one to be injured. I can only pray to da Loa that I was not poisoned. But I did get hurt. Thank you for healing me, mon.  Oh, no! Look behind you, mon! One of da scorpids be comin'' back to finish da job!', '', 'Return to your trainer.', 299224, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '')
+(200030, 2, 3, 3, -523, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 292202, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Who Called For Da Docta?', 'Slay the Scorpid Stalker.', 'My brethren be out here tryin'' to deal wit da scorpid situation. It be more dangerous than it look.  I am not da first one to be injured. I can only pray to da Loa that I was not poisoned. But I did get hurt. Thank you for healing me, mon.  Oh, no! Look behind you, mon! One of da scorpids be comin'' back to finish da job!', '', 'Return to your trainer.', 299224, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', ''),
+(9302431, 2, 3, 3, -508, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 540070, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Call of the Shadowlands', 'Visit Old Brokthar in the Valley of Trials.', 'Smirk one more time when looking at my helmet, and I''ll put these blades in your chest, $N.    ...you are bold. I can sense you have come to me to learn. I do have a simple task for you today, young $C.    In the valley is an old orc who is nearing his end. In his prime, he was a behemoth on the battlefield and took many lives. But now, he sits out his days by the burial ground east of the camp.    He will die and the Shadowlands will claim him. But today is not his day. Yet, I can feel his yearning to leave this plane, but he is unaware of what lays before him once he is gone.    You may not have expected such a task, but I would humbly ask you to pay him a visit and have a chat.', '', 'Return to your trainer.', 685022, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Chat with Old Brokthar', '', '', '')
 ON DUPLICATE KEY UPDATE `QuestType` = VALUES(`QuestType`), `QuestLevel` = VALUES(`QuestLevel`), `MinLevel` = VALUES(`MinLevel`), `QuestSortID` = VALUES(`QuestSortID`), `QuestInfoID` = VALUES(`QuestInfoID`), `SuggestedGroupNum` = VALUES(`SuggestedGroupNum`), `RequiredFactionId1` = VALUES(`RequiredFactionId1`), `RequiredFactionId2` = VALUES(`RequiredFactionId2`), `RequiredFactionValue1` = VALUES(`RequiredFactionValue1`), `RequiredFactionValue2` = VALUES(`RequiredFactionValue2`), `RewardNextQuest` = VALUES(`RewardNextQuest`), `RewardXPDifficulty` = VALUES(`RewardXPDifficulty`), `RewardMoney` = VALUES(`RewardMoney`), `RewardMoneyDifficulty` = VALUES(`RewardMoneyDifficulty`), `RewardDisplaySpell` = VALUES(`RewardDisplaySpell`), `RewardSpell` = VALUES(`RewardSpell`), `RewardHonor` = VALUES(`RewardHonor`), `RewardKillHonor` = VALUES(`RewardKillHonor`), `StartItem` = VALUES(`StartItem`), `Flags` = VALUES(`Flags`), `RequiredPlayerKills` = VALUES(`RequiredPlayerKills`), `RewardItem1` = VALUES(`RewardItem1`), `RewardAmount1` = VALUES(`RewardAmount1`), `RewardItem2` = VALUES(`RewardItem2`), `RewardAmount2` = VALUES(`RewardAmount2`), `RewardItem3` = VALUES(`RewardItem3`), `RewardAmount3` = VALUES(`RewardAmount3`), `RewardItem4` = VALUES(`RewardItem4`), `RewardAmount4` = VALUES(`RewardAmount4`), `ItemDrop1` = VALUES(`ItemDrop1`), `ItemDropQuantity1` = VALUES(`ItemDropQuantity1`), `ItemDrop2` = VALUES(`ItemDrop2`), `ItemDropQuantity2` = VALUES(`ItemDropQuantity2`), `ItemDrop3` = VALUES(`ItemDrop3`), `ItemDropQuantity3` = VALUES(`ItemDropQuantity3`), `ItemDrop4` = VALUES(`ItemDrop4`), `ItemDropQuantity4` = VALUES(`ItemDropQuantity4`), `RewardChoiceItemID1` = VALUES(`RewardChoiceItemID1`), `RewardChoiceItemQuantity1` = VALUES(`RewardChoiceItemQuantity1`), `RewardChoiceItemID2` = VALUES(`RewardChoiceItemID2`), `RewardChoiceItemQuantity2` = VALUES(`RewardChoiceItemQuantity2`), `RewardChoiceItemID3` = VALUES(`RewardChoiceItemID3`), `RewardChoiceItemQuantity3` = VALUES(`RewardChoiceItemQuantity3`), `RewardChoiceItemID4` = VALUES(`RewardChoiceItemID4`), `RewardChoiceItemQuantity4` = VALUES(`RewardChoiceItemQuantity4`), `RewardChoiceItemID5` = VALUES(`RewardChoiceItemID5`), `RewardChoiceItemQuantity5` = VALUES(`RewardChoiceItemQuantity5`), `RewardChoiceItemID6` = VALUES(`RewardChoiceItemID6`), `RewardChoiceItemQuantity6` = VALUES(`RewardChoiceItemQuantity6`), `POIContinent` = VALUES(`POIContinent`), `POIx` = VALUES(`POIx`), `POIy` = VALUES(`POIy`), `POIPriority` = VALUES(`POIPriority`), `RewardTitle` = VALUES(`RewardTitle`), `RewardTalents` = VALUES(`RewardTalents`), `RewardArenaPoints` = VALUES(`RewardArenaPoints`), `RewardFactionID1` = VALUES(`RewardFactionID1`), `RewardFactionValue1` = VALUES(`RewardFactionValue1`), `RewardFactionOverride1` = VALUES(`RewardFactionOverride1`), `RewardFactionID2` = VALUES(`RewardFactionID2`), `RewardFactionValue2` = VALUES(`RewardFactionValue2`), `RewardFactionOverride2` = VALUES(`RewardFactionOverride2`), `RewardFactionID3` = VALUES(`RewardFactionID3`), `RewardFactionValue3` = VALUES(`RewardFactionValue3`), `RewardFactionOverride3` = VALUES(`RewardFactionOverride3`), `RewardFactionID4` = VALUES(`RewardFactionID4`), `RewardFactionValue4` = VALUES(`RewardFactionValue4`), `RewardFactionOverride4` = VALUES(`RewardFactionOverride4`), `RewardFactionID5` = VALUES(`RewardFactionID5`), `RewardFactionValue5` = VALUES(`RewardFactionValue5`), `RewardFactionOverride5` = VALUES(`RewardFactionOverride5`), `LogTitle` = VALUES(`LogTitle`), `LogDescription` = VALUES(`LogDescription`), `QuestDescription` = VALUES(`QuestDescription`), `AreaDescription` = VALUES(`AreaDescription`), `QuestCompletionLog` = VALUES(`QuestCompletionLog`), `RequiredNpcOrGo1` = VALUES(`RequiredNpcOrGo1`), `RequiredNpcOrGo2` = VALUES(`RequiredNpcOrGo2`), `RequiredNpcOrGo3` = VALUES(`RequiredNpcOrGo3`), `RequiredNpcOrGo4` = VALUES(`RequiredNpcOrGo4`), `RequiredNpcOrGoCount1` = VALUES(`RequiredNpcOrGoCount1`), `RequiredNpcOrGoCount2` = VALUES(`RequiredNpcOrGoCount2`), `RequiredNpcOrGoCount3` = VALUES(`RequiredNpcOrGoCount3`), `RequiredNpcOrGoCount4` = VALUES(`RequiredNpcOrGoCount4`), `RequiredItemId1` = VALUES(`RequiredItemId1`), `RequiredItemId2` = VALUES(`RequiredItemId2`), `RequiredItemId3` = VALUES(`RequiredItemId3`), `RequiredItemId4` = VALUES(`RequiredItemId4`), `RequiredItemId5` = VALUES(`RequiredItemId5`), `RequiredItemId6` = VALUES(`RequiredItemId6`), `RequiredItemCount1` = VALUES(`RequiredItemCount1`), `RequiredItemCount2` = VALUES(`RequiredItemCount2`), `RequiredItemCount3` = VALUES(`RequiredItemCount3`), `RequiredItemCount4` = VALUES(`RequiredItemCount4`), `RequiredItemCount5` = VALUES(`RequiredItemCount5`), `RequiredItemCount6` = VALUES(`RequiredItemCount6`), `ObjectiveText1` = VALUES(`ObjectiveText1`), `ObjectiveText2` = VALUES(`ObjectiveText2`), `ObjectiveText3` = VALUES(`ObjectiveText3`), `ObjectiveText4` = VALUES(`ObjectiveText4`);
 
-DELETE FROM `quest_template_addon` WHERE `ID` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162);
+DELETE FROM `quest_template_addon` WHERE `ID` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162, 9302430, 9302431);
 INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `PrevQuestID`, `ProvidedItemCount`, `SpecialFlags`)
 VALUES
 (52000, 0, 2048, 788, 1, 0),
@@ -395,6 +437,7 @@ VALUES
 (52014, 0, 134217728, 788, 1, 0),
 (52015, 0, 268435456, 788, 1, 0),
 (52016, 0, 4096, 788, 1, 0),
+(9302430, 0, 536870912, 788, 1, 0),
 (200107, 0, 2048, 52000, 0, 0),
 (200020, 0, 524288, 52001, 0, 0),
 (200074, 0, 16777216, 52002, 0, 0),
@@ -419,9 +462,10 @@ VALUES
 (200068, 0, 134217728, 52014, 0, 0),
 (200026, 0, 268435456, 52015, 1, 0),
 (200029, 0, 4096, 52016, 0, 0),
-(200030, 0, 4096, 200029, 0, 0);
+(200030, 0, 4096, 200029, 0, 0),
+(9302431, 0, 536870912, 9302430, 0, 0);
 
-DELETE FROM `quest_offer_reward` WHERE `ID` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162);
+DELETE FROM `quest_offer_reward` WHERE `ID` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162, 9302430, 9302431);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)
 VALUES
 (52000, 'Lok''tar, young warrior! The fire of battle burns in your eyes, and I can sense the primal rage that courses through your blood. You have chosen the ancient path of the barbarian.$B$BAs a Barbarian, you will learn to channel your innermost fury into crushing blows that shatter armor and bone alike. Your berserker rage will make you nearly unstoppable in combat, while the spirits of the wild guide your strikes with deadly precision.$B$BThis path requires you to embrace the beast within while maintaining enough control to distinguish friend from foe. Your rage will be your greatest weapon, but it must never consume your honor. Train hard, fight harder, and let your enemies taste the fury of the Horde.$B$BWelcome to the brotherhood of berserkers, warrior. May your rage burn eternal!'),
@@ -441,6 +485,7 @@ VALUES
 (52014, 'Brilliant innovation sparks in your mind! You have chosen to walk the path that bridges magic and machinery, creating wonders that neither art alone could achieve.$B$BAs a Tinker, you will learn to construct devices that aid allies, confound enemies, and demonstrate the power of creative thinking applied to practical problems. Your inventions will show that progress and tradition can work together.$B$BThis path requires both technical knowledge and creative inspiration. You must understand how things work before you can make them work better, but true innovation comes from seeing possibilities that others miss.$B$BThe spirits of invention smile upon your choice. May your devices never malfunction when you need them most, and may your innovations serve the Horde well.'),
 (52015, 'The deadly balance flows through your understanding! You have chosen to master the dual nature of toxins - their power to harm and their equal power to heal when properly applied.$B$BAs a Venomancer, you will learn to brew poisons that can fell the mightiest enemies, but also to create antidotes and cures that can save lives others consider beyond hope. Every toxin has its remedy if one understands the principles involved.$B$BThis knowledge carries tremendous responsibility - the same compound that kills a corrupted beast might save a poisoned child. Your wisdom must guide when to unleash death and when to preserve life.$B$BThe natural balance recognizes your understanding. May your venoms strike true against our enemies, and your cures bring healing to our allies.'),
 (52016, 'The loa welcome their new voice in the mortal world! You have chosen to serve as vessel for ancestral wisdom, bridging the realm of spirits with the land of the living.$B$BAs a Witch Doctor, you will learn to channel the power of the loa through ritual and sacrifice, to heal with spirit magic and hex your enemies with curses that transcend death itself. The ancestors will guide your hands in both blessing and judgment.$B$BThis sacred calling demands respect for the old ways while adapting to modern needs. You must serve as healer, advisor, and spiritual guide to your people, interpreting the will of the loa for those who cannot hear their voices.$B$BYour magic serves not just individual needs, but the spiritual health of the entire community.$B$BThe ancestral wisdom welcomes its new guardian. May the loa guide your steps, and may your magic serve both the living and the dead with equal reverence.'),
+(9302430, 'So Gornek be sendin'' you to Zul’raja. Good.$B$BEvery soul be a crop, mon, and every crop got its season. A reaper learns when to cut and when to let it grow. You gonna swing da scythe for da Horde, and da spirits of da fallen gonna whisper where to strike.$B$BStay close. Da first lesson be waitin'' for you.'),
 (200107, ''),
 (200020, 'A Blood Wizard?$B$BInteresting...$B$BWell, upon further inspection, this tome is worthless. You can have it.$B$BReturn to me in the future when you are stronger. Maybe we can work together again.'),
 (200074, ''),
@@ -465,9 +510,10 @@ VALUES
 (200068, 'Well, this is perfect!$B$BI was able to use this metal to finish a new gun for me and, guess what, I made you one too!$B$BTake it and have a great day!'),
 (200026, 'I know you''re wondering why I had you do this.$B$BIn due time, you will learn.$B$BThere is nothing else to worry about now. I''ve made you a similar concoction, take it with you, and use it wisely.$B$BFarewell, $N.'),
 (200029, 'Thank you! I feel better now. I can feel da Loa.'),
-(200030, 'Hi''bi told me what you did.$B$BI''m proud of you, mon.$B$BTake this.');
+(200030, 'Hi''bi told me what you did.$B$BI''m proud of you, mon.$B$BTake this.'),
+(9302431, 'You may not have expected such a task, $N. But it is important to understand that the Shadowlands call for those who are ready, and knowing when to claim a soul can be just as important as the reclamation of the soul itself.$B$BFor helping our friend out here, I will reward you with these boots. May they serve you well, as they are enchanted to allow you to walk on the surface of water itself.');
 
-DELETE FROM `quest_request_items` WHERE `ID` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162);
+DELETE FROM `quest_request_items` WHERE `ID` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162, 9302430, 9302431);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
 (52000, 'I sense the primal fury awakening within you, warrior. So you wish to learn the barbarian''s path of rage and wilderness combat?'),
@@ -487,6 +533,7 @@ VALUES
 (52014, 'Innovation sparks in your mind, builder. So you wish to become a Tinker, to blend magic and machinery?'),
 (52015, 'The balance of toxin and antidote calls to you. So you wish to become a Venomancer, to master poison and cure?'),
 (52016, 'The loa whisper your name, spirit-walker. So you wish to become a Witch Doctor, to serve as bridge between worlds?'),
+(9302430, 'Da harvest be callin'' you, $N. You bring me da letter?'),
 (200107, ''),
 (200020, 'You be doin'' good, mon. Who did you say had this tome again?'),
 (200074, ''),
@@ -511,12 +558,13 @@ VALUES
 (200068, 'Have you found the scrap yet?'),
 (200026, 'Welcome back. Have you done what I asked?'),
 (200029, ''),
-(200030, '');
+(200030, ''),
+(9302431, '');
 
 -- ---------------------------------------------------------------------------
 -- 7. Who offers and who takes them back
 -- ---------------------------------------------------------------------------
-DELETE FROM `creature_queststarter` WHERE `quest` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162);
+DELETE FROM `creature_queststarter` WHERE `quest` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162, 9302430, 9302431);
 INSERT INTO `creature_queststarter` (`id`, `quest`)
 VALUES
 (3143, 52000),
@@ -558,9 +606,11 @@ VALUES
 (11378, 200135),
 (11378, 200136),
 (503402, 200144),
-(50290, 200162);
+(50290, 200162),
+(3143, 9302430),
+(501296, 9302431);
 
-DELETE FROM `creature_questender` WHERE `quest` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162);
+DELETE FROM `creature_questender` WHERE `quest` IN (52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010, 52011, 52012, 52013, 52014, 52015, 52016, 200008, 200009, 200010, 200020, 200022, 200026, 200029, 200030, 200034, 200049, 200050, 200051, 200068, 200074, 200080, 200095, 200096, 200097, 200107, 200112, 200134, 200135, 200136, 200144, 200162, 9302430, 9302431);
 INSERT INTO `creature_questender` (`id`, `quest`)
 VALUES
 (502953, 52000),
@@ -602,7 +652,9 @@ VALUES
 (11378, 200135),
 (502791, 200136),
 (503402, 200144),
-(50290, 200162);
+(50290, 200162),
+(501296, 9302430),
+(501296, 9302431);
 
 DELETE FROM `gameobject_queststarter` WHERE `quest` IN (200050, 200051);
 INSERT INTO `gameobject_queststarter` (`id`, `quest`)
@@ -671,13 +723,14 @@ DELETE FROM `creature` WHERE `guid` IN (4912, 7651);
 --   deleted above, so Gornek no longer offers it
 DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((3143, 2383), (3143, 3065), (3143, 3085));
 
-DELETE FROM `creature_addon` WHERE `guid` IN (9003500, 9003501, 9003502, 9003503, 9003504, 9003505, 9003506, 9003507, 9003508, 9003509, 9003510, 9003511, 9003512, 9003513, 9003514, 9003515, 9003516, 9003520, 9003521, 9003522, 9003523, 9003524, 9003525, 9003526, 9003527, 9003528, 9003529) OR `guid` BETWEEN 9003500 AND 9003699;
+DELETE FROM `creature_addon` WHERE `guid` IN (9003500, 9003501, 9003502, 9003503, 9003504, 9003505, 9003506, 9003507, 9003508, 9003509, 9003510, 9003511, 9003512, 9003513, 9003514, 9003515, 9003516, 9003517, 9003520, 9003521, 9003522, 9003523, 9003524, 9003525, 9003526, 9003527, 9003528, 9003529, 9003530) OR `guid` BETWEEN 9003500 AND 9003699;
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
 VALUES
 (9003522, 0, 0, 3, 0, 0, 0, NULL),
-(9003524, 0, 0, 8, 0, 0, 0, NULL);
+(9003524, 0, 0, 8, 0, 0, 0, NULL),
+(9003530, 0, 0, 1, 0, 0, 0, NULL);
 
-DELETE FROM `creature` WHERE `guid` IN (9003500, 9003501, 9003502, 9003503, 9003504, 9003505, 9003506, 9003507, 9003508, 9003509, 9003510, 9003511, 9003512, 9003513, 9003514, 9003515, 9003516, 9003520, 9003521, 9003522, 9003523, 9003524, 9003525, 9003526, 9003527, 9003528, 9003529) OR `guid` BETWEEN 9003500 AND 9003699;
+DELETE FROM `creature` WHERE `guid` IN (9003500, 9003501, 9003502, 9003503, 9003504, 9003505, 9003506, 9003507, 9003508, 9003509, 9003510, 9003511, 9003512, 9003513, 9003514, 9003515, 9003516, 9003517, 9003520, 9003521, 9003522, 9003523, 9003524, 9003525, 9003526, 9003527, 9003528, 9003529, 9003530) OR `guid` BETWEEN 9003500 AND 9003699;
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
 (9003500, 502953, 1, 0, 0, 1, 1, 1, -638.09, -4234.09, 38.135, 5.585, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Barbarian trainer at the SOURCED-CLIENT turn-in point; under the south pavilion, whose west side is closed by Parod''s wagon and the cliffs, so players come in through its open north and north-east sides; the shield rack behind him; faces out of the north-east side straight toward the start, with Tav''vin 93 deg off his left and nothing ahead within 12 yd'),
@@ -697,6 +750,7 @@ VALUES
 (9003514, 50288, 1, 0, 0, 1, 1, 1, -558.66, -4195.2, 46.396, 3.75, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Venomancer trainer at the SOURCED-CLIENT turn-in point; on the slope above the cooking camp, the rock mound south of her; faces the path that runs past the mound down to the camp and Gornek'),
 (9003515, 50290, 1, 0, 0, 1, 1, 1, -638.57, -4226.43, 38.137, 0.26, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Primalist trainer at the SOURCED-CLIENT turn-in point; under the south pavilion, whose west side is closed by Parod''s wagon and the cliffs, so players come in through its open north and north-east sides; barrels 1-2 yd behind him; faces north out of the open side, past the east end of Parod''s wagon where the path from Gornek comes in, with Jen''shan more than 30 deg off his right'),
 (9003516, 502912, 1, 0, 0, 1, 1, 1, -619.78, -4204.3, 38.135, 0.09, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Runemaster trainer at the SOURCED-CLIENT turn-in point; west row by the jar table; faces north toward the den-mouth side of the camp, where players come down from Gornek, with Ken''jai''s post 3 yd away 33 deg off her left shoulder'),
+(9003517, 501296, 1, 0, 0, 1, 1, 1, -627, -4301.5, 40.685, 1.4, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Reaper trainer at an INFERRED post, the troll burial ground east of the camp, beside the mummified dead and the skull pile, the torches 8 yd off his right; faces the camp and the start players come from'),
 (9003520, 299239, 1, 0, 0, 1, 1, 1, -617.39, -4202.4, 38.135, 4.87, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Ken''jai''s stock post outside the den "near the witch doctor" (the quest text), with his stock facing; the stock spawn 4912 is deleted'),
 (9003521, 299328, 1, 0, 0, 1, 1, 1, -588.83, -4137.63, 41.57, 4.1, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: the Den, SOURCED-CLIENT 200107 objective point in the corridor; faces the passage from the den mouth'),
 (9003522, 299225, 1, 0, 0, 1, 1, 0, -691, -4144, 29.986, 1.22, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: asleep against the rock outcrop in the quiet south-west corner of the valley, far from the lumber piles, scorpids 12 yd away ("Scorpid attack, probably")'),
@@ -706,7 +760,8 @@ VALUES
 (9003526, 9300204, 1, 0, 0, 1, 1, 0, -85.55, -4206.95, 49.77, 3.93, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower west hall among the Felstalkers, 3.4 yd off the Vile Familiar''s walk through the hall (path 47050); faces the way in from the south-east'),
 (9003527, 9300204, 1, 0, 0, 1, 1, 0, -126.08, -4333.2, 64.431, 3.89, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east gallery inside the entrance passage, 3.5 yd off the Vile Familiar''s walk along the gallery (path 130620); faces the entrance'),
 (9003528, 9300205, 1, 0, 0, 1, 1, 0, -205, -4401, 64.781, 2.39, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: canyon before the Burning Blade Coven, east end, beside the campfire he is bound to, 3.2 yd away; faces the canyon mouth players come through'),
-(9003529, 685037, 1, 0, 0, 1, 1, 0, -839, -4250, 88.447, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: southern mountains, on the sheltered shelf 7 yd east of the hidden statue, in sight of anyone who reaches it: the walk-in credit for 200080');
+(9003529, 685037, 1, 0, 0, 1, 1, 0, -839, -4250, 88.447, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: southern mountains, on the sheltered shelf 7 yd east of the hidden statue, in sight of anyone who reaches it: the walk-in credit for 200080'),
+(9003530, 9300206, 1, 0, 0, 1, 1, 0, -640.5, -4288, 40.066, 5.63, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: sitting on the open ground at the south-west edge of the troll burial ground, facing the skull pile; 7 yd from Kragar and 10 yd from the spirit healer');
 
 DELETE FROM `gameobject` WHERE `guid` IN (7912300, 7912301, 7912302, 7912303, 7912304, 7912305, 7912306, 7912307, 7912308, 7912309, 7912310, 7912311, 7912312, 7912313, 7912314, 7912315, 7912316, 7912317, 7912318, 7912319, 7912320, 7912321, 7912322, 7912323, 7912324, 7912325, 7912326, 7912327, 7912328) OR `guid` BETWEEN 7912300 AND 7912399;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
@@ -744,7 +799,7 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 10. Scripts
 -- ---------------------------------------------------------------------------
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (-9003529, 502925, 9300200, 9300201, 9300202, 9300203) AND `source_type` = 0;
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (-9003529, 502925, 9300200, 9300201, 9300202, 9300203, 9300206) AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (-9003529, 0, 0, 0, 10, 0, 100, 0, 1, 12, 1000, 1000, 1, 0, 33, 685037, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, '[KC] Visit - Player in sight within 12 yd - Quest Credit ''A Quiet Life'' at the hidden statue'),
@@ -754,7 +809,8 @@ VALUES
 (9300202, 0, 0, 0, 8, 0, 100, 0, 684328, 0, 0, 0, 0, 0, 33, 685011, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Beaky - On Spellhit ''Tend Jo''s Wounds'' (Red Vial) - Quest Credit ''Falcons Are Friends'''),
 (9300202, 0, 1, 0, 19, 0, 100, 0, 200009, 0, 0, 0, 0, 0, 12, 299222, 4, 120000, 1, 0, 0, 8, 0, 0, 0, 0, -488.5, -4296.5, 43.11, 2.42, 'Beaky - On Quest ''A Surprise Attack!'' Accepted - Summon Suspicious Creature from the bushes, attacking the invoker'),
 (9300203, 0, 0, 0, 8, 0, 100, 0, 801670, 0, 0, 0, 0, 0, 33, 685021, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Hi''bi Ja''min - On Spellhit ''Loa''s Brew'' Rank 1 - Quest Credit ''The Doctor Is In!'''),
-(9300203, 0, 1, 0, 19, 0, 100, 0, 200030, 0, 0, 0, 0, 0, 12, 299224, 4, 120000, 1, 0, 0, 8, 0, 0, 0, 0, -406, -4444, 50.46, 0.35, 'Hi''bi Ja''min - On Quest ''Who Called For Da Docta?'' Accepted - Summon Scorpid Stalker behind the player, attacking the invoker');
+(9300203, 0, 1, 0, 19, 0, 100, 0, 200030, 0, 0, 0, 0, 0, 12, 299224, 4, 120000, 1, 0, 0, 8, 0, 0, 0, 0, -406, -4444, 50.46, 0.35, 'Hi''bi Ja''min - On Quest ''Who Called For Da Docta?'' Accepted - Summon Scorpid Stalker behind the player, attacking the invoker'),
+(9300206, 0, 0, 0, 62, 0, 100, 0, 930303, 0, 0, 0, 0, 0, 33, 685022, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Old Brokthar - On Gossip Option 0 Selected - Quest Credit ''Call of the Shadowlands''');
 
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 9301200 AND `source_type` = 1;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
