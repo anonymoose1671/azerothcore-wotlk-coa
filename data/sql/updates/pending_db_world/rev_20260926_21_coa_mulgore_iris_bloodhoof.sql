@@ -5,7 +5,8 @@
 -- ---------------------------------------------------------------------------
 -- 1. Creatures
 -- ---------------------------------------------------------------------------
--- Stand-in displays where the CoA model is missing from the client.
+-- Stand-in displays where the CoA model is missing from the client. 162949 is the same row that
+-- rev_20260926_31 writes.
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `detection_range`, `rank`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `family`, `type`, `type_flags`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `KillCredit1`, `ScriptName`)
 VALUES
 (162902, 'Handros', NULL, 0, 8, 8, 0, 104, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, '', 0, 0.96, 1, 1, 1, 1, 0, 0, ''),
@@ -35,6 +36,17 @@ VALUES
 (162909, 0, 1454, 1, 1),
 (162949, 0, 11686, 1, 1),
 (162950, 0, 11686, 1, 1);
+
+-- Shared listen-credit marker, the same row as rev_20260923_00 (Goldshire).
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `rank`, `unit_class`, `unit_flags`, `type`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`, `KillCredit1`, `gossip_menu_id`)
+VALUES
+(162921, '[KC] Listen to Aliscar Lend', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0)
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `KillCredit1` = VALUES(`KillCredit1`), `gossip_menu_id` = VALUES(`gossip_menu_id`);
+
+DELETE FROM `creature_template_model` WHERE `CreatureID` = 162921;
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
+VALUES
+(162921, 0, 11686, 1, 1);
 
 -- Ardunno lies dead in his hut; the fires carry the Fire Shield the blessing strips.
 DELETE FROM `creature_template_addon` WHERE `entry` IN (162902, 162903, 162904, 162905, 162906, 162907, 162908, 162909, 162949, 162950, 991485);

@@ -22,6 +22,8 @@ UPDATE `creature` SET `position_x` = -2200, `position_y` = -75, `position_z` = -
 UPDATE `creature` SET `position_x` = -2160, `position_y` = -40, `position_z` = 7.052 WHERE `guid` = 25238 AND `id` = 2956;
 -- Wiry Swoop (26069): buried by the burnt hut; south edge of the plain north of the hill.
 UPDATE `creature` SET `position_x` = -2200, `position_y` = -25, `position_z` = 5.02 WHERE `guid` = 26069 AND `id` = 2969;
+-- Adult Plainstrider (25204): wandered into the fire ground; north-east rise of the plain north of the hill.
+UPDATE `creature` SET `position_x` = -2150, `position_y` = 5, `position_z` = 22.15 WHERE `guid` = 25204 AND `id` = 2956;
 -- Prairie Wolf (25398): buried on the new hill; open slope west of it.
 UPDATE `creature` SET `position_x` = -2425, `position_y` = 100, `position_z` = 40.856 WHERE `guid` = 25398 AND `id` = 2958;
 -- Adult Plainstrider (25162): buried on the hilltop; plain north of the hill.
@@ -62,6 +64,9 @@ UPDATE `creature` SET `position_z` = 55.849 WHERE `guid` = 94870 AND `id` = 2961
 UPDATE `creature` SET `position_z` = 67.943 WHERE `guid` = 72741 AND `id` = 2966;
 -- Battleboar (72745): floated 0.98; same x and y.
 UPDATE `creature` SET `position_z` = 75.241 WHERE `guid` = 72745 AND `id` = 2966;
+
+-- Battleboar (72741): 20 yd from Morriga; wander 5 so it stays off her spot.
+UPDATE `creature` SET `wander_distance` = 5 WHERE `guid` = 72741 AND `id` = 2966;
 
 -- ---------------------------------------------------------------------------
 -- 3. Palemane Rock and Stonefather's Circle
