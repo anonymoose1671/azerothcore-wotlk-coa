@@ -126,18 +126,21 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 2. Dialogue
 -- ---------------------------------------------------------------------------
--- Cached npc_text greetings (shared with Arathror, identical rows); option text INFERRED.
-DELETE FROM `npc_text` WHERE `ID` IN (62611, 62615);
+-- Cached npc_text greetings: 62611/62615 shared with Arathror (identical rows); 62619, the only
+-- tauren greeting of the 62611-62619 batch, as his default (attribution INFERRED). Option text INFERRED.
+DELETE FROM `npc_text` WHERE `ID` IN (62611, 62615, 62619);
 INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `BroadcastTextID0`, `lang0`, `Probability0`)
 VALUES
 (62611, 'We’ve got everything we need for the disguise. Are things ready on your end?', 'We’ve got everything we need for the disguise. Are things ready on your end?', 0, 0, 1),
-(62615, 'Everything is in place. Once you are ready, I will see to your disguise myself.', 'Everything is in place. Once you are ready, I will see to your disguise myself.', 0, 0, 1);
+(62615, 'Everything is in place. Once you are ready, I will see to your disguise myself.', 'Everything is in place. Once you are ready, I will see to your disguise myself.', 0, 0, 1),
+(62619, '<The elder tauren has his back to you. His massive arms work diligently, rolling up a curtain of white cloth. His fingers, surprisingly deft for their size, drum against it like the legs of a spider.>', '<The elder tauren has his back to you. His massive arms work diligently, rolling up a curtain of white cloth. His fingers, surprisingly deft for their size, drum against it like the legs of a spider.>', 0, 0, 1);
 
 DELETE FROM `gossip_menu` WHERE `MenuID` = 932450;
 INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
 VALUES
 (932450, 62611),
-(932450, 62615);
+(932450, 62615),
+(932450, 62619);
 
 DELETE FROM `gossip_menu_option` WHERE `MenuID` = 932450;
 INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`)
@@ -150,6 +153,8 @@ VALUES
 (14, 932450, 62611, 0, 0, 8, 0, 1660032, 0, 0, 0, 0, 0, '', 'Nauchol greeting 62611 once Death and Dishonor is rewarded'),
 (14, 932450, 62611, 0, 0, 8, 0, 1660033, 0, 0, 1, 0, 0, '', 'Nauchol greeting 62611 until Death and Justice is rewarded'),
 (14, 932450, 62615, 0, 0, 9, 0, 1660033, 0, 0, 0, 0, 0, '', 'Nauchol greeting 62615 while Death and Justice is taken'),
+(14, 932450, 62619, 0, 0, 8, 0, 1660032, 0, 0, 1, 0, 0, '', 'Nauchol greeting 62619 until Death and Dishonor is rewarded'),
+(14, 932450, 62619, 0, 1, 8, 0, 1660033, 0, 0, 0, 0, 0, '', 'Nauchol greeting 62619 or once Death and Justice is rewarded'),
 (15, 932450, 0, 0, 0, 8, 0, 1660032, 0, 0, 0, 0, 0, '', 'Disguise option: Death and Dishonor rewarded'),
 (15, 932450, 0, 0, 0, 1, 0, 256709, 0, 0, 1, 0, 0, '', 'Disguise option: not already wearing 256709'),
 (15, 932450, 0, 0, 0, 1, 0, 256710, 0, 0, 1, 0, 0, '', 'Disguise option: not already wearing 256710'),
@@ -450,7 +455,8 @@ VALUES
 (90110050, 5, -3527, -1111, 221, NULL, 0, 0, 0, 0, 0, 100, 0),
 (90110050, 6, -3521, -1116, 221, NULL, 0, 0, 0, 0, 0, 100, 0),
 (90110050, 7, -3513, -1115, 221, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 8, -3509, -1111, 221, NULL, 0, 0, 0, 0, 0, 100, 0);
+(90110050, 8, -3484, -1122, 206.5, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 9, -3509, -1111, 221, NULL, 0, 0, 0, 0, 0, 100, 0);
 
 -- ---------------------------------------------------------------------------
 -- 8. Scripts
