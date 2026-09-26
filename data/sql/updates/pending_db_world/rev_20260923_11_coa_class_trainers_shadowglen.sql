@@ -21,7 +21,7 @@
 --   stock spawn moved  Lyrai (46171), 2.5 yd west to stand beside Kaleidormu on his point (INFERRED).
 --   map markers  quest_poi for 200046 and 200056, whose texts mark the map (INFERRED points).
 --
--- Blocks: creature guid 9004100-9004299, gameobject guid 6912600-6912699, creature entry 9300350-9300399,
+-- Blocks: creature guid 9004100-9004299, gameobject guid 7912600-7912699, creature entry 9300350-9300399,
 -- gameobject entry 9301350-9301399, gossip menu and npc_text 930450-930499. 19 trainers, 19 letters, 27 chain
 -- quests, 29 creature and 22 gameobject spawns.
 
@@ -737,31 +737,31 @@ VALUES
 (9004138, 685032, 1, 0, 0, 1, 1, 0, 10710.5, 762.9, 1321.279, 0, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Shadowglen: in the Shadowglen moonwell pool (Nightelfmoonwellornate.wmo, pool floor 1321.2), 1.1 yd from the stock Moonwell objects 49687 and 49719 at its centre; its 5 yd sight radius plus both combat reaches (7.5 yd) covers all of the water'),
 (9004139, 685037, 1, 0, 0, 1, 1, 0, 10659, 815.5, 1328.85, 3.24, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Shadowglen: at the foot of the statue of Uther on the knoll west of the moonwell, where the Templar meditates');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6912600, 6912601, 6912602, 6912603, 6912604, 6912605, 6912606, 6912607, 6912608, 6912609, 6912610, 6912611, 6912612, 6912613, 6912614, 6912615, 6912616, 6912617, 6912618, 6912619, 6912620, 6912621) OR `guid` BETWEEN 6912600 AND 6912699;
+DELETE FROM `gameobject` WHERE `guid` IN (7912600, 7912601, 7912602, 7912603, 7912604, 7912605, 7912606, 7912607, 7912608, 7912609, 7912610, 7912611, 7912612, 7912613, 7912614, 7912615, 7912616, 7912617, 7912618, 7912619, 7912620, 7912621) OR `guid` BETWEEN 7912600 AND 7912699;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6912600, 9301356, 1, 0, 0, 1, 1, 10395, 991, 1327.487, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Shadowglen: flat hollow at the foot of the great tree''s arching roots, 175 yd north-west of Baarelam''s graveyard ("Let me mark your map to the location of where my ritual must be had"), between grell camps 2 and 3 whose Grellkin carry the bones, flesh and skull'),
-(6912601, 9301355, 1, 0, 0, 1, 1, 10659, 814, 1328.971, 3.24, 0, 0, 0.99879, -0.049184, 300, 100, 1, '', 'CoA Shadowglen: top of the knoll west of the moonwell (terrain 1328.8, prominence 6-9 yd over the meadow), "a hill where a statue of a powerful Paladin was erected"; faces 3.24 toward Aldrassil'),
-(6912602, 9301350, 1, 0, 0, 1, 1, 10450.5, 790, 1345.646, 1.2, 0, 0, 0.564642, 0.825336, 60, 100, 1, '', 'CoA Shadowglen: Aldrassil 1345.7 landing beside the bench at the top of Kaleidormu''s ramp, where he left it'),
-(6912603, 9301350, 1, 0, 0, 1, 1, 10424, 788.5, 1322.705, 4.4, 0, 0, 0.808496, -0.588501, 60, 100, 1, '', 'CoA Shadowglen: Aldrassil base hall by the stone benches of the west wall; a second copy so two students can search at once'),
-(6912604, 9301351, 1, 0, 0, 1, 1, 10506, 792, 1397.215, 0.7, 0, 0, 0.342898, 0.939373, 60, 100, 1, '', 'CoA Shadowglen: the crown of Aldrassil (1397.2) at the top of the outer ramp: the riddle''s answer "lays within Aldrassil"'),
-(6912605, 9301351, 1, 0, 0, 1, 1, 10516.5, 823.5, 1354.791, 2.1, 0, 0, 0.867423, 0.497571, 60, 100, 1, '', 'CoA Shadowglen: the 1354.8 landing of the outer ramp inside the tree; a second copy'),
-(6912606, 9301352, 1, 0, 0, 1, 1, 10362, 749.5, 1321.836, 5.6, 0, 0, 0.334988, -0.942222, 60, 100, 1, '', 'CoA Shadowglen: against the fallen log (Kalidartreelog02) 17 yd north-east of Flowzie''s post: "placed in the surrounding area"'),
-(6912607, 9301352, 1, 0, 0, 1, 1, 10371, 737, 1323.46, 0.4, 0, 0, 0.198669, 0.980067, 60, 100, 1, '', 'CoA Shadowglen: at the foot of the junction signpost south-east of Flowzie; a second copy'),
-(6912608, 9301353, 1, 0, 0, 1, 1, 10292, 938, 1334.508, 2, 0, 0, 0.841471, 0.540302, 60, 100, 1, '', 'CoA Shadowglen: on the path out of the Grell camp (camp 1) toward Aldrassil, where Telusaara dropped it fleeing'),
-(6912609, 9301353, 1, 0, 0, 1, 1, 10486, 1030, 1327.336, 5.1, 0, 0, 0.557684, -0.830054, 60, 100, 1, '', 'CoA Shadowglen: south-east edge of grell camp 3 on the way back to Aldrassil; a second copy'),
-(6912610, 9301354, 1, 0, 0, 1, 1, 10276, 965, 1340.047, 0.6, 0, 0, 0.29552, 0.955336, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, north-east of the campfire where the edge is least steep (13 degrees; the rim falls at 15-16)'),
-(6912611, 9301354, 1, 0, 0, 1, 1, 10271, 951, 1340.79, 2.2, 0, 0, 0.891207, 0.453596, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, east edge below the drums'),
-(6912612, 9301354, 1, 0, 0, 1, 1, 10264, 953, 1341.757, 4, 0, 0, 0.909297, -0.416147, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, south-east edge on a level step above the slope'),
-(6912613, 9301354, 1, 0, 0, 1, 1, 10279, 974, 1340.48, 5.5, 0, 0, 0.381661, -0.924302, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, north edge under the tree'),
-(6912614, 9301354, 1, 0, 0, 1, 1, 10347, 1030, 1338.386, 1.1, 0, 0, 0.522687, 0.852525, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, north-east of the fire'),
-(6912615, 9301354, 1, 0, 0, 1, 1, 10326, 1026, 1338.474, 3.3, 0, 0, 0.996865, -0.079121, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, south-east edge by the big tree'),
-(6912616, 9301354, 1, 0, 0, 1, 1, 10354, 1037, 1341.16, 0.2, 0, 0, 0.099833, 0.995004, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, north edge by the totem'),
-(6912617, 9301354, 1, 0, 0, 1, 1, 10321, 1038, 1339.318, 4.6, 0, 0, 0.745705, -0.666276, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, south side beside the tent'),
-(6912618, 9301354, 1, 0, 0, 1, 1, 10512, 1047, 1323.584, 1.8, 0, 0, 0.783327, 0.62161, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, north-east of the fire'),
-(6912619, 9301354, 1, 0, 0, 1, 1, 10501, 1044, 1325.23, 3.9, 0, 0, 0.92896, -0.370181, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, east edge'),
-(6912620, 9301354, 1, 0, 0, 1, 1, 10489, 1041, 1327.119, 5.9, 0, 0, 0.190423, -0.981702, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, south-east edge by the big tree'),
-(6912621, 9301354, 1, 0, 0, 1, 1, 10514, 1058, 1323.933, 2.7, 0, 0, 0.975723, 0.219007, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, north edge on the level ground beside the totem');
+(7912600, 9301356, 1, 0, 0, 1, 1, 10395, 991, 1327.487, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Shadowglen: flat hollow at the foot of the great tree''s arching roots, 175 yd north-west of Baarelam''s graveyard ("Let me mark your map to the location of where my ritual must be had"), between grell camps 2 and 3 whose Grellkin carry the bones, flesh and skull'),
+(7912601, 9301355, 1, 0, 0, 1, 1, 10659, 814, 1328.971, 3.24, 0, 0, 0.99879, -0.049184, 300, 100, 1, '', 'CoA Shadowglen: top of the knoll west of the moonwell (terrain 1328.8, prominence 6-9 yd over the meadow), "a hill where a statue of a powerful Paladin was erected"; faces 3.24 toward Aldrassil'),
+(7912602, 9301350, 1, 0, 0, 1, 1, 10450.5, 790, 1345.646, 1.2, 0, 0, 0.564642, 0.825336, 60, 100, 1, '', 'CoA Shadowglen: Aldrassil 1345.7 landing beside the bench at the top of Kaleidormu''s ramp, where he left it'),
+(7912603, 9301350, 1, 0, 0, 1, 1, 10424, 788.5, 1322.705, 4.4, 0, 0, 0.808496, -0.588501, 60, 100, 1, '', 'CoA Shadowglen: Aldrassil base hall by the stone benches of the west wall; a second copy so two students can search at once'),
+(7912604, 9301351, 1, 0, 0, 1, 1, 10506, 792, 1397.215, 0.7, 0, 0, 0.342898, 0.939373, 60, 100, 1, '', 'CoA Shadowglen: the crown of Aldrassil (1397.2) at the top of the outer ramp: the riddle''s answer "lays within Aldrassil"'),
+(7912605, 9301351, 1, 0, 0, 1, 1, 10516.5, 823.5, 1354.791, 2.1, 0, 0, 0.867423, 0.497571, 60, 100, 1, '', 'CoA Shadowglen: the 1354.8 landing of the outer ramp inside the tree; a second copy'),
+(7912606, 9301352, 1, 0, 0, 1, 1, 10362, 749.5, 1321.836, 5.6, 0, 0, 0.334988, -0.942222, 60, 100, 1, '', 'CoA Shadowglen: against the fallen log (Kalidartreelog02) 17 yd north-east of Flowzie''s post: "placed in the surrounding area"'),
+(7912607, 9301352, 1, 0, 0, 1, 1, 10371, 737, 1323.46, 0.4, 0, 0, 0.198669, 0.980067, 60, 100, 1, '', 'CoA Shadowglen: at the foot of the junction signpost south-east of Flowzie; a second copy'),
+(7912608, 9301353, 1, 0, 0, 1, 1, 10292, 938, 1334.508, 2, 0, 0, 0.841471, 0.540302, 60, 100, 1, '', 'CoA Shadowglen: on the path out of the Grell camp (camp 1) toward Aldrassil, where Telusaara dropped it fleeing'),
+(7912609, 9301353, 1, 0, 0, 1, 1, 10486, 1030, 1327.336, 5.1, 0, 0, 0.557684, -0.830054, 60, 100, 1, '', 'CoA Shadowglen: south-east edge of grell camp 3 on the way back to Aldrassil; a second copy'),
+(7912610, 9301354, 1, 0, 0, 1, 1, 10276, 965, 1340.047, 0.6, 0, 0, 0.29552, 0.955336, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, north-east of the campfire where the edge is least steep (13 degrees; the rim falls at 15-16)'),
+(7912611, 9301354, 1, 0, 0, 1, 1, 10271, 951, 1340.79, 2.2, 0, 0, 0.891207, 0.453596, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, east edge below the drums'),
+(7912612, 9301354, 1, 0, 0, 1, 1, 10264, 953, 1341.757, 4, 0, 0, 0.909297, -0.416147, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, south-east edge on a level step above the slope'),
+(7912613, 9301354, 1, 0, 0, 1, 1, 10279, 974, 1340.48, 5.5, 0, 0, 0.381661, -0.924302, 90, 100, 1, '', 'CoA Shadowglen: grell camp 1, north edge under the tree'),
+(7912614, 9301354, 1, 0, 0, 1, 1, 10347, 1030, 1338.386, 1.1, 0, 0, 0.522687, 0.852525, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, north-east of the fire'),
+(7912615, 9301354, 1, 0, 0, 1, 1, 10326, 1026, 1338.474, 3.3, 0, 0, 0.996865, -0.079121, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, south-east edge by the big tree'),
+(7912616, 9301354, 1, 0, 0, 1, 1, 10354, 1037, 1341.16, 0.2, 0, 0, 0.099833, 0.995004, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, north edge by the totem'),
+(7912617, 9301354, 1, 0, 0, 1, 1, 10321, 1038, 1339.318, 4.6, 0, 0, 0.745705, -0.666276, 90, 100, 1, '', 'CoA Shadowglen: grell camp 2, south side beside the tent'),
+(7912618, 9301354, 1, 0, 0, 1, 1, 10512, 1047, 1323.584, 1.8, 0, 0, 0.783327, 0.62161, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, north-east of the fire'),
+(7912619, 9301354, 1, 0, 0, 1, 1, 10501, 1044, 1325.23, 3.9, 0, 0, 0.92896, -0.370181, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, east edge'),
+(7912620, 9301354, 1, 0, 0, 1, 1, 10489, 1041, 1327.119, 5.9, 0, 0, 0.190423, -0.981702, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, south-east edge by the big tree'),
+(7912621, 9301354, 1, 0, 0, 1, 1, 10514, 1058, 1323.933, 2.7, 0, 0, 0.975723, 0.219007, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, north edge on the level ground beside the totem');
 
 -- stock Frahun Shadewhisper (guid 46179) deleted: 1.1 yd from Saelina Shedana's sourced point (650144), which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)
 -- stock Alyissia (guid 46178) deleted: 1.6 yd from Huntress Naalia's sourced point (650153), which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)

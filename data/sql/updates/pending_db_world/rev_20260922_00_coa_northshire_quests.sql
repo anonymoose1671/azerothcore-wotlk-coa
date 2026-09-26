@@ -63,9 +63,9 @@
 -- Regenerate and commit before starting the worldserver on a branch without this file: that start deletes
 -- its row in `updates`, and the next start here applies the file again.
 --
--- Spawn guid blocks: creature 9001000-9001999, gameobject 6910000-6910999. The worldserver hands
--- a new in-game spawn the next guid above the highest in use, which lands inside these blocks. Everything
--- below 6901527 is spoken for, and the Worldforged module deletes 6900001-6901526 outright.
+-- Spawn guid blocks: creature 9001000-9001999, gameobject 7910000-7910999. The worldserver hands
+-- a new in-game spawn the next guid above the highest in use, which lands inside these blocks. The
+-- Worldforged module owns gameobject guids 6900001-6999999 and deletes them outright.
 -- Seed spawns deleted in game: creature none; gameobject none.
 
 -- ---------------------------------------------------------------------------
@@ -375,20 +375,20 @@ VALUES
 (9001086, 161708, 0, 0, 0, 1, 1, 0, -8632, -404, 53.728, 1.571, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, library gallery, guarding the Abbess''s Staff, facing the way in'),
 (9001087, 161708, 0, 0, 0, 1, 1, 0, -8580, -302, 53.724, 3.142, 300, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, dungeon, north-east reading room between the round table and the bookshelves');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6910000, 6910001, 6910002, 6910003, 6910004, 6910005, 6910006, 6910007, 6910008, 6910009, 6910010);
+DELETE FROM `gameobject` WHERE `guid` IN (7910000, 7910001, 7910002, 7910003, 7910004, 7910005, 7910006, 7910007, 7910008, 7910009, 7910010);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6910000, 2300500, 0, 0, 0, 1, 1, -8912.93, -209.89, 82.99, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page I'),
-(6910001, 2300517, 0, 0, 0, 1, 1, -8912.76, -208.82, 82.99, 5.45, 0, 0, 0.404647, -0.914473, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page VI'),
-(6910002, 2300501, 0, 0, 0, 1, 1, -8775.58, -278.45, 79.17, 3.141593, 0, 0, 1, 0, 120, 100, 1, '', 'CoA Northshire: hand placement, observed atlas position for Dungeon Door, turned to cover the stairwell opening'),
-(6910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 54.72, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Abbess''s Staff'),
-(6910004, 96001, 0, 0, 0, 1, 1, -8906.66, -705.67, 70.67, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Smudged Note'),
-(6910005, 2300503, 0, 0, 0, 1, 1, -8857.02, -187.281, 90.383, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8643 position for Lost Page II, on the upper library floor'),
-(6910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 81.94, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8644 position for Lost Page III, on the abbey hall floor'),
-(6910007, 2300505, 0, 0, 0, 1, 1, -8857.35, -185.58, 83.119, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8645 position for Lost Page IV, on the library desk'),
-(6910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
-(6910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
-(6910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall');
+(7910000, 2300500, 0, 0, 0, 1, 1, -8912.93, -209.89, 82.99, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page I'),
+(7910001, 2300517, 0, 0, 0, 1, 1, -8912.76, -208.82, 82.99, 5.45, 0, 0, 0.404647, -0.914473, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page VI'),
+(7910002, 2300501, 0, 0, 0, 1, 1, -8775.58, -278.45, 79.17, 3.141593, 0, 0, 1, 0, 120, 100, 1, '', 'CoA Northshire: hand placement, observed atlas position for Dungeon Door, turned to cover the stairwell opening'),
+(7910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 54.72, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Abbess''s Staff'),
+(7910004, 96001, 0, 0, 0, 1, 1, -8906.66, -705.67, 70.67, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Smudged Note'),
+(7910005, 2300503, 0, 0, 0, 1, 1, -8857.02, -187.281, 90.383, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8643 position for Lost Page II, on the upper library floor'),
+(7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 81.94, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8644 position for Lost Page III, on the abbey hall floor'),
+(7910007, 2300505, 0, 0, 0, 1, 1, -8857.35, -185.58, 83.119, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8645 position for Lost Page IV, on the library desk'),
+(7910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
+(7910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
+(7910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall');
 
 -- ---------------------------------------------------------------------------
 -- 8. The Wayward Theologian

@@ -24,7 +24,7 @@
 --     gossip option on Innkeeper Farley, shown only with the quest, gives him away; the line is authored.
 --   not restored  quests 254039 and 254040 are in no source, so 254041 and 254095 follow 254038 directly.
 --
--- Spawn guid blocks: creature 9002200-9002599, gameobject 6911200-6911599. Quest 17005 starts from the
+-- Spawn guid blocks: creature 9002200-9002599, gameobject 7911200-7911599. Quest 17005 starts from the
 -- Smudged Note that rev_20260922_00_coa_northshire_quests.sql spawns.
 
 -- ---------------------------------------------------------------------------
@@ -393,44 +393,44 @@ VALUES
 (9002346, 474, 0, 0, 0, 1, 1, 1, -9064, -1005, 71.18, 3.71, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, north-west, open rise at the east edge of the north oak grove, facing the stones'),
 (9002347, 474, 0, 0, 0, 1, 1, 1, -9095, -1075, 73.8, 2.58, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Stone Cairn standing stones, north-east, at the foot of the Earthroot knoll, facing the stones');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6911200, 6911201, 6911202, 6911203, 6911204, 6911205, 6911206, 6911207, 6911208, 6911209, 6911210, 6911211, 6911212, 6911213, 6911214, 6911215, 6911216, 6911217, 6911218, 6911219, 6911220, 6911221, 6911230, 6911231, 6911232, 6911233, 6911234, 6911235, 6911236, 6911237, 6911238, 6911239, 6911240, 6911241, 6911250) OR `guid` BETWEEN 6911200 AND 6911599;
+DELETE FROM `gameobject` WHERE `guid` IN (7911200, 7911201, 7911202, 7911203, 7911204, 7911205, 7911206, 7911207, 7911208, 7911209, 7911210, 7911211, 7911212, 7911213, 7911214, 7911215, 7911216, 7911217, 7911218, 7911219, 7911220, 7911221, 7911230, 7911231, 7911232, 7911233, 7911234, 7911235, 7911236, 7911237, 7911238, 7911239, 7911240, 7911241, 7911250) OR `guid` BETWEEN 7911200 AND 7911599;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6911200, 96000, 0, 0, 0, 1, 1, -9950.16, -132.37, 25.37, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: 17000 SuperTrack objective point, inside the farmhouse at Jerod''s Landing (atlas sighting 0.4 yd away)'),
-(6911201, 96002, 0, 0, 0, 1, 1, -9766.9, -1560.26, 41.48, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: Defias camp east of Ridgepoint Tower, 17006 SuperTrack objective point beside the camp crates (atlas sighting 0.3 yd away)'),
-(6911202, 96003, 0, 0, 0, 1, 1, -9491.41, 475.9, 50.96, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, 17008 SuperTrack objective point, between three trees'),
-(6911203, 96003, 0, 0, 0, 1, 1, -9482.9, 441.86, 53.11, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, atlas sighting, east rows'),
-(6911204, 96003, 0, 0, 0, 1, 1, -9488, 493, 51.97, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the west fence'),
-(6911205, 96003, 0, 0, 0, 1, 1, -9478, 495, 52.63, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-west corner'),
-(6911206, 96003, 0, 0, 0, 1, 1, -9474.5, 483.5, 52.12, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the north fence'),
-(6911207, 96003, 0, 0, 0, 1, 1, -9481.5, 487, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the west rows'),
-(6911208, 96003, 0, 0, 0, 1, 1, -9478, 474.5, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows'),
-(6911209, 96003, 0, 0, 0, 1, 1, -9479, 467.5, 51.53, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, north side'),
-(6911210, 96003, 0, 0, 0, 1, 1, -9486, 467, 51.4, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, south side'),
-(6911211, 96003, 0, 0, 0, 1, 1, -9492.5, 465, 51.2, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the south fence'),
-(6911212, 96003, 0, 0, 0, 1, 1, -9477.5, 458, 51.56, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows, north side'),
-(6911213, 96003, 0, 0, 0, 1, 1, -9486.5, 458, 51.55, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows'),
-(6911214, 96003, 0, 0, 0, 1, 1, -9490, 454.5, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-east rows'),
-(6911215, 96003, 0, 0, 0, 1, 1, -9476.5, 452.5, 51.95, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-east rows'),
-(6911216, 96003, 0, 0, 0, 1, 1, -9492, 447.5, 52.73, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-east corner'),
-(6911217, 96003, 0, 0, 0, 1, 1, -9473, 448, 52.47, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-east corner'),
-(6911218, 96003, 0, 0, 0, 1, 1, -9481.5, 449, 52.28, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows, middle'),
-(6911219, 96003, 0, 0, 0, 1, 1, -9494, 482.5, 51.24, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-west rows'),
-(6911220, 96003, 0, 0, 0, 1, 1, -9484, 473, 51.4, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, west side'),
-(6911221, 96003, 0, 0, 0, 1, 1, -9485.5, 482.5, 51.6, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the west rows, middle'),
-(6911230, 5055563, 0, 0, 0, 1, 1, -9757.68, -442.04, 32.79, 3.63, 0, 0, 0.97033, -0.241784, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, atlas sighting, ravine by the crate stacks'),
-(6911231, 5055563, 0, 0, 0, 1, 1, -9784.5, -452, 30.77, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, south end of the long loot table'),
-(6911232, 5055563, 0, 0, 0, 1, 1, -9789, -467, 29.37, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, under the storehouse crane beside the crate stacks'),
-(6911233, 5055563, 0, 0, 0, 1, 1, -9793, -438, 29.57, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, beside the ore carts at the mine mouth'),
-(6911234, 5055563, 0, 0, 0, 1, 1, -9803.5, -429, 31.49, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, inside the mine entrance'),
-(6911235, 5055563, 0, 0, 0, 1, 1, -9804, -465, 28.9, 2, 0, 0, 0.841471, 0.540302, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, shed, beside the lockbox table'),
-(6911236, 5055563, 0, 0, 0, 1, 1, -9818, -457, 30.56, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, bunk shed, at the foot of the bunks'),
-(6911237, 5055563, 0, 0, 0, 1, 1, -9795, -470.5, 28.9, 0.5, 0, 0, 0.247404, 0.968912, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, farmyard by the farmhouse''s west wall'),
-(6911238, 5055563, 0, 0, 0, 1, 1, -9786, -481.5, 30.6, 4.7, 0, 0, 0.711473, -0.702713, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, inside the farmhouse by the coal piles'),
-(6911239, 5055563, 0, 0, 0, 1, 1, -9781.5, -497, 33, 5, 0, 0, 0.598472, -0.801144, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, east campsite, at the tent'),
-(6911240, 5055563, 0, 0, 0, 1, 1, -9762, -436, 32.54, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, ravine path below the gate stairs'),
-(6911241, 5055563, 0, 0, 0, 1, 1, -9823, -431, 38.4, 3.14, 0, 0, 1, 0.000796, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, west end of the south boardwalk'),
-(6911250, 25428, 0, 0, 0, 1, 1, -4980.27, -3483, 305.61, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: 254051 SuperTrack objective point on the trogg island, beside the troggs'' cauldron (atlas sighting 3 yd away)');
+(7911200, 96000, 0, 0, 0, 1, 1, -9950.16, -132.37, 25.37, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: 17000 SuperTrack objective point, inside the farmhouse at Jerod''s Landing (atlas sighting 0.4 yd away)'),
+(7911201, 96002, 0, 0, 0, 1, 1, -9766.9, -1560.26, 41.48, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: Defias camp east of Ridgepoint Tower, 17006 SuperTrack objective point beside the camp crates (atlas sighting 0.3 yd away)'),
+(7911202, 96003, 0, 0, 0, 1, 1, -9491.41, 475.9, 50.96, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, 17008 SuperTrack objective point, between three trees'),
+(7911203, 96003, 0, 0, 0, 1, 1, -9482.9, 441.86, 53.11, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, atlas sighting, east rows'),
+(7911204, 96003, 0, 0, 0, 1, 1, -9488, 493, 51.97, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the west fence'),
+(7911205, 96003, 0, 0, 0, 1, 1, -9478, 495, 52.63, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-west corner'),
+(7911206, 96003, 0, 0, 0, 1, 1, -9474.5, 483.5, 52.12, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the north fence'),
+(7911207, 96003, 0, 0, 0, 1, 1, -9481.5, 487, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the west rows'),
+(7911208, 96003, 0, 0, 0, 1, 1, -9478, 474.5, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows'),
+(7911209, 96003, 0, 0, 0, 1, 1, -9479, 467.5, 51.53, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, north side'),
+(7911210, 96003, 0, 0, 0, 1, 1, -9486, 467, 51.4, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, south side'),
+(7911211, 96003, 0, 0, 0, 1, 1, -9492.5, 465, 51.2, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree by the south fence'),
+(7911212, 96003, 0, 0, 0, 1, 1, -9477.5, 458, 51.56, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows, north side'),
+(7911213, 96003, 0, 0, 0, 1, 1, -9486.5, 458, 51.55, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows'),
+(7911214, 96003, 0, 0, 0, 1, 1, -9490, 454.5, 51.9, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-east rows'),
+(7911215, 96003, 0, 0, 0, 1, 1, -9476.5, 452.5, 51.95, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-east rows'),
+(7911216, 96003, 0, 0, 0, 1, 1, -9492, 447.5, 52.73, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-east corner'),
+(7911217, 96003, 0, 0, 0, 1, 1, -9473, 448, 52.47, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the north-east corner'),
+(7911218, 96003, 0, 0, 0, 1, 1, -9481.5, 449, 52.28, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the east rows, middle'),
+(7911219, 96003, 0, 0, 0, 1, 1, -9494, 482.5, 51.24, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the south-west rows'),
+(7911220, 96003, 0, 0, 0, 1, 1, -9484, 473, 51.4, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the middle rows, west side'),
+(7911221, 96003, 0, 0, 0, 1, 1, -9485.5, 482.5, 51.6, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Elwynn: Mirror Lake Orchard, foot of the tree in the west rows, middle'),
+(7911230, 5055563, 0, 0, 0, 1, 1, -9757.68, -442.04, 32.79, 3.63, 0, 0, 0.97033, -0.241784, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, atlas sighting, ravine by the crate stacks'),
+(7911231, 5055563, 0, 0, 0, 1, 1, -9784.5, -452, 30.77, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, south end of the long loot table'),
+(7911232, 5055563, 0, 0, 0, 1, 1, -9789, -467, 29.37, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, under the storehouse crane beside the crate stacks'),
+(7911233, 5055563, 0, 0, 0, 1, 1, -9793, -438, 29.57, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, beside the ore carts at the mine mouth'),
+(7911234, 5055563, 0, 0, 0, 1, 1, -9803.5, -429, 31.49, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, inside the mine entrance'),
+(7911235, 5055563, 0, 0, 0, 1, 1, -9804, -465, 28.9, 2, 0, 0, 0.841471, 0.540302, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, shed, beside the lockbox table'),
+(7911236, 5055563, 0, 0, 0, 1, 1, -9818, -457, 30.56, 1.57, 0, 0, 0.706825, 0.707388, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, bunk shed, at the foot of the bunks'),
+(7911237, 5055563, 0, 0, 0, 1, 1, -9795, -470.5, 28.9, 0.5, 0, 0, 0.247404, 0.968912, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, farmyard by the farmhouse''s west wall'),
+(7911238, 5055563, 0, 0, 0, 1, 1, -9786, -481.5, 30.6, 4.7, 0, 0, 0.711473, -0.702713, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, inside the farmhouse by the coal piles'),
+(7911239, 5055563, 0, 0, 0, 1, 1, -9781.5, -497, 33, 5, 0, 0, 0.598472, -0.801144, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, east campsite, at the tent'),
+(7911240, 5055563, 0, 0, 0, 1, 1, -9762, -436, 32.54, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, ravine path below the gate stairs'),
+(7911241, 5055563, 0, 0, 0, 1, 1, -9823, -431, 38.4, 3.14, 0, 0, 1, 0.000796, 120, 100, 1, '', 'CoA Elwynn: Bandit''s Bastion, west end of the south boardwalk'),
+(7911250, 25428, 0, 0, 0, 1, 1, -4980.27, -3483, 305.61, 0, 0, 0, 0, 1, 2, 100, 1, '', 'CoA Elwynn: 254051 SuperTrack objective point on the trogg island, beside the troggs'' cauldron (atlas sighting 3 yd away)');
 
 -- ---------------------------------------------------------------------------
 -- 7. Scripts

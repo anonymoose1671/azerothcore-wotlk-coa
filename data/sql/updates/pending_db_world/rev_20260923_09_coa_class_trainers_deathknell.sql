@@ -31,7 +31,7 @@
 --   stock patrols  two waypoint turnarounds that walked onto sourced trainer posts are moved by hand (INFERRED,
 --   the nearest open floor on the same route); claimed in coordination/ct-deathknell.md.
 --
--- Blocks: creature guids 9003700-9003899, gameobject guids 6912400-6912499, creature entries 9300250-9300299,
+-- Blocks: creature guids 9003700-9003899, gameobject guids 7912400-7912499, creature entries 9300250-9300299,
 --   gameobject entries 9301250-9301299, gossip and npc_text 930350-930399. Runs after
 --   rev_20260923_05_coa_class_trainer_core.sql.
 
@@ -812,31 +812,31 @@ INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `e
 VALUES
 (9003725, 0, 0, 3, 1, 0, 0, NULL);
 
-DELETE FROM `gameobject` WHERE `guid` IN (6912400, 6912401, 6912402, 6912403, 6912404, 6912405, 6912406, 6912407, 6912408, 6912409, 6912410, 6912411, 6912412, 6912413, 6912414, 6912415, 6912416, 6912417, 6912418, 6912419, 6912420, 6912421) OR `guid` BETWEEN 6912400 AND 6912499;
+DELETE FROM `gameobject` WHERE `guid` IN (7912400, 7912401, 7912402, 7912403, 7912404, 7912405, 7912406, 7912407, 7912408, 7912409, 7912410, 7912411, 7912412, 7912413, 7912414, 7912415, 7912416, 7912417, 7912418, 7912419, 7912420, 7912421) OR `guid` BETWEEN 7912400 AND 7912499;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6912400, 9301250, 0, 0, 0, 1, 1, 1756, 1590, 111.813, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: hills south of Deathknell: before the two tombstone monuments where CoA lit four candles (CoA-only Candle01.m2)'),
-(6912401, 9301251, 0, 0, 0, 1, 1, 1793, 1662, 112.677, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: the hills south-west of Deathknell: the sheltered hollow between the two knolls'),
-(6912402, 9301252, 0, 0, 0, 1, 1, 1836, 1575, 97.488, 1.2, 0, 0, 0.564642, 0.825336, 60, 100, 1, '', 'CoA Deathknell: the farmhouse next door to the inn: on the butcher''s table'),
-(6912403, 9301253, 0, 0, 0, 1, 1, 1858.3, 1572.2, 95.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Deathknell inn (the two-storey house), ground floor: on the table by the hearth'),
-(6912404, 9301253, 0, 0, 0, 1, 1, 1864.25, 1554.62, 100.011, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Deathknell inn (the two-storey house), upper floor: on the free west half of the small table, clear of the candelabra and the book stack'),
-(6912405, 9301254, 0, 0, 0, 1, 1, 1803, 1378, 81.192, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, north edge, on the way she fled toward Deathknell'),
-(6912406, 9301254, 0, 0, 0, 1, 1, 1822, 1410, 80.221, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, further north toward Deathknell, in the dip below the camp where she ran'),
-(6912407, 9301256, 0, 0, 0, 1, 1, 1864, 1531.5, 88.542, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: abandoned barn south-east of Deathknell: set among the sacks beside the dead mule'),
-(6912408, 9301256, 0, 0, 0, 1, 1, 1945, 1536, 90.165, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: abandoned smithy east of Deathknell: on the smithy floor by the cold forge (the ground outside the back wall is a walled-off pocket with no path)'),
-(6912409, 9301257, 0, 0, 0, 1, 1, 1847.5, 1778.5, 122.06, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell: western mountains: the hidden gully west of the village behind the knoll, below the fallen tree; faces north to the gully mouth'),
-(6912410, 9301255, 0, 0, 0, 1, 1, 1761, 1388, 93.93, 0.4, 0, 0, 0.198669, 0.980067, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, inside the tent, in the middle under the canvas'),
-(6912411, 9301255, 0, 0, 0, 1, 1, 1759.5, 1389.5, 94.486, 2.1, 0, 0, 0.867423, 0.497571, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, inside the tent, back corner'),
-(6912412, 9301255, 0, 0, 0, 1, 1, 1762.5, 1386.5, 93.309, 5.2, 0, 0, 0.515501, -0.856889, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, inside the tent, by the flap'),
-(6912413, 9301255, 0, 0, 0, 1, 1, 1766.5, 1385.5, 92.609, 1.3, 0, 0, 0.605186, 0.796084, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, at the tent mouth by the lantern and goblet'),
-(6912414, 9301255, 0, 0, 0, 1, 1, 1767, 1390.5, 93.751, 3.6, 0, 0, 0.973848, -0.227202, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, north corner of the tent'),
-(6912415, 9301255, 0, 0, 0, 1, 1, 1763, 1395.5, 95.189, 0.9, 0, 0, 0.434966, 0.900447, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, behind the tent, west side'),
-(6912416, 9301255, 0, 0, 0, 1, 1, 1758, 1395, 95.784, 4.4, 0, 0, 0.808496, -0.588501, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, behind the tent, south-west corner'),
-(6912417, 9301255, 0, 0, 0, 1, 1, 1754.5, 1390, 95.814, 2.7, 0, 0, 0.975723, 0.219007, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, south side of the tent'),
-(6912418, 9301255, 0, 0, 0, 1, 1, 1754.5, 1384, 94.454, 5.9, 0, 0, 0.190423, -0.981702, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, south-east of the tent'),
-(6912419, 9301255, 0, 0, 0, 1, 1, 1758.5, 1381, 92.511, 1.8, 0, 0, 0.783327, 0.62161, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, east of the tent, beside the path'),
-(6912420, 9301255, 0, 0, 0, 1, 1, 1769, 1385.5, 92.444, 4, 0, 0, 0.909297, -0.416147, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, between the tent and Meven Korgal'),
-(6912421, 9301255, 0, 0, 0, 1, 1, 1770, 1394.5, 94.159, 0.2, 0, 0, 0.099833, 0.995004, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, north-west of the tent under the canopy tree');
+(7912400, 9301250, 0, 0, 0, 1, 1, 1756, 1590, 111.813, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: hills south of Deathknell: before the two tombstone monuments where CoA lit four candles (CoA-only Candle01.m2)'),
+(7912401, 9301251, 0, 0, 0, 1, 1, 1793, 1662, 112.677, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: the hills south-west of Deathknell: the sheltered hollow between the two knolls'),
+(7912402, 9301252, 0, 0, 0, 1, 1, 1836, 1575, 97.488, 1.2, 0, 0, 0.564642, 0.825336, 60, 100, 1, '', 'CoA Deathknell: the farmhouse next door to the inn: on the butcher''s table'),
+(7912403, 9301253, 0, 0, 0, 1, 1, 1858.3, 1572.2, 95.2, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Deathknell inn (the two-storey house), ground floor: on the table by the hearth'),
+(7912404, 9301253, 0, 0, 0, 1, 1, 1864.25, 1554.62, 100.011, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Deathknell inn (the two-storey house), upper floor: on the free west half of the small table, clear of the candelabra and the book stack'),
+(7912405, 9301254, 0, 0, 0, 1, 1, 1803, 1378, 81.192, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, north edge, on the way she fled toward Deathknell'),
+(7912406, 9301254, 0, 0, 0, 1, 1, 1822, 1410, 80.221, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, further north toward Deathknell, in the dip below the camp where she ran'),
+(7912407, 9301256, 0, 0, 0, 1, 1, 1864, 1531.5, 88.542, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: abandoned barn south-east of Deathknell: set among the sacks beside the dead mule'),
+(7912408, 9301256, 0, 0, 0, 1, 1, 1945, 1536, 90.165, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Deathknell: abandoned smithy east of Deathknell: on the smithy floor by the cold forge (the ground outside the back wall is a walled-off pocket with no path)'),
+(7912409, 9301257, 0, 0, 0, 1, 1, 1847.5, 1778.5, 122.06, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell: western mountains: the hidden gully west of the village behind the knoll, below the fallen tree; faces north to the gully mouth'),
+(7912410, 9301255, 0, 0, 0, 1, 1, 1761, 1388, 93.93, 0.4, 0, 0, 0.198669, 0.980067, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, inside the tent, in the middle under the canvas'),
+(7912411, 9301255, 0, 0, 0, 1, 1, 1759.5, 1389.5, 94.486, 2.1, 0, 0, 0.867423, 0.497571, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, inside the tent, back corner'),
+(7912412, 9301255, 0, 0, 0, 1, 1, 1762.5, 1386.5, 93.309, 5.2, 0, 0, 0.515501, -0.856889, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, inside the tent, by the flap'),
+(7912413, 9301255, 0, 0, 0, 1, 1, 1766.5, 1385.5, 92.609, 1.3, 0, 0, 0.605186, 0.796084, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, at the tent mouth by the lantern and goblet'),
+(7912414, 9301255, 0, 0, 0, 1, 1, 1767, 1390.5, 93.751, 3.6, 0, 0, 0.973848, -0.227202, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, north corner of the tent'),
+(7912415, 9301255, 0, 0, 0, 1, 1, 1763, 1395.5, 95.189, 0.9, 0, 0, 0.434966, 0.900447, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, behind the tent, west side'),
+(7912416, 9301255, 0, 0, 0, 1, 1, 1758, 1395, 95.784, 4.4, 0, 0, 0.808496, -0.588501, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, behind the tent, south-west corner'),
+(7912417, 9301255, 0, 0, 0, 1, 1, 1754.5, 1390, 95.814, 2.7, 0, 0, 0.975723, 0.219007, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, south side of the tent'),
+(7912418, 9301255, 0, 0, 0, 1, 1, 1754.5, 1384, 94.454, 5.9, 0, 0, 0.190423, -0.981702, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, south-east of the tent'),
+(7912419, 9301255, 0, 0, 0, 1, 1, 1758.5, 1381, 92.511, 1.8, 0, 0, 0.783327, 0.62161, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, east of the tent, beside the path'),
+(7912420, 9301255, 0, 0, 0, 1, 1, 1769, 1385.5, 92.444, 4, 0, 0, 0.909297, -0.416147, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, between the tent and Meven Korgal'),
+(7912421, 9301255, 0, 0, 0, 1, 1, 1770, 1394.5, 94.159, 0.2, 0, 0, 0.099833, 0.995004, 60, 100, 1, '', 'CoA Deathknell: Scarlet camp south-east of Deathknell, Meven Korgal''s tent, north-west of the tent under the canopy tree');
 
 -- ---------------------------------------------------------------------------
 -- 9. Scripts

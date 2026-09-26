@@ -33,7 +33,7 @@
 --   letter pages  pagetextcache where CoA had them; the rest are written in the trainers' voices
 --     (INFERRED). The quest item pages the zones share (Tome of Blood, Riddlestone, Note) are ct-deathknell's.
 --
--- Blocks: creature guids 9003100-9003299, gameobject guids 6912100-6912199, creature entries 9300100-9300104,
+-- Blocks: creature guids 9003100-9003299, gameobject guids 7912100-7912199, creature entries 9300100-9300104,
 -- gameobject entries 9301100-9301105, gossip menus and texts 930200-930206.
 
 -- ---------------------------------------------------------------------------
@@ -734,27 +734,27 @@ VALUES
 (9003121, 0, 0, 8, 0, 0, 0, ''),
 (9003124, 0, 0, 4, 0, 0, 0, '');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6912100, 6912101, 6912102, 6912103, 6912104, 6912105, 6912106, 6912107, 6912108, 6912109, 6912110, 6912111, 6912112, 6912113, 6912114, 6912115, 6912116, 6912117) OR `guid` BETWEEN 6912100 AND 6912199;
+DELETE FROM `gameobject` WHERE `guid` IN (7912100, 7912101, 7912102, 7912103, 7912104, 7912105, 7912106, 7912107, 7912108, 7912109, 7912110, 7912111, 7912112, 7912113, 7912114, 7912115, 7912116, 7912117) OR `guid` BETWEEN 7912100 AND 7912199;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6912100, 9301100, 0, 0, 0, 1, 1, -8918.5, -418, 66.037, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Northshire class chain: clearing in the woods north of the Defias camp, 35 yd from its bandits (the note: "the nearby Defias bandits have just what is needed")'),
-(6912101, 21282, 0, 0, 0, 1, 1, -8972, -462.5, 72.399, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Northshire class chain: the campfire Scorch is bound to, in the draw south-east of the Defias camp'),
-(6912102, 9301105, 0, 0, 0, 1, 1, -8732.4, -416.4, 83.38, 2.45, 0, 0, 0.940806, 0.338946, 300, 100, 1, '', 'CoA Northshire class chain: the ledge above the pool 10 yd south of the SOURCED-ATLAS sighting of goober 251653, which lies on a 55-63 degree cliff face where the stand-in model floated up to 6 yd; z is the lowest floor under its footprint (83.38-84.33); faces the pool and the visit marker'),
-(6912103, 9301101, 0, 0, 0, 1, 1, -8909.4, -183.3, 81.939, 1.2, 0, 0, 0.564642, 0.825336, 60, 100, 1, '', 'CoA Northshire class chain: Northshire Abbey, entry chapel floor beside the tall book stack, far from Soridormi''s library'),
-(6912104, 9301102, 0, 0, 0, 1, 1, -8898.6, -181.2, 81.939, 2.9, 0, 0, 0.992713, 0.120503, 60, 100, 1, '', 'CoA Northshire class chain: Northshire Abbey, main hall, at the foot of the first stone bust (the riddle''s "silent watchers")'),
-(6912105, 9301103, 0, 0, 0, 1, 1, -8941, -417.5, 66.024, 0.6, 0, 0, 0.29552, 0.955336, 60, 100, 1, '', 'CoA Northshire class chain: trail north of the Defias camp fire, where the chaplain fled'),
-(6912106, 9301103, 0, 0, 0, 1, 1, -8931, -409, 66.564, 2.2, 0, 0, 0.891207, 0.453596, 60, 100, 1, '', 'CoA Northshire class chain: further along the same trail toward the river; a second spot so two players need not wait'),
-(6912107, 9301104, 0, 0, 0, 1, 1, -8779.3, -115.8, 82.641, 0.4, 0, 0, 0.198669, 0.980067, 120, 100, 1, '', 'CoA Northshire class chain: north kobold camp, beside the wheelbarrow'),
-(6912108, 9301104, 0, 0, 0, 1, 1, -8763.5, -124.8, 83.527, 2, 0, 0, 0.841471, 0.540302, 120, 100, 1, '', 'CoA Northshire class chain: north kobold camp, behind the tent'),
-(6912109, 9301104, 0, 0, 0, 1, 1, -8775.5, -121.5, 82.964, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire class chain: north kobold camp, west of the campfire'),
-(6912110, 9301104, 0, 0, 0, 1, 1, -8756.5, -193.8, 85.762, 1.1, 0, 0, 0.522687, 0.852525, 120, 100, 1, '', 'CoA Northshire class chain: middle kobold camp, beside the campfire'),
-(6912111, 9301104, 0, 0, 0, 1, 1, -8771.8, -170.2, 82.61, 5.2, 0, 0, 0.515501, -0.856889, 120, 100, 1, '', 'CoA Northshire class chain: middle kobold camp, by the crates at the tent'),
-(6912112, 9301104, 0, 0, 0, 1, 1, -8759.5, -166, 84.098, 3, 0, 0, 0.997495, 0.070737, 120, 100, 1, '', 'CoA Northshire class chain: middle kobold camp, north edge'),
-(6912113, 9301104, 0, 0, 0, 1, 1, -8781, -250.8, 82.548, 0.8, 0, 0, 0.389418, 0.921061, 120, 100, 1, '', 'CoA Northshire class chain: south kobold camp, among the sacks'),
-(6912114, 9301104, 0, 0, 0, 1, 1, -8808.2, -240.8, 82.188, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire class chain: south kobold camp, by the west tent'),
-(6912115, 9301104, 0, 0, 0, 1, 1, -8797.8, -246.2, 82.4, 4.5, 0, 0, 0.778073, -0.628174, 120, 100, 1, '', 'CoA Northshire class chain: south kobold camp, north side of the fire'),
-(6912116, 9301104, 0, 0, 0, 1, 1, -8674.8, -117.5, 91.554, 1.7, 0, 0, 0.75128, 0.659983, 120, 100, 1, '', 'CoA Northshire class chain: Echo Ridge Mine mouth, west side'),
-(6912117, 9301104, 0, 0, 0, 1, 1, -8664, -126, 91.492, 5.9, 0, 0, 0.190423, -0.981702, 120, 100, 1, '', 'CoA Northshire class chain: Echo Ridge Mine mouth, inside the entrance');
+(7912100, 9301100, 0, 0, 0, 1, 1, -8918.5, -418, 66.037, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Northshire class chain: clearing in the woods north of the Defias camp, 35 yd from its bandits (the note: "the nearby Defias bandits have just what is needed")'),
+(7912101, 21282, 0, 0, 0, 1, 1, -8972, -462.5, 72.399, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Northshire class chain: the campfire Scorch is bound to, in the draw south-east of the Defias camp'),
+(7912102, 9301105, 0, 0, 0, 1, 1, -8732.4, -416.4, 83.38, 2.45, 0, 0, 0.940806, 0.338946, 300, 100, 1, '', 'CoA Northshire class chain: the ledge above the pool 10 yd south of the SOURCED-ATLAS sighting of goober 251653, which lies on a 55-63 degree cliff face where the stand-in model floated up to 6 yd; z is the lowest floor under its footprint (83.38-84.33); faces the pool and the visit marker'),
+(7912103, 9301101, 0, 0, 0, 1, 1, -8909.4, -183.3, 81.939, 1.2, 0, 0, 0.564642, 0.825336, 60, 100, 1, '', 'CoA Northshire class chain: Northshire Abbey, entry chapel floor beside the tall book stack, far from Soridormi''s library'),
+(7912104, 9301102, 0, 0, 0, 1, 1, -8898.6, -181.2, 81.939, 2.9, 0, 0, 0.992713, 0.120503, 60, 100, 1, '', 'CoA Northshire class chain: Northshire Abbey, main hall, at the foot of the first stone bust (the riddle''s "silent watchers")'),
+(7912105, 9301103, 0, 0, 0, 1, 1, -8941, -417.5, 66.024, 0.6, 0, 0, 0.29552, 0.955336, 60, 100, 1, '', 'CoA Northshire class chain: trail north of the Defias camp fire, where the chaplain fled'),
+(7912106, 9301103, 0, 0, 0, 1, 1, -8931, -409, 66.564, 2.2, 0, 0, 0.891207, 0.453596, 60, 100, 1, '', 'CoA Northshire class chain: further along the same trail toward the river; a second spot so two players need not wait'),
+(7912107, 9301104, 0, 0, 0, 1, 1, -8779.3, -115.8, 82.641, 0.4, 0, 0, 0.198669, 0.980067, 120, 100, 1, '', 'CoA Northshire class chain: north kobold camp, beside the wheelbarrow'),
+(7912108, 9301104, 0, 0, 0, 1, 1, -8763.5, -124.8, 83.527, 2, 0, 0, 0.841471, 0.540302, 120, 100, 1, '', 'CoA Northshire class chain: north kobold camp, behind the tent'),
+(7912109, 9301104, 0, 0, 0, 1, 1, -8775.5, -121.5, 82.964, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire class chain: north kobold camp, west of the campfire'),
+(7912110, 9301104, 0, 0, 0, 1, 1, -8756.5, -193.8, 85.762, 1.1, 0, 0, 0.522687, 0.852525, 120, 100, 1, '', 'CoA Northshire class chain: middle kobold camp, beside the campfire'),
+(7912111, 9301104, 0, 0, 0, 1, 1, -8771.8, -170.2, 82.61, 5.2, 0, 0, 0.515501, -0.856889, 120, 100, 1, '', 'CoA Northshire class chain: middle kobold camp, by the crates at the tent'),
+(7912112, 9301104, 0, 0, 0, 1, 1, -8759.5, -166, 84.098, 3, 0, 0, 0.997495, 0.070737, 120, 100, 1, '', 'CoA Northshire class chain: middle kobold camp, north edge'),
+(7912113, 9301104, 0, 0, 0, 1, 1, -8781, -250.8, 82.548, 0.8, 0, 0, 0.389418, 0.921061, 120, 100, 1, '', 'CoA Northshire class chain: south kobold camp, among the sacks'),
+(7912114, 9301104, 0, 0, 0, 1, 1, -8808.2, -240.8, 82.188, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire class chain: south kobold camp, by the west tent'),
+(7912115, 9301104, 0, 0, 0, 1, 1, -8797.8, -246.2, 82.4, 4.5, 0, 0, 0.778073, -0.628174, 120, 100, 1, '', 'CoA Northshire class chain: south kobold camp, north side of the fire'),
+(7912116, 9301104, 0, 0, 0, 1, 1, -8674.8, -117.5, 91.554, 1.7, 0, 0, 0.75128, 0.659983, 120, 100, 1, '', 'CoA Northshire class chain: Echo Ridge Mine mouth, west side'),
+(7912117, 9301104, 0, 0, 0, 1, 1, -8664, -126, 91.492, 5.9, 0, 0, 0.190423, -0.981702, 120, 100, 1, '', 'CoA Northshire class chain: Echo Ridge Mine mouth, inside the entrance');
 
 -- ---------------------------------------------------------------------------
 -- 9. Scripts

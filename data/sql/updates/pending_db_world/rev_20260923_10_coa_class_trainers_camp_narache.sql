@@ -28,7 +28,7 @@
 -- The other kept Camp Narache NPCs stay where they are.
 --
 --
--- Id blocks: creature guid 9003900-9004099, gameobject guid 6912500-6912599, creature entry 9300300-9300349,
+-- Id blocks: creature guid 9003900-9004099, gameobject guid 7912500-7912599, creature entry 9300300-9300349,
 --   gameobject entry 9301300-9301349, gossip 930400-930449.
 
 -- ---------------------------------------------------------------------------
@@ -540,15 +540,15 @@ VALUES
 (9003915, 685033, 1, 0, 0, 1, 1, 0, -3450, -153.5, 116.194, 0.63, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Camp Narache: on the ridge ledge above Seer Graytongue''s fire, at the shrine to Mu''sha; walk-in credit within 10 yd'),
 (9003916, 685037, 1, 0, 0, 1, 1, 0, -3423.5, -219, 61.875, 3.14, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Camp Narache: in front of the hidden statue at the head of the south valley; walk-in credit within 8 yd');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6912500, 6912501, 6912502, 6912503, 6912504, 6912505) OR `guid` BETWEEN 6912500 AND 6912599;
+DELETE FROM `gameobject` WHERE `guid` IN (7912500, 7912501, 7912502, 7912503, 7912504, 7912505) OR `guid` BETWEEN 7912500 AND 7912599;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6912500, 1798, 1, 0, 0, 1, 1, -3121.5, -865, 53.107, 0, 0, 0, 0, 1, 300, 100, 1, '', 'Camp Narache: Scorch''s campfire on the flattest ground (9 deg) below the east ridge'),
-(6912501, 9301301, 1, 0, 0, 1, 1, -3426, -219, 62.316, 0, 0, 0, 0, 1, 300, 100, 1, '', 'Camp Narache: head of the secluded south valley at the foot of the southern mountains (southern Red Cloud Mesa), facing north down the valley toward the way in'),
-(6912502, 9301302, 1, 0, 0, 1, 1, -3452, -155, 115.98, 0.63, 0, 0, 0.309816, 0.950796, 300, 100, 1, '', 'Camp Narache: ridge ledge in the mountains south of Seer Graytongue''s hill, 12 yd above her fire, facing the path up'),
-(6912503, 177416, 1, 0, 0, 1, 1, -3452, -155, 115.98, 0.63, 0, 0, 0.309816, 0.950796, 300, 100, 1, '', 'Camp Narache: moon-blue glow around the shrine to Mu''sha'),
-(6912504, 9301300, 1, 0, 0, 1, 1, -3106.5, -1001, 52.69, 0.8, 0, 0, 0.389418, 0.921061, 60, 100, 1, '', 'Camp Narache: torch-lit quilboar camp at the ravine end of the Brambleblade tunnel, at the foot of the thornbush on the tunnel side, where a fleeing tauren runs for the mesa'),
-(6912505, 9301300, 1, 0, 0, 1, 1, -3099, -1017.5, 52.299, 2.2, 0, 0, 0.891207, 0.453596, 60, 100, 1, '', 'Camp Narache: torch-lit quilboar camp at the ravine end of the Brambleblade tunnel, on the open ground 9.5 yd from the camp torch, where she was run off');
+(7912500, 1798, 1, 0, 0, 1, 1, -3121.5, -865, 53.107, 0, 0, 0, 0, 1, 300, 100, 1, '', 'Camp Narache: Scorch''s campfire on the flattest ground (9 deg) below the east ridge'),
+(7912501, 9301301, 1, 0, 0, 1, 1, -3426, -219, 62.316, 0, 0, 0, 0, 1, 300, 100, 1, '', 'Camp Narache: head of the secluded south valley at the foot of the southern mountains (southern Red Cloud Mesa), facing north down the valley toward the way in'),
+(7912502, 9301302, 1, 0, 0, 1, 1, -3452, -155, 115.98, 0.63, 0, 0, 0.309816, 0.950796, 300, 100, 1, '', 'Camp Narache: ridge ledge in the mountains south of Seer Graytongue''s hill, 12 yd above her fire, facing the path up'),
+(7912503, 177416, 1, 0, 0, 1, 1, -3452, -155, 115.98, 0.63, 0, 0, 0.309816, 0.950796, 300, 100, 1, '', 'Camp Narache: moon-blue glow around the shrine to Mu''sha'),
+(7912504, 9301300, 1, 0, 0, 1, 1, -3106.5, -1001, 52.69, 0.8, 0, 0, 0.389418, 0.921061, 60, 100, 1, '', 'Camp Narache: torch-lit quilboar camp at the ravine end of the Brambleblade tunnel, at the foot of the thornbush on the tunnel side, where a fleeing tauren runs for the mesa'),
+(7912505, 9301300, 1, 0, 0, 1, 1, -3099, -1017.5, 52.299, 2.2, 0, 0, 0.891207, 0.453596, 60, 100, 1, '', 'Camp Narache: torch-lit quilboar camp at the ravine end of the Brambleblade tunnel, on the open ground 9.5 yd from the camp torch, where she was run off');
 
 -- ---------------------------------------------------------------------------
 -- 9. Scripts

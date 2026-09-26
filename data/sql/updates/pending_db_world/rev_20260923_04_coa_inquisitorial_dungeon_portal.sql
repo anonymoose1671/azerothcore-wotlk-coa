@@ -20,7 +20,7 @@
 --     936. The Vaults are still empty, so the Dungeon Finder leaves them out; walking in is not affected.
 --   difficulties  inside, each portal spawns only in its own difficulty (spawnMask 1, 2, 4), as stock dungeons do.
 --
--- Gameobject guid block 6912000-6912099.
+-- Gameobject guid block 7912000-7912099.
 
 DELETE FROM `areatrigger` WHERE `entry` IN (8002, 8003);
 INSERT INTO `areatrigger` (`entry`, `map`, `x`, `y`, `z`, `radius`, `length`, `width`, `height`, `orientation`)
@@ -51,22 +51,22 @@ ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId
     `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `AIName` = VALUES(`AIName`),
     `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `gameobject` WHERE `guid` IN (6912000, 6912001, 6912002, 6912003, 6912004, 6912005);
+DELETE FROM `gameobject` WHERE `guid` IN (7912000, 7912001, 7912002, 7912003, 7912004, 7912005);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`,
     `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`,
     `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6912000, 2300565, 0, 0, 0, 1, 1, -8628.39, -489.8, 40.111, 1.5707964, 0, 0, 0.7071068, 0.7071068, 300, 100, 1, '',
+(7912000, 2300565, 0, 0, 0, 1, 1, -8628.39, -489.8, 40.111, 1.5707964, 0, 0, 0.7071068, 0.7071068, 300, 100, 1, '',
     'CoA Vaults portal (normal): trigger 8002 at the end of the tombs, on the floor at the box face'),
-(6912001, 2300566, 0, 0, 0, 1, 1, -8628.39, -489.8, 40.111, 1.5707964, 0, 0, 0.7071068, 0.7071068, 300, 100, 1, '',
+(7912001, 2300566, 0, 0, 0, 1, 1, -8628.39, -489.8, 40.111, 1.5707964, 0, 0, 0.7071068, 0.7071068, 300, 100, 1, '',
     'CoA Vaults portal (heroic): trigger 8002 at the end of the tombs, on the floor at the box face'),
-(6912002, 2300567, 0, 0, 0, 1, 1, -8628.39, -489.8, 40.111, 1.5707964, 0, 0, 0.7071068, 0.7071068, 300, 100, 1, '',
+(7912002, 2300567, 0, 0, 0, 1, 1, -8628.39, -489.8, 40.111, 1.5707964, 0, 0, 0.7071068, 0.7071068, 300, 100, 1, '',
     'CoA Vaults portal (mythic): trigger 8002 at the end of the tombs, on the floor at the box face'),
-(6912003, 2300565, 936, 0, 0, 1, 1, -6658.54, -5555.8, 178.549, 4.712389, 0, 0, 0.7071068, -0.7071068, 300, 100, 1,
+(7912003, 2300565, 936, 0, 0, 1, 1, -6658.54, -5555.8, 178.549, 4.712389, 0, 0, 0.7071068, -0.7071068, 300, 100, 1,
     '', 'CoA Vaults exit portal (normal): trigger 8003 on the entry-stair landing, on the floor at the box face'),
-(6912004, 2300566, 936, 0, 0, 2, 1, -6658.54, -5555.8, 178.549, 4.712389, 0, 0, 0.7071068, -0.7071068, 300, 100, 1,
+(7912004, 2300566, 936, 0, 0, 2, 1, -6658.54, -5555.8, 178.549, 4.712389, 0, 0, 0.7071068, -0.7071068, 300, 100, 1,
     '', 'CoA Vaults exit portal (heroic): trigger 8003 on the entry-stair landing, on the floor at the box face'),
-(6912005, 2300567, 936, 0, 0, 4, 1, -6658.54, -5555.8, 178.549, 4.712389, 0, 0, 0.7071068, -0.7071068, 300, 100, 1,
+(7912005, 2300567, 936, 0, 0, 4, 1, -6658.54, -5555.8, 178.549, 4.712389, 0, 0, 0.7071068, -0.7071068, 300, 100, 1,
     '', 'CoA Vaults exit portal (mythic): trigger 8003 on the entry-stair landing, on the floor at the box face');
 
 DELETE FROM `disables` WHERE `sourceType` = 8 AND `entry` = 936;

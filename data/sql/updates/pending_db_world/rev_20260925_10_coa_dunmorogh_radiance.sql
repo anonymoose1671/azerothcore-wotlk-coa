@@ -1,6 +1,6 @@
 -- CoA Coldridge Valley storyline: Groldha's search for her son through the Crash Site, the hidden path,
 -- Runestone Forest and Radiance Town (quests 1660006-1660011 and 1660039), and the Radiant One Disguise.
--- Creature guids 9008000-9008399, gameobject guids 6914000-6914099, gossip menus 932200-932229.
+-- Creature guids 9008000-9008399, gameobject guids 7914000-7914099, gossip menus 932200-932229.
 
 -- ---------------------------------------------------------------------------
 -- 1. Creatures
@@ -362,16 +362,16 @@ VALUES
 (9008121, 161786, 0, 0, 0, 1, 1, 0, -5886.24, 497.43, 529.088, 3, 300, 3, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Radiance: Radiant Devotee; Radiance Town (area 10203): on the bank below Lahud'),
 (9008122, 161786, 0, 0, 0, 1, 1, 0, -5887.67, 479.32, 534.506, 1.8, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Radiance: Radiant Devotee; Radiance Town (area 10203): on the floor of Lahud''s hut (534.51) at its gnome table');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6914000, 6914001, 6914002, 6914003, 6914004, 6914005, 6914006) OR `guid` BETWEEN 6914000 AND 6914099;
+DELETE FROM `gameobject` WHERE `guid` IN (7914000, 7914001, 7914002, 7914003, 7914004, 7914005, 7914006) OR `guid` BETWEEN 7914000 AND 7914099;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6914000, 2300525, 0, 0, 0, 1, 1, -6093.37, 404.29, 395.537, 4.02, 0, 0, 0.905091, -0.425219, 60, 100, 1, '', 'CoA Radiance: SOURCED-ATLAS sighting beside Groldha in Anvilmar hall (Anvilmar.wmo floor 395.54)'),
-(6914001, 2300507, 0, 0, 0, 1, 1, -6214.3, 720.65, 386.585, 1.2, 0, 0, 0.564642, 0.825336, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8657 objective 1 point on the goblin Crash Site (area 10201) crater floor, west rim'),
-(6914002, 2300508, 0, 0, 0, 1, 1, -6197.39, 735.64, 380.246, 2.6, 0, 0, 0.963558, 0.267499, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8658 objective 2 point on the goblin Crash Site (area 10201) crater floor; the ST z floats 0.79, so it stands on the floor below'),
-(6914003, 2300509, 0, 0, 0, 1, 1, -6175.24, 744.28, 377.641, 0.4, 0, 0, 0.198669, 0.980067, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8659 objective 3 point on the goblin Crash Site (area 10201) crater floor beside the rocket'),
-(6914004, 2300510, 0, 0, 0, 1, 1, -6160.98, 753.42, 378.197, 5.1, 0, 0, 0.557684, -0.830054, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8660 objective 4 point on the goblin Crash Site (area 10201) crater floor, east side'),
-(6914005, 2300506, 0, 0, 0, 1, 1, -6207.21, 739.52, 381.196, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Radiance: SOURCED-ATLAS sighting on the goblin Crash Site (area 10201) crater floor between the plating and the crate; the atlas z sinks 0.33, so it stands on the floor'),
-(6914006, 2300539, 0, 0, 0, 1, 1, -6010.39, 678.37, 484.794, 3.14, 0, 0, 1, 0.000796, 60, 100, 1, '', 'CoA Radiance: SOURCED-ATLAS sighting at Arathror''s post in Runestone Forest (area 10202), on the WestfallChair doodad of the CoA map, turned 3.14 like that doodad');
+(7914000, 2300525, 0, 0, 0, 1, 1, -6093.37, 404.29, 395.537, 4.02, 0, 0, 0.905091, -0.425219, 60, 100, 1, '', 'CoA Radiance: SOURCED-ATLAS sighting beside Groldha in Anvilmar hall (Anvilmar.wmo floor 395.54)'),
+(7914001, 2300507, 0, 0, 0, 1, 1, -6214.3, 720.65, 386.585, 1.2, 0, 0, 0.564642, 0.825336, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8657 objective 1 point on the goblin Crash Site (area 10201) crater floor, west rim'),
+(7914002, 2300508, 0, 0, 0, 1, 1, -6197.39, 735.64, 380.246, 2.6, 0, 0, 0.963558, 0.267499, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8658 objective 2 point on the goblin Crash Site (area 10201) crater floor; the ST z floats 0.79, so it stands on the floor below'),
+(7914003, 2300509, 0, 0, 0, 1, 1, -6175.24, 744.28, 377.641, 0.4, 0, 0, 0.198669, 0.980067, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8659 objective 3 point on the goblin Crash Site (area 10201) crater floor beside the rocket'),
+(7914004, 2300510, 0, 0, 0, 1, 1, -6160.98, 753.42, 378.197, 5.1, 0, 0, 0.557684, -0.830054, 30, 100, 1, '', 'CoA Radiance: SOURCED-CLIENT ST8660 objective 4 point on the goblin Crash Site (area 10201) crater floor, east side'),
+(7914005, 2300506, 0, 0, 0, 1, 1, -6207.21, 739.52, 381.196, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Radiance: SOURCED-ATLAS sighting on the goblin Crash Site (area 10201) crater floor between the plating and the crate; the atlas z sinks 0.33, so it stands on the floor'),
+(7914006, 2300539, 0, 0, 0, 1, 1, -6010.39, 678.37, 484.794, 3.14, 0, 0, 1, 0.000796, 60, 100, 1, '', 'CoA Radiance: SOURCED-ATLAS sighting at Arathror''s post in Runestone Forest (area 10202), on the WestfallChair doodad of the CoA map, turned 3.14 like that doodad');
 
 -- ---------------------------------------------------------------------------
 -- 8. Scripts

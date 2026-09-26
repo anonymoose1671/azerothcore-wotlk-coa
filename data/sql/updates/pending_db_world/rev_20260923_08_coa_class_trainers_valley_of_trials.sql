@@ -21,7 +21,7 @@
 --   stock trainers  every one stays standing as a plain NPC (core 05), except Frang (guid 7651), 2.0 yd from
 --     Omogulg's turn-in point, and Ken'jai (guid 4912), whose post the Cultist kill copy takes.
 --
--- Blocks: creature guid 9003500-9003699, gameobject guid 6912300-6912399, creature
+-- Blocks: creature guid 9003500-9003699, gameobject guid 7912300-7912399, creature
 -- entries 9300200-9300205, gameobject entries 9301200-9301204, menus 930300-930302.
 
 -- ---------------------------------------------------------------------------
@@ -708,38 +708,38 @@ VALUES
 (9003528, 9300205, 1, 0, 0, 1, 1, 0, -205, -4401, 64.781, 2.39, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: canyon before the Burning Blade Coven, east end, beside the campfire he is bound to, 3.2 yd away; faces the canyon mouth players come through'),
 (9003529, 685037, 1, 0, 0, 1, 1, 0, -839, -4250, 88.447, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Valley of Trials: southern mountains, on the sheltered shelf 7 yd east of the hidden statue, in sight of anyone who reaches it: the walk-in credit for 200080');
 
-DELETE FROM `gameobject` WHERE `guid` IN (6912300, 6912301, 6912302, 6912303, 6912304, 6912305, 6912306, 6912307, 6912308, 6912309, 6912310, 6912311, 6912312, 6912313, 6912314, 6912315, 6912316, 6912317, 6912318, 6912319, 6912320, 6912321, 6912322, 6912323, 6912324, 6912325, 6912326, 6912327, 6912328) OR `guid` BETWEEN 6912300 AND 6912399;
+DELETE FROM `gameobject` WHERE `guid` IN (7912300, 7912301, 7912302, 7912303, 7912304, 7912305, 7912306, 7912307, 7912308, 7912309, 7912310, 7912311, 7912312, 7912313, 7912314, 7912315, 7912316, 7912317, 7912318, 7912319, 7912320, 7912321, 7912322, 7912323, 7912324, 7912325, 7912326, 7912327, 7912328) OR `guid` BETWEEN 7912300 AND 7912399;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6912300, 9301200, 1, 0, 0, 1, 1, -232, -4330, 65.055, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Valley of Trials: canyon before the Burning Blade Coven, open flat ground in the middle of the canyon, the Vile Familiars 18-30 yd round it ("the nearby Vile Familiars")'),
-(6912301, 1798, 1, 0, 0, 1, 1, -208, -4400, 64.007, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Valley of Trials: canyon before the Burning Blade Coven, east end: the campfire Scorch is bound to ("a campfire near the Burning Blade Coven")'),
-(6912302, 9301201, 1, 0, 0, 1, 1, -596, -4128, 73.631, 1.1, 0, 0, 0.522687, 0.852525, 60, 100, 1, '', 'CoA Valley of Trials: hilltop over the den, above the west chamber'),
-(6912303, 9301201, 1, 0, 0, 1, 1, -600, -4150, 76.168, 2.6, 0, 0, 0.963558, 0.267499, 60, 100, 1, '', 'CoA Valley of Trials: hilltop over the den, above the exit passage'),
-(6912304, 9301202, 1, 0, 0, 1, 1, -603, -4149, 43.336, 0.8, 0, 0, 0.389418, 0.921061, 60, 100, 1, '', 'CoA Valley of Trials: the Den, south passage toward the exit'),
-(6912305, 9301202, 1, 0, 0, 1, 1, -610.5, -4104, 42.413, 5.5, 0, 0, 0.381661, -0.924302, 60, 100, 1, '', 'CoA Valley of Trials: the Den, alcove at the south end of the west chamber'),
-(6912306, 9301203, 1, 0, 0, 1, 1, -27, -4240, 68.196, 0.4, 0, 0, 0.198669, 0.980067, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north-west gallery by the far wall'),
-(6912307, 9301203, 1, 0, 0, 1, 1, -45, -4318, 68.22, 2.1, 0, 0, 0.867423, 0.497571, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north-east gallery, on the slope below the wall'),
-(6912308, 9301203, 1, 0, 0, 1, 1, -45, -4270, 68.527, 3.3, 0, 0, 0.996865, -0.079121, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north gallery beside the passage west'),
-(6912309, 9301203, 1, 0, 0, 1, 1, -61, -4232, 62.229, 1.6, 0, 0, 0.717356, 0.696707, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), ledge below Yarrog Baneshadow''s alcove'),
-(6912310, 9301203, 1, 0, 0, 1, 1, -75, -4210, 50.458, 4.4, 0, 0, 0.808496, -0.588501, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower west hall, west wall'),
-(6912311, 9301203, 1, 0, 0, 1, 1, -91, -4206, 50.465, 0.9, 0, 0, 0.434966, 0.900447, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower west hall, south of the pit'),
-(6912312, 9301203, 1, 0, 0, 1, 1, -109, -4246, 53.845, 5.2, 0, 0, 0.515501, -0.856889, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), foot of the ramp from the lower hall'),
-(6912313, 9301203, 1, 0, 0, 1, 1, -149, -4256, 60.321, 2.8, 0, 0, 0.98545, 0.169967, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south-west passage'),
-(6912314, 9301203, 1, 0, 0, 1, 1, -129, -4230, 57.409, 3.9, 0, 0, 0.92896, -0.370181, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south-west chamber by the west wall'),
-(6912315, 9301203, 1, 0, 0, 1, 1, -99, -4300, 61.365, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), middle hall, near Thazz''ril''s pick'),
-(6912316, 9301203, 1, 0, 0, 1, 1, -85, -4326, 65.953, 4.7, 0, 0, 0.711473, -0.702713, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east hall'),
-(6912317, 9301203, 1, 0, 0, 1, 1, -125, -4318, 66.079, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east gallery by the Felstalker den'),
-(6912318, 9301203, 1, 0, 0, 1, 1, -145, -4366, 67.602, 5.9, 0, 0, 0.190423, -0.981702, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), just inside the entrance passage'),
-(6912319, 9301203, 1, 0, 0, 1, 1, -137, -4300, 65.378, 2.5, 0, 0, 0.948985, 0.315322, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south gallery above the entrance'),
-(6912321, 9301203, 1, 0, 0, 1, 1, -155, -4352, 65.991, 1.4, 0, 0, 0.644218, 0.764842, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), entrance passage, south side'),
-(6912322, 9301203, 1, 0, 0, 1, 1, -60, -4335, 68.095, 3.6, 0, 0, 0.973848, -0.227202, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east gallery by the Felstalker den'),
-(6912323, 9301203, 1, 0, 0, 1, 1, -74, -4330, 67.582, 0.7, 0, 0, 0.342898, 0.939373, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east hall, dry ledge on the south-east shore of the pool, between the east-hall piles'),
-(6912324, 9301203, 1, 0, 0, 1, 1, -29, -4262, 66.719, 5, 0, 0, 0.598472, -0.801144, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north gallery by the passage east'),
-(6912325, 9301203, 1, 0, 0, 1, 1, -105, -4210, 54.341, 2.2, 0, 0, 0.891207, 0.453596, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower west hall, south part'),
-(6912326, 9301203, 1, 0, 0, 1, 1, -121, -4222, 54.671, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south-west chamber, north end'),
-(6912327, 9301203, 1, 0, 0, 1, 1, -111, -4300, 62.42, 1.9, 0, 0, 0.813416, 0.581683, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), middle hall, south side'),
-(6912328, 9301203, 1, 0, 0, 1, 1, -79, -4272, 50.869, 5.6, 0, 0, 0.334988, -0.942222, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower hall, east end below the ramp'),
-(6912320, 9301204, 1, 0, 0, 1, 1, -840.5, -4243, 88.341, 1.75, 0, 0, 0.767544, 0.640997, 300, 100, 1, '', 'CoA Valley of Trials: southern mountains: a flat shelf 45 yd above the valley floor, walled off from the valley by the ridge to its north ("use your agile movements"); faces west along the shelf, the way the ledge path from the valley comes in');
+(7912300, 9301200, 1, 0, 0, 1, 1, -232, -4330, 65.055, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Valley of Trials: canyon before the Burning Blade Coven, open flat ground in the middle of the canyon, the Vile Familiars 18-30 yd round it ("the nearby Vile Familiars")'),
+(7912301, 1798, 1, 0, 0, 1, 1, -208, -4400, 64.007, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Valley of Trials: canyon before the Burning Blade Coven, east end: the campfire Scorch is bound to ("a campfire near the Burning Blade Coven")'),
+(7912302, 9301201, 1, 0, 0, 1, 1, -596, -4128, 73.631, 1.1, 0, 0, 0.522687, 0.852525, 60, 100, 1, '', 'CoA Valley of Trials: hilltop over the den, above the west chamber'),
+(7912303, 9301201, 1, 0, 0, 1, 1, -600, -4150, 76.168, 2.6, 0, 0, 0.963558, 0.267499, 60, 100, 1, '', 'CoA Valley of Trials: hilltop over the den, above the exit passage'),
+(7912304, 9301202, 1, 0, 0, 1, 1, -603, -4149, 43.336, 0.8, 0, 0, 0.389418, 0.921061, 60, 100, 1, '', 'CoA Valley of Trials: the Den, south passage toward the exit'),
+(7912305, 9301202, 1, 0, 0, 1, 1, -610.5, -4104, 42.413, 5.5, 0, 0, 0.381661, -0.924302, 60, 100, 1, '', 'CoA Valley of Trials: the Den, alcove at the south end of the west chamber'),
+(7912306, 9301203, 1, 0, 0, 1, 1, -27, -4240, 68.196, 0.4, 0, 0, 0.198669, 0.980067, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north-west gallery by the far wall'),
+(7912307, 9301203, 1, 0, 0, 1, 1, -45, -4318, 68.22, 2.1, 0, 0, 0.867423, 0.497571, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north-east gallery, on the slope below the wall'),
+(7912308, 9301203, 1, 0, 0, 1, 1, -45, -4270, 68.527, 3.3, 0, 0, 0.996865, -0.079121, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north gallery beside the passage west'),
+(7912309, 9301203, 1, 0, 0, 1, 1, -61, -4232, 62.229, 1.6, 0, 0, 0.717356, 0.696707, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), ledge below Yarrog Baneshadow''s alcove'),
+(7912310, 9301203, 1, 0, 0, 1, 1, -75, -4210, 50.458, 4.4, 0, 0, 0.808496, -0.588501, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower west hall, west wall'),
+(7912311, 9301203, 1, 0, 0, 1, 1, -91, -4206, 50.465, 0.9, 0, 0, 0.434966, 0.900447, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower west hall, south of the pit'),
+(7912312, 9301203, 1, 0, 0, 1, 1, -109, -4246, 53.845, 5.2, 0, 0, 0.515501, -0.856889, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), foot of the ramp from the lower hall'),
+(7912313, 9301203, 1, 0, 0, 1, 1, -149, -4256, 60.321, 2.8, 0, 0, 0.98545, 0.169967, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south-west passage'),
+(7912314, 9301203, 1, 0, 0, 1, 1, -129, -4230, 57.409, 3.9, 0, 0, 0.92896, -0.370181, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south-west chamber by the west wall'),
+(7912315, 9301203, 1, 0, 0, 1, 1, -99, -4300, 61.365, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), middle hall, near Thazz''ril''s pick'),
+(7912316, 9301203, 1, 0, 0, 1, 1, -85, -4326, 65.953, 4.7, 0, 0, 0.711473, -0.702713, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east hall'),
+(7912317, 9301203, 1, 0, 0, 1, 1, -125, -4318, 66.079, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east gallery by the Felstalker den'),
+(7912318, 9301203, 1, 0, 0, 1, 1, -145, -4366, 67.602, 5.9, 0, 0, 0.190423, -0.981702, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), just inside the entrance passage'),
+(7912319, 9301203, 1, 0, 0, 1, 1, -137, -4300, 65.378, 2.5, 0, 0, 0.948985, 0.315322, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south gallery above the entrance'),
+(7912321, 9301203, 1, 0, 0, 1, 1, -155, -4352, 65.991, 1.4, 0, 0, 0.644218, 0.764842, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), entrance passage, south side'),
+(7912322, 9301203, 1, 0, 0, 1, 1, -60, -4335, 68.095, 3.6, 0, 0, 0.973848, -0.227202, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east gallery by the Felstalker den'),
+(7912323, 9301203, 1, 0, 0, 1, 1, -74, -4330, 67.582, 0.7, 0, 0, 0.342898, 0.939373, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), east hall, dry ledge on the south-east shore of the pool, between the east-hall piles'),
+(7912324, 9301203, 1, 0, 0, 1, 1, -29, -4262, 66.719, 5, 0, 0, 0.598472, -0.801144, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), north gallery by the passage east'),
+(7912325, 9301203, 1, 0, 0, 1, 1, -105, -4210, 54.341, 2.2, 0, 0, 0.891207, 0.453596, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower west hall, south part'),
+(7912326, 9301203, 1, 0, 0, 1, 1, -121, -4222, 54.671, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), south-west chamber, north end'),
+(7912327, 9301203, 1, 0, 0, 1, 1, -111, -4300, 62.42, 1.9, 0, 0, 0.813416, 0.581683, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), middle hall, south side'),
+(7912328, 9301203, 1, 0, 0, 1, 1, -79, -4272, 50.869, 5.6, 0, 0, 0.334988, -0.942222, 120, 100, 1, '', 'CoA Valley of Trials: Burning Blade Coven (the imp cave), lower hall, east end below the ramp'),
+(7912320, 9301204, 1, 0, 0, 1, 1, -840.5, -4243, 88.341, 1.75, 0, 0, 0.767544, 0.640997, 300, 100, 1, '', 'CoA Valley of Trials: southern mountains: a flat shelf 45 yd above the valley floor, walled off from the valley by the ridge to its north ("use your agile movements"); faces west along the shelf, the way the ledge path from the valley comes in');
 
 -- ---------------------------------------------------------------------------
 -- 10. Scripts

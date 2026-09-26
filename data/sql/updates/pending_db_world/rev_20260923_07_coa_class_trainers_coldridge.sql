@@ -28,7 +28,7 @@
 --     Nurribit, 0.24 yd from Grelin Ironbeard's point. Their stock letters 3107 and 3114 lose Sten's
 --     starter rows, since nothing is left to end them.
 --
--- Blocks: creature guid 9003300-9003499, gameobject guid 6912200-6912299, creature entry 9300150-9300199,
+-- Blocks: creature guid 9003300-9003499, gameobject guid 7912200-7912299, creature entry 9300150-9300199,
 -- gameobject entry 9301150-9301199, gossip and npc_text 930250-930299.
 
 -- ---------------------------------------------------------------------------
@@ -689,31 +689,31 @@ INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `e
 VALUES
 (9003322, 0, 0, 5, 1, 0, 0, NULL);
 
-DELETE FROM `gameobject` WHERE `guid` IN (6912200, 6912201, 6912202, 6912203, 6912204, 6912205, 6912206, 6912207, 6912208, 6912209, 6912210, 6912211, 6912212, 6912213, 6912214, 6912215, 6912216, 6912217, 6912218, 6912219, 6912220, 6912221) OR `guid` BETWEEN 6912200 AND 6912299;
+DELETE FROM `gameobject` WHERE `guid` IN (7912200, 7912201, 7912202, 7912203, 7912204, 7912205, 7912206, 7912207, 7912208, 7912209, 7912210, 7912211, 7912212, 7912213, 7912214, 7912215, 7912216, 7912217, 7912218, 7912219, 7912220, 7912221) OR `guid` BETWEEN 7912200 AND 7912299;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(6912200, 9301152, 0, 0, 0, 1, 1, -6247, 483, 386.548, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north edge of the ruins, open ground'),
-(6912201, 9301150, 0, 0, 0, 1, 1, -6063.8, 379.4, 393.658, 0.7, 0, 0, 0.342898, 0.939373, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, north room, on the south table beside the candelabra'),
-(6912202, 9301150, 0, 0, 0, 1, 1, -6114.9, 379.2, 396.438, 2.3, 0, 0, 0.912764, 0.408487, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, main hall, on the south-east table among the chairs'),
-(6912203, 9301151, 0, 0, 0, 1, 1, -6063.8, 386.4, 393.658, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, north room, on the north table beside the bread'),
-(6912204, 9301151, 0, 0, 0, 1, 1, -6097.6, 404.6, 396.411, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, main hall, on the west table behind Freja Stormbelch'),
-(6912205, 9301153, 0, 0, 0, 1, 1, -6422.5, 352, 390.738, 1.1, 0, 0, 0.522687, 0.852525, 60, 100, 1, '', 'CoA Coldridge: pillaged camp at the broken cart south of Anvilmar, in the snow north-east of the cart'),
-(6912206, 9301153, 0, 0, 0, 1, 1, -6419.5, 343.5, 391.155, 4, 0, 0, 0.909297, -0.416147, 60, 100, 1, '', 'CoA Coldridge: pillaged camp at the broken cart south of Anvilmar, in the snow east of the cart, where she fled'),
-(6912207, 9301154, 0, 0, 0, 1, 1, -6270.5, 489, 386.188, 2.6, 0, 0, 0.963558, 0.267499, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, at the collapsed south end of the west tent'),
-(6912208, 9301154, 0, 0, 0, 1, 1, -6268, 479.5, 386.28, 0.9, 0, 0, 0.434966, 0.900447, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, between the camp chair and the dig-site rocks'),
-(6912209, 9301154, 0, 0, 0, 1, 1, -6277.5, 476, 386.148, 4.1, 0, 0, 0.887362, -0.461073, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, beside the abandoned excavation hammers'),
-(6912210, 9301154, 0, 0, 0, 1, 1, -6256, 475.5, 386.037, 5.5, 0, 0, 0.381661, -0.924302, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, by the broken barrel east of the east tent'),
-(6912211, 9301154, 0, 0, 0, 1, 1, -6246, 470, 385.919, 1.7, 0, 0, 0.75128, 0.659983, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north-east edge, below the old stump'),
-(6912212, 9301154, 0, 0, 0, 1, 1, -6244.5, 495, 387.122, 3.4, 0, 0, 0.991665, -0.128844, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north of the tents, beyond the small pines'),
-(6912213, 9301154, 0, 0, 0, 1, 1, -6247, 507, 386.225, 0.3, 0, 0, 0.149438, 0.988771, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north-west edge, beyond the big pine'),
-(6912214, 9301154, 0, 0, 0, 1, 1, -6268, 509, 386.918, 2.2, 0, 0, 0.891207, 0.453596, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, west side, beside the lone snow pine'),
-(6912215, 9301154, 0, 0, 0, 1, 1, -6283, 497, 386.137, 5, 0, 0, 0.598472, -0.801144, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, south-west, past the paired snow pines'),
-(6912216, 9301154, 0, 0, 0, 1, 1, -6285.5, 478, 386.11, 1.1, 0, 0, 0.522687, 0.852525, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, south edge, south of the paired snow pines'),
-(6912217, 9301154, 0, 0, 0, 1, 1, -6268, 463.5, 386.077, 3.8, 0, 0, 0.9463, -0.32329, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, east edge, beyond the excavation hammers'),
-(6912218, 9301154, 0, 0, 0, 1, 1, -6258, 528, 386.144, 6, 0, 0, 0.14112, -0.989992, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, west end, south of the lone pines'),
-(6912219, 9301155, 0, 0, 0, 1, 1, -5905, 19, 367.05, 1.95, 0, 0, 0.827702, 0.561168, 300, 100, 1, '', 'CoA Coldridge: Coldridge Pass (area 800), flat valley floor at the foot of the pass road, south of the road''s end where the mountaineer''s patrol turns, faces up the road toward the pass mouth; base within 0.06 yd of the ground over its whole footprint'),
-(6912220, 1798, 0, 0, 0, 1, 1, -6319.5, 711, 384.687, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Coldridge: frozen lake in the south-west of the valley, Scorch''s campfire on the ice (200143)'),
-(6912221, 1798, 0, 0, 0, 1, 1, -6111, 703, 433.087, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Coldridge: shelf above the crash site, Kali''s campfire');
+(7912200, 9301152, 0, 0, 0, 1, 1, -6247, 483, 386.548, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north edge of the ruins, open ground'),
+(7912201, 9301150, 0, 0, 0, 1, 1, -6063.8, 379.4, 393.658, 0.7, 0, 0, 0.342898, 0.939373, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, north room, on the south table beside the candelabra'),
+(7912202, 9301150, 0, 0, 0, 1, 1, -6114.9, 379.2, 396.438, 2.3, 0, 0, 0.912764, 0.408487, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, main hall, on the south-east table among the chairs'),
+(7912203, 9301151, 0, 0, 0, 1, 1, -6063.8, 386.4, 393.658, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, north room, on the north table beside the bread'),
+(7912204, 9301151, 0, 0, 0, 1, 1, -6097.6, 404.6, 396.411, 0, 0, 0, 0, 1, 60, 100, 1, '', 'CoA Coldridge: Anvilmar, main hall, on the west table behind Freja Stormbelch'),
+(7912205, 9301153, 0, 0, 0, 1, 1, -6422.5, 352, 390.738, 1.1, 0, 0, 0.522687, 0.852525, 60, 100, 1, '', 'CoA Coldridge: pillaged camp at the broken cart south of Anvilmar, in the snow north-east of the cart'),
+(7912206, 9301153, 0, 0, 0, 1, 1, -6419.5, 343.5, 391.155, 4, 0, 0, 0.909297, -0.416147, 60, 100, 1, '', 'CoA Coldridge: pillaged camp at the broken cart south of Anvilmar, in the snow east of the cart, where she fled'),
+(7912207, 9301154, 0, 0, 0, 1, 1, -6270.5, 489, 386.188, 2.6, 0, 0, 0.963558, 0.267499, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, at the collapsed south end of the west tent'),
+(7912208, 9301154, 0, 0, 0, 1, 1, -6268, 479.5, 386.28, 0.9, 0, 0, 0.434966, 0.900447, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, between the camp chair and the dig-site rocks'),
+(7912209, 9301154, 0, 0, 0, 1, 1, -6277.5, 476, 386.148, 4.1, 0, 0, 0.887362, -0.461073, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, beside the abandoned excavation hammers'),
+(7912210, 9301154, 0, 0, 0, 1, 1, -6256, 475.5, 386.037, 5.5, 0, 0, 0.381661, -0.924302, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, by the broken barrel east of the east tent'),
+(7912211, 9301154, 0, 0, 0, 1, 1, -6246, 470, 385.919, 1.7, 0, 0, 0.75128, 0.659983, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north-east edge, below the old stump'),
+(7912212, 9301154, 0, 0, 0, 1, 1, -6244.5, 495, 387.122, 3.4, 0, 0, 0.991665, -0.128844, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north of the tents, beyond the small pines'),
+(7912213, 9301154, 0, 0, 0, 1, 1, -6247, 507, 386.225, 0.3, 0, 0, 0.149438, 0.988771, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, north-west edge, beyond the big pine'),
+(7912214, 9301154, 0, 0, 0, 1, 1, -6268, 509, 386.918, 2.2, 0, 0, 0.891207, 0.453596, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, west side, beside the lone snow pine'),
+(7912215, 9301154, 0, 0, 0, 1, 1, -6283, 497, 386.137, 5, 0, 0, 0.598472, -0.801144, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, south-west, past the paired snow pines'),
+(7912216, 9301154, 0, 0, 0, 1, 1, -6285.5, 478, 386.11, 1.1, 0, 0, 0.522687, 0.852525, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, south edge, south of the paired snow pines'),
+(7912217, 9301154, 0, 0, 0, 1, 1, -6268, 463.5, 386.077, 3.8, 0, 0, 0.9463, -0.32329, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, east edge, beyond the excavation hammers'),
+(7912218, 9301154, 0, 0, 0, 1, 1, -6258, 528, 386.144, 6, 0, 0, 0.14112, -0.989992, 60, 100, 1, '', 'CoA Coldridge: ruined excavation camp west of the start among the Burly Rockjaw Troggs, west end, south of the lone pines'),
+(7912219, 9301155, 0, 0, 0, 1, 1, -5905, 19, 367.05, 1.95, 0, 0, 0.827702, 0.561168, 300, 100, 1, '', 'CoA Coldridge: Coldridge Pass (area 800), flat valley floor at the foot of the pass road, south of the road''s end where the mountaineer''s patrol turns, faces up the road toward the pass mouth; base within 0.06 yd of the ground over its whole footprint'),
+(7912220, 1798, 0, 0, 0, 1, 1, -6319.5, 711, 384.687, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Coldridge: frozen lake in the south-west of the valley, Scorch''s campfire on the ice (200143)'),
+(7912221, 1798, 0, 0, 0, 1, 1, -6111, 703, 433.087, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Coldridge: shelf above the crash site, Kali''s campfire');
 
 -- ---------------------------------------------------------------------------
 -- 10. Scripts
