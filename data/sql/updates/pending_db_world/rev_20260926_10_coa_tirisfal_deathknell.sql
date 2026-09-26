@@ -1,5 +1,6 @@
 -- CoA Deathknell: the Cain Family Estate chain (1660024-1660029, 1660042), CoA 363 and 6395, the east
--- slope re-floors, the Pilgrim's Bounty turkeys there and the recorded Deathknell props.
+-- slope re-floors, the Pilgrim's Bounty turkeys there and the recorded Deathknell props;
+-- Kobold Desecrators in the Cain crypt (1660025 texts; points inferred).
 -- Creature guids 9010000-9010349, gameobject guids 7916000-7916119, gossip menus 932400-932414.
 
 -- ---------------------------------------------------------------------------
@@ -26,10 +27,11 @@ VALUES
 (161763, 'Father', NULL, 0, 3, 3, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 6, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
 (161764, 'Cousin Salem', NULL, 0, 3, 3, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 6, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
 (161765, 'Uncle Abel', NULL, 0, 3, 3, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 6, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
-(161836, 'Hound of House Cain', NULL, 0, 4, 4, 0, 7, 0, 1, 1.14286, 20, 1, 2000, 2000, 1, 0, 2048, 0, 1, 0, 0, '', 0, 2.79, 1, 1, 1, 1, 0, 0, '')
+(161836, 'Hound of House Cain', NULL, 0, 4, 4, 0, 7, 0, 1, 1.14286, 20, 1, 2000, 2000, 1, 0, 2048, 0, 1, 0, 0, '', 0, 2.79, 1, 1, 1, 1, 0, 0, ''),
+(161751, 'Kobold Desecrator', NULL, 0, 3, 3, 0, 26, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, '', 0, 0.93, 1, 1, 1, 1, 0, 0, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `family` = VALUES(`family`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `DamageModifier` = VALUES(`DamageModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `KillCredit1` = VALUES(`KillCredit1`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161739, 161740, 161741, 161742, 161743, 161746, 161747, 161748, 161749, 161752, 161753, 161754, 161755, 161757, 161762, 161763, 161764, 161765, 161836);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161739, 161740, 161741, 161742, 161743, 161746, 161747, 161748, 161749, 161751, 161752, 161753, 161754, 161755, 161757, 161762, 161763, 161764, 161765, 161836);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (161739, 0, 14756, 1, 1),
@@ -50,7 +52,8 @@ VALUES
 (161763, 0, 3222, 1, 1),
 (161764, 0, 10483, 1, 1),
 (161765, 0, 10478, 1, 1),
-(161836, 0, 9021, 1, 1);
+(161836, 0, 9021, 1, 1),
+(161751, 0, 2299, 1, 1);
 
 -- The Aberrant Progeny display lacks model info.
 DELETE FROM `creature_model_info` WHERE `DisplayID` = 76125;
@@ -225,7 +228,7 @@ UPDATE `quest_template` SET `RequiredNpcOrGo2` = 1919, `RequiredNpcOrGoCount2` =
 -- ---------------------------------------------------------------------------
 -- 5. Spawns
 -- ---------------------------------------------------------------------------
-DELETE FROM `creature` WHERE `guid` IN (9010000, 9010001, 9010002, 9010003, 9010004, 9010005, 9010006, 9010007, 9010008, 9010009, 9010010, 9010011, 9010012, 9010020, 9010021, 9010022, 9010023, 9010024, 9010025, 9010026, 9010027, 9010028, 9010029, 9010030, 9010031, 9010032, 9010033, 9010034, 9010035, 9010036, 9010037, 9010038, 9010039, 9010040, 9010041, 9010042, 9010043, 9010050, 9010051, 9010052, 9010053, 9010054, 9010055, 9010056, 9010057, 9010058, 9010059, 9010060, 9010061, 9010062, 9010063, 9010064, 9010065, 9010066, 9010080, 9010081, 9010082, 9010083, 9010084, 9010085, 9010086, 9010087, 9010100, 9010101, 9010102, 9010103, 9010104, 9010105, 9010106, 9010107, 9010108, 9010109, 9010110, 9010111, 9010112, 9010113, 9010114, 9010115, 9010116, 9010117, 9010118, 9010119, 9010120, 9010121, 9010122, 9010123, 9010124) OR `guid` BETWEEN 9010000 AND 9010349;
+DELETE FROM `creature` WHERE `guid` IN (9010000, 9010001, 9010002, 9010003, 9010004, 9010005, 9010006, 9010007, 9010008, 9010009, 9010010, 9010011, 9010012, 9010020, 9010021, 9010022, 9010023, 9010024, 9010025, 9010026, 9010027, 9010028, 9010029, 9010030, 9010031, 9010032, 9010033, 9010034, 9010035, 9010036, 9010037, 9010038, 9010039, 9010040, 9010041, 9010042, 9010043, 9010050, 9010051, 9010052, 9010053, 9010054, 9010055, 9010056, 9010057, 9010058, 9010059, 9010060, 9010061, 9010062, 9010063, 9010064, 9010065, 9010066, 9010080, 9010081, 9010082, 9010083, 9010084, 9010085, 9010086, 9010087, 9010100, 9010101, 9010102, 9010103, 9010104, 9010105, 9010106, 9010107, 9010108, 9010109, 9010110, 9010111, 9010112, 9010113, 9010114, 9010115, 9010116, 9010117, 9010118, 9010119, 9010120, 9010121, 9010122, 9010123, 9010124, 9010130, 9010131, 9010132, 9010133) OR `guid` BETWEEN 9010000 AND 9010349;
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
 (9010000, 161739, 0, 0, 0, 1, 1, 0, 1847.8, 1597.3, 94.144, 0.52, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Questie point on the village street; faces the square'),
@@ -290,6 +293,10 @@ VALUES
 (9010085, 161743, 0, 0, 0, 1, 1, 0, 1900, 1995, 156.676, 2.2, 180, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Cain estate: Necrotic Bear; lake shore north of the stable'),
 (9010086, 161743, 0, 0, 0, 1, 1, 0, 1830, 1890, 157.673, 1, 180, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Cain estate: Necrotic Bear; south-west woods edge'),
 (9010087, 161743, 0, 0, 0, 1, 1, 0, 1975, 1968, 154.888, 3.8, 180, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Cain estate: Necrotic Bear; north-east field toward the woods'),
+(9010130, 161751, 0, 0, 0, 1, 1, 0, 1781, 1970, 124.072, 2.84, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Cain crypt: Kobold Desecrator; lower hall between the parents'' niches, prying at Mother''s'),
+(9010131, 161751, 0, 0, 0, 1, 1, 0, 1789, 1964, 124.072, 0.96, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Cain crypt: Kobold Desecrator; lower hall south side, rummaging toward Father''s niche'),
+(9010132, 161751, 0, 0, 0, 1, 1, 0, 1757, 1944, 132.057, 2.62, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Cain crypt: Kobold Desecrator; west chamber, picking at Cousin Salem''s coffin'),
+(9010133, 161751, 0, 0, 0, 1, 1, 0, 1788, 1940, 132.057, 4.54, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Cain crypt: Kobold Desecrator; south-east chamber floor, turned toward Uncle Abel''s niche'),
 (9010100, 1512, 0, 0, 0, 1, 1, 0, 1718, 1645, 124.696, 5.5, 180, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA 363 crypt road: Duskbat; north of the upper road bend below the crypt hill'),
 (9010101, 1512, 0, 0, 0, 1, 1, 0, 1726, 1622, 120.178, 0.8, 180, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA 363 crypt road: Duskbat; south of the upper road'),
 (9010102, 1512, 0, 0, 0, 1, 1, 0, 1729, 1638, 120.878, 4.9, 180, 10, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA 363 crypt road: Duskbat; above the road by the grave frame'),

@@ -1,6 +1,6 @@
 -- CoA Brill (Tirisfal Glades): quests 1660050-1660054 with Flemer, Delcard and Alric Sading, Dark Priestess
--- Ashara, the spores of the ruined tower, the Brightwater rebels and the Rosewalk Scarlets; Brill rebuild
--- moves, camp clearance and Brill holiday rows.
+-- Ashara, the spores of the ruined tower, the Brightwater rebels and the Rosewalk Scarlets; the other
+-- Masons' Lodge members; Brill rebuild moves, camp clearance and Brill holiday rows.
 -- Creature guids 9010350-9010599, gameobject guids 7916120-7916219, gossip menus 932415-932426.
 
 -- ---------------------------------------------------------------------------
@@ -12,6 +12,8 @@ VALUES
 (162842, 'Sporephase Guardian', NULL, 0, 8, 8, 0, 72, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 4, 0, 162842, 0, 0, '', 0, 0.96, 1, 1, 1, 1, 0, 0, ''),
 (162843, 'Apothecary Flemer', NULL, 0, 11, 11, 0, 68, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, 0, 0, '', 0, 0.98, 1, 1, 1, 1, 0, 0, ''),
 (162844, 'Delcard Sading', 'Masons of Tirisfal', 0, 17, 17, 0, 68, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
+(162845, 'Velyna Shadowveil', 'Masons of Tirisfal', 932416, 17, 17, 0, 68, 1, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
+(162846, 'Mordrek Blackbone', 'Masons of Tirisfal', 0, 17, 17, 0, 68, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
 (162847, 'Dark Priestess Ashara', NULL, 932415, 29, 29, 0, 68, 3, 1, 1.14286, 20, 0, 2000, 2000, 2, 0, 2048, 0, 6, 0, 0, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 1, 0, 0, ''),
 (162853, 'Brightwater Rebel', NULL, 0, 8, 8, 0, 16, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, 1, 12, '', 0, 0.96, 1, 1, 1, 1, 0, 0, ''),
 (162854, 'Brightwater Rebel', NULL, 0, 8, 8, 0, 16, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, 1, 12, '', 0, 0.96, 1, 1, 1, 1, 0, 162853, ''),
@@ -21,12 +23,14 @@ VALUES
 (162861, 'Scarlet Battler', NULL, 0, 8, 8, 0, 67, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, 1, 12, '', 0, 0.96, 1, 1, 1, 1, 0, 162859, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `family` = VALUES(`family`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `mingold` = VALUES(`mingold`), `maxgold` = VALUES(`maxgold`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `DamageModifier` = VALUES(`DamageModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `KillCredit1` = VALUES(`KillCredit1`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (162842, 162843, 162844, 162847, 162853, 162854, 162857, 162859, 162860, 162861);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (162842, 162843, 162844, 162845, 162846, 162847, 162853, 162854, 162857, 162859, 162860, 162861);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (162842, 0, 3033, 1, 1),
 (162843, 0, 22113, 1, 1),
 (162844, 0, 15176, 1, 1),
+(162845, 0, 1592, 1, 1),
+(162846, 0, 4006, 1, 1),
 (162847, 0, 8782, 1, 1),
 (162853, 0, 4127, 1, 1),
 (162853, 1, 4128, 1, 1),
@@ -43,7 +47,7 @@ VALUES
 (162860, 1, 2513, 1, 1),
 (162861, 0, 2514, 1, 1);
 
-DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (162842, 162843, 162844, 162847, 162853, 162854, 162857, 162859, 162860, 162861);
+DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (162842, 162843, 162844, 162845, 162846, 162847, 162853, 162854, 162857, 162859, 162860, 162861);
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`)
 VALUES
 (162844, 1, 1903, 0, 0),
@@ -68,20 +72,26 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 2. Dialogue
 -- ---------------------------------------------------------------------------
-DELETE FROM `npc_text` WHERE `ID` = 85157;
+-- Velyna's greeting and answer are the lodge's cached npc_text; her option label is inferred.
+DELETE FROM `npc_text` WHERE `ID` IN (85157, 85206, 85207);
 INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `BroadcastTextID0`, `lang0`, `Probability0`)
 VALUES
-(85157, '<Her banshee gaze passes through you like a spear; flesh and spirit alike.>', '<Her banshee gaze passes through you like a spear; flesh and spirit alike.>', 0, 0, 1);
+(85157, '<Her banshee gaze passes through you like a spear; flesh and spirit alike.>', '<Her banshee gaze passes through you like a spear; flesh and spirit alike.>', 0, 0, 1),
+(85206, 'Welcome to the Masonic Lodge of Tirisfal, $C. <She sweeps her hand to encompass the towering Gothic building>. This marvel is the epicenter of the Forsaken’s architectural and cultural revolution. A beacon of hope… if that word still holds any meaning.', 'Welcome to the Masonic Lodge of Tirisfal, $C. <She sweeps her hand to encompass the towering Gothic building>. This marvel is the epicenter of the Forsaken’s architectural and cultural revolution. A beacon of hope… if that word still holds any meaning.', 0, 0, 1),
+(85207, '<She replies with a sharp nod; the rag of her tongue swings like the pendulum of a clock.>$b$bBrill is the cradle of our vision. We began by restoring the town hall and the inn. A building here, another there… The Scourge, as you know, tore Lordaeron to shreds; most of the town was nothing but staggering ruins when we arrived. Yet where others saw tragic wreckage, we saw opportunity.$b$bThe Dark Lady seeks a divorce. We are not human, no longer. Clinging to the memory of what our lives once were is a trap, a way of delaying the pain of facing our true nature. The Brill of old was a village like any other. The Brill we are building now… is a sculpted work. A hymn to the Gothic and decrepit spirit of the Forsaken.$b$bWe want to restore dignity to our people. To do more with our freedom than crawl through the ruins of the past as if nothing had changed.$b$bBecause everything has changed.', '<She replies with a sharp nod; the rag of her tongue swings like the pendulum of a clock.>$b$bBrill is the cradle of our vision. We began by restoring the town hall and the inn. A building here, another there… The Scourge, as you know, tore Lordaeron to shreds; most of the town was nothing but staggering ruins when we arrived. Yet where others saw tragic wreckage, we saw opportunity.$b$bThe Dark Lady seeks a divorce. We are not human, no longer. Clinging to the memory of what our lives once were is a trap, a way of delaying the pain of facing our true nature. The Brill of old was a village like any other. The Brill we are building now… is a sculpted work. A hymn to the Gothic and decrepit spirit of the Forsaken.$b$bWe want to restore dignity to our people. To do more with our freedom than crawl through the ruins of the past as if nothing had changed.$b$bBecause everything has changed.', 0, 0, 1);
 
-DELETE FROM `gossip_menu` WHERE `MenuID` = 932415;
+DELETE FROM `gossip_menu` WHERE `MenuID` IN (932415, 932416, 932417);
 INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
 VALUES
-(932415, 85157);
+(932415, 85157),
+(932416, 85206),
+(932417, 85207);
 
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 932415;
+DELETE FROM `gossip_menu_option` WHERE `MenuID` IN (932415, 932416);
 INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`)
 VALUES
-(932415, 0, 0, '<Stay a while and listen.>', 0, 1, 1, 0, 0, 0, 0, '', 0);
+(932415, 0, 0, '<Stay a while and listen.>', 0, 1, 1, 0, 0, 0, 0, '', 0),
+(932416, 0, 0, 'What is your vision for Brill?', 0, 1, 1, 932417, 0, 0, 0, '', 0);
 
 DELETE FROM `conditions` WHERE `SourceGroup` = 932415 AND `SourceTypeOrReferenceId` IN (14, 15);
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`)
@@ -173,13 +183,15 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 5. Spawns
 -- ---------------------------------------------------------------------------
-DELETE FROM `creature` WHERE `guid` IN (9010350, 9010351, 9010352, 9010353, 9010360, 9010361, 9010362, 9010363, 9010364, 9010365, 9010366, 9010367, 9010368, 9010369, 9010370, 9010371, 9010372, 9010373, 9010374, 9010375, 9010376, 9010377, 9010380, 9010381, 9010382, 9010383, 9010384, 9010385, 9010386, 9010387, 9010388, 9010389, 9010390, 9010391, 9010392, 9010393, 9010394, 9010395, 9010396, 9010397, 9010398, 9010399, 9010400, 9010401, 9010402, 9010403, 9010404, 9010410, 9010411, 9010412, 9010413, 9010414, 9010415, 9010416, 9010417, 9010418, 9010419, 9010420, 9010421, 9010422, 9010423, 9010424, 9010425, 9010426, 9010427) OR `guid` BETWEEN 9010350 AND 9010599;
+DELETE FROM `creature` WHERE `guid` IN (9010350, 9010351, 9010352, 9010353, 9010354, 9010355, 9010360, 9010361, 9010362, 9010363, 9010364, 9010365, 9010366, 9010367, 9010368, 9010369, 9010370, 9010371, 9010372, 9010373, 9010374, 9010375, 9010376, 9010377, 9010380, 9010381, 9010382, 9010383, 9010384, 9010385, 9010386, 9010387, 9010388, 9010389, 9010390, 9010391, 9010392, 9010393, 9010394, 9010395, 9010396, 9010397, 9010398, 9010399, 9010400, 9010401, 9010402, 9010403, 9010404, 9010410, 9010411, 9010412, 9010413, 9010414, 9010415, 9010416, 9010417, 9010418, 9010419, 9010420, 9010421, 9010422, 9010423, 9010424, 9010425, 9010426, 9010427) OR `guid` BETWEEN 9010350 AND 9010599;
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
 (9010350, 162843, 0, 0, 0, 1, 1, 0, 2258.22, 407.96, 35.525, 2.48, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: ST8722, the 1660050/1660051 turn-in point in the ruined-building lab, working at the alchemy table'),
 (9010351, 162844, 0, 0, 0, 1, 1, 1, 2247.63, 326.61, 35.188, 2.44, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: ST8723, the 1660052/1660053 turn-in point in the Masons'' Lodge, facing the door'),
 (9010352, 162847, 0, 0, 0, 1, 1, 0, 2192.81, 333.04, 34.673, 4.46, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: Questie point behind the lectern of the Forsaken chapel, facing the pews'),
 (9010353, 162857, 0, 0, 0, 1, 1, 1, 2283.18, 1.8, 35.838, 5.79, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: ST8724, the 1660052 objective point on the prison HQ upper floor, by his table'),
+(9010354, 162845, 0, 0, 0, 1, 1, 0, 2252, 330.5, 35.188, 3.65, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: Masons'' Lodge hall by the west bookshelf, greeting visitors from the door'),
+(9010355, 162846, 0, 0, 0, 1, 1, 0, 2255, 322.5, 35.188, 2.63, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: Masons'' Lodge hall by the east bookshelves, facing Delcard'),
 (9010380, 162854, 0, 0, 0, 1, 1, 1, 2307.6, -3.55, 22.891, 1.57, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: Questie point on the dock head below the HQ'),
 (9010381, 162853, 0, 0, 0, 1, 1, 1, 2300.37, -52.79, 22.891, 1.2, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: Questie point on the south dock under the tent pavilion'),
 (9010382, 162853, 0, 0, 0, 1, 1, 1, 2295, -30, 22.891, 1.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: dock walk by the excavation tents'),

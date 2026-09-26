@@ -1,6 +1,7 @@
 -- Conquest of Azeroth: Tirisfal Glades quest map markers (WorldMapAreaId 20).
 -- Turn-in and objective markers follow the enders and objects the Tirisfal files moved; new CoA quests
--- get a turn-in marker at their QuestSuperTrack turn-in point. Exact keys only; re-applying is a no-op.
+-- get a turn-in marker at their QuestSuperTrack turn-in point, and 1660053 an objective marker over its
+-- camp. Exact keys only; re-applying is a no-op.
 -- Not marked: 1660054 Stay a While: no QuestSuperTrack turn-in point. 6395 turn-in: its QuestSuperTrack turn-in
 --   (1086) is on map 1; the stock marker at Elreth stays. 9302412, 9302413 (migration 09): no QuestSuperTrack
 --   point.
@@ -81,3 +82,22 @@ VALUES
 (254056, 0, 0, 2489, -393),
 (254057, 0, 0, 2489, -393),
 (254064, 0, 0, 2656, 1046);
+
+-- ---------------------------------------------------------------------------
+-- 4. Objective markers for new CoA quests
+-- ---------------------------------------------------------------------------
+-- 1660053 Scarlet Correspondence: the Rosewalk Scarlet camp, outline of the 15 Questie Scarlet points.
+DELETE FROM `quest_poi` WHERE (`QuestID`, `id`) IN (
+    (1660053, 1));
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`)
+VALUES
+(1660053, 1, 0, 0, 20, 0, 0, 1);
+DELETE FROM `quest_poi_points` WHERE (`QuestID`, `Idx1`) IN (
+    (1660053, 1));
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`)
+VALUES
+(1660053, 1, 0, 2397, 160),
+(1660053, 1, 1, 2421, 96),
+(1660053, 1, 2, 2490, 164),
+(1660053, 1, 3, 2420, 203),
+(1660053, 1, 4, 2414, 202);
