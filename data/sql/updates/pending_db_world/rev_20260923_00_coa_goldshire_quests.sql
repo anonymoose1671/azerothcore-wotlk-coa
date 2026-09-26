@@ -23,7 +23,8 @@
 --   credits  the Mirror Shard and Kobold Warren objects credit their hidden markers when used, then
 --     despawn until they respawn. 'Stay a While' credits from a gossip option shown only during the quest;
 --     no source keeps the lecture itself.
---   dialogue  the greetings of Aliscar Lend (85190) and the mayor (85163, 85164) are from the cache.
+--   dialogue  the greetings of Aliscar Lend (85190) and the mayor (85163, 85164) are from the cache, as
+--     is the projection's (85160, linked to it by its words about the view from the arch: INFERRED).
 --
 -- Spawn guid blocks: creature 9002000-9002199, gameobject 7911000-7911199.
 
@@ -52,7 +53,7 @@ VALUES
 (162822, 'Goldshire Farmer', NULL, 6, 6, 0, 12, 0, 0, 1, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0, 0, 0),
 (162823, 'Goldshire Farmer', NULL, 6, 6, 0, 12, 0, 0, 1, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0, 0, 0),
 (162824, 'Goldshire Farmer', NULL, 6, 6, 0, 12, 0, 0, 1, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0, 0, 0),
-(162943, 'Arcane Projection of Aliscar', NULL, 12, 12, 0, 35, 0, 0, 8, 0, 7, 0, '', 0, 1, 1, 1, 1, 0, 162921, 0),
+(162943, 'Arcane Projection of Aliscar', NULL, 12, 12, 0, 35, 1, 0, 8, 0, 7, 0, '', 0, 1, 1, 1, 1, 0, 162921, 85160),
 (162920, '[TG] kharanos hops', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
 (162921, '[KC] Listen to Aliscar Lend', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
 (162940, '[KC] Kobold Warren Destroyed', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0)
@@ -110,16 +111,18 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 2. Dialogue
 -- ---------------------------------------------------------------------------
-DELETE FROM `npc_text` WHERE `ID` IN (85163, 85164, 85190);
+DELETE FROM `npc_text` WHERE `ID` IN (85160, 85163, 85164, 85190);
 INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `lang0`, `Probability0`)
 VALUES
+(85160, 'Best views in all Goldshire, believe me! Well… except for the town hall clock tower.', 'Best views in all Goldshire, believe me! Well… except for the town hall clock tower.', 0, 1),
 (85163, '<The mayor can’t help the flicker of a smile when his eyes meet Thalira Conacher’s across the great hall.>', '<The mayor can’t help the flicker of a smile when his eyes meet Thalira Conacher’s across the great hall.>', 0, 1),
 (85164, 'The kingdom is divided into provinces, which in turn are divided into smaller territories. There’s still a feudal administration, with various noble families heading each region, but all are subordinate to the authority of the crown.$b$bThis part of Elwynn belongs to the Bruck family’s estate, on whose behalf I serve as mayor. While the Brucks enjoy the well-earned comforts of their centuries-old manor, I handle Goldshire’s governance and justice in accordance with their wisdom and the laws of the realm.$b$bOther noble families in Elwynn, like the Spada, Herbad, Locker, or Feandor, limit themselves to managing their holdings and properties, or what remains of them. Many have little left of nobility but the title.', 'The kingdom is divided into provinces, which in turn are divided into smaller territories. There’s still a feudal administration, with various noble families heading each region, but all are subordinate to the authority of the crown.$b$bThis part of Elwynn belongs to the Bruck family’s estate, on whose behalf I serve as mayor. While the Brucks enjoy the well-earned comforts of their centuries-old manor, I handle Goldshire’s governance and justice in accordance with their wisdom and the laws of the realm.$b$bOther noble families in Elwynn, like the Spada, Herbad, Locker, or Feandor, limit themselves to managing their holdings and properties, or what remains of them. Many have little left of nobility but the title.', 0, 1),
 (85190, 'Welcome, $C.$b$bMy name is Aliscar Lend; mage, sorcerer, and public advisor for Goldshire.', 'Welcome, $C.$b$bMy name is Aliscar Lend; mage, sorcerer, and public advisor for Goldshire.', 0, 1);
 
-DELETE FROM `gossip_menu` WHERE `MenuID` IN (85163, 85164, 85190);
+DELETE FROM `gossip_menu` WHERE `MenuID` IN (85160, 85163, 85164, 85190);
 INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
 VALUES
+(85160, 85160),
 (85163, 85163),
 (85164, 85164),
 (85190, 85190);

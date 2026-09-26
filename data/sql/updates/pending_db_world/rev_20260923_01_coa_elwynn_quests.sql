@@ -10,6 +10,7 @@
 --     Cache, one Mirror Lake Harvest, the Crocolisk Egg) and the archive atlas (one Harvest, one crate of
 --     Stolen Goods); the rest are placed by hand at a named landmark, each on the server floor.
 --   quest givers  SOURCED where the quest text names them; the rest INFERRED from the voice of the text.
+--   Esyra's greeting  npccache 4000. Supply Run follows Remy's Gold Dust Exchange (INFERRED from its text).
 --   new NPCs  Guard Jacob, Esyra and Sinter Wive come from the creature cache. Agent Serina Vale (996114 in
 --     Goldshire, 996115 at the Bastion) is in no source; two entries keep each copy's quests apart. Displays
 --     the client cannot resolve use stock stand-ins. Givers and enders stand at their QuestSuperTrack
@@ -21,7 +22,7 @@
 --   credits  Slimy Solution: the vial spell hitting a murloc corpse credits it and removes the corpse;
 --     a condition refuses the vial on a living murloc, as its spell description says (corpse only).
 --     Unexpected Results: the enchanted fragment credits once per beast per ten minutes. Final Dig: a new
---     gossip option on Innkeeper Farley, shown only with the quest, gives him away; the line is authored.
+--     gossip option on Innkeeper Farley, shown only with the quest, gives him away (option and line INFERRED).
 --   not restored  quests 254039 and 254040 are in no source, so 254041 and 254095 follow 254038 directly.
 --
 -- Spawn guid blocks: creature 9002200-9002599, gameobject 7911200-7911599. Quest 17005 starts from the
@@ -30,18 +31,18 @@
 -- ---------------------------------------------------------------------------
 -- 1. Creatures
 -- ---------------------------------------------------------------------------
-INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `rank`, `unit_class`, `unit_flags`, `type`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`)
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `rank`, `unit_class`, `unit_flags`, `type`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`, `gossip_menu_id`)
 VALUES
-(157000, 'Guard Jacob', NULL, 30, 30, 0, 12, 2, 0, 1, 0, 7, 0, '', 0, 1.36, 1, 1, 1, 0),
-(900017, 'Esyra', 'Apprentice of Azora', 10, 10, 0, 12, 2, 0, 8, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0),
-(996119, 'Defias Sentry', NULL, 9, 10, 0, 17, 0, 0, 1, 0, 7, 996119, '', 0, 0.92448, 1, 1, 1, 0),
-(996114, 'Agent Serina Vale', NULL, 20, 20, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 1, 1, 1, 1, 0),
-(996115, 'Agent Serina Vale', NULL, 20, 20, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 1, 1, 1, 1, 0),
-(764542, 'Sinter Wive', NULL, 15, 15, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 1, 1, 1, 1, 0),
-(300220, '[KC] Slimy Murloc Spittle', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(996120, '[KC] Find the Mole', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(996121, '[KC] Test Minerals Potency', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130)
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`);
+(157000, 'Guard Jacob', NULL, 30, 30, 0, 12, 2, 0, 1, 0, 7, 0, '', 0, 1.36, 1, 1, 1, 0, 0),
+(900017, 'Esyra', 'Apprentice of Azora', 10, 10, 0, 12, 3, 0, 8, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0, 4000),
+(996119, 'Defias Sentry', NULL, 9, 10, 0, 17, 0, 0, 1, 0, 7, 996119, '', 0, 0.92448, 1, 1, 1, 0, 0),
+(996114, 'Agent Serina Vale', NULL, 20, 20, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 1, 1, 1, 1, 0, 0),
+(996115, 'Agent Serina Vale', NULL, 20, 20, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 1, 1, 1, 1, 0, 0),
+(764542, 'Sinter Wive', NULL, 15, 15, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 1, 1, 1, 1, 0, 0),
+(300220, '[KC] Slimy Murloc Spittle', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(996120, '[KC] Find the Mole', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(996121, '[KC] Test Minerals Potency', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0)
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `gossip_menu_id` = VALUES(`gossip_menu_id`);
 
 DELETE FROM `creature_template_model` WHERE `CreatureID` IN (157000, 300220, 764542, 900017, 996114, 996115, 996119, 996120, 996121);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
@@ -63,6 +64,16 @@ VALUES
 
 UPDATE `creature_template` SET `npcflag` = `npcflag` | 2 WHERE `entry` IN (250, 66, 11916, 955, 958, 11072);
 UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN (118, 822);
+
+DELETE FROM `npc_text` WHERE `ID` = 4000;
+INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `lang0`, `Probability0`)
+VALUES
+(4000, 'Oh! Hello! You must be an adventurer, right? That’s so exciting! I’ve been helping out here at the Tower of Azora, just an apprentice really, but I finally got assigned some real tasks!     I can’t leave the grounds yet, but maybe you can help me with them?', 'Oh! Hello! You must be an adventurer, right? That’s so exciting! I’ve been helping out here at the Tower of Azora, just an apprentice really, but I finally got assigned some real tasks!     I can’t leave the grounds yet, but maybe you can help me with them?', 0, 1);
+
+DELETE FROM `gossip_menu` WHERE `MenuID` = 4000;
+INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
+VALUES
+(4000, 4000);
 
 -- ---------------------------------------------------------------------------
 -- 2. World objects
@@ -117,7 +128,7 @@ VALUES
 (17007, 0, 0, 17006, 1, 0),
 (17008, 0, 0, 0, 0, 0),
 (100071, 0, 0, 0, 0, 0),
-(100073, 0, 0, 0, 0, 0),
+(100073, 0, 0, 47, 0, 0),
 (100074, 0, 0, 0, 1, 0),
 (254038, 0, 0, 0, 0, 0),
 (254041, 0, 0, 254038, 0, 0),
@@ -462,7 +473,7 @@ VALUES
 DELETE FROM `creature_text` WHERE `CreatureID` = 295 AND `GroupID` = 2;
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Language`, `Probability`, `comment`)
 VALUES
-(295, 2, 0, 'Defias? Never had any dealings with... well, not since the old masons'' guild days. Can I get you anything else?', 12, 0, 100, 'Innkeeper Farley - gives himself away (authored, no source)');
+(295, 2, 0, 'Defias? Never had any dealings with... well, not since the old masons'' guild days. Can I get you anything else?', 12, 0, 100, 'Innkeeper Farley - gives himself away (INFERRED)');
 
 DELETE FROM `gossip_menu_option` WHERE `MenuID` = 1291 AND `OptionID` = 4;
 INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`)
