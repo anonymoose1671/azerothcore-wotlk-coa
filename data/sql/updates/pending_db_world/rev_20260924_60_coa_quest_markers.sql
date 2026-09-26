@@ -18,13 +18,17 @@
 --     WorldMapAreaId (same zone map).
 --   objective moves (2)  SOURCED-CLIENT: QuestSuperTrack objective point; DERIVED: the only source of the item (a
 --     chest or a vendor) moved with a verified building transform.
---   turn-in adds (154 quests)  SOURCED-CLIENT: CoA quests with no quest_poi row at all get one turn-in marker at
+--   turn-in adds (155 quests)  SOURCED-CLIENT: CoA quests with no quest_poi row at all get one turn-in marker at
 --     the QuestSuperTrack turn-in point, where their ender's spawn stands (0.0-1.6 yd). The new row is
 --     (ObjectiveIndex -1, Floor 0, Priority 0, Flags 1), the most common stock turn-in pattern; poi id 0 because
 --     the quest has no other POI.
 --   WorldMapAreaId  INFERRED: the stock convention of the area (the parent zone map), like the 301 existing rows
 --     in CoA's starting zones. CoA also has its own starting-zone maps (WorldMapArea 1237-1244); whether the
 --     client shows parent-zone markers on them is open (research Q1).
+--   turn-ins at the ender (10 quests)  DERIVED: quests with no QuestSuperTrack turn-in whose ender is far from the
+--     giver, hand-placed or out of sight (user decision 2026-09-26): the same row pattern at the ender's spawn
+--     (within 1 yd). 254108's objective: its QuestSuperTrack point carried through the inn transform (DERIVED,
+--     D6), poi id 0 with the turn-in as poi id 1 (the stock order).
 --   quest_template POIx/POIy  SOURCED-CORE: only copied into the quest query (QuestDef.cpp:486-489) and read by no
 --     CoA interface file. Of the quests here only 135 has a value (-8752, 384), which is not the old marker point,
 --     so none is stale and none is changed.
@@ -49,11 +53,12 @@
 --     are stock data).
 --   - Objective markers whose QuestSuperTrack point has no source spawn near it or would only add a second blob
 --     (167, 168, 176, 387, 434, 489, 543, 932, 2746, 17001, 254108).
---   - 179 quests with no turn-in marker and no sourced turn-in point (175 CoA class-trainer quests in the
---     capitals, Ammen Vale and Sunstrider Isle, 254041, 254108, 1660075, 1660080), and 45 sourced objective
---     markers for CoA quests that have none (research table B2): this file adds turn-in markers only.
+--   - CoA quests with no sourced turn-in point and a nearby ender (the capital class-trainer quests, the Ammen
+--     Vale and other Sunstrider Isle letters; Kuroth in the Sacred Grove stays unmarked on purpose), and 45
+--     sourced objective markers for CoA quests that have none (research table B2): this file adds turn-in markers
+--     only.
 --
--- Counts: 50 turn-in markers and 2 objective markers moved; 154 quest_poi rows and 154 quest_poi_points rows added.
+-- Counts: 50 turn-in markers and 2 objective markers moved; 166 quest_poi rows and as many quest_poi_points rows added.
 -- Exact-key updates and deletes only; re-applying the file is a no-op. It runs after every other pending file.
 
 -- ---------------------------------------------------------------------------
@@ -297,6 +302,7 @@ UPDATE `quest_poi_points` SET `X` = -9478, `Y` = -26 WHERE `QuestID` = 116 AND `
 --   254038 Start Digging: Agent Serina Vale 996115, QuestSuperTrack 8463
 --   254095 Arcane Insight: Theocritus 313, QuestSuperTrack 8489
 --   254098 Mixed Reagents: Dawn Brightstar 958, QuestSuperTrack 8501
+--   254099 Test the Mix: Theocritus 313, QuestSuperTrack 8502
 --   254106 Enchant the Mineral: Kitta Firewind 11072, QuestSuperTrack 8506
 --   254107 Unexpected Results: Agent Serina Vale 996114, QuestSuperTrack 8513
 --   1660000 Bookworm: Moroi Spada 161701, QuestSuperTrack 8641
@@ -359,15 +365,15 @@ DELETE FROM `quest_poi` WHERE (`QuestID`, `id`) IN (
     (53007, 0), (53008, 0), (53009, 0), (53010, 0), (53011, 0), (53012, 0), (53013, 0), (53014, 0), (53015, 0),
     (53017, 0), (53201, 0), (55101, 0), (55102, 0), (55103, 0), (55104, 0), (55105, 0), (55106, 0), (55107, 0),
     (55108, 0), (100071, 0), (100073, 0), (100074, 0), (200107, 0), (254000, 0), (254001, 0), (254002, 0),
-    (254003, 0), (254004, 0), (254038, 0), (254051, 0), (254095, 0), (254098, 0), (254106, 0), (254107, 0),
-    (500005, 0), (500006, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0), (650146, 0),
-    (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0), (650154, 0),
-    (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0), (1660002, 0),
-    (1660003, 0), (1660004, 0), (1660005, 0), (1660006, 0), (1660007, 0), (1660008, 0), (1660009, 0), (1660010,
-    0), (1660011, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015, 0), (1660016, 0), (1660017, 0),
-    (1660038, 0), (1660039, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0), (1660058, 0), (1660059,
-    0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660076, 0), (1660077, 0),
-    (1660078, 0), (1660079, 0), (1660085, 0));
+    (254003, 0), (254004, 0), (254038, 0), (254051, 0), (254095, 0), (254098, 0), (254099, 0), (254106, 0),
+    (254107, 0), (500005, 0), (500006, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0),
+    (650146, 0), (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0),
+    (650154, 0), (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0),
+    (1660002, 0), (1660003, 0), (1660004, 0), (1660005, 0), (1660006, 0), (1660007, 0), (1660008, 0), (1660009,
+    0), (1660010, 0), (1660011, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015, 0), (1660016, 0),
+    (1660017, 0), (1660038, 0), (1660039, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0), (1660058,
+    0), (1660059, 0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660076, 0),
+    (1660077, 0), (1660078, 0), (1660079, 0), (1660085, 0));
 INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`)
 VALUES
 (17000, 0, -1, 0, 30, 0, 0, 1),
@@ -465,6 +471,7 @@ VALUES
 (254051, 0, -1, 0, 35, 0, 0, 1),
 (254095, 0, -1, 0, 30, 0, 0, 1),
 (254098, 0, -1, 0, 30, 0, 0, 1),
+(254099, 0, -1, 0, 30, 0, 0, 1),
 (254106, 0, -1, 0, 30, 0, 0, 1),
 (254107, 0, -1, 0, 30, 0, 0, 1),
 (500005, 0, -1, 0, 27, 0, 0, 1),
@@ -535,15 +542,15 @@ DELETE FROM `quest_poi_points` WHERE (`QuestID`, `Idx1`) IN (
     (53007, 0), (53008, 0), (53009, 0), (53010, 0), (53011, 0), (53012, 0), (53013, 0), (53014, 0), (53015, 0),
     (53017, 0), (53201, 0), (55101, 0), (55102, 0), (55103, 0), (55104, 0), (55105, 0), (55106, 0), (55107, 0),
     (55108, 0), (100071, 0), (100073, 0), (100074, 0), (200107, 0), (254000, 0), (254001, 0), (254002, 0),
-    (254003, 0), (254004, 0), (254038, 0), (254051, 0), (254095, 0), (254098, 0), (254106, 0), (254107, 0),
-    (500005, 0), (500006, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0), (650146, 0),
-    (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0), (650154, 0),
-    (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0), (1660002, 0),
-    (1660003, 0), (1660004, 0), (1660005, 0), (1660006, 0), (1660007, 0), (1660008, 0), (1660009, 0), (1660010,
-    0), (1660011, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015, 0), (1660016, 0), (1660017, 0),
-    (1660038, 0), (1660039, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0), (1660058, 0), (1660059,
-    0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660076, 0), (1660077, 0),
-    (1660078, 0), (1660079, 0), (1660085, 0));
+    (254003, 0), (254004, 0), (254038, 0), (254051, 0), (254095, 0), (254098, 0), (254099, 0), (254106, 0),
+    (254107, 0), (500005, 0), (500006, 0), (650141, 0), (650142, 0), (650143, 0), (650144, 0), (650145, 0),
+    (650146, 0), (650147, 0), (650148, 0), (650149, 0), (650150, 0), (650151, 0), (650152, 0), (650153, 0),
+    (650154, 0), (650155, 0), (650156, 0), (650157, 0), (650158, 0), (650159, 0), (1660000, 0), (1660001, 0),
+    (1660002, 0), (1660003, 0), (1660004, 0), (1660005, 0), (1660006, 0), (1660007, 0), (1660008, 0), (1660009,
+    0), (1660010, 0), (1660011, 0), (1660012, 0), (1660013, 0), (1660014, 0), (1660015, 0), (1660016, 0),
+    (1660017, 0), (1660038, 0), (1660039, 0), (1660040, 0), (1660055, 0), (1660056, 0), (1660057, 0), (1660058,
+    0), (1660059, 0), (1660060, 0), (1660071, 0), (1660072, 0), (1660073, 0), (1660074, 0), (1660076, 0),
+    (1660077, 0), (1660078, 0), (1660079, 0), (1660085, 0));
 INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`)
 VALUES
 (17000, 0, 0, -10005, 53),
@@ -641,6 +648,7 @@ VALUES
 (254051, 0, 0, -5201, -3522),
 (254095, 0, 0, -9553, -728),
 (254098, 0, 0, -9541, -717),
+(254099, 0, 0, -9553, -728),
 (254106, 0, 0, -9576, -718),
 (254107, 0, 0, -9451, 80),
 (500005, 0, 0, -5765, -1275),
@@ -700,3 +708,52 @@ VALUES
 (1660078, 0, 0, -5712, -604),
 (1660079, 0, 0, -5641, -622),
 (1660085, 0, 0, 10376, 745);
+
+-- ---------------------------------------------------------------------------
+-- 4. Markers at the ender or the moved objective (no current QuestSuperTrack point)
+-- ---------------------------------------------------------------------------
+--   53016 Spirit Fetish: turn-in at Shadow-Walker Voss 9300251 (Tirisfal Glades, hand-placed trainer)
+--   55100 Seared Tome: turn-in at Apprentice Yahk Loregrain 503403 (Mulgore, hand-placed trainer)
+--   55109 Sacred Oath: turn-in at Jax Dawnsoar 9300300 (Mulgore, hand-placed trainer)
+--   55110 Plains Hunter Guide: turn-in at Nawat Windhorn 9300301 (Mulgore, hand-placed trainer)
+--   254041 Report To The General: turn-in at General Marcus Jonathan 466 (Stormwind City, Stormwind Keep)
+--   254108 Final Dig: turn-in at Agent Serina Vale 996114 (Elwynn Forest, Goldshire)
+--   1660075 Stay a While: turn-in at Alenna Whisperbough 162881 (Teldrassil, Dolanaar)
+--   1660080 Stay a While: turn-in at Gravedigger Nonuid 162901 (Dun Morogh, Kharanos)
+--   9302123 Bone-Bound Codex: turn-in at Morthalis Gravewhisper 9300473 (Eversong Woods, 305 yd from the start)
+--   9302125 Whispering Parchment: turn-in at Zaelith Shadowmoor 9300475 (Eversong Woods, 283 yd from the start)
+--   254108 objective 0: Find the Mole in the Lion's Pride Inn: QuestSuperTrack 8514 (-9467.77, 14.56, r 25) is
+--     the stock inn spot; through the inn transform (DISCOVERIES D6) it is (-9485.7, -20.3), 5 yd from Innkeeper
+--     Farley
+DELETE FROM `quest_poi` WHERE (`QuestID`, `id`) IN (
+    (53016, 0), (55100, 0), (55109, 0), (55110, 0), (254041, 0), (254108, 0), (254108, 1), (1660075, 0),
+    (1660080, 0), (9302123, 0), (9302125, 0));
+INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`)
+VALUES
+(53016, 0, -1, 0, 20, 0, 0, 1),
+(55100, 0, -1, 1, 9, 0, 0, 1),
+(55109, 0, -1, 1, 9, 0, 0, 1),
+(55110, 0, -1, 1, 9, 0, 0, 1),
+(254041, 0, -1, 0, 301, 0, 0, 1),
+(254108, 0, 0, 0, 30, 0, 0, 1),
+(254108, 1, -1, 0, 30, 0, 0, 1),
+(1660075, 0, -1, 1, 41, 0, 0, 1),
+(1660080, 0, -1, 0, 27, 0, 0, 1),
+(9302123, 0, -1, 530, 462, 0, 0, 1),
+(9302125, 0, -1, 530, 462, 0, 0, 1);
+DELETE FROM `quest_poi_points` WHERE (`QuestID`, `Idx1`) IN (
+    (53016, 0), (55100, 0), (55109, 0), (55110, 0), (254041, 0), (254108, 0), (254108, 1), (1660075, 0),
+    (1660080, 0), (9302123, 0), (9302125, 0));
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`)
+VALUES
+(53016, 0, 0, 1836, 1599),
+(55100, 0, 0, -2903, -260),
+(55109, 0, 0, -2921, -279),
+(55110, 0, 0, -2905, -204),
+(254041, 0, 0, -8954, 521),
+(254108, 0, 0, -9486, -20),
+(254108, 1, 0, -9451, 80),
+(1660075, 0, 0, 9831, 792),
+(1660080, 0, 0, -5603, -605),
+(9302123, 0, 0, 10046, -6325),
+(9302125, 0, 0, 10213, -6110);
