@@ -102,9 +102,8 @@ VALUES
 (600636, 5, 63383, 'Cauldron Prop', '', '', 1.42242, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (174, 5, 166, 'Common Anvil', '', '', 2, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (520048, 5, 515675, 'Sturdy Arrow PROP', '', 'Looting', 0.1, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(520061, 5, 352, 'Casket Lid Prop', '', 'Looting', 1, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(754162, 5, 1025463, 'Eroded Sigil Stone', '', 'Looting', 0.1, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(523523, 5, 406, 'Ancient Statuette', '', '', 8, '', 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+(523523, 5, 406, 'Ancient Statuette', '', '', 8, '', 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(9303400, 10, 6479, 'Old Digging Shovel', '', '', 1, 'SmartGameObjectAI', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `IconName` = VALUES(`IconName`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `AIName` = VALUES(`AIName`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`);
 
 -- The cellar door is locked like stock key doors; the quest objects are usable only while needed.
@@ -319,7 +318,7 @@ VALUES
 
 DELETE FROM `creature_addon` WHERE `guid` BETWEEN 9010000 AND 9010349;
 
-DELETE FROM `gameobject` WHERE `guid` IN (7916000, 7916001, 7916002, 7916003, 7916004, 7916005, 7916006, 7916007, 7916008, 7916010, 7916011, 7916012, 7916013, 7916014, 7916015, 7916016, 7916017, 7916018) OR `guid` BETWEEN 7916000 AND 7916119;
+DELETE FROM `gameobject` WHERE `guid` IN (7916000, 7916001, 7916002, 7916003, 7916004, 7916005, 7916006, 7916007, 7916008, 7916010, 7916011, 7916012, 7916013, 7916014, 7916015, 7916018, 7916019) OR `guid` BETWEEN 7916000 AND 7916119;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
 (7916000, 2300540, 0, 0, 0, 1, 1, 1767.97, 1974.13, 124.202, 4.38, 0, 0, 0.814341, -0.580387, 60, 100, 1, '', 'CoA Cain estate: ST8679, Mother''s niche; along the wall'),
@@ -331,24 +330,23 @@ VALUES
 (7916006, 2300529, 0, 0, 0, 1, 1, 1921.2, 1931.49, 154.155, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Cain estate: ST8700, south room floor'),
 (7916007, 2300530, 0, 0, 0, 1, 1, 1924.93, 1955.26, 177.579, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Cain estate: ST8701, on the top floor round table'),
 (7916008, 2300531, 0, 0, 0, 1, 1, 1939.4, 1945.25, 176.445, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Cain estate: ST8702, on the roof'),
+(7916019, 9303400, 0, 0, 0, 1, 1, 1940, 1961, 148.651, 0.35, 0, 0, 0.174108, 0.984727, 60, 100, 1, '', 'CoA Cain estate: cellar floor west of the stair foot; lifts a player locked below the door back to the ground floor'),
 (7916010, 600632, 0, 0, 0, 1, 1, 1659.56, 1687.91, 120.841, 5.62, 0, 0, 0.325549, -0.945525, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, beside Mordo; faces him'),
 (7916011, 600633, 0, 0, 0, 1, 1, 1659.31, 1692.19, 120.635, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, beside Mordo'),
 (7916012, 600636, 0, 0, 0, 1, 1, 1656.3, 1686.93, 119.953, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, beside Mordo'),
 (7916013, 191351, 0, 0, 0, 1, 1, 1659.34, 1691.34, 120.719, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, over the cistern'),
 (7916014, 174, 0, 0, 0, 1, 1, 1939.53, 1545.6, 90.165, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, abandoned smithy'),
 (7916015, 520048, 0, 0, 0, 1, 1, 1849.41, 1759.76, 137.669, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, western gully'),
-(7916016, 520061, 0, 0, 0, 1, 1, 1797.64, 1965.46, 156.301, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, crypt mouth'),
-(7916017, 754162, 0, 0, 0, 1, 1, 1687.48, 1548.33, 124.757, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, on the mausoleum'),
 (7916018, 523523, 0, 0, 0, 1, 1, 2196.577, 1452.045, 87.955, 0, 0, 0, 0, 1, 300, 100, 1, '', 'CoA Deathknell prop: atlas point, east road');
 
 -- ---------------------------------------------------------------------------
 -- 6. Scripts
 -- ---------------------------------------------------------------------------
 -- Each remains summons its spirit at the player who prayed, and the spirit attacks that player; the remains
--- despawn for 60 s.
+-- despawn for 60 s. The cellar shovel returns a player locked below the door to the ground floor.
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161762, 161763, 161764, 161765) AND `source_type` = 0;
 
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300540, 2300541, 2300542, 2300543) AND `source_type` = 1;
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300540, 2300541, 2300542, 2300543, 9303400) AND `source_type` = 1;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (2300540, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 12, 161762, 1, 120000, 1, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Remains of Riscell''s relatives - On Use - Summon Mother'),
@@ -358,7 +356,8 @@ VALUES
 (2300542, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 12, 161764, 1, 120000, 1, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Remains of Riscell''s relatives - On Use - Summon Cousin Salem'),
 (2300542, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Remains of Riscell''s relatives - Linked - Despawn until it respawns'),
 (2300543, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 12, 161765, 1, 120000, 1, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Remains of Riscell''s relatives - On Use - Summon Uncle Abel'),
-(2300543, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Remains of Riscell''s relatives - Linked - Despawn until it respawns');
+(2300543, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Remains of Riscell''s relatives - Linked - Despawn until it respawns'),
+(9303400, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 1934.5, 1972, 156.64, 0.87, 'Old Digging Shovel - On Gossip Hello - Teleport to the manor ground floor');
 
 -- ---------------------------------------------------------------------------
 -- 7. Stock rows: Marla's Grave, the east slope and its turkeys
@@ -393,3 +392,4 @@ UPDATE `creature` SET `position_x` = 1931.45, `position_y` = 1688.03, `position_
 UPDATE `creature` SET `position_x` = 1936, `position_y` = 1542, `position_z` = 90.14 WHERE `guid` = 241974 AND `id` = 32820;
 UPDATE `creature` SET `position_x` = 1905.91, `position_y` = 1666.46, `position_z` = 83.728 WHERE `guid` = 242845 AND `id` = 32820;
 UPDATE `creature` SET `position_x` = 1960, `position_y` = 1604, `position_z` = 88.174 WHERE `guid` = 241984 AND `id` = 32820;
+UPDATE `creature` SET `position_x` = 1870, `position_y` = 1557, `position_z` = 93.207 WHERE `guid` = 242420 AND `id` = 32820;
