@@ -151,8 +151,8 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 4. Quests
 -- ---------------------------------------------------------------------------
--- Chains 254002 -> 254003 -> 254004 and 1660076 -> 1660077. 254004's RewardNextQuest stays 0 until
--- 254005 (Loch Modan) exists. The upsert leaves the POI columns to migration 60.
+-- Chains 254002 -> 254003 -> 254004 and 1660009 -> 1660076 -> 1660077. 254004's RewardNextQuest stays
+-- 0 until 254005 (Loch Modan) exists. The upsert leaves the POI columns to migration 60.
 INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `MinLevel`, `QuestSortID`, `QuestInfoID`, `SuggestedGroupNum`, `RequiredFactionId1`, `RequiredFactionId2`, `RequiredFactionValue1`, `RequiredFactionValue2`, `RewardNextQuest`, `RewardXPDifficulty`, `RewardMoney`, `RewardMoneyDifficulty`, `RewardDisplaySpell`, `RewardSpell`, `RewardHonor`, `RewardKillHonor`, `StartItem`, `Flags`, `RequiredPlayerKills`, `RewardItem1`, `RewardAmount1`, `RewardItem2`, `RewardAmount2`, `RewardItem3`, `RewardAmount3`, `RewardItem4`, `RewardAmount4`, `ItemDrop1`, `ItemDropQuantity1`, `ItemDrop2`, `ItemDropQuantity2`, `ItemDrop3`, `ItemDropQuantity3`, `ItemDrop4`, `ItemDropQuantity4`, `RewardChoiceItemID1`, `RewardChoiceItemQuantity1`, `RewardChoiceItemID2`, `RewardChoiceItemQuantity2`, `RewardChoiceItemID3`, `RewardChoiceItemQuantity3`, `RewardChoiceItemID4`, `RewardChoiceItemQuantity4`, `RewardChoiceItemID5`, `RewardChoiceItemQuantity5`, `RewardChoiceItemID6`, `RewardChoiceItemQuantity6`, `POIContinent`, `POIx`, `POIy`, `POIPriority`, `RewardTitle`, `RewardTalents`, `RewardArenaPoints`, `RewardFactionID1`, `RewardFactionValue1`, `RewardFactionOverride1`, `RewardFactionID2`, `RewardFactionValue2`, `RewardFactionOverride2`, `RewardFactionID3`, `RewardFactionValue3`, `RewardFactionOverride3`, `RewardFactionID4`, `RewardFactionValue4`, `RewardFactionOverride4`, `RewardFactionID5`, `RewardFactionValue5`, `RewardFactionOverride5`, `LogTitle`, `LogDescription`, `QuestDescription`, `AreaDescription`, `QuestCompletionLog`, `RequiredNpcOrGo1`, `RequiredNpcOrGo2`, `RequiredNpcOrGo3`, `RequiredNpcOrGo4`, `RequiredNpcOrGoCount1`, `RequiredNpcOrGoCount2`, `RequiredNpcOrGoCount3`, `RequiredNpcOrGoCount4`, `RequiredItemId1`, `RequiredItemId2`, `RequiredItemId3`, `RequiredItemId4`, `RequiredItemId5`, `RequiredItemId6`, `RequiredItemCount1`, `RequiredItemCount2`, `RequiredItemCount3`, `RequiredItemCount4`, `RequiredItemCount5`, `RequiredItemCount6`, `ObjectiveText1`, `ObjectiveText2`, `ObjectiveText3`, `ObjectiveText4`)
 VALUES
 (254003, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 254004, 2, 0, 67, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 3, 0, 54, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Old Mirsinth', 'Find the exiled Frostmane troll.', 'I saw a troll wanderin’ in the hills up between Brewnall and Kharanos, looked to be avodin’ the other trolls. Went near the cave of that yeti we’ve taken to callin’ Old Icebeard. Why? Well, he’s been there for a while, and his beard has ice in it.$B$BAnyways, your troll exile’s probably dead by now, Old Icebeard’s taken out some good dwarves in my time. I wouldn’t go near him personally, but if you’ve really gotta find that troll, just keep an eye out and stay clear of him. Got it? Rather not have your death on my conscience.', '', 'Find the exiled Frostmane troll', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', ''),
@@ -171,7 +171,7 @@ INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `PrevQ
 VALUES
 (254003, 0, 0, 254002, 0, 0),
 (254004, 0, 0, 254003, 0, 0),
-(1660076, 0, 0, 0, 0, 0),
+(1660076, 0, 0, 1660009, 0, 0),
 (1660077, 0, 0, 1660076, 0, 0),
 (1660078, 0, 0, 0, 0, 0),
 (1660079, 0, 0, 0, 1, 0),

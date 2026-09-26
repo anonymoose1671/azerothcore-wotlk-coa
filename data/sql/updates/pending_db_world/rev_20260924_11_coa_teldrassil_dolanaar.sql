@@ -300,7 +300,7 @@ DELETE FROM `quest_template_addon` WHERE `ID` IN (1660074, 1660075);
 INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `PrevQuestID`, `BreadcrumbForQuestId`, `ProvidedItemCount`, `SpecialFlags`)
 VALUES
 (1660074, 0, 0, 1660071, 0, 0, 0),
-(1660075, 0, 0, 0, 0, 0, 0);
+(1660075, 0, 0, 1660071, 0, 0, 0);
 
 DELETE FROM `quest_offer_reward` WHERE `ID` IN (1660074, 1660075);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)

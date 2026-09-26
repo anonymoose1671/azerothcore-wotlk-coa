@@ -42,6 +42,8 @@ UPDATE `quest_template` SET `RewardNextQuest` = 940 WHERE `ID` = 937;
 -- 2459 Ferocitas the Dream Eater: the jewel moves from item slot 3 to slot 1.
 UPDATE `quest_template` SET `RequiredItemId1` = 8050, `RequiredItemCount1` = 1, `RequiredItemId3` = 0, `RequiredItemCount3` = 0 WHERE `ID` = 2459;
 UPDATE `quest_poi` SET `ObjectiveIndex` = 4 WHERE `QuestID` = 2459 AND `id` = 3 AND `ObjectiveIndex` = 6;
+-- 2459 progress text: CoA's version adds a closing sentence (AscensionES archive pEN).
+UPDATE `quest_request_items` SET `CompletionText` = 'Ferocitas and the Gnarlpine Mystics must return what is mine. Please retrieve the emerald so that I may repair my emerald dreamcatcher.$B$BMake sure to take the gem out of that necklace first, I don''t need the rest of it.' WHERE `ID` = 2459;
 
 -- ---------------------------------------------------------------------------
 -- 2. Cave graveyards
