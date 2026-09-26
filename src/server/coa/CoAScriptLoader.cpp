@@ -237,7 +237,6 @@ void AddSC_AscensionBankVoucher();
 void AddSC_AscensionRunePouches();
 void AddSC_AscensionPrestigiousCache();
 void AddSC_AscensionCallboardCache();
-void AddSC_AscensionForgeCursor();
 void AddSC_AscensionFeatherOfAncients();
 void AddSC_AscensionVultureCultQuests();
 void AddSC_AscensionCaravanCarts();
@@ -482,7 +481,6 @@ void AddCoAScripts()
     AddSC_AscensionRunePouches();
     AddSC_AscensionPrestigiousCache();
     AddSC_AscensionCallboardCache();
-    AddSC_AscensionForgeCursor();
     AddSC_AscensionFeatherOfAncients();
     AddSC_AscensionVultureCultQuests();
     AddSC_AscensionCaravanCarts();

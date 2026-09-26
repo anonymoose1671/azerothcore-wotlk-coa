@@ -23,7 +23,6 @@ COA = 'src/server/coa/'
 COA_TESTS = 'apps/coa-tests/'
 NATIVE_DBC = 'src/server/shared/DataStores/'
 CONTENT = 'apps/coa-world-content/'
-ADDON = 'apps/coa-world-addon/'
 CONTROL_FILES = {'tools/check_source.py', 'tools/test_source.py', '.github/workflows/quality.yml'}
 SUITES = {
     'source-tools': {
@@ -59,10 +58,6 @@ SUITES = {
     'world-content': {
         'paths': [CONTENT + '*.py'],
         'commands': [[CONTENT + 'test_validate_content.py'], [CONTENT + 'test_archive.py']],
-    },
-    'world-addon': {
-        'paths': [ADDON + '*.py', ADDON + 'CoAForge/*.lua', ADDON + 'CoAForge/*.toc'],
-        'commands': [[ADDON + 'test_check_addon.py']],
     },
     'registrations': {
         'paths': [COA + '*.cpp', COA + '*.h', COA + 'CMakeLists.txt', 'src/server/apps/worldserver/Main.cpp',
