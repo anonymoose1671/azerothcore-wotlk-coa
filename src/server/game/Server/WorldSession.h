@@ -515,7 +515,7 @@ public:
     std::string const& GetRemoteAddress() { return m_Address; }
 
     // Set by WorldSocket: the connection uses the Ascension client protocol
-    // (loopback or AscensionCompat.AllowRemoteClients, and AscensionCompat.Enable).
+    // (loopback or CoA.AllowRemoteClients, and CoA.Enable).
     bool IsAscensionCompatEnabled() const { return _ascensionCompatEnabled; }
     void SetAscensionCompatEnabled(bool enabled) { _ascensionCompatEnabled = enabled; }
     void SetPlayer(Player* player);
@@ -578,8 +578,11 @@ public:
 
     //void SendTestCreatureQueryOpcode(uint32 entry, ObjectGuid guid, uint32 testvalue);
     void SendNameQueryOpcode(ObjectGuid guid);
+    void SendItemQuerySingleResponse(uint32 item);
 
-    void SendTrainerList(Creature* npc);
+    /// `onlyTrainable` leaves out the rows of the window the player cannot buy yet; see
+    /// Trainer::SendSpells.
+    void SendTrainerList(Creature* npc, bool onlyTrainable = false);
     void SendListInventory(ObjectGuid guid, uint32 vendorEntry = 0);
     void SendShowBank(ObjectGuid guid);
     bool CanOpenMailBox(ObjectGuid guid);
@@ -1240,6 +1243,11 @@ public:                                                 // opcodes handlers
     QueryCallbackProcessor& GetQueryProcessor() { return _queryProcessor; }
     TransactionCallback& AddTransactionCallback(TransactionCallback&& callback);
     SQLQueryHolderCallback& AddQueryHolderCallback(SQLQueryHolderCallback&& callback);
+
+    [[nodiscard]] bool HasPendingAsyncCallbacks() const
+    {
+        return !_queryProcessor.Empty() || !_transactionCallbacks.Empty() || !_queryHolderProcessor.Empty();
+    }
 
     void InitializeSession();
     void InitializeSessionCallback(CharacterDatabaseQueryHolder const& realmHolder, uint32 clientCacheVersion);

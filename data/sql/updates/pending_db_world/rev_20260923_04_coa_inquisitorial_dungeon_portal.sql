@@ -72,7 +72,7 @@ VALUES
 DELETE FROM `disables` WHERE `sourceType` = 8 AND `entry` = 936;
 INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, `comment`)
 VALUES
-(8, 936, 1, '', '', 'Vaults of the Inquisition - no Dungeon Finder until the instance is populated');
+(8, 936, 7, '', '', 'Vaults of the Inquisition - no Dungeon Finder until the instance is populated');
 
 DELETE FROM `game_graveyard` WHERE `ID` = 6074;
 INSERT INTO `game_graveyard` (`ID`, `Map`, `x`, `y`, `z`, `Comment`)

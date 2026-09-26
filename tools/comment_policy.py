@@ -6,9 +6,9 @@ import re
 import tokenize
 
 
-OWNED_ROOTS = ('modules/mod-ascension-compat/', 'apps/coa-dbc/', 'apps/coa-gameplay-test/',
+OWNED_ROOTS = ('src/server/coa/', 'apps/coa-tests/', 'apps/coa-bugreport/', 'apps/coa-dbc/', 'apps/coa-gameplay-test/',
                'apps/coa-mechanics/', 'apps/coa-world-content/',
-    'apps/coa-world-addon/', 'tools/', '.github/scripts/')
+               'apps/coa-world-addon/', 'tools/', '.github/scripts/')
 CPP_SUFFIXES = {'.c', '.cc', '.cpp', '.h', '.hpp'}
 CPP_PARTS = re.compile(
     r'(?P<raw>(?:u8|u|U|L)?R"(?P<delimiter>[^ ()\\\t\r\n]{0,16})\([\s\S]*?\)(?P=delimiter)")'
@@ -60,7 +60,7 @@ def cpp_comments(source, path):
             exemption = 'legal notice'
         elif CPP_TOOL_DIRECTIVE.fullmatch(text):
             exemption = 'tool directive'
-        elif str(path).startswith('modules/mod-ascension-compat/tests/') and HARNESS_MARKER.fullmatch(text):
+        elif str(path).startswith('apps/coa-tests/') and HARNESS_MARKER.fullmatch(text):
             exemption = 'test generator marker'
         start_line = source.count('\n', 0, match.start()) + 1
         found.append(Comment(match.start(), match.end(), start_line, start_line + text.count('\n'),

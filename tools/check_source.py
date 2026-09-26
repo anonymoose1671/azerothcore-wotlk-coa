@@ -19,15 +19,18 @@ from check_change_boundaries import ROOT, changed_paths
 GAMEPLAY = 'apps/coa-gameplay-test/'
 DBC = 'apps/coa-dbc/'
 MECHANICS = 'apps/coa-mechanics/'
+COA = 'src/server/coa/'
+COA_TESTS = 'apps/coa-tests/'
+NATIVE_DBC = 'src/server/shared/DataStores/'
 CONTENT = 'apps/coa-world-content/'
 ADDON = 'apps/coa-world-addon/'
-MODULE = 'modules/mod-ascension-compat/'
 CONTROL_FILES = {'tools/check_source.py', 'tools/test_source.py', '.github/workflows/quality.yml'}
 SUITES = {
     'source-tools': {
-        'paths': ['tools/check_*.py', 'tools/test_*.py', 'tools/comment_policy.py'],
+        'paths': ['tools/check_*.py', 'tools/test_*.py', 'tools/comment_policy.py', 'tools/verify_*.py',
+                  GAMEPLAY + 'batch.py', GAMEPLAY + 'catalog.py', GAMEPLAY + 'run.py'],
         'commands': [['tools/test_source.py'], ['tools/test_change_boundaries.py'], ['tools/test_registrations.py'],
-                     ['tools/test_comments.py']],
+                     ['tools/test_comments.py'], ['tools/test_verify_all.py']],
     },
     'codestyle': {
         'paths': ['apps/codestyle/*', '.editorconfig'],
@@ -38,17 +41,20 @@ SUITES = {
         'commands': [['.github/scripts/test_label_issues.py']],
     },
     'dbc': {
-        'paths': [DBC + '*.py', DBC + 'coa-dbc-viewer', DBC + 'viewer.html'],
+        'paths': [DBC + '*.py', DBC + 'coa-dbc-viewer', DBC + 'viewer.html',
+                  NATIVE_DBC + 'DBCStructure.h', NATIVE_DBC + 'DBCfmt.h'],
         'commands': [[DBC + 'test_client_dbc.py'], [DBC + 'test_inspector.py'], [DBC + 'test_capture_sql.py']],
     },
     'mechanics': {
-        'paths': [MECHANICS + '*.py', MECHANICS + '*.json', DBC + '*.py', GAMEPLAY + '*.py', GAMEPLAY + '*.json'],
+        'paths': [MECHANICS + '*.py', MECHANICS + '*.json', DBC + '*.py',
+                  NATIVE_DBC + 'DBCStructure.h', NATIVE_DBC + 'DBCfmt.h', GAMEPLAY + '*.py', GAMEPLAY + '*.json'],
         'commands': [[MECHANICS + 'test_mechanic_map.py'], [MECHANICS + 'mechanic_map.py', 'check']],
     },
     'gameplay': {
-        'paths': [GAMEPLAY + '*.py', GAMEPLAY + '*.json', MODULE + 'src/CoAGameplayTest*'],
+        'paths': [GAMEPLAY + '*.py', GAMEPLAY + '*.json', COA + 'CoAGameplayTest*'],
         'commands': [[GAMEPLAY + 'test_runner.py'], [GAMEPLAY + 'test_world_cache.py'],
-                     [GAMEPLAY + 'test_verification.py'], [GAMEPLAY + 'catalog.py', '--check']],
+                     [GAMEPLAY + 'test_verification.py'], [GAMEPLAY + 'test_batch.py'],
+                     [GAMEPLAY + 'catalog.py', '--check']],
     },
     'world-content': {
         'paths': [CONTENT + '*.py'],
@@ -59,11 +65,13 @@ SUITES = {
         'commands': [[ADDON + 'test_check_addon.py']],
     },
     'registrations': {
-        'paths': [MODULE + 'src/*.cpp', MODULE + 'src/*.h', MODULE + 'include.sh', 'tools/*registrations.py'],
+        'paths': [COA + '*.cpp', COA + '*.h', COA + 'CMakeLists.txt', 'src/server/apps/worldserver/Main.cpp',
+                  'tools/*registrations.py'],
         'commands': [['tools/check_registrations.py']],
     },
 }
-CLIENT_COMPAT_PATHS = [MODULE + 'tests/client_compat/*', 'src/server/game/Server/WorldSocket.*',
+CLIENT_COMPAT_PATHS = [COA_TESTS + 'client_compat/*', COA_TESTS + 'core_integration/*',
+                       COA + 'CoASpellbook.*', COA + 'CMakeLists.txt', 'src/server/game/Server/WorldSocket.*',
                        'src/server/game/Entities/Player/*', 'src/server/shared/DataStores/*',
                        'src/common/DataStores/*', 'src/common/Define.h', 'src/common/Common.h']
 
