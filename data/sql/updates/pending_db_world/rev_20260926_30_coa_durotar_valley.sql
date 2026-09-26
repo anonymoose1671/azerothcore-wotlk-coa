@@ -29,7 +29,7 @@ VALUES
 (161803, 'Zeb''Goro Denizen', NULL, 0, 5, 6, 0, 126, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 0, 7, 0, 0, '', 0, 0.93, 1, 1, 1, 1, 0, 0, ''),
 (161804, 'Zeb''Goro Denizen', NULL, 0, 5, 6, 0, 126, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 0, 7, 0, 0, '', 0, 0.93, 1, 1, 1, 1, 0, 0, ''),
 (161805, 'Guker', NULL, 0, 7, 7, 0, 126, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 0, 7, 0, 0, '', 0, 0.96, 1, 1, 1, 1, 0, 0, ''),
-(161806, 'Shakari the Innkeeper', NULL, 0, 10, 10, 0, 126, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 0, 7, 0, 0, '', 0, 0.98, 1, 1, 1, 1, 0, 0, ''),
+(161806, 'Shakari the Innkeeper', NULL, 1290, 10, 10, 0, 126, 65537, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 0, 7, 0, 0, 'SmartAI', 0, 0.98, 1, 1, 1, 1, 0, 0, ''),
 (161827, 'Zeb''Goro Guard', NULL, 0, 20, 20, 0, 126, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 32768, 2048, 0, 7, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, ''),
 (161831, 'K''eru', NULL, 0, 6, 6, 0, 126, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 0, 7, 0, 0, '', 0, 0.96, 1, 1, 1, 1, 0, 0, ''),
 (161800, 'Magical barrier crossed', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 0, 10, 0, 0, '', 0, 1, 1, 1, 1, 1, 130, 0, ''),
@@ -488,7 +488,8 @@ UPDATE `smart_scripts` SET `target_x` = -315, `target_y` = -4160, `target_z` = 5
 -- ---------------------------------------------------------------------------
 -- 8. Scripts
 -- ---------------------------------------------------------------------------
--- The lair trigger (AreaTrigger.dbc 6139) credits amulet holders on 1660019.
+-- The lair trigger (AreaTrigger.dbc 6139) credits amulet holders on 1660019. Shakari runs an INFERRED inn
+-- on the stock Horde innkeeper menu 1290 (bind, Hallow's End treats).
 DELETE FROM `areatrigger` WHERE `entry` = 6139;
 INSERT INTO `areatrigger` (`entry`, `map`, `x`, `y`, `z`, `radius`, `length`, `width`, `height`, `orientation`)
 VALUES
@@ -505,7 +506,7 @@ VALUES
 (22, 1, 6139, 2, 0, 9, 0, 1660019, 0, 0, 0, 0, 0, '', '1660019 taken'),
 (22, 1, 6139, 2, 0, 2, 0, 559146, 1, 0, 0, 0, 0, '', 'amulet held');
 
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161732, 161790, 161791, 161792, 161807, 161859, 161860, 161861, 161862) AND `source_type` = 0;
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161732, 161790, 161791, 161792, 161806, 161807, 161859, 161860, 161861, 161862) AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (161732, 0, 0, 1, 62, 0, 100, 0, 932501, 0, 0, 0, 0, 0, 33, 161821, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Esgramor - On Gossip Option Selected - Quest Credit Report delivered to Esgramor'),
@@ -518,6 +519,8 @@ VALUES
 (161791, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 256478, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Uneasy Citizen - Linked - Cast ''Fear'''),
 (161791, 0, 2, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 60, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Uneasy Citizen - Linked - Despawn In 2 Seconds'),
 (161792, 0, 0, 0, 0, 0, 100, 0, 3000, 6000, 9000, 12000, 0, 0, 11, 256482, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Elder Guardian Spirit - In Combat - Cast ''Ghost Strike'''),
+(161806, 0, 0, 1, 62, 0, 100, 512, 1290, 0, 0, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Shakari the Innkeeper - On Gossip Option 0 Selected - Close Gossip'),
+(161806, 0, 1, 0, 61, 0, 100, 512, 0, 0, 0, 0, 0, 0, 134, 24751, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Shakari the Innkeeper - Linked - Invoker Cast ''Trick or Treat'''),
 (161807, 0, 0, 0, 0, 0, 100, 0, 4000, 7000, 10000, 14000, 0, 0, 11, 256485, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Voodoo Devotee - In Combat - Cast ''Slash'''),
 (161859, 0, 0, 1, 8, 0, 100, 0, 256724, 0, 0, 0, 0, 0, 56, 559173, 1, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Elemental Earth - On Spellhit - Add Item 559173 (shackles)'),
 (161859, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 256477, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Elemental Earth - Linked - Remove Aura ''Chained'''),

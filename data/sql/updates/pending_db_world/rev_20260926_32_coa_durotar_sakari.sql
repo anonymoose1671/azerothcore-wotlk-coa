@@ -1,5 +1,5 @@
 -- CoA Durotar: Sakari's cure (quests 254008-254013) from the Den to Queen Erethina and Orgrimmar.
--- Creature guids 9012550-9012599, gameobject guids 7917200-7917279.
+-- Creature guids 9012550-9012599, gameobject guids 7917200-7917279, gossip menu 932530.
 
 -- ---------------------------------------------------------------------------
 -- 1. Creatures
@@ -8,7 +8,7 @@ INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `
 VALUES
 (254011, 'Sakari', NULL, 0, 20, 20, 0, 29, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, '', 0, 1.25, 1, 1, 1, 1, 0, 0, ''),
 (254013, 'Sakari', NULL, 0, 20, 20, 0, 126, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, '', 0, 1.25, 1, 1, 1, 1, 0, 0, ''),
-(254012, 'Queen Erethina', NULL, 0, 20, 20, 0, 35, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, '', 0, 1.25, 1, 1, 1, 1, 0, 0, ''),
+(254012, 'Queen Erethina', NULL, 932530, 20, 20, 0, 35, 3, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 7, 0, 0, '', 0, 1.25, 1, 1, 1, 1, 0, 0, ''),
 (254015, 'Xaitoth', NULL, 0, 3, 3, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 0, 3, 0, 254015, '', 0, 2.0925, 1, 1, 1, 1, 0, 0, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `family` = VALUES(`family`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `DamageModifier` = VALUES(`DamageModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `KillCredit1` = VALUES(`KillCredit1`), `ScriptName` = VALUES(`ScriptName`);
 
@@ -25,6 +25,17 @@ DELETE FROM `creature_model_info` WHERE `DisplayID` = 254003;
 INSERT INTO `creature_model_info` (`DisplayID`, `BoundingRadius`, `CombatReach`, `Gender`, `DisplayID_Other_Gender`)
 VALUES
 (254003, 0.236, 1.5, 1, 0);
+
+-- Erethina's greeting: cached npc_text 520009, attribution INFERRED (its text0_1 is a bookshelf line).
+DELETE FROM `npc_text` WHERE `ID` = 520009;
+INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `BroadcastTextID0`, `lang0`, `Probability0`)
+VALUES
+(520009, 'Adventurers want fight and kill destroy and maim and crush and burn, yes, yes, yes!$B$BNot fight you, fight no fit for queen, queen watch and command and eat food sisters bring, you want fight, you fight sisters, yes, yes, yes!', 'Adventurers want fight and kill destroy and maim and crush and burn, yes, yes, yes!$B$BNot fight you, fight no fit for queen, queen watch and command and eat food sisters bring, you want fight, you fight sisters, yes, yes, yes!', 0, 0, 1);
+
+DELETE FROM `gossip_menu` WHERE `MenuID` = 932530;
+INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
+VALUES
+(932530, 520009);
 
 -- ---------------------------------------------------------------------------
 -- 2. Objects and loot

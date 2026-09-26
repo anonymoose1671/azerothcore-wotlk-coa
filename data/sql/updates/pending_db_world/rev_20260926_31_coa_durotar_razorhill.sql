@@ -77,18 +77,18 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 2. Dialogue
 -- ---------------------------------------------------------------------------
--- The peon's text is cached npc_text; Bagamul's is his quest greeting. Option texts are INFERRED.
-DELETE FROM `npc_text` WHERE `ID` IN (85204, 932516);
+-- Greetings are cached npc_text; option texts are INFERRED. 932516 was an earlier Bagamul greeting.
+DELETE FROM `npc_text` WHERE `ID` IN (85189, 85204, 932516);
 INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `BroadcastTextID0`, `lang0`, `Probability0`)
 VALUES
 (85204, '<The orc’s clumsy movements betray his meager strength. He’s sweating from every pore, but the heat inside the mine is so furnace-hot the sweat vanishes before it ever puddles.>', '<The orc’s clumsy movements betray his meager strength. He’s sweating from every pore, but the heat inside the mine is so furnace-hot the sweat vanishes before it ever puddles.>', 0, 0, 1),
-(932516, 'Sit down, don''t worry. There''s room for both of us.$B$B<The old orc gestures in welcome, murmuring as if to himself.>$B$B<Perhaps he has something worth sharing.>', 'Sit down, don''t worry. There''s room for both of us.$B$B<The old orc gestures in welcome, murmuring as if to himself.>$B$B<Perhaps he has something worth sharing.>', 0, 0, 1);
+(85189, '<The gray-haired orc sits with his legs dangling. Razor Hill sprawls beneath you like a miniature Orgrimmar.>', '<The gray-haired orc sits with his legs dangling. Razor Hill sprawls beneath you like a miniature Orgrimmar.>', 0, 0, 1);
 
 DELETE FROM `gossip_menu` WHERE `MenuID` IN (932515, 932516);
 INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
 VALUES
 (932515, 85204),
-(932516, 932516);
+(932516, 85189);
 
 DELETE FROM `gossip_menu_option` WHERE `MenuID` IN (932515, 932516);
 INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`)
