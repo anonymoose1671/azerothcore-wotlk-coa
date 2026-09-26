@@ -85,30 +85,30 @@ ON DUPLICATE KEY UPDATE `class` = VALUES(`class`), `subclass` = VALUES(`subclass
 -- ---------------------------------------------------------------------------
 -- 2. Creatures
 -- ---------------------------------------------------------------------------
-INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `rank`, `unit_class`, `unit_flags`, `type`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`)
+INSERT INTO `creature_template` (`entry`, `name`, `subname`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `rank`, `unit_class`, `unit_flags`, `type`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`, `gossip_menu_id`)
 VALUES
-(161700, 'Bianca Spada', NULL, 5, 6, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0),
-(161701, 'Moroi Spada', 'Seminarian of Northshire Abbey', 5, 6, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 0.98, 1, 1, 1, 0),
-(161702, 'Sister Alma', 'Ancient Priestess of Northshire', 5, 6, 0, 35, 2, 0, 1, 0, 6, 0, '', 0, 1.0, 1, 1, 1, 0),
-(161705, 'Injured Northshire Guard', NULL, 5, 6, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 1.0, 1, 1, 1, 0),
-(161716, 'Shadewell Murloc', NULL, 4, 5, 0, 14, 0, 0, 1, 0, 7, 0, '', 0, 0.93, 1, 1, 1, 0),
-(161717, 'Shadewell Murloc Oracle', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 7, 161717, '', 0, 0.93, 1, 1, 1, 0),
-(161736, 'Defias Plunderer', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 7, 0, '', 0, 0.93, 1, 1, 1, 0),
-(161707, 'Shadewell Spider', NULL, 4, 5, 0, 14, 0, 0, 1, 0, 1, 0, '', 0, 0.93, 1, 1, 1, 0),
-(161712, 'Accursed Censor', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 6, 0, '', 0, 2.79, 1, 1, 1, 0),
-(161708, 'Accursed Judge', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 6, 0, '', 0, 0.93, 1, 1, 1, 0),
-(161713, 'Wayward Theologian', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 5.76, 1, 1, 1, 0),
-(161904, 'Wayward Theologian', NULL, 6, 6, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 1.0, 1, 1, 1, 64),
-(161703, '[KC] Hidden Path', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(161704, '[KC] Ruined Estate', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(161714, '[KC] Dungeon Entrance', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, 'SmartAI', 0, 1, 1, 1, 1, 130),
-(161715, '[KC] Purify Relics', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(161824, '[KC] Purify Staff', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(161825, '[KC] Purify Idol', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(161826, '[KC] Purify Jewel', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130),
-(161908, 'Wayward Theologian', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 9, 0, 'SmartAI', 0, 1, 1, 1, 1, 130),
-(161909, 'Wayward Theologian', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 9, 0, 'SmartAI', 0, 1, 1, 1, 1, 130)
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`);
+(161700, 'Bianca Spada', NULL, 5, 6, 0, 35, 2, 0, 1, 0, 7, 0, 'SmartAI', 0, 0.96, 1, 1, 1, 0, 0),
+(161701, 'Moroi Spada', 'Seminarian of Northshire Abbey', 5, 6, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 0.98, 1, 1, 1, 0, 0),
+(161702, 'Sister Alma', 'Ancient Priestess of Northshire', 5, 6, 0, 35, 2, 0, 1, 0, 6, 0, '', 0, 1.0, 1, 1, 1, 0, 0),
+(161705, 'Injured Northshire Guard', NULL, 5, 6, 0, 35, 3, 0, 1, 0, 7, 0, '', 0, 1.0, 1, 1, 1, 0, 62631),
+(161716, 'Shadewell Murloc', NULL, 4, 5, 0, 14, 0, 0, 1, 0, 7, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161717, 'Shadewell Murloc Oracle', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 7, 161717, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161736, 'Defias Plunderer', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 7, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161707, 'Shadewell Spider', NULL, 4, 5, 0, 14, 0, 0, 1, 0, 1, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161712, 'Accursed Censor', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 6, 0, '', 0, 2.79, 1, 1, 1, 0, 0),
+(161708, 'Accursed Judge', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 6, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161713, 'Wayward Theologian', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 5.76, 1, 1, 1, 0, 0),
+(161904, 'Wayward Theologian', NULL, 6, 6, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 1.0, 1, 1, 1, 64, 0),
+(161703, '[KC] Hidden Path', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(161704, '[KC] Ruined Estate', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(161714, '[KC] Dungeon Entrance', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, 'SmartAI', 0, 1, 1, 1, 1, 130, 0),
+(161715, '[KC] Purify Relics', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(161824, '[KC] Purify Staff', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(161825, '[KC] Purify Idol', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(161826, '[KC] Purify Jewel', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
+(161908, 'Wayward Theologian', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 9, 0, 'SmartAI', 0, 1, 1, 1, 1, 130, 0),
+(161909, 'Wayward Theologian', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 9, 0, 'SmartAI', 0, 1, 1, 1, 1, 130, 0)
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `gossip_menu_id` = VALUES(`gossip_menu_id`);
 
 DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161700, 161701, 161702, 161705, 161716, 161717, 161736, 161707, 161712, 161708, 161713, 161904, 161703, 161704, 161714, 161715, 161824, 161825, 161826, 161908, 161909);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
@@ -484,3 +484,27 @@ VALUES
 (161713, 0, 0, 'You''ve come for Sitis, haven''t you? Then you''ve already gone too far... I''m sorry for what must follow.', 12, 100, 'Wayward Theologian - pull (INFERRED)'),
 (161713, 1, 0, 'I am sorry. Truly. But your death is a mercy, compared to the dark path you would have walked.', 12, 100, 'Wayward Theologian - in combat between shield phases (INFERRED)'),
 (161713, 2, 0, 'I beg you... Don''t speak her name... Don''t read her words... Her philosophy... will be your end...', 12, 100, 'Wayward Theologian - death (INFERRED)');
+
+-- ---------------------------------------------------------------------------
+-- 10. Bianca and the injured guard
+-- ---------------------------------------------------------------------------
+-- Bianca's yell is CoA's archived locale text; the guard's greeting is npccache 62631.
+DELETE FROM `creature_text` WHERE `CreatureID` = 161700;
+INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Probability`, `comment`)
+VALUES
+(161700, 0, 0, 'Moroi, I know you''re in there! We don''t have all day. Mother doesn''t either! Get out here you scoundrel!', 14, 100, 'Bianca Spada - calls for her brother');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 161700 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(161700, 0, 0, 0, 10, 0, 100, 0, 2, 40, 60000, 120000, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Bianca Spada - OOC LOS player within 40 yards - Yell for Moroi');
+
+DELETE FROM `npc_text` WHERE `ID` IN (62631);
+INSERT INTO `npc_text` (`ID`, `text0_0`, `text0_1`, `lang0`, `Probability0`)
+VALUES
+(62631, '<The soldier gasps, his fist barely clenched around the hilt of his sword. His arm dangles useless from a shoulder skewered clean through by an arrow shaft still jutting from the wound.>$b$bNorthshire Valley was supposed to be a quiet post… “a stroke of luck”, they said, to have me stationed here!$b$b<He spits his bitterness to the ground and growls:>$b$bTo hell with that. I’m not dying here.', '<The soldier gasps, his fist barely clenched around the hilt of his sword. His arm dangles useless from a shoulder skewered clean through by an arrow shaft still jutting from the wound.>$b$bNorthshire Valley was supposed to be a quiet post… “a stroke of luck”, they said, to have me stationed here!$b$b<He spits his bitterness to the ground and growls:>$b$bTo hell with that. I’m not dying here.', 0, 1);
+
+DELETE FROM `gossip_menu` WHERE `MenuID` IN (62631);
+INSERT INTO `gossip_menu` (`MenuID`, `TextID`)
+VALUES
+(62631, 62631);
