@@ -1,23 +1,26 @@
--- Conquest of Azeroth class trainers in Deathknell: the 19 trainers CoA placed there, the 19 intro letters
---   Shadow Priest Sarvis hands out after "The Mindless Ones", the first class chains that follow them, and every
---   creature, object and drop those chains need.
+-- Conquest of Azeroth class trainers in Deathknell: the 19 trainers CoA placed there and a Barbarian, the 20
+--   intro letters Shadow Priest Sarvis hands out after "The Mindless Ones", the first class chains that follow
+--   them, and every creature, object and drop those chains need.
 --
 -- WHERE EACH VALUE COMES FROM
 --   trainer posts  SOURCED-CLIENT: the QuestSuperTrack turn-in point of each intro letter, z from the server
 --   floor (surface.floor). Undertaker Chite stands on the terrain under his point (0.6 yd above it). Shadow-
---   Walker Voss (letter 53016) has no point and is placed by hand (INFERRED).
+--   Walker Voss (letter 53016) and Stenchbone have no point and are placed by hand (INFERRED); Deathguard
+--   Bradforth steps 1.6 yd off his point, 3.7 yd from Marla's Grave (ST6961).
 --   facings  INFERRED by hand toward the way players arrive (the chapel door, the inn's front door, the stair
 --   head, the graveyard gate); every choice is in the trainer's seed.
 --   trainers  names and titles SOURCED-CACHE (creaturecache); Brallmular and Shadow-Walker Voss are named by
 --   their letters (no cache record, new entries). Race from the name, title and class (INFERRED; Deathknell took
 --   the undead and blood elf classes). Looks are stand-ins built from stock NPC looks: no SMSG_MIRRORIMAGE_DATA
---   capture of any trainer exists.
+--   capture of any trainer exists. Stenchbone is CoA's unspawned Barbarian trainer record 51278 (INFERRED for
+--   Deathknell).
 --   quests  SOURCED-CACHE (questcache). Starter of the letters INFERRED from the stock letter pattern (3095-3099
 --   start at Sarvis after quest 364) and the Details voice ("young one ... tasted death"). Chains start at the
 --   letter's trainer (PrevQuestID = the letter) and continue by PrevQuestID only; the cache's NextQuestInChain
---   is not copied.
+--   is not copied. The Barbarian letter 9302412 and its Warband trial 9302413 are new (INFERRED), modelled on
+--   53000 and 200104.
 --   letter pages  page_text is missing from the world DB: 8 pages SOURCED-CACHE (pagetextcache, verbatim even
---   where they name older trainers), 11 composed from the quest Details (INFERRED). The shared chain items
+--   where they name older trainers), 12 composed from the quest Details (INFERRED). The shared chain items
 --   661316, 661329 and 662316 get their pages here once for every zone (INFERRED; 662316 quotes quests 200001
 --   and 200013; the Riddlestone riddle is zone-neutral as ct-coldridge and ct-northshire asked, since each zone
 --   hides its Eye in another building).
@@ -28,12 +31,12 @@
 --   drop chances  SOURCED-EXILES creature_loot where it has them; unique holders drop 100%.
 --   stock trainer removed  Dannal Stern (guid 28464) stood 2.48 yd from Dabbert Staze's sourced point; his quest
 --   copy 299240 takes his alcove. Every other stock trainer stays as a plain NPC.
---   stock patrols  two waypoint turnarounds that walked onto sourced trainer posts are moved by hand (INFERRED,
---   the nearest open floor on the same route); claimed in coordination/ct-deathknell.md.
+--   stock patrols  two waypoint turnarounds that walked onto a trainer post and Marla's Grave are moved by hand
+--   (INFERRED, the nearest open floor on the same route); claimed in coordination/ct-deathknell.md.
 --
 -- Blocks: creature guids 9003700-9003899, gameobject guids 7912400-7912499, creature entries 9300250-9300299,
---   gameobject entries 9301250-9301299, gossip and npc_text 930350-930399. Runs after
---   rev_20260923_05_coa_class_trainer_core.sql.
+--   gameobject entries 9301250-9301299, gossip and npc_text 930350-930399, quest and item 9302412-9302413,
+--   page_text 931412. Runs after rev_20260923_05_coa_class_trainer_core.sql.
 
 -- ---------------------------------------------------------------------------
 -- 1. Trainers
@@ -101,6 +104,11 @@
 --   speaks of fetishes and restless spirits; Witch Doctor is a troll class. look is a stand-in, no
 --   SMSG_MIRRORIMAGE_DATA capture of this trainer exists: troll male from Witch Doctor Unbagwa (display 4661),
 --   changed hair 5/2, face 5, tusks 4, Big Voodoo mask and cloak.
+-- 51278 Stenchbone, Barbarian: Forsaken male: CoA's unspawned Barbarian trainer record 51278 (display 590221
+--   does not resolve; caches, Exiles, atlas and captures hold no other look), chosen over Grimar the Reaver
+--   51279 as undead by name; Barbarian is an undead class and Deathknell had no trainer for it. look is a stand-
+--   in, no SMSG_MIRRORIMAGE_DATA capture of this trainer exists: Forsaken male from Austil de Mon (display
+--   1599), changed bald, bare rotting chest, spiked Horde leather shoulders.
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `detection_range`, `rank`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `type_flags`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`, `ScriptName`)
 VALUES
 (50276, 'Dar''danis', 'Felsworn Trainer', 930014, 10, 10, 0, 68, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
@@ -121,10 +129,11 @@ VALUES
 (650688, 'Apothecary Kelan', 'Venomancer Trainer', 930029, 10, 10, 0, 68, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (502891, 'Undertaker Chite', 'Reaper Trainer', 930030, 10, 10, 0, 68, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (502913, 'Wilhelm Balthier', 'Runemaster Trainer', 930351, 10, 10, 0, 68, 51, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
-(9300251, 'Shadow-Walker Voss', 'Witch Doctor Trainer', 930013, 10, 10, 0, 68, 51, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, '')
+(9300251, 'Shadow-Walker Voss', 'Witch Doctor Trainer', 930013, 10, 10, 0, 68, 51, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
+(51278, 'Stenchbone', 'Barbarian Trainer', 930012, 10, 10, 0, 68, 51, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (50275, 50276, 50279, 50281, 50293, 50327, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (50275, 50276, 50279, 50281, 50293, 50327, 51278, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (50276, 0, 15476, 1, 1),
@@ -145,9 +154,10 @@ VALUES
 (650688, 0, 57, 1, 1),
 (502891, 0, 57, 1, 1),
 (502913, 0, 57, 1, 1),
-(9300251, 0, 1478, 1, 1);
+(9300251, 0, 1478, 1, 1),
+(51278, 0, 57, 1, 1);
 
-DELETE FROM `creature_display_preset` WHERE `entry` IN (50275, 50276, 50279, 50281, 50293, 50327, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
+DELETE FROM `creature_display_preset` WHERE `entry` IN (50275, 50276, 50279, 50281, 50293, 50327, 51278, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
 INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, `class`, `skin`, `face`, `hair`, `haircolor`, `facialhair`, `guild_id`, `item_head`, `item_shoulders`, `item_body`, `item_chest`, `item_waist`, `item_legs`, `item_feet`, `item_wrists`, `item_hands`, `item_back`, `item_tabard`)
 VALUES
 (50276, 15476, 10, 0, 1, 1, 3, 6, 4, 0, 0, 0, 0, 0, 32038, 2014, 32037, 29230, 2016, 32039, 0, 0),
@@ -168,9 +178,10 @@ VALUES
 (650688, 57, 5, 0, 1, 0, 1, 6, 2, 1, 0, 2330, 0, 6347, 9722, 2923, 3335, 6348, 0, 15993, 14802, 0),
 (502891, 57, 5, 0, 1, 1, 6, 1, 2, 0, 0, 45122, 0, 5621, 30144, 6070, 5622, 8083, 0, 0, 0, 0),
 (502913, 57, 5, 0, 1, 4, 9, 5, 0, 3, 0, 0, 18639, 8493, 26261, 6344, 5684, 5676, 0, 0, 0, 0),
-(9300251, 1478, 8, 0, 1, 1, 5, 5, 2, 4, 0, 20179, 8316, 9795, 5512, 9017, 9112, 0, 0, 9005, 18966, 0);
+(9300251, 1478, 8, 0, 1, 1, 5, 5, 2, 4, 0, 20179, 8316, 9795, 5512, 9017, 9112, 0, 0, 9005, 18966, 0),
+(51278, 57, 5, 0, 1, 4, 0, 0, 0, 16, 0, 0, 8316, 0, 0, 6983, 1105, 3538, 3539, 3540, 0, 0);
 
-DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (50275, 50276, 50279, 50281, 50293, 50327, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
+DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (50275, 50276, 50279, 50281, 50293, 50327, 51278, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`)
 VALUES
 (50276, 1, 12482, 12502, 0),
@@ -191,9 +202,10 @@ VALUES
 (650688, 1, 2139, 2494, 0),
 (502891, 1, 13054, 0, 0),
 (502913, 1, 5956, 26569, 0),
-(9300251, 1, 25183, 0, 0);
+(9300251, 1, 25183, 0, 0),
+(51278, 1, 1680, 0, 0);
 
-DELETE FROM `creature_default_trainer` WHERE `CreatureId` IN (50275, 50276, 50279, 50281, 50293, 50327, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
+DELETE FROM `creature_default_trainer` WHERE `CreatureId` IN (50275, 50276, 50279, 50281, 50293, 50327, 51278, 502773, 502803, 502822, 502833, 502850, 502873, 502891, 502913, 502922, 502930, 650688, 9300250, 9300251);
 INSERT INTO `creature_default_trainer` (`CreatureId`, `TrainerId`)
 VALUES
 (50276, 900014),
@@ -214,7 +226,8 @@ VALUES
 (650688, 900029),
 (502891, 900030),
 (502913, 900032),
-(9300251, 900013);
+(9300251, 900013),
+(51278, 900012);
 
 -- ---------------------------------------------------------------------------
 -- 2. Named menus and the dying man's words
@@ -284,6 +297,9 @@ VALUES
 --   Keed.
 -- 9300254 Scorch: Pyromancer "The Way of the Pyromancer" 200145: the fire elemental bound to a campfire in the
 --   hills; small fire elemental (display 1405 at scale 0.6, a stand-in).
+-- 9300257 Mortimer: Barbarian "Welcome to the Warband" 9302413: the rookie the Warband turned away, as Gerald
+--   and Gok in the other starting areas (name INFERRED); Forsaken Thug display 4132 (a stand-in); neutral and
+--   immune to NPCs.
 -- 9300255 Dalin Soft: Reaper "Call of the Shadowlands" 200039: the dying man of Deathknell, named in the
 --   objective; Forsaken Refugee display 27588 (a stand-in).
 -- 9300256 Agatha Harlow: Witch Hunter "The Hunt Begins" 200057: the witch in her disguise, a Deathknell
@@ -300,6 +316,7 @@ VALUES
 (9300252, 'Suspicious Blood Elf', NULL, 0, 3, 3, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 9300252, '', 0, 1, 1, 1, 1, 0, ''),
 (9300253, 'Felo', NULL, 0, 3, 3, 0, 35, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 1, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 2, ''),
 (9300254, 'Scorch', NULL, 0, 4, 4, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 4, 0, 9300254, '', 0, 1.5, 1, 1, 1, 0, ''),
+(9300257, 'Mortimer', NULL, 0, 4, 4, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 512, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 0, ''),
 (9300255, 'Dalin Soft', NULL, 930352, 5, 5, 0, 68, 1, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 2, ''),
 (9300256, 'Agatha Harlow', NULL, 0, 4, 4, 0, 68, 0, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 0, ''),
 (685012, '[KC] Poison Sunspeaker Talethia', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 10, 0, 0, '', 0, 1, 1, 1, 1, 130, ''),
@@ -308,7 +325,7 @@ VALUES
 (685034, 'Invisible Dummy (Starcaller3)', NULL, 0, 1, 1, 0, 35, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 33555202, 2048, 12, 0, 0, 'SmartAI', 0, 0.93, 1, 1, 1, 130, '')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `gossip_menu_id` = VALUES(`gossip_menu_id`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `speed_walk` = VALUES(`speed_walk`), `speed_run` = VALUES(`speed_run`), `detection_range` = VALUES(`detection_range`), `rank` = VALUES(`rank`), `BaseAttackTime` = VALUES(`BaseAttackTime`), `RangeAttackTime` = VALUES(`RangeAttackTime`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `unit_flags2` = VALUES(`unit_flags2`), `type` = VALUES(`type`), `type_flags` = VALUES(`type_flags`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `ScriptName` = VALUES(`ScriptName`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (299226, 299240, 685012, 685013, 685014, 685034, 9300252, 9300253, 9300254, 9300255, 9300256);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (299226, 299240, 685012, 685013, 685014, 685034, 9300252, 9300253, 9300254, 9300255, 9300256, 9300257);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (299240, 0, 1578, 1, 1),
@@ -316,6 +333,7 @@ VALUES
 (9300252, 0, 16088, 1, 1),
 (9300253, 0, 81081, 0.6, 1),
 (9300254, 0, 1405, 0.6, 1),
+(9300257, 0, 4132, 1, 1),
 (9300255, 0, 27588, 1, 1),
 (9300256, 0, 4129, 1, 1),
 (685012, 0, 11686, 1, 1),
@@ -323,11 +341,12 @@ VALUES
 (685014, 0, 11686, 1, 1),
 (685034, 0, 81082, 1, 1);
 
-DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (299240, 9300252);
+DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (299240, 9300252, 9300257);
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`)
 VALUES
 (299240, 1, 1899, 0, 0),
-(9300252, 1, 2209, 0, 0);
+(9300252, 1, 2209, 0, 0),
+(9300257, 1, 12348, 0, 0);
 
 -- ---------------------------------------------------------------------------
 -- 4. Chain objects
@@ -383,6 +402,8 @@ VALUES
 (53016, 2, 2, 2, -508, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 9200586, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Spirit Fetish', 'Seek out Shadow-Walker Voss in Deathknell.', 'I was asked to bring this to your attention, young one. It appears to be an ancient scroll decorated with bones and dark fetishes, humming with the power of restless spirits. The witch doctor''s art bridges life and death through ancient rituals, and it seems to be from Shadow-Walker Voss, who practices these mystical arts in Deathknell. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Shadow-Walker Voss in Deathknell.', 0, 0, 0, 0, 0, 0, 0, 0, 9200586, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (53017, 2, 2, 2, -519, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 9200587, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Inquisitor''s Letter', 'Seek out Bailey Horrorhate in Deathknell.', 'I was asked to bring this to your attention, young one. It appears to be a sealed letter bearing the burning wax seal of the Inquisition. Having experienced transformation firsthand, you can distinguish between natural evolution and true corruption, and it seems to be from Bailey Horrorhate, who hunts with perfect justice in Deathknell. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Bailey Horrorhate in Deathknell.', 0, 0, 0, 0, 0, 0, 0, 0, 9200587, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (53201, 2, 2, 2, -506, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 532001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Stellar Chart', 'Read the Stellar Chart and seek out Landralanis in Deathknell.', 'I was asked to bring this to your attention, young one. It appears to be an ethereal chart containing star maps that twinkle with actual starlight, pulsing with cosmic power from distant galaxies. The way of the Starcaller opens celestial mysteries, and it comes from Landralanis, who commands stellar forces in Deathknell. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Landralanis in Deathknell.', 0, 0, 0, 0, 0, 0, 0, 0, 532001, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
+(9302412, 2, 2, 2, -526, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 9302412, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Grave-Etched Tablet', 'Seek out Stenchbone in Deathknell.', 'I was asked to bring this to your attention, young one. It appears to be a slab of broken headstone gouged with barbarian war-runes, and the rage in them did not die with the one who carved them. It seems to be from Stenchbone, who teaches the barbarian''s way in Deathknell. I wouldn''t hesitate to read it before you continue your duties here.', '', 'Seek out Stenchbone in Deathknell.', 0, 0, 0, 0, 0, 0, 0, 0, 9302412, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
+(9302413, 2, 3, 3, -526, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 532805, 1, 532806, 1, 395861, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Welcome to the Warband', 'Kill Mortimer and return back to your trainer.', 'Har! Har! Welcome, $N. Glad you could join the Warband.  What is the Warband, you might be wondering? Considering your arrival, I would have assumed you''d already know. Well, little $c, this is about to be a rude awakening.  The Warband is where all barbarians, brutes, and strongmen alike come together to compete to see who is the strongest, most brutal, and most powerful individual of them all.  That''s the only way we can TRULY test our mettle. THIS IS IT! You may be new to this, but absolutely nobody will go easy on you.  Your first test will be the same as all the other rookies. There''s an individual who has been mucking things up and spreading rumors just because they couldn''t cut it and were denied access to the Warband.  They''re known as Mortimer. Kill him, hahaha! I will reward you with a weapon well-suited for a noob like yourself if you are capable of such a task.  Come back to me alive, or die.', '', 'Return to your trainer.', 9300257, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', ''),
 (200019, 2, 3, 3, -516, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 661317, 1, 1505015, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Blood Is Power', 'Collect the Tome of Blood from the suspicious Blood Elf.', 'Ahh, $C. Your day has finally come.  Blood. Something you should be well acquainted with at this point, in some way or another. Blood is life. But blood, as you will soon learn, is also power.  I want you to imagine what you can be capable of in a world in which you can control the very life essence of another beings body. To simply crush their insides with the flick of a wrist...  Intoxicating.  In due time, you will learn more. For now, I require your assistance in pursuing my own studies and through this I will also be able to help you learn.   Nearby is a tome, that of which is possessed by a suspicious Blood Elf rummaging in the abandoned houses nearby, and one of which I require for my studies. Collect it for me.', '', 'Return to your trainer.', 0, 0, 0, 0, 0, 0, 0, 0, 661316, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (200168, 2, 3, 3, -530, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 553122, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Perfect Timing', 'Find Quardormi''s wand in Deathknell.', 'Ahhh, $N, I saw your arrival long ago. Now it is time to teach you what it means to be a Chronomancer. To weave the very fabric of space and time. To be equivalent to a god...   Let me not get ahead of myself. For you, $N, are new to the world of chronomancy, and before I can allow you to inhabit this world with such latent power... you must learn how to control yourself.  As a Chronomancer, you are a master of time magic. This means you must respect time on the most foundational of levels. It just so happens that I left my wand somewhere next door.   You have 2 minutes. Find it for me.', '', 'Return to Quardormi.', 0, 0, 0, 0, 0, 0, 0, 0, 661335, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '', '', '', ''),
 (200075, 2, 3, 3, -522, 0, 0, 0, 0, 0, 0, 0, 3, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 532803, 1, 532804, 1, 532881, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Going MAD!', 'Kill Dannal Stern.', 'You have arrived at the most opportune time, $N.  I have heard the whispers of the great beyond. It tells me of a particularly dangerous individual to our cause. I need you to destroy them, swiftly.  If you do this I will reward you with a weapon fit for a follower of the Old Gods themselves.  The individual you''re looking for lays inside the inn. They go by the name of "Dannal Stern". End him.', '', 'Return to your trainer.', 299240, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', ''),
@@ -413,7 +434,7 @@ ON DUPLICATE KEY UPDATE `QuestType` = VALUES(`QuestType`), `QuestLevel` = VALUES
 
 UPDATE `quest_template` SET `TimeAllowed` = 120 WHERE `ID` = 200168;
 
-DELETE FROM `quest_template_addon` WHERE `ID` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168);
+DELETE FROM `quest_template_addon` WHERE `ID` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168, 9302412, 9302413);
 INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `PrevQuestID`, `ProvidedItemCount`, `SpecialFlags`)
 VALUES
 (53000, 0, 536870912, 364, 1, 0),
@@ -435,6 +456,8 @@ VALUES
 (53016, 0, 4096, 364, 1, 0),
 (53017, 0, 16384, 364, 1, 0),
 (53201, 0, 33554432, 364, 1, 0),
+(9302412, 0, 2048, 364, 1, 0),
+(9302413, 0, 2048, 9302412, 0, 0),
 (200019, 0, 524288, 53001, 0, 0),
 (200168, 0, 2097152, 53007, 0, 0),
 (200075, 0, 16777216, 53002, 0, 0),
@@ -462,7 +485,7 @@ VALUES
 (200023, 0, 8192, 53003, 0, 0),
 (200057, 0, 16384, 53017, 1, 0);
 
-DELETE FROM `quest_offer_reward` WHERE `ID` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168);
+DELETE FROM `quest_offer_reward` WHERE `ID` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168, 9302412, 9302413);
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`)
 VALUES
 (53000, 'So, you have heeded the call of endless fury. Good. You show promise, $N.$B$BThe path of the Reaper is not one of mindless rage, but of fury given purpose and form. You will learn to harness the primal wrath that dwells within all warriors and transform it into something far more terrible - a rage that never dims, never falters, never shows mercy. Where others grow weary, you will grow stronger. Where others fall back, you will press forward with renewed ferocity.$B$BUnder my tutelage, you will master the berserker arts passed down through countless generations of warriors who refused to accept the limitations of mortal endurance. Your fury will become a living thing, a companion in battle that whispers strategies born of pure aggression. You will learn to channel this rage into devastating whirlwind attacks, earth-shattering charges, and strikes that can cleave through armor as if it were parchment.$B$BWelcome to the path of eternal rage, $N. Let your enemies learn what it means to face one whose fury knows no bounds!'),
@@ -484,6 +507,8 @@ VALUES
 (53016, 'The spirits whisper your name, $N. They have been waiting for you.$B$BThe witch doctor walks between worlds, equally at home among the living and the dead. You will become a bridge between realms, a speaker for spirits who have no voice, a commander of forces that exist just beyond mortal perception. This ancient art predates civilization itself, born when the first mortals realized that death was not an ending but a transformation.$B$BYou will learn to see and speak with spirits invisible to others, to channel their knowledge and power through your own body. Ancestral spirits will guide your decisions, ghostly warriors will fight at your side, and the wisdom of the ages will flow through you like water. You''ll master hexes that curse enemies with spiritual afflictions, wards that protect against possession, and rituals that can trap or banish even the most powerful spirits.$B$BYour tools will be both primitive and profound - fetishes that house spirit allies, drums that call the dead to dance, and masks that let you assume the aspects of powerful spirit entities. You''ll learn to enter the spirit realm physically, to navigate its strange geography, and to bargain with entities that have never known mortal form. In time, you may even learn to become a living spirit yourself, existing simultaneously in multiple realms.$B$BWelcome to the spirit path, $N. Let the veil between worlds part before you!'),
 (53017, 'The hunt begins now, $N. Corruption has a new predator to fear.$B$BThe witch hunter''s burden is heavy but necessary. You will become the blade that cuts out infection, the fire that purifies corruption, the unwavering eye that sees through all deception. Where others might show mercy to the corrupted, you understand that sometimes the kindest cut is the killing blow. Your duty is to protect the innocent by eliminating threats others are too weak or blind to recognize.$B$BYou will master techniques specifically designed to combat the forces of darkness. Silver weapons that burn the corrupted, holy water that reveals hidden evil, and wards that prevent dark magic from taking hold. You''ll develop an almost supernatural sense for detecting corruption - a witch''s curse, a demon''s influence, or the subtle taint of void corruption. Your training will include resistance to mental manipulation, immunity to curses, and the ability to break enchantments with your mere presence.$B$BYou''ll learn to distinguish between harmless hedge wizards and genuine threats, between those who can be redeemed and those who must be eliminated. The witch hunter''s greatest skill is judgment - knowing when to strike and when to stay your hand. You''ll compile knowledge of every form of corruption, creating a mental library of threats and their weaknesses. In time, your very name will become a ward against evil, spoken by parents to protect their children, whispered by the corrupt in fear.$B$BWelcome to the eternal hunt, $N. Let no evil escape your sight!'),
 (53201, 'The stars have guided you to me, $N. I sense the cosmic energies stirring within you.$B$BAs a Starcaller, you will command forces that predate mortal civilization. The night sky becomes your grimoire, constellations your spells. You will channel starlight into devastating beams, call down meteor showers upon your enemies, and navigate by stellar winds that carry the whispers of distant galaxies.$B$BThe cosmos is vast and eternal, filled with powers beyond mortal comprehension. Ancient star-gods once wielded these same forces to shape reality itself. Now their knowledge flows through you.$B$BWelcome to stellar mastery. The universe itself bends to your will!'),
+(9302412, 'Har! So the priest sent you to me. Good.$B$BThe grave took your breath, $N, but it could not take your anger. A barbarian needs no tricks and no spells. We hit, we roar, and we keep hitting until nothing is left standing.$B$BShow me what that dead heart of yours can still do.'),
+(9302413, ''),
 (200019, 'A Blood Wizard?$B$BInteresting...$B$BWell, upon further inspection, this tome is worthless. You can have it.$B$BReturn to me in the future when you are stronger. Maybe we can work together again.'),
 (200168, 'Welcome back, $N. I knew you would find my wand in time. Literally.$B$BThis wand is for you. I hope it serves you well. In fact, I know it will.'),
 (200075, ''),
@@ -511,7 +536,7 @@ VALUES
 (200023, 'You may be wondering why I had you retrieve this skull.$B$BDemon skulls are often vessels of immense fel power. Today, I give this to you.$B$BHowever, if you prefer, I can infuse the power of this skull into a powerful sword.$B$BThe choice is yours, whatever it may be, it will serve you well.'),
 (200057, 'Yet another evil creature banished from our world.$B$B... and yet.$B$BStill so many others to destroy. Be vigilant.$B$BHere, take these, let them guide you in your battles with evil.');
 
-DELETE FROM `quest_request_items` WHERE `ID` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168);
+DELETE FROM `quest_request_items` WHERE `ID` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168, 9302412, 9302413);
 INSERT INTO `quest_request_items` (`ID`, `CompletionText`)
 VALUES
 (53000, 'I can sense the fury building within you, $N. Have you brought the Fury Tablet? The path of endless rage awaits those strong enough to walk it.'),
@@ -533,6 +558,8 @@ VALUES
 (53016, 'The spirits whisper of your arrival, $N. Have you brought the Spirit Fetish? The other side beckons.'),
 (53017, 'Righteous determination burns in your eyes, $N. Have you brought the Inquisitor''s Letter? The hunt for corruption never ends.'),
 (53201, 'Greetings, $N. Have you something for me?'),
+(9302412, 'You reek of grave-dirt and anger, $N. Is that my tablet you carry?'),
+(9302413, ''),
 (200019, 'Impressive. Who did you say had this tome again?'),
 (200168, 'Ahh, you''ve returned.'),
 (200075, ''),
@@ -560,7 +587,7 @@ VALUES
 (200023, 'Good find.'),
 (200057, 'You have returned.');
 
-DELETE FROM `creature_queststarter` WHERE `quest` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168);
+DELETE FROM `creature_queststarter` WHERE `quest` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168, 9302412, 9302413);
 INSERT INTO `creature_queststarter` (`id`, `quest`)
 VALUES
 (1569, 53000),
@@ -582,6 +609,8 @@ VALUES
 (1569, 53016),
 (1569, 53017),
 (1569, 53201),
+(1569, 9302412),
+(51278, 9302413),
 (502922, 200019),
 (502822, 200168),
 (502833, 200075),
@@ -607,7 +636,7 @@ VALUES
 (50276, 200023),
 (50275, 200057);
 
-DELETE FROM `creature_questender` WHERE `quest` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168);
+DELETE FROM `creature_questender` WHERE `quest` IN (53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010, 53011, 53012, 53013, 53014, 53015, 53016, 53017, 53201, 200011, 200012, 200013, 200019, 200023, 200024, 200033, 200035, 200039, 200052, 200053, 200054, 200057, 200062, 200069, 200075, 200081, 200098, 200099, 200100, 200113, 200140, 200141, 200142, 200145, 200168, 9302412, 9302413);
 INSERT INTO `creature_questender` (`id`, `quest`)
 VALUES
 (502891, 53000),
@@ -629,6 +658,8 @@ VALUES
 (9300251, 53016),
 (50275, 53017),
 (502850, 53201),
+(51278, 9302412),
+(51278, 9302413),
 (502922, 200019),
 (502822, 200168),
 (502833, 200075),
@@ -683,7 +714,7 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 6. Letter and chain item pages
 -- ---------------------------------------------------------------------------
-DELETE FROM `page_text` WHERE `ID` IN (10201, 11112, 15000, 15001, 15002, 15003, 15004, 15005, 15006, 15007, 15008, 15009, 15010, 15011, 15012, 15013, 15014, 15015, 15016, 15017, 25151, 27575);
+DELETE FROM `page_text` WHERE `ID` IN (10201, 11112, 15000, 15001, 15002, 15003, 15004, 15005, 15006, 15007, 15008, 15009, 15010, 15011, 15012, 15013, 15014, 15015, 15016, 15017, 25151, 27575, 931412);
 INSERT INTO `page_text` (`ID`, `Text`, `NextPageID`)
 VALUES
 (10201, 'The cosmos calls to those who would command stellar power.$B$BThe stars themselves hold infinite knowledge and energy waiting to be harnessed. As a Starcaller, you will channel celestial forces with perfect clarity, drawing power from distant galaxies and cosmic phenomena.$B$BSeek me in Deathknell, and I will teach you to command the eternal stars.$B$BLandralanis$BStarcaller Trainer', 0),
@@ -707,7 +738,15 @@ VALUES
 (15016, 'The spirits do not rest in Tirisfal. They whisper in the dead trees and linger over every grave, and the witch doctor hears them all.$B$BAs a Witch Doctor, you will bridge life and death through fetish and ritual, hexing your foes and mending your friends.$B$BShadow-Walker Voss practices these mystical arts in Deathknell. Seek him at the south end of the village.', 0),
 (15017, 'The hunt for corruption takes on new meaning when pursued by one who has experienced the ultimate corruption and emerged purified by death itself. The undead witch hunter understands evil intimately.$B$BAs an undead witch hunter, you will track supernatural threats with the authority of one who has crossed death''s threshold. Your blessed weapons will strike down the unholy, your knowledge of darkness used to protect the innocent from the very forces that once claimed you.$B$BBailey Horrorhate continues the eternal crusade in Deathknell. Seek him to learn how death transforms the hunt against evil into something far more relentless and pure.', 0),
 (25151, 'Blood is life. Blood is power.$B$BThe crimson arts teach that the essence which flows through every living body may be drawn out, shaped and turned against its owner. Those who master it need neither steel nor fire.', 0),
-(27575, 'I have no lid, yet I never sleep.$BI judge what is fair without a word.$BBeauty, they say, was never in the thing at all, but always in me.$B$BWhat am I? Look within these walls.', 0);
+(27575, 'I have no lid, yet I never sleep.$BI judge what is fair without a word.$BBeauty, they say, was never in the thing at all, but always in me.$B$BWhat am I? Look within these walls.', 0),
+(931412, 'Death does not cool a barbarian''s blood. It only silences the pain that once told the body to stop.$B$BAs an undead barbarian, you will fight with the fury of the living and the endurance of the dead, and break your foes with strength alone.$B$BStenchbone teaches the barbarian''s way in Deathknell. Find him at the south end of the street, across from the chapel door.', 0);
+
+-- 9302412 Grave-Etched Tablet: the Barbarian letter item, with the look and flags of the Fury Tablet 9200570
+--   (SOURCED-CACHE itemcache).
+INSERT INTO `item_template` (`entry`, `class`, `subclass`, `name`, `displayid`, `Quality`, `Flags`, `ItemLevel`, `maxcount`, `stackable`, `bonding`, `description`, `PageText`, `Material`)
+VALUES
+(9302412, 12, 0, 'Grave-Etched Tablet', 3108, 1, 0, 0, 1, 1, 1, 'A slab of broken headstone gouged with war-runes by a heavy hand.', 931412, 0)
+ON DUPLICATE KEY UPDATE `class` = VALUES(`class`), `subclass` = VALUES(`subclass`), `name` = VALUES(`name`), `displayid` = VALUES(`displayid`), `Quality` = VALUES(`Quality`), `Flags` = VALUES(`Flags`), `ItemLevel` = VALUES(`ItemLevel`), `maxcount` = VALUES(`maxcount`), `stackable` = VALUES(`stackable`), `bonding` = VALUES(`bonding`), `description` = VALUES(`description`), `PageText` = VALUES(`PageText`), `Material` = VALUES(`Material`);
 
 -- ---------------------------------------------------------------------------
 -- 7. Loot
@@ -770,19 +809,20 @@ DELETE FROM `creature_queststarter` WHERE `id` = 1569 AND `quest` = 3095;
 --   Archibald Kava and 7.8 yd from Cadmus; both legs from the door are clear of walls and pass every NPC at 3.4
 --   yd or more.
 UPDATE `waypoint_data` SET `position_x` = 1862.0, `position_y` = 1571.0, `position_z` = 94.314 WHERE `id` = 319160 AND `point` = 4;
--- Deathguard Phillip 1739 (guid 28705) path: both legs through the east turnaround (1893.23, 1586.92) passed
---   1.1-1.2 yd from Deathguard Bradforth's sourced post (53004). He now turns 1.9 yd further south on the same
---   open street, so both legs pass 2.1 yd from Bradforth and 4.6 yd from Deathguard Randolph.
+-- Deathguard Phillip 1739 (guid 28705) path: both legs through the east turnaround (1893.23, 1586.92) pass
+--   0.3-0.4 yd from Marla's Grave at its CoA point (ST6961). He now turns 1.9 yd further south on the same open
+--   street, so both legs pass 1.5 yd from the grave, 3.3 yd from Deathguard Bradforth and 4.6 yd from Deathguard
+--   Randolph.
 UPDATE `waypoint_data` SET `position_x` = 1893.2, `position_y` = 1585.0, `position_z` = 88.312 WHERE `id` = 287050 AND `point` = 5;
 
-DELETE FROM `creature` WHERE `guid` IN (9003700, 9003701, 9003702, 9003703, 9003704, 9003705, 9003706, 9003707, 9003708, 9003709, 9003710, 9003711, 9003712, 9003713, 9003714, 9003715, 9003716, 9003717, 9003718, 9003720, 9003721, 9003722, 9003723, 9003724, 9003725, 9003726, 9003727, 9003728) OR `guid` BETWEEN 9003700 AND 9003899;
+DELETE FROM `creature` WHERE `guid` IN (9003700, 9003701, 9003702, 9003703, 9003704, 9003705, 9003706, 9003707, 9003708, 9003709, 9003710, 9003711, 9003712, 9003713, 9003714, 9003715, 9003716, 9003717, 9003718, 9003719, 9003720, 9003721, 9003722, 9003723, 9003724, 9003725, 9003726, 9003727, 9003728, 9003729) OR `guid` BETWEEN 9003700 AND 9003899;
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
 (9003700, 50276, 0, 0, 0, 1, 1, 1, 1839.63, 1645.13, 97.628, 5.07, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Dar''danis, Felsworn trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53003, z from surface.floor. Faces 5.07 toward the nave and the chapel door the letter-bearers walk in by, clear 15 yd'),
 (9003701, 50275, 0, 0, 0, 1, 1, 1, 1849.52, 1563.24, 94.859, 1.6, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Bailey Horrorhate, Witch Hunter trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53017, z from surface.floor. Faces 1.60 west down the lane to the street and the mailbox by the chapel door; the stock-derived 2.88 faced the farmhouse wall 4.6 yd away'),
 (9003702, 502773, 0, 0, 0, 1, 1, 1, 1859.99, 1556.58, 94.789, 1.55, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Dabbert Staze, Stormbringer trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53011, z from surface.floor. Faces 1.55 toward the inn''s front door (1860, 1577), 15 yd of open floor'),
 (9003703, 9300250, 0, 0, 0, 1, 1, 1, 1876.38, 1612.34, 94.045, 3.8, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Brallmular, Knight of Xoroth trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53005, z from surface.floor. Faces 3.80 down the street toward the chapel door players come from, open 9-15 yd; the stock-derived 4.71 faced across the street away from the approach'),
-(9003704, 50279, 0, 0, 0, 1, 1, 1, 1882.26, 1588.39, 89.848, 2.59, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Deathguard Bradforth, Guardian trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53004, z from surface.floor. Faces 2.59 toward the mailbox and chapel door at the far end of the street'),
+(9003704, 50279, 0, 0, 0, 1, 1, 1, 1881.26, 1589.64, 89.973, 2.76, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Deathguard Bradforth, Guardian trainer. Deathknell: hand-placed (INFERRED) north gate, 1.6 yd west of his SuperTrack post (53004), which is 2.3 yd from Marla''s Grave at its CoA point (ST6961); now 3.7 yd from the grave, 3.3 yd from the Deathguard patrol and 5.1 yd from the Wretched Ghoul''s turnaround, inspected with inspect_area and passing surface.check. Faces 2.76 toward the mailbox and chapel door at the far end of the street'),
 (9003705, 502803, 0, 0, 0, 1, 1, 1, 1864.39, 1614.29, 95.617, 3.4, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Vaelion Grandbell, Templar trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53013, z from surface.floor. Faces 3.40 toward the chapel door and mailbox players come from; the stock-derived 4.69 faced across the street'),
 (9003706, 502922, 0, 0, 0, 1, 1, 1, 1849.53, 1631.43, 96.933, 3.3, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Irina Valreed, Bloodmage trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53001, z from surface.floor. Faces 3.30 into the nave toward the door, as Dark Cleric Duesten beside her does'),
 (9003707, 50281, 0, 0, 0, 1, 1, 1, 1886.79, 1646.3, 92.426, 3.91, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Gustaf Blightflight, Ranger trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53009, z from surface.floor. Faces 3.91 toward the mailbox and chapel door across the graveyard'),
@@ -797,6 +837,7 @@ VALUES
 (9003716, 502891, 0, 0, 0, 1, 1, 1, 1870.29, 1635.95, 95.484, 5.3, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Undertaker Chite, Reaper trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53000, z from surface.floor. Faces 5.30 toward the graveyard gate players enter by, his open grave and dirt mound in front of him; the wheelbarrow at his side blocks the other approach'),
 (9003717, 502913, 0, 0, 0, 1, 1, 1, 1847.92, 1641.24, 97.628, 4.01, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Wilhelm Balthier, Runemaster trainer. Deathknell: SOURCED-CLIENT QuestSuperTrack turn-in point of quest 53010, z from surface.floor. Faces 4.01 down the nave toward the door, past Novice Elreth'),
 (9003718, 9300251, 0, 0, 0, 1, 1, 1, 1835.5, 1598.5, 95.254, 0.85, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Shadow-Walker Voss, Witch Doctor trainer. Deathknell: hand-placed (INFERRED) south end of the street, west side, in front of the chapel''s south-east corner: the empty part of the village, 9 yd from both guard patrol lines, inspected with inspect_area and passing surface.check. Faces 0.85 toward the chapel door (1843, 1607.5) where players leave with their letters'),
+(9003719, 51278, 0, 0, 0, 1, 1, 1, 1838, 1583.5, 94.395, 1.37, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Stenchbone, Barbarian trainer. Deathknell: hand-placed (INFERRED) south end of the street, east side, in front of the farmhouse, across the street from Shadow-Walker Voss; 2.1 yd west of Maquell Ebonwood''s walk into the farmhouse, 5 yd from the Deathguard patrol, inspected with inspect_area and passing surface.check. Faces 1.37 across the street to the chapel door players leave with their letters'),
 (9003720, 299240, 0, 0, 0, 1, 1, 1, 1863.2, 1556.3, 94.793, 2.5, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Deathknell inn (the two-storey house), ground floor: the stock warrior trainer Dannal Stern''s alcove, 0.75 yd from his post and 3.2 yd from Dabbert Staze; the stock spawn (guid 28464) stood 2.48 yd from Dabbert''s sourced point, so the kill copy replaces it. Stock facing'),
 (9003721, 299226, 0, 0, 0, 1, 1, 0, 1915, 1596, 83.835, 3.6, 60, 8, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Deathknell, the field north of the village exit where the risen wander, running amok among the Mindless Zombies'),
 (9003722, 9300252, 0, 0, 0, 1, 1, 1, 1898, 1573.5, 89.074, 0, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: abandoned farmhouses north-east of Deathknell, south house, rummaging at the Shadowfang table'),
@@ -805,7 +846,8 @@ VALUES
 (9003725, 9300255, 0, 0, 0, 1, 1, 0, 1860.3, 1556.2, 99.727, 1.57, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Deathknell inn (the two-storey house), upper floor: lying in the canopy bed CoA furnished (Innbedcanopy and three Innpillow models), head on the pillows'),
 (9003726, 9300256, 0, 0, 0, 1, 1, 0, 1826, 1566, 95.623, 1.25, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: Deathknell, the shadowed nook behind the dead canopy tree by the south gate torch, watching the street'),
 (9003727, 685034, 0, 0, 0, 1, 1, 0, 1913, 1728, 99.976, 0, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: north-west of Deathknell: at the foot of the Elune statue with pilgrim candles (Diremaulstonestatue04.m2, CoA-only) on the side that faces the village'),
-(9003728, 685037, 0, 0, 0, 1, 1, 0, 1845, 1778.5, 122.244, 0, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: western mountains: in the hidden gully west of the village, before the paladin statue');
+(9003728, 685037, 0, 0, 0, 1, 1, 0, 1845, 1778.5, 122.244, 0, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: western mountains: in the hidden gully west of the village, before the paladin statue'),
+(9003729, 9300257, 0, 0, 0, 1, 1, 1, 1898.5, 1597, 87.587, 3.73, 60, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Deathknell: outside the north gate, below the graveyard''s east lantern post, glaring back at the gate he was turned away from');
 
 DELETE FROM `creature_addon` WHERE `guid` = 9003725 OR `guid` BETWEEN 9003700 AND 9003899;
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
