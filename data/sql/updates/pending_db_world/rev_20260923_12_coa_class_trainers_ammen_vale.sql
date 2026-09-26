@@ -88,9 +88,8 @@ VALUES
 --   from Anchorite Truuen 17238 (display 16930), changed skin, face, hair colour and tendrils; keeps the anchorite
 --   robes
 -- 9300423 Ossiruun of the Auchenai: look is a stand-in, no SMSG_MIRRORIMAGE_DATA capture of this trainer exists:
---   draenei male from Auchenai Doomsayer 21285 (display 20187), changed skin (ashen) and face (stern); the
---   Auchenai Death-Speaker's black robe top (149310) over the blue Auchenai mantle, skirt and black cloak, no
---   gloves
+--   draenei male from Auchenai Necromancer 18702 (display 18077), changed the full Auchenai Necromancer robes
+--   (shoulders, robe, belt and skirt of 18702), ashen skin
 -- 9300424 Pyraal: look is a stand-in, no SMSG_MIRRORIMAGE_DATA capture of this trainer exists: draenei female from
 --   Shattered Sun Magi 25153 (display 22958), changed gender (female instead of male, for variety), face, hair,
 --   hair colour and facial features; the Shattered Sun tabard (display 40734) removed, which belongs to the
@@ -127,7 +126,7 @@ VALUES
 (9300418, 16125, 11, 0, 1, 5, 3, 7, 1, 6, 0, 968, 34411, 0, 34525, 34668, 34526, 34417, 0, 34669, 34407, 0),
 (9300419, 16125, 11, 0, 1, 1, 4, 4, 3, 1, 0, 6071, 17564, 0, 17555, 28805, 18462, 29055, 0, 29056, 0, 36117),
 (9300422, 16125, 11, 0, 1, 7, 1, 2, 5, 4, 0, 0, 0, 0, 30513, 24129, 29987, 0, 5728, 0, 0, 0),
-(9300423, 16125, 11, 0, 1, 13, 9, 6, 1, 5, 0, 0, 146448, 0, 149310, 151194, 153276, 0, 0, 0, 158645, 0),
+(9300423, 16125, 11, 0, 1, 13, 9, 6, 1, 5, 0, 0, 146485, 0, 149343, 151234, 153325, 0, 0, 0, 0, 0),
 (9300424, 16126, 11, 1, 1, 3, 2, 8, 2, 3, 0, 40785, 40786, 0, 40788, 40789, 40790, 40791, 0, 40792, 0, 0),
 (9300425, 16126, 11, 1, 1, 14, 4, 3, 6, 4, 0, 26315, 0, 0, 148789, 150651, 153286, 0, 0, 0, 0, 0),
 (9300426, 16125, 11, 0, 1, 8, 5, 3, 4, 2, 0, 0, 0, 0, 28901, 28902, 28903, 0, 0, 0, 0, 0),
