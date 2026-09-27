@@ -384,7 +384,7 @@ VALUES
 (9012101, 161804, 1, 0, 0, 1, 1, 0, -380, -4130, 50.9, 1.2, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Zeb''Goro resident: by the water trough inside the south arch'),
 (9012102, 161805, 1, 0, 0, 1, 1, 0, -345, -4112, 49.752, 2.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Zeb''Goro resident: at the foot of the market deck'),
 (9012103, 161806, 1, 0, 0, 1, 1, 0, -369.6, -4056.5, 51.273, 3, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Zeb''Goro resident: the ground-floor deck of Troll_Hotel01, her inn'),
-(9012104, 161827, 1, 0, 0, 1, 1, 0, -362, -4140, 52.074, 3.6, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Zeb''Goro resident: outside the south arch on the approach, 43 yd from the nearest Devotee; faces the road'),
+(9012104, 161827, 1, 0, 0, 1, 1, 0, -364.5, -4139.5, 51.965, 3.6, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Zeb''Goro resident: outside the south arch on the approach, clear of the bush, 43 yd from the nearest Devotee; faces the road'),
 (9012105, 161831, 1, 0, 0, 1, 1, 0, -360, -4108, 51.205, 1, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Zeb''Goro resident: market lane below the mall, between the gong and the trough');
 
 DELETE FROM `creature_addon` WHERE `guid` BETWEEN 9012000 AND 9012299;
@@ -427,7 +427,7 @@ DELETE FROM `gameobject_addon` WHERE `guid` BETWEEN 7917000 AND 7917099;
 -- 7. Stock rows
 -- ---------------------------------------------------------------------------
 -- Recorded CoA points for the Den and gate NPCs; Zeb'Goro wildlife out of the village; buried rows re-floored.
-UPDATE `creature` SET `position_x` = -419.414, `position_y` = -4103.92, `position_z` = 49.338 WHERE `guid` = 6471; -- Hana'zua: ST1365 on dry ground west of the new pool
+UPDATE `creature` SET `position_x` = -421.2, `position_y` = -4104.8, `position_z` = 49.511 WHERE `guid` = 6471; -- Hana'zua: ST1365 (2.0 yd) west of the new pool, out of the plant
 UPDATE `creature` SET `position_x` = -599.645, `position_y` = -4184.11, `position_z` = 41.084 WHERE `guid` = 3443; -- Gornek: ST637 (atlas agrees) on the Den floor
 UPDATE `creature` SET `position_x` = -606.95, `position_y` = -4187.24, `position_z` = 41.092 WHERE `guid` = 4797; -- Kzan Thornslash: atlas point at the Den mouth
 UPDATE `creature` SET `position_x` = -594, `position_y` = -4574.9, `position_z` = 41.033 WHERE `guid` = 4787; -- Ukor: at the valley gate by his stall, 1.1 yd off the atlas point to clear the worldforged Forgotten Sack

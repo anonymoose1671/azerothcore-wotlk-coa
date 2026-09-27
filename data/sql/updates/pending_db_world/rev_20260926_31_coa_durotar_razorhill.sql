@@ -197,7 +197,7 @@ DELETE FROM `creature` WHERE `guid` IN (9012300, 9012301, 9012302, 9012303, 9012
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
 (9012300, 162839, 1, 0, 0, 1, 1, 0, 366.935, -4764.07, 30.122, 2.3877, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Razor Hill: ST8740 on the cliff rock under his tent (atlas 0.8 yd); looks out over the town'),
-(9012301, 162840, 1, 0, 0, 1, 1, 0, 332.782, -4986.61, 21.16, 4.9714, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Razor Hill: ST8744 under the tree outside Rivenruin Cave (atlas); eyes the cave mouth he fled'),
+(9012301, 162840, 1, 0, 0, 1, 1, 0, 331, -4987.4, 20.726, 5.0147, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Razor Hill: ST8744 (1.9 yd) under the tree outside Rivenruin Cave, clear of the dry bush; eyes the cave mouth he fled'),
 (9012302, 162838, 1, 0, 0, 1, 1, 0, 375.735, -4664.36, 16.134, 3.9261, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Razor Hill: ST8845 at the mine mouth (atlas); faces the town road'),
 (9012303, 162841, 1, 0, 0, 1, 1, 0, 244.59, -4699.78, 38.53, 4.712, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Razor Hill: atlas point on the Pvp_Orctower top floor (Questie 0.3 yd); looks east over the land toward the sea'),
 (9012304, 162949, 1, 0, 0, 1, 1, 0, 207.812, -4695.65, 11.462, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Razor Hill: ST8846, the pool west of town (water 12.78); invisible, Collect Water reaches 6 yd, the SuperTrack radius'),
@@ -226,17 +226,17 @@ VALUES
 (9012334, 162834, 1, 0, 0, 1, 1, 0, 405, -5025, 8.04, 3.2219, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the foot of the tunnel slope'),
 (9012335, 162834, 1, 0, 0, 1, 1, 0, 416.02, -5032.74, 6.605, 1.0958, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the landing ledge'),
 (9012336, 162834, 1, 0, 0, 1, 1, 0, 427.3, -5042.79, 4.63, 1.9602, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the balcony over the south hall'),
-(9012337, 162834, 1, 0, 0, 1, 1, 0, 427.3, -5008.95, 1.558, 4.2855, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the north end of the balcony'),
+(9012337, 162834, 1, 0, 0, 1, 1, 0, 427.6, -5010.6, 1.985, 4.2268, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; north end of the balcony, out of the tall grass'),
 (9012338, 162834, 1, 0, 0, 1, 1, 0, 438.57, -5038.56, 2.065, 2.5109, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the balcony'),
-(9012339, 162834, 1, 0, 0, 1, 1, 0, 418.13, -5014.23, 3.735, 4.8843, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point at the balcony head'),
-(9012340, 162834, 1, 0, 0, 1, 1, 0, 429, -5028, -30.434, 4.588, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the south hall floor under the balcony'),
-(9012341, 162834, 1, 0, 0, 1, 1, 0, 420, -5046, -31.172, 5.0554, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the lowest floor of the south hall'),
+(9012339, 162834, 1, 0, 0, 1, 1, 0, 419.3, -5013.8, 3.439, 4.7748, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the balcony head, out of the tall grass'),
+(9012340, 162834, 1, 0, 0, 1, 1, 0, 427.3, -5028, -30.424, 4.6406, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the south hall floor under the balcony, south of the grass'),
+(9012341, 162834, 1, 0, 0, 1, 1, 0, 422.5, -5045, -31.377, 4.8775, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the lowest floor of the south hall, north of the grass'),
 (9012342, 162834, 1, 0, 0, 1, 1, 0, 432, -5064, -28.687, 2.6224, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the south hall east side'),
 (9012343, 162834, 1, 0, 0, 1, 1, 0, 417, -5088, -28.799, 1.2925, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the approach to the Brute'),
 (9012344, 162834, 1, 0, 0, 1, 1, 0, 452.32, -4951.84, -25.344, 2.542, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point in the west hall'),
 (9012345, 162834, 1, 0, 0, 1, 1, 0, 411, -4914, -24.062, 5.4578, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the west hall south corner'),
 (9012346, 162834, 1, 0, 0, 1, 1, 0, 435, -4935, -25.682, 4.7124, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the west hall centre'),
-(9012347, 162834, 1, 0, 0, 1, 1, 0, 462, -4926, -25.494, 3.6199, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the west hall north side'),
+(9012347, 162834, 1, 0, 0, 1, 1, 0, 461, -4929.5, -25.541, 3.5254, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the west hall north side, off the coral'),
 (9012348, 162834, 1, 0, 0, 1, 1, 0, 426, -4968, -22.709, 1.2598, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the west hall east rise'),
 (9012349, 162834, 1, 0, 0, 1, 1, 0, 444, -4977, -22.142, 1.8094, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the foot of the ramp up to the middle gallery'),
 (9012350, 162834, 1, 0, 0, 1, 1, 0, 441.75, -4999.43, -0.053, 5.6931, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point at the middle gallery entrance'),
@@ -245,13 +245,13 @@ VALUES
 (9012353, 162834, 1, 0, 0, 1, 1, 0, 474.17, -5028.51, 5.924, 2.1671, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the gallery rise'),
 (9012354, 162834, 1, 0, 0, 1, 1, 0, 474.52, -5011.06, 5.038, 3.534, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the gallery rise'),
 (9012355, 162834, 1, 0, 0, 1, 1, 0, 483.33, -4995.73, -5.756, 5.723, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the way down to the north hall'),
-(9012356, 162834, 1, 0, 0, 1, 1, 0, 496.72, -5037.5, -15.061, 0.3593, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point at the north hall mouth'),
+(9012356, 162834, 1, 0, 0, 1, 1, 0, 498.2, -5036.5, -14.866, 0.347, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the north hall mouth, off the ruin ring'),
 (9012357, 162834, 1, 0, 0, 1, 1, 0, 511.17, -5024.81, -12.29, 6.2731, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point in the north hall'),
 (9012358, 162834, 1, 0, 0, 1, 1, 0, 507.29, -5045.43, -14.486, 0.7326, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; Questie point on the north hall east side'),
 (9012359, 162834, 1, 0, 0, 1, 1, 0, 540, -5031, -13.334, 2.6012, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the north hall middle'),
 (9012360, 162834, 1, 0, 0, 1, 1, 0, 561, -5037, -13.672, 2.7723, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the far north hall'),
 (9012361, 162834, 1, 0, 0, 1, 1, 0, 525, -5001, -12.414, 4.9178, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the north hall west bay'),
-(9012362, 162834, 1, 0, 0, 1, 1, 0, 465, -5070, -23.821, 5.4978, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the east hall floor'),
+(9012362, 162834, 1, 0, 0, 1, 1, 0, 467, -5069.5, -23.347, 5.2117, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the east hall floor, north of the grass'),
 (9012363, 162834, 1, 0, 0, 1, 1, 0, 486, -5064, -18.907, 3.7439, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Myrmidon; the east hall rise toward the north hall'),
 (9012370, 162835, 1, 0, 0, 1, 1, 0, 365.39, -5045.45, 21.699, 2.5071, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; atlas sighting in the side bay of the west mouth'),
 (9012371, 162835, 1, 0, 0, 1, 1, 0, 399, -5028, 10.927, 3.1761, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; the tunnel slope, behind the myrmidons'),
@@ -264,7 +264,7 @@ VALUES
 (9012378, 162835, 1, 0, 0, 1, 1, 0, 530.55, -5024.28, -13.51, 4.0601, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; Questie point in the north hall'),
 (9012379, 162835, 1, 0, 0, 1, 1, 0, 547.82, -5025.87, -13.737, 3.0928, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; Questie point in the north hall'),
 (9012380, 162835, 1, 0, 0, 1, 1, 0, 552, -5022, -13.626, 3.2771, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; beside Questie (555.92, -5020.58), which stands against the wall'),
-(9012381, 162835, 1, 0, 0, 1, 1, 0, 423, -5061, -29.28, 0.4636, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; the south hall west side'),
+(9012381, 162835, 1, 0, 0, 1, 1, 0, 424.5, -5063, -28.962, 1.4056, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; the south hall west side, out of the grass'),
 (9012382, 162835, 1, 0, 0, 1, 1, 0, 426, -5088, -27.973, 1.6065, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; the south hall end, before the Brute'),
 (9012383, 162835, 1, 0, 0, 1, 1, 0, 474, -5076, -21.504, 2.8966, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; the east hall'),
 (9012384, 162835, 1, 0, 0, 1, 1, 0, 459, -4962, -22.711, 2.3996, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Rivenruin Cave: Rivenruin Sorceress; the west hall north-east bay'),
@@ -386,8 +386,8 @@ UPDATE `creature` SET `position_x` = 281.47, `position_y` = -4694.72, `position_
 UPDATE `creature` SET `position_x` = 268.98, `position_y` = -4694.89, `position_z` = 14.056, `orientation` = 6.2457 WHERE `guid` = 6460 AND `id` = 3191;
 -- Razor Hill Grunt (7294): the atlas grunt post north-west of town (inside the great-hall wall before); faces away from the town.
 UPDATE `creature` SET `position_x` = 174.73, `position_y` = -4675.37, `position_z` = 20.62, `orientation` = 2.8435 WHERE `guid` = 7294 AND `id` = 5953;
--- Razor Hill Grunt (8417): buried 15 yd; foot of the new south-west tower.
-UPDATE `creature` SET `position_x` = 244, `position_y` = -4838, `position_z` = 30.075 WHERE `guid` = 8417 AND `id` = 5953;
+-- Razor Hill Grunt (8417): buried 15 yd; south-west tower foot, off the bush.
+UPDATE `creature` SET `position_x` = 242.8, `position_y` = -4838, `position_z` = 30.105 WHERE `guid` = 8417 AND `id` = 5953;
 -- Razor Hill Grunt (8421): buried 21 yd; foot of the new south-west tower.
 UPDATE `creature` SET `position_x` = 257.5, `position_y` = -4830, `position_z` = 31.783 WHERE `guid` = 8421 AND `id` = 5953;
 -- Razor Hill Grunt (6385): buried 14 yd; on the raised east hill, town side.
@@ -396,8 +396,8 @@ UPDATE `creature` SET `position_x` = 357.65, `position_y` = -4788.13, `position_
 UPDATE `creature` SET `position_x` = 365.533, `position_y` = -4827.24, `position_z` = 30.502 WHERE `guid` = 8416 AND `id` = 5953;
 -- Razor Hill Grunt (10277): buried 17 yd; on the raised east hill.
 UPDATE `creature` SET `position_x` = 369.885, `position_y` = -4818.79, `position_z` = 28.859 WHERE `guid` = 10277 AND `id` = 5953;
--- Razor Hill Grunt (8423): sunk on a steep bank; open ground below.
-UPDATE `creature` SET `position_x` = 382, `position_y` = -4757, `position_z` = 10.037 WHERE `guid` = 8423 AND `id` = 5953;
+-- Razor Hill Grunt (8423): sunk on a steep bank; open ground clear of the bush.
+UPDATE `creature` SET `position_x` = 380.5, `position_y` = -4756, `position_z` = 9.679 WHERE `guid` = 8423 AND `id` = 5953;
 -- Razor Hill Grunt (7668): sunk 1.9 yd; open ground beside it.
 UPDATE `creature` SET `position_x` = 388, `position_y` = -4855, `position_z` = 14.257 WHERE `guid` = 7668 AND `id` = 5953;
 -- Razor Hill Grunt (7296): against a new cactus; 1 yd clear.

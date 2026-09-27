@@ -215,7 +215,7 @@ VALUES
 (9010400, 162854, 0, 0, 0, 1, 1, 1, 2258, -20, 24.304, 1.9, 300, 3, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Brill: west approach below the HQ'),
 (9010401, 162853, 0, 0, 0, 1, 1, 1, 2260, 5, 26.484, 1.3, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: west side of the HQ, facing the Brill road'),
 (9010402, 162854, 0, 0, 0, 1, 1, 1, 2285, -32, 22.891, 4.2, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: south dock by the cargo boxes'),
-(9010403, 162853, 0, 0, 0, 1, 1, 1, 2296, -44, 22.891, 4.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: south dock walk'),
+(9010403, 162853, 0, 0, 0, 1, 1, 1, 2299, -42, 22.891, 4.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: south dock walk, outside the tent'),
 (9010404, 162854, 0, 0, 0, 1, 1, 1, 2266, -26, 24.126, 2.3, 300, 3, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Brill: south-west corner of the palisade'),
 (9010410, 162859, 0, 0, 0, 1, 1, 1, 2450.42, 153.23, 27.947, 3.14, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: Questie point on the garden terrace'),
 (9010411, 162859, 0, 0, 0, 1, 1, 1, 2465.48, 153.23, 29.154, 3.5, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Brill: Questie point on the north lawn by the torches'),
@@ -303,7 +303,7 @@ VALUES
 UPDATE `creature` SET `position_x` = 2291.23, `position_y` = 358.639, `position_z` = 34.273, `orientation` = 2.916 WHERE `guid` = 33711 AND `id` = 4773;
 UPDATE `creature` SET `position_x` = 2300.92, `position_y` = 352.76, `position_z` = 34.221, `orientation` = 3.073 WHERE `guid` = 28472 AND `id` = 4731;
 UPDATE `creature` SET `position_x` = 2283.65, `position_y` = 351.05, `position_z` = 34.113, `orientation` = 2.881 WHERE `guid` = 28478 AND `id` = 10055;
-UPDATE `creature` SET `position_x` = 2296.63, `position_y` = 348.74, `position_z` = 34.234, `orientation` = 2.969 WHERE `guid` = 31906 AND `id` = 12342;
+UPDATE `creature` SET `position_x` = 2296.6, `position_y` = 348, `position_z` = 34.234, `orientation` = 2.969 WHERE `guid` = 31906 AND `id` = 12342;
 UPDATE `creature` SET `position_x` = 2304.71, `position_y` = 356.87, `position_z` = 34.173, `orientation` = 2.951 WHERE `guid` = 31907 AND `id` = 12341;
 UPDATE `creature` SET `position_x` = 2297.88, `position_y` = 358.04, `position_z` = 34.199, `orientation` = 3.038 WHERE `guid` = 31909 AND `id` = 12343;
 UPDATE `creature` SET `position_x` = 2303.53, `position_y` = 347.75, `position_z` = 34.269, `orientation` = 2.986 WHERE `guid` = 31910 AND `id` = 11156;
@@ -317,7 +317,7 @@ UPDATE `creature` SET `position_x` = 2279.45, `position_y` = 298.072, `position_
 UPDATE `creature` SET `position_x` = 2269.51, `position_y` = 279.453, `position_z` = 34.654, `orientation` = 2.705 WHERE `guid` = 29798 AND `id` = 1652;
 UPDATE `creature` SET `position_x` = 2272.98, `position_y` = 290.231, `position_z` = 34.55 WHERE `guid` = 34112 AND `id` = 1746;
 UPDATE `creature` SET `position_x` = 2255.06, `position_y` = 307.46, `position_z` = 34.324 WHERE `guid` = 31918 AND `id` = 2311;
-UPDATE `creature` SET `position_x` = 2266, `position_y` = 329.6, `position_z` = 35.085, `orientation` = 6.248 WHERE `guid` = 28470 AND `id` = 2114;
+UPDATE `creature` SET `position_x` = 2266.5, `position_y` = 327.3, `position_z` = 34.984, `orientation` = 6.248 WHERE `guid` = 28470 AND `id` = 2114;
 UPDATE `creature` SET `position_x` = 2187.53, `position_y` = 274.695, `position_z` = 35.306 WHERE `guid` = 45153 AND `id` = 4075;
 UPDATE `creature` SET `position_x` = 2216, `position_y` = 268, `position_z` = 35.066 WHERE `guid` = 45048 AND `id` = 4075;
 UPDATE `creature` SET `position_x` = 2162.23, `position_y` = 273.459, `position_z` = 37.605 WHERE `guid` = 44912 AND `id` = 1547;
@@ -563,7 +563,7 @@ UPDATE `gameobject` SET `position_x` = 2234.31, `position_y` = 277.073, `positio
 UPDATE `gameobject` SET `position_x` = 2277.55, `position_y` = 266.3, `position_z` = 35.108, `orientation` = 0.2269 WHERE `guid` = 41622 AND `id` = 178430;
 
 -- Buried in the knoll: open ground below it.
-UPDATE `creature` SET `position_x` = 2250, `position_y` = 445, `position_z` = 39.816, `orientation` = 2.968 WHERE `guid` = 242925 AND `id` = 32820;
+UPDATE `creature` SET `position_x` = 2254, `position_y` = 445, `position_z` = 38.512, `orientation` = 2.968 WHERE `guid` = 242925 AND `id` = 32820;
 
 -- Out of the new chapel.
 UPDATE `creature` SET `position_x` = 2172, `position_y` = 350, `position_z` = 37.391, `orientation` = 5.015 WHERE `guid` = 242861 AND `id` = 32820;
@@ -585,6 +585,6 @@ UPDATE `gameobject` SET `position_x` = 2304.21, `position_y` = 260.41, `position
 UPDATE `gameobject` SET `position_x` = 2302.42, `position_y` = 295.455, `position_z` = 53.35, `orientation` = 1.32645 WHERE `guid` = 76528 AND `id` = 181389;
 
 -- Sunk in a stump, rubble or the moved well: open ground beside it.
-UPDATE `creature` SET `position_x` = 2286.23, `position_y` = 335.584, `position_z` = 34.509, `orientation` = 3.604 WHERE `guid` = 243003 AND `id` = 32820;
+UPDATE `creature` SET `position_x` = 2286.5, `position_y` = 332.8, `position_z` = 34.53, `orientation` = 3.604 WHERE `guid` = 243003 AND `id` = 32820;
 UPDATE `gameobject` SET `position_x` = 2291.53, `position_y` = 332.038, `position_z` = 35.054, `orientation` = 6.25743 WHERE `guid` = 151967 AND `id` = 113769;
 UPDATE `creature` SET `position_x` = 2272, `position_y` = 450, `position_z` = 34.027, `orientation` = 3.4143 WHERE `guid` = 244296 AND `id` = 32820;

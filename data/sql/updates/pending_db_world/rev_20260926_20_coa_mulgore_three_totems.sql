@@ -8,8 +8,8 @@
 -- Never spawned: the kill-credit markers 161822, 161823, 161849, the disguise looks 161829/161830 and the totem spirits (summoned).
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `detection_range`, `rank`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `type_flags`, `lootid`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `DamageModifier`, `RegenHealth`, `flags_extra`, `KillCredit1`, `ScriptName`)
 VALUES
-(161817, 'Redhorn', NULL, 0, 10, 10, 0, 35, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1.029, 1, 1, 1, 1, 0, 0, ''),
-(161818, 'Morriga Hollowhoof', NULL, 0, 15, 15, 0, 35, 2, 1, 1.14286, 20, 1, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1.05, 1, 1, 1, 1, 0, 0, ''),
+(161817, 'Redhorn', NULL, 0, 10, 10, 0, 104, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1.029, 1, 1, 1, 1, 0, 0, ''),
+(161818, 'Morriga Hollowhoof', NULL, 0, 15, 15, 0, 104, 2, 1, 1.14286, 20, 1, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1.05, 1, 1, 1, 1, 0, 0, ''),
 (161819, 'Sage Nauchol', NULL, 932450, 13, 13, 0, 35, 3, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, 'SmartAI', 0, 1.05, 1, 1, 1, 1, 0, 161823, ''),
 (161840, 'Hyena Spirit', NULL, 0, 10, 10, 0, 35, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 1, 0, 0, '', 0, 0.98, 1, 1, 1, 1, 0, 0, ''),
 (161838, 'Belduna', NULL, 0, 5, 5, 0, 1374, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 0.96, 1, 1, 1, 1, 0, 0, ''),
