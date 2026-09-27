@@ -18,10 +18,10 @@
 --     come back in section 5 under the same MenuID, OptionID, icon and broadcast text, so the root menus keep
 --     their order, but they now lead to a CoA submenu. Every other root menu keeps 5 or more options (Dalaran
 --     10082 keeps 2), so none falls back to menu 0 (PlayerGossip.cpp:40-42).
---   CoA trainers  SOURCED-DB: the 110 class-trainer spawns (trainer Type 0, Requirement 12-32) that stand in a
+--   CoA trainers  SOURCED-DB: the 111 class-trainer spawns (trainer Type 0, Requirement 12-32) that stand in a
 --     city or town with guard directions, read from coa_grd2 = scratch acore_world plus every updater-pending file
 --     in name order (effective positions). Stormwind 16, Ironforge 11, Darnassus 13 (with Mathrengyl Bearwalker
---     4217), the Exodar 14, Orgrimmar 15, the Undercity 17, Thunder Bluff 7, Silvermoon 16 and Kharanos 1 (Zipak
+--     4217), the Exodar 14, Orgrimmar 15, the Undercity 18, Thunder Bluff 7, Silvermoon 16 and Kharanos 1 (Zipak
 --     Cogweight, Reaper). Every trainer has its city's faction. No CoA class trainer stands in Dalaran, Shattrath,
 --     Razor Hill, Bloodhoof Village, Brill, Goldshire, Dolanaar, Azure Watch or Falconwing Square, so those guards
 --     get no option.
@@ -44,7 +44,7 @@
 --
 -- Counts: 136 stock gossip_menu_option keys deleted (+ their locale rows),
 -- 98 stock points_of_interest ids deleted (+ locale rows);
--- 11 root options restored, 9 CoA submenus with 110 options, 84 leaf menus, 110 points of interest.
+-- 11 root options restored, 9 CoA submenus with 111 options, 84 leaf menus, 111 points of interest.
 -- Exact-key deletes before every insert; re-applying the file is a no-op.
 
 -- ---------------------------------------------------------------------------
@@ -708,7 +708,7 @@ VALUES
 (932104, 13, 0, 'Venomancer', 0, 1, 1, 932161, 9321089, 0, 0, '', 0, 0),
 (932104, 14, 0, 'Witch Doctor', 0, 1, 1, 932160, 9321088, 0, 0, '', 0, 0);
 
--- Undercity: submenu 932105 (text copied from stock npc_text 3542), 17 class options, reached from 2849/12
+-- Undercity: submenu 932105 (text copied from stock npc_text 3542), 18 class options, reached from 2849/12
 --     (Undercity Guardian 5624), 10769/12 (Kor'kron Overseer 36213).
 --   leaf 932165: Felsworn Thimakria Dilanore guid 9004665 POI 9321100, Necromancer Kobidus the Lich guid 9004666
 --       POI 9321101; checked at the spawn: Magic Quarter trainers' pit, z -61 (WMO area Magic Quarter; stock POIs
@@ -720,10 +720,12 @@ VALUES
 --       study, Magic Quarter upper level (Anastasia 3.8 yd)
 --   leaf 932168: Pyromancer Ridley of Lordaeron guid 9004670 POI 9321105; checked at the spawn: War Quarter forge,
 --       inner ring (WMO area War Quarter; Samuel Van Brunt 6.1 yd, stock POI 337 10.3 yd)
---   leaf 932169: Guardian Deathguard Solor guid 9004671 POI 9321106, Knight of Xoroth Galgrimorth guid 9004672 POI
---       9321107, Templar Benjamin the Sinless guid 9004673 POI 9321108, Starcaller Fal'ador Yanille guid 9004674
---       POI 9321109, Cultist Vytalas the Dreamer guid 9004675 POI 9321110; checked at the spawn: War Quarter round
---       hall, outer ring (WMO area War Quarter)
+--   leaf 932169: Barbarian Ray'chelle Greenhill guid 9004689 POI 9321117, Guardian Deathguard Solor guid 9004671
+--       POI 9321106, Knight of Xoroth Galgrimorth guid 9004672 POI 9321107, Templar Benjamin the Sinless guid
+--       9004673 POI 9321108, Starcaller Fal'ador Yanille guid 9004674 POI 9321109, Cultist Vytalas the Dreamer
+--       guid 9004675 POI 9321110; checked at the spawn: War Quarter round hall, outer ring (WMO area War Quarter)
+--       and the island in its middle (same Undercity.wmo floor at z -57.2; Christoph Walker's removed warrior post
+--       5.8 yd)
 --   leaf 932170: Sun Cleric Lightspeaker Shaylan guid 9004676 POI 9321111; checked at the spawn: War Quarter east
 --       corridor at the pit rim (WMO area War Quarter; stock priest POI 332 3.3 yd)
 --   leaf 932171: Reaper Sidus the Soul-Collector guid 9004681 POI 9321112; checked at the spawn: training dummies
@@ -734,13 +736,14 @@ VALUES
 --   leaf 932173: Tinker Ol' Jimbles guid 9004680 POI 9321116; checked at the spawn: engineers' stalls, Rogues'
 --       Quarter outer ring (Franklin Lloyd 10.0 yd, stock POI 340 5.6 yd)
 DELETE FROM `points_of_interest_locale` WHERE `ID` IN (
-    9321103, 9321102, 9321110, 9321100, 9321106, 9321107, 9321101, 9321105, 9321113, 9321112, 9321104, 9321109,
-    9321115, 9321111, 9321108, 9321116, 9321114);
+    9321117, 9321103, 9321102, 9321110, 9321100, 9321106, 9321107, 9321101, 9321105, 9321113, 9321112, 9321104,
+    9321109, 9321115, 9321111, 9321108, 9321116, 9321114);
 DELETE FROM `points_of_interest` WHERE `ID` IN (
-    9321103, 9321102, 9321110, 9321100, 9321106, 9321107, 9321101, 9321105, 9321113, 9321112, 9321104, 9321109,
-    9321115, 9321111, 9321108, 9321116, 9321114);
+    9321117, 9321103, 9321102, 9321110, 9321100, 9321106, 9321107, 9321101, 9321105, 9321113, 9321112, 9321104,
+    9321109, 9321115, 9321111, 9321108, 9321116, 9321114);
 INSERT INTO `points_of_interest` (`ID`, `PositionX`, `PositionY`, `Icon`, `Flags`, `Importance`, `Name`)
 VALUES
+(9321117, 1775.5, 426, 7, 99, 0, 'Undercity Barbarian Trainer'),
 (9321103, 1770.5, 69.5, 7, 99, 0, 'Undercity Bloodmage Trainer'),
 (9321102, 1774, 60, 7, 99, 0, 'Undercity Chronomancer Trainer'),
 (9321110, 1751.5, 423, 7, 99, 0, 'Undercity Cultist Trainer'),
@@ -770,7 +773,7 @@ VALUES
 (932166, 'Magic Quarter, the portal room on the upper level. Nyrmedormi teaches the Chronomancers there and Belinaros Cicero the Bloodmages.', 'Magic Quarter, the portal room on the upper level. Nyrmedormi teaches the Chronomancers there and Belinaros Cicero the Bloodmages.', 0, 0, 1, 0),
 (932167, 'Thalen Mackenzie is in Anastasia Hartwell''s study, on the upper level of the Magic Quarter.', 'Thalen Mackenzie is in Anastasia Hartwell''s study, on the upper level of the Magic Quarter.', 0, 0, 1, 0),
 (932168, 'Ridley of Lordaeron works the forge in the War Quarter with the Van Brunts. He is on the inner ring.', 'Ridley of Lordaeron works the forge in the War Quarter with the Van Brunts. He is on the inner ring.', 0, 0, 1, 0),
-(932169, 'The round hall of the War Quarter, on the outer ring. Deathguard Solor trains the Guardians by the north entrance. Galgrimorth of the Knights of Xoroth, Benjamin the Sinless of the Templars, Fal''ador Yanille of the Starcallers and Vytalas the Dreamer of the Cultists stand around the hall.', 'The round hall of the War Quarter, on the outer ring. Deathguard Solor trains the Guardians by the north entrance. Galgrimorth of the Knights of Xoroth, Benjamin the Sinless of the Templars, Fal''ador Yanille of the Starcallers and Vytalas the Dreamer of the Cultists stand around the hall.', 0, 0, 1, 0),
+(932169, 'The round hall of the War Quarter. Ray''chelle Greenhill trains the Barbarians on the island in its middle, over one of the bridges. On the outer ring, Deathguard Solor trains the Guardians by the north entrance. Galgrimorth of the Knights of Xoroth, Benjamin the Sinless of the Templars, Fal''ador Yanille of the Starcallers and Vytalas the Dreamer of the Cultists stand around the hall.', 'The round hall of the War Quarter. Ray''chelle Greenhill trains the Barbarians on the island in its middle, over one of the bridges. On the outer ring, Deathguard Solor trains the Guardians by the north entrance. Galgrimorth of the Knights of Xoroth, Benjamin the Sinless of the Templars, Fal''ador Yanille of the Starcallers and Vytalas the Dreamer of the Cultists stand around the hall.', 0, 0, 1, 0),
 (932170, 'Lightspeaker Shaylan teaches in the War Quarter, in the east corridor at the rim of the pit, where the priests gather.', 'Lightspeaker Shaylan teaches in the War Quarter, in the east corridor at the rim of the pit, where the priests gather.', 0, 0, 1, 0),
 (932171, 'Sidus the Soul-Collector waits behind the training dummies on the ring below the War Quarter.', 'Sidus the Soul-Collector waits behind the training dummies on the ring below the War Quarter.', 0, 0, 1, 0),
 (932172, 'Rogues'' Quarter. Sigi Mikayla trains the Rangers, Phineas the Fervent the Witch Hunters and Harold Garett the Stormbringers, all out in the open quarter.', 'Rogues'' Quarter. Sigi Mikayla trains the Rangers, Phineas the Fervent the Witch Hunters and Harold Garett the Stormbringers, all out in the open quarter.', 0, 0, 1, 0),
@@ -795,23 +798,24 @@ DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 932105;
 DELETE FROM `gossip_menu_option` WHERE `MenuID` = 932105;
 INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`, `VerifiedBuild`)
 VALUES
-(932105, 0, 0, 'Bloodmage', 0, 1, 1, 932166, 9321103, 0, 0, '', 0, 0),
-(932105, 1, 0, 'Chronomancer', 0, 1, 1, 932166, 9321102, 0, 0, '', 0, 0),
-(932105, 2, 0, 'Cultist', 0, 1, 1, 932169, 9321110, 0, 0, '', 0, 0),
-(932105, 3, 0, 'Felsworn', 0, 1, 1, 932165, 9321100, 0, 0, '', 0, 0),
-(932105, 4, 0, 'Guardian', 0, 1, 1, 932169, 9321106, 0, 0, '', 0, 0),
-(932105, 5, 0, 'Knight of Xoroth', 0, 1, 1, 932169, 9321107, 0, 0, '', 0, 0),
-(932105, 6, 0, 'Necromancer', 0, 1, 1, 932165, 9321101, 0, 0, '', 0, 0),
-(932105, 7, 0, 'Pyromancer', 0, 1, 1, 932168, 9321105, 0, 0, '', 0, 0),
-(932105, 8, 0, 'Ranger', 0, 1, 1, 932172, 9321113, 0, 0, '', 0, 0),
-(932105, 9, 0, 'Reaper', 0, 1, 1, 932171, 9321112, 0, 0, '', 0, 0),
-(932105, 10, 0, 'Runemaster', 0, 1, 1, 932167, 9321104, 0, 0, '', 0, 0),
-(932105, 11, 0, 'Starcaller', 0, 1, 1, 932169, 9321109, 0, 0, '', 0, 0),
-(932105, 12, 0, 'Stormbringer', 0, 1, 1, 932172, 9321115, 0, 0, '', 0, 0),
-(932105, 13, 0, 'Sun Cleric', 0, 1, 1, 932170, 9321111, 0, 0, '', 0, 0),
-(932105, 14, 0, 'Templar', 0, 1, 1, 932169, 9321108, 0, 0, '', 0, 0),
-(932105, 15, 0, 'Tinker', 0, 1, 1, 932173, 9321116, 0, 0, '', 0, 0),
-(932105, 16, 0, 'Witch Hunter', 0, 1, 1, 932172, 9321114, 0, 0, '', 0, 0);
+(932105, 0, 0, 'Barbarian', 0, 1, 1, 932169, 9321117, 0, 0, '', 0, 0),
+(932105, 1, 0, 'Bloodmage', 0, 1, 1, 932166, 9321103, 0, 0, '', 0, 0),
+(932105, 2, 0, 'Chronomancer', 0, 1, 1, 932166, 9321102, 0, 0, '', 0, 0),
+(932105, 3, 0, 'Cultist', 0, 1, 1, 932169, 9321110, 0, 0, '', 0, 0),
+(932105, 4, 0, 'Felsworn', 0, 1, 1, 932165, 9321100, 0, 0, '', 0, 0),
+(932105, 5, 0, 'Guardian', 0, 1, 1, 932169, 9321106, 0, 0, '', 0, 0),
+(932105, 6, 0, 'Knight of Xoroth', 0, 1, 1, 932169, 9321107, 0, 0, '', 0, 0),
+(932105, 7, 0, 'Necromancer', 0, 1, 1, 932165, 9321101, 0, 0, '', 0, 0),
+(932105, 8, 0, 'Pyromancer', 0, 1, 1, 932168, 9321105, 0, 0, '', 0, 0),
+(932105, 9, 0, 'Ranger', 0, 1, 1, 932172, 9321113, 0, 0, '', 0, 0),
+(932105, 10, 0, 'Reaper', 0, 1, 1, 932171, 9321112, 0, 0, '', 0, 0),
+(932105, 11, 0, 'Runemaster', 0, 1, 1, 932167, 9321104, 0, 0, '', 0, 0),
+(932105, 12, 0, 'Starcaller', 0, 1, 1, 932169, 9321109, 0, 0, '', 0, 0),
+(932105, 13, 0, 'Stormbringer', 0, 1, 1, 932172, 9321115, 0, 0, '', 0, 0),
+(932105, 14, 0, 'Sun Cleric', 0, 1, 1, 932170, 9321111, 0, 0, '', 0, 0),
+(932105, 15, 0, 'Templar', 0, 1, 1, 932169, 9321108, 0, 0, '', 0, 0),
+(932105, 16, 0, 'Tinker', 0, 1, 1, 932173, 9321116, 0, 0, '', 0, 0),
+(932105, 17, 0, 'Witch Hunter', 0, 1, 1, 932172, 9321114, 0, 0, '', 0, 0);
 
 -- Thunder Bluff: submenu 932106 (text copied from stock npc_text 1300), 7 class options, reached from 721/9
 --     (Bluffwatcher 3084).

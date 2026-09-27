@@ -1,10 +1,12 @@
--- Conquest of Azeroth class trainers in the Horde capitals: the Orgrimmar (15), Undercity (17) and Thunder
+-- Conquest of Azeroth class trainers in the Horde capitals: the Orgrimmar (15), Undercity (18) and Thunder
 -- Bluff (7) twins of the starting-zone trainers. Each trainer is a core class trainer (trainer 900000 +
 -- class and its menu 930000 + class from migration 05) with a look, weapons and a hand-checked post.
 --
 -- WHERE EACH VALUE COMES FROM
 --   entries, names and titles  SOURCED-CACHE creaturecache; which capital a twin serves is INFERRED from the
---     6-prefix twin pattern and the cache capture counts (research/class-trainers/trainers.md).
+--     6-prefix twin pattern and the cache capture counts (research/class-trainers/trainers.md). The
+--     Undercity Barbarian 602951 is only in the coa-alpha capture of the union cache (2026-02-22), also in
+--     the stock-client creature list and the Exiles export; undead may be Barbarians in CharBaseInfo.dbc.
 --   posts  INFERRED: no source gives a capital trainer position. Every post was hand-picked in the stock
 --     hall of a related class or at a landmark that suits the class, checked with surface.check on the
 --     server floor, and kept at least 2.5 yd from every kept NPC (user decision 2026-09-23: stock class
@@ -53,6 +55,7 @@ VALUES
 (602921, 'Sul''natu Hearteater', 'Bloodmage Trainer', 930020, 60, 60, 0, 29, 49, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (602922, 'Belinaros Cicero', 'Bloodmage Trainer', 930020, 60, 60, 0, 68, 49, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (602950, 'Thokor Galanthoof', 'Barbarian Trainer', 930012, 60, 60, 0, 104, 49, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
+(602951, 'Ray''chelle Greenhill', 'Barbarian Trainer', 930012, 60, 60, 0, 68, 49, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (602953, 'Zulaka''jin', 'Barbarian Trainer', 930650, 60, 60, 0, 29, 49, 1, 1.14286, 20, 0, 2000, 2000, 1, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (603402, 'Murthakk Krulk', 'Pyromancer Trainer', 930024, 60, 60, 0, 29, 49, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
 (612912, 'Kodor the Seer', 'Runemaster Trainer', 930032, 60, 60, 0, 104, 49, 1, 1.14286, 20, 0, 2000, 2000, 8, 768, 2048, 7, 134217728, 0, '', 0, 1, 1, 1, 1, 2, ''),
@@ -195,6 +198,12 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), 
 --   exists: undead male from Shadowstalker Getry (25729) (display 23335), changed skin 1, face 6, hair 0,
 --   haircolor 3, facialhair 8; shoulders of Deathstalker Razael (23998); race INFERRED from the Undercity twin
 --   pattern (Deathknell start); weapons 25236
+-- 602951 Ray'chelle Greenhill, Barbarian: look is a stand-in, no SMSG_MIRRORIMAGE_DATA capture of this trainer
+--   exists: undead female from Angela Curthas (4594) (display 2658), changed skin 4, face 3, hair 7, haircolor 2,
+--   facialhair 1; bare hands, spiked Horde leather shoulders (8316); race INFERRED from the Undercity twin pattern
+--   (602951 is the one capital Barbarian twin left beside 602950, 602952, 602953 and 650295, and Undercity the
+--   only Barbarian-race capital without one, RACE-CLASS.md) and the human family name Greenhill; female by her
+--   first name; weapons 3198
 -- 602950 Thokor Galanthoof, Barbarian: look is a stand-in, no SMSG_MIRRORIMAGE_DATA capture of this trainer
 --   exists: tauren male from Tauren Warrior (17933) (display 17332), changed skin 5, face 1, hair 6, haircolor 2,
 --   facialhair 2; shoulders of the Tauren Warrior (19601); race INFERRED from "-hoof" family name; weapons 14084
@@ -220,7 +229,7 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), 
 --   tauren female from Fallen Druid (18490) (display 17850), changed skin 3, face 2, hair 4, haircolor 1,
 --   facialhair 3; shoulders of the Twilight Apostle (30179); race INFERRED from "Thunderhoof" family name; weapons
 --   12943
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602951, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (503925, 0, 51, 1, 1),
@@ -247,6 +256,7 @@ VALUES
 (602921, 0, 1479, 1, 1),
 (602922, 0, 15476, 1, 1),
 (602950, 0, 59, 1, 1),
+(602951, 0, 58, 1, 1),
 (602953, 0, 1478, 1, 1),
 (603402, 0, 51, 1, 1),
 (612912, 0, 59, 1, 1),
@@ -263,7 +273,7 @@ VALUES
 (650296, 0, 1478, 1, 1),
 (650327, 0, 15475, 1, 1);
 
-DELETE FROM `creature_display_preset` WHERE `entry` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
+DELETE FROM `creature_display_preset` WHERE `entry` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602951, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
 INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, `class`, `skin`, `face`, `hair`, `haircolor`, `facialhair`, `guild_id`, `item_head`, `item_shoulders`, `item_body`, `item_chest`, `item_waist`, `item_legs`, `item_feet`, `item_wrists`, `item_hands`, `item_back`, `item_tabard`)
 VALUES
 (503925, 51, 2, 0, 1, 7, 3, 0, 7, 10, 0, 11971, 27305, 0, 8471, 8565, 8472, 6214, 28642, 5628, 0, 0),
@@ -290,6 +300,7 @@ VALUES
 (602921, 1479, 8, 1, 1, 4, 5, 3, 7, 2, 0, 145320, 146277, 147863, 149047, 150925, 152967, 0, 0, 157502, 0, 0),
 (602922, 15476, 10, 0, 1, 2, 6, 3, 8, 4, 0, 0, 2178, 0, 16572, 6076, 6199, 31655, 0, 0, 0, 0),
 (602950, 59, 6, 0, 1, 5, 1, 6, 2, 2, 0, 0, 27527, 5533, 0, 5338, 5475, 0, 0, 0, 0, 0),
+(602951, 58, 5, 1, 1, 4, 3, 7, 2, 1, 0, 0, 8316, 6237, 0, 6238, 2038, 4237, 0, 0, 0, 0),
 (602953, 1478, 8, 0, 1, 2, 3, 4, 2, 5, 0, 164265, 46411, 0, 164264, 164935, 164268, 164303, 0, 164304, 0, 0),
 (603402, 51, 2, 0, 1, 5, 2, 6, 4, 4, 0, 145327, 146769, 0, 148789, 150938, 152982, 155139, 0, 157516, 158736, 0),
 (612912, 59, 6, 0, 1, 12, 0, 3, 1, 0, 0, 0, 0, 5503, 0, 8066, 26794, 26793, 0, 7176, 0, 0),
@@ -306,7 +317,7 @@ VALUES
 (650296, 1478, 8, 0, 1, 3, 4, 5, 6, 8, 0, 145082, 0, 147400, 148721, 150467, 24988, 0, 156256, 6411, 0, 0),
 (650327, 15475, 10, 1, 1, 1, 7, 12, 4, 7, 0, 0, 146557, 0, 25813, 0, 25815, 155482, 0, 0, 0, 0);
 
-DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
+DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602951, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`)
 VALUES
 (503925, 1, 11365, 0, 0),
@@ -333,6 +344,7 @@ VALUES
 (602921, 1, 13336, 0, 0),
 (602922, 1, 28739, 0, 0),
 (602950, 1, 14084, 0, 0),
+(602951, 1, 3198, 0, 0),
 (602953, 1, 30848, 0, 0),
 (603402, 1, 12937, 0, 0),
 (612912, 1, 11542, 0, 0),
@@ -349,7 +361,7 @@ VALUES
 (650296, 1, 19214, 0, 0),
 (650327, 1, 28738, 0, 0);
 
-DELETE FROM `creature_default_trainer` WHERE `CreatureId` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
+DELETE FROM `creature_default_trainer` WHERE `CreatureId` IN (503925, 503930, 600242, 602760, 602773, 602781, 602790, 602791, 602803, 602810, 602822, 602832, 602833, 602834, 602850, 602872, 602873, 602891, 602900, 602912, 602913, 602921, 602922, 602950, 602951, 602953, 603402, 612912, 650275, 650276, 650277, 650278, 650279, 650281, 650285, 650288, 650290, 650293, 650296, 650327);
 INSERT INTO `creature_default_trainer` (`CreatureId`, `TrainerId`)
 VALUES
 (503925, 900023),
@@ -376,6 +388,7 @@ VALUES
 (602921, 900020),
 (602922, 900020),
 (602950, 900012),
+(602951, 900012),
 (602953, 900012),
 (603402, 900024),
 (612912, 900032),
@@ -515,6 +528,10 @@ VALUES
 -- 9004681 Reaper: hand-placed (INFERRED) training ground behind the dummies on the ring below the War Quarter, 5.3
 --   yd behind the Heroic Training Dummy and 11 yd off the ring road that Theresa and the Dark Rangers walk; faces
 --   4.800 toward the ring road between the two training dummies
+-- 9004689 Barbarian: hand-placed (INFERRED) War Quarter, island in the middle of the round hall, west side of the
+--   ring of stock warrior trainer posts (removed) around the sunken centre, 5.8 yd from Christoph Walker's and 11
+--   yd from Baltus Fowler's former posts, 5.0 yd off the Dark Ranger Clea's walk across the island (path 2033940);
+--   faces 4.710 toward the sunken centre, as the warrior trainers did, between the two bridges players cross by
 -- Thunder Bluff:
 -- 9004682 Barbarian: hand-placed (INFERRED) Hunter Rise lodge tent, north side of the ring of warrior and hunter
 --   trainers, 4.1 yd beside Ker Ragetotem and out of his line; faces 4.100 toward the centre of the tent, as Ker
@@ -532,7 +549,7 @@ VALUES
 -- 9004688 Cultist: hand-placed (INFERRED) Pools of Vision under Spirit Rise, north-west end of the chamber, 11 yd
 --   from the shadow priest Miles Welsh and out of his and Ursyn Ghull's lines; faces 3.790 toward the foot of the
 --   ramp from Spirit Rise, the chamber's only way in
-DELETE FROM `creature` WHERE `guid` IN (9004650, 9004651, 9004652, 9004653, 9004654, 9004655, 9004656, 9004657, 9004658, 9004659, 9004660, 9004661, 9004662, 9004663, 9004664, 9004665, 9004666, 9004667, 9004668, 9004669, 9004670, 9004671, 9004672, 9004673, 9004674, 9004675, 9004676, 9004677, 9004678, 9004679, 9004680, 9004681, 9004682, 9004683, 9004684, 9004685, 9004686, 9004687, 9004688) OR `guid` BETWEEN 9004650 AND 9004799;
+DELETE FROM `creature` WHERE `guid` IN (9004650, 9004651, 9004652, 9004653, 9004654, 9004655, 9004656, 9004657, 9004658, 9004659, 9004660, 9004661, 9004662, 9004663, 9004664, 9004665, 9004666, 9004667, 9004668, 9004669, 9004670, 9004671, 9004672, 9004673, 9004674, 9004675, 9004676, 9004677, 9004678, 9004679, 9004680, 9004681, 9004682, 9004683, 9004684, 9004685, 9004686, 9004687, 9004688, 9004689) OR `guid` BETWEEN 9004650 AND 9004799;
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
 (9004650, 602953, 1, 0, 0, 1, 1, 1, 1983, -4801.5, 56.039, 1.99, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Barbarian trainer: Hall of the Brave in the Valley of Honor, south-east side of the sparring pit, 3.5 yd beside Grezz Ragefist and 4.1 yd from the battlemasters'' post, clear of the lines of the battlemaster ring that faces the pit centre; faces across the pit to the hall entrance in the west-south-west, where players come in'),
@@ -567,6 +584,7 @@ VALUES
 (9004679, 602773, 0, 0, 0, 1, 1, 1, 1430, 57, -62.279, 2.9, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Stormbringer trainer: Rogues'' Quarter, north side, 10 yd from Miles Dexter; the city has no shaman hall or storm landmark, so he stands in the open quarter with the Ranger and the Witch Hunter; faces the middle of the quarter, where the rogue trainers face'),
 (9004680, 602873, 0, 0, 0, 1, 1, 1, 1414, 142, -62.293, 2.63, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Tinker trainer: engineers'' corner of the Rogues'' Quarter, 10 yd from Franklin Lloyd and Graham Van Talen; faces the engineers'' stalls'),
 (9004681, 602891, 0, 0, 0, 1, 1, 1, 1767, 356, -61.87, 4.8, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Reaper trainer: training ground behind the dummies on the ring below the War Quarter, 5.3 yd behind the Heroic Training Dummy and 11 yd off the ring road that Theresa and the Dark Rangers walk; faces the ring road between the two training dummies'),
+(9004689, 602951, 0, 0, 0, 1, 1, 1, 1775.5, 426, -57.198, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Barbarian trainer: War Quarter, island in the middle of the round hall, west side of the ring of stock warrior trainer posts (removed) around the sunken centre, 5.8 yd from Christoph Walker''s and 11 yd from Baltus Fowler''s former posts, 5.0 yd off the Dark Ranger Clea''s walk across the island (path 2033940); faces the sunken centre, as the warrior trainers did, between the two bridges players cross by'),
 (9004682, 602950, 1, 0, 0, 1, 1, 1, -1446.5, -80.5, 159.018, 4.1, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Barbarian trainer: Hunter Rise lodge tent, north side of the ring of warrior and hunter trainers, 4.1 yd beside Ker Ragetotem and out of his line; faces the centre of the tent, as Ker does'),
 (9004683, 602790, 1, 0, 0, 1, 1, 1, -1463, -97, 159.018, 0.79, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Guardian trainer: Hunter Rise lodge tent, south side of the ring against the tent wall, 3.6 yd beside Kary Thunderhorn and out of her line; faces the centre of the tent, as Kary does'),
 (9004684, 602900, 1, 0, 0, 1, 1, 1, -1044, -272, 159.03, 4.47, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'Primalist trainer: Elder Rise, open ground of the druids, north side, 10.6 yd from Turak Runetotem; faces the druids gathered in the middle of the rise'),
