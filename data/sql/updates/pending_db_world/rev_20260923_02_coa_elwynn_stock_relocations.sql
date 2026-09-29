@@ -312,17 +312,23 @@ UPDATE `creature` SET `position_x` = -9475, `position_y` = 456, `position_z` = 5
 -- Thuros Lightfingers (134009): Thuros Lightfingers spawn point (pool 1002) out of the walled manor grounds;
 --   Mirror Lake Orchard at the farmhouse's west corner
 UPDATE `creature` SET `position_x` = -9448, `position_y` = 487.5, `position_z` = 53.42, `orientation` = 5.5 WHERE `guid` = 134009 AND `id` = 61;
--- Defias Bandit (80386): camp bandit left outside the manor's north-west wall; 4 yd down-slope from its floating
---   stock spot onto level ground
-UPDATE `creature` SET `position_x` = -9306, `position_y` = 522, `position_z` = 77.62, `orientation` = 1.86 WHERE `guid` = 80386 AND `id` = 116;
+-- Defias Bandit (80386): Mirror Lake camp bandit out from beside the manor's north-west wall (playtest: too close
+--   to the manor); Mirror Lake Orchard, south tree rows
+UPDATE `creature` SET `position_x` = -9452, `position_y` = 450, `position_z` = 52.85, `orientation` = 2.15 WHERE `guid` = 80386 AND `id` = 116;
+-- Defias Bandit (80384): Mirror Lake camp bandit out from behind the manor's north wall (playtest: too close to
+--   the manor); Mirror Lake Orchard, west edge
+UPDATE `creature` SET `position_x` = -9480, `position_y` = 472, `position_z` = 51.66, `orientation` = 6.15 WHERE `guid` = 80384 AND `id` = 116;
 -- Sheep (80290): sheep out of the space under the manor's ground floor; manor's south lawn
 UPDATE `creature` SET `position_x` = -9308.5, `position_y` = 466, `position_z` = 78.48, `orientation` = 2.8 WHERE `guid` = 80290 AND `id` = 1933;
 -- Forest Spider (80288): forest spider floating in the manor's east garden; on the ground a yard clear of the tree
 --   trunk
 UPDATE `creature` SET `position_x` = -9258, `position_y` = 447, `position_z` = 80.89, `orientation` = 5.12 WHERE `guid` = 80288 AND `id` = 30;
--- Defias Rogue Wizard (80383): Defias Rogue Wizard inside a tree trunk on the Mirror Lake slope; a step up-slope,
---   clear of the trunk
-UPDATE `creature` SET `position_x` = -9346, `position_y` = 527, `position_z` = 55.58, `orientation` = 3.84 WHERE `guid` = 80383 AND `id` = 474;
+-- Defias Rogue Wizard (80383): Defias Rogue Wizard out of the Mirror Lake slope below the manor (playtest: too
+--   close to the manor, and stock spot inside a tree trunk); Mirror Lake Orchard, north-west corner
+UPDATE `creature` SET `position_x` = -9485, `position_y` = 486, `position_z` = 51.73, `orientation` = 5.61 WHERE `guid` = 80383 AND `id` = 474;
+-- Defias Rogue Wizard (80412): Defias Rogue Wizard out from under the manor by the falls (playtest: too close to
+--   the manor); Mirror Lake Orchard, south edge
+UPDATE `creature` SET `position_x` = -9468, `position_y` = 446, `position_z` = 53.29, `orientation` = 1.45 WHERE `guid` = 80412 AND `id` = 474;
 -- Deer (80356): deer against the moved inn's window planters; grass strip between the inn's north wall and the
 --   orchard
 UPDATE `creature` SET `position_x` = -9468.5, `position_y` = -25, `position_z` = 57.08, `orientation` = 5.97 WHERE `guid` = 80356 AND `id` = 883;
