@@ -1,4 +1,4 @@
--- Northshire wolves and Wolves Across the Border (33) as in CoA: vanilla wolves, Tough Wolf Meat
+-- Northshire wolves, Wolves Across the Border (33) and Eagan Peltskinner (5261) as in CoA: vanilla wolves, Tough Wolf Meat
 UPDATE `creature_template` SET `name` = 'Timber Wolf' WHERE `entry` = 69;
 UPDATE `creature_template` SET `name` = 'Young Wolf' WHERE `entry` = 299;
 UPDATE `creature_template_model` SET `CreatureDisplayID` = 604 WHERE `CreatureID` = 69 AND `Idx` = 0;
@@ -11,3 +11,4 @@ UPDATE `quest_template` SET `RequiredItemId1` = 750,
 `QuestDescription` = 'I hate those nasty timber wolves! But I sure like eating wolf steaks... Bring me tough wolf meat and I will exchange it for something you\'ll find useful.$B$BTough wolf meat is gathered from hunting the timber wolves and young wolves wandering the Northshire countryside.'
 WHERE `ID` = 33;
 UPDATE `quest_request_items` SET `CompletionText` = 'Hey $N. How goes the hunt for wolves?' WHERE `ID` = 33;
+UPDATE `quest_template` SET `QuestDescription` = 'Eagan Peltskinner is looking for someone to hunt wolves for him. That\'s good news, because we\'re seeing a lot more wolves in Northshire Valley lately.' WHERE `ID` = 5261;
