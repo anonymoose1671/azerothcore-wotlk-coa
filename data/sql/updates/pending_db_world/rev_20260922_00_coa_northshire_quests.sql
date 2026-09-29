@@ -66,7 +66,7 @@
 -- Spawn guid blocks: creature 9001000-9001999, gameobject 7910000-7910999. The worldserver hands
 -- a new in-game spawn the next guid above the highest in use, which lands inside these blocks. The
 -- Worldforged module owns gameobject guids 6900001-6999999 and deletes them outright.
--- Seed spawns deleted in game: creature none; gameobject none.
+-- Seed spawns deleted in game: creature 9001066, 9001067, 9001068, 9001070, 9001071, 9001072, 9001074; gameobject none.
 
 -- ---------------------------------------------------------------------------
 -- 1. Items
@@ -91,14 +91,15 @@ VALUES
 (161701, 'Moroi Spada', 'Seminarian of Northshire Abbey', 5, 6, 0, 35, 2, 0, 1, 0, 7, 0, '', 0, 0.98, 1, 1, 1, 0, 0),
 (161702, 'Sister Alma', 'Ancient Priestess of Northshire', 5, 6, 0, 35, 2, 0, 1, 0, 6, 0, '', 0, 1.0, 1, 1, 1, 0, 0),
 (161705, 'Injured Northshire Guard', NULL, 5, 6, 0, 35, 3, 0, 1, 0, 7, 0, '', 0, 1.0, 1, 1, 1, 0, 62631),
-(161716, 'Shadewell Murloc', NULL, 4, 5, 0, 14, 0, 0, 1, 0, 7, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
-(161717, 'Shadewell Murloc Oracle', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 7, 161717, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161716, 'Shadewell Murloc', NULL, 4, 5, 0, 7, 0, 0, 1, 0, 7, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161717, 'Shadewell Murloc Oracle', NULL, 5, 6, 0, 7, 0, 0, 1, 0, 7, 161717, '', 0, 0.93, 1, 1, 1, 0, 0),
 (161736, 'Defias Plunderer', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 7, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
-(161707, 'Shadewell Spider', NULL, 4, 5, 0, 14, 0, 0, 1, 0, 1, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
+(161707, 'Shadewell Spider', NULL, 4, 5, 0, 7, 0, 0, 1, 0, 1, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
 (161712, 'Accursed Censor', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 6, 0, '', 0, 2.79, 1, 1, 1, 0, 0),
 (161708, 'Accursed Judge', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 6, 0, '', 0, 0.93, 1, 1, 1, 0, 0),
 (161713, 'Wayward Theologian', NULL, 7, 7, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 5.76, 1, 1, 1, 0, 0),
 (161904, 'Wayward Theologian', NULL, 6, 6, 0, 14, 0, 1, 1, 0, 7, 0, 'SmartAI', 0, 1.0, 1, 1, 1, 64, 0),
+(161711, 'Living Heresy', NULL, 5, 6, 0, 14, 0, 0, 1, 0, 0, 0, 'SmartAI', 0, 1.0, 1, 1, 1, 0, 0),
 (161703, '[KC] Hidden Path', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
 (161704, '[KC] Ruined Estate', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0),
 (161714, '[KC] Dungeon Entrance', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, 'SmartAI', 0, 1, 1, 1, 1, 130, 0),
@@ -110,7 +111,7 @@ VALUES
 (161909, 'Wayward Theologian', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 9, 0, 'SmartAI', 0, 1, 1, 1, 1, 130, 0)
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `gossip_menu_id` = VALUES(`gossip_menu_id`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161700, 161701, 161702, 161705, 161716, 161717, 161736, 161707, 161712, 161708, 161713, 161904, 161703, 161704, 161714, 161715, 161824, 161825, 161826, 161908, 161909);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161700, 161701, 161702, 161705, 161716, 161717, 161736, 161707, 161712, 161708, 161713, 161904, 161711, 161703, 161704, 161714, 161715, 161824, 161825, 161826, 161908, 161909);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (161700, 0, 3344, 1, 1),
@@ -125,6 +126,7 @@ VALUES
 (161708, 0, 4629, 1, 1),
 (161713, 0, 49, 1, 1),
 (161904, 0, 49, 1, 1),
+(161711, 0, 19110, 1, 1),
 (161736, 1, 4419, 1, 1),
 (161703, 0, 11686, 1, 1),
 (161704, 0, 11686, 1, 1),
@@ -139,8 +141,8 @@ VALUES
 DELETE FROM `creature_display_preset` WHERE `entry` IN (161713, 161904);
 INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, `class`, `skin`, `face`, `hair`, `haircolor`, `facialhair`, `guild_id`, `item_head`, `item_shoulders`, `item_body`, `item_chest`, `item_waist`, `item_legs`, `item_feet`, `item_wrists`, `item_hands`, `item_back`, `item_tabard`)
 VALUES
-(161713, 49, 1, 0, 1, 1, 4, 4, 9, 3, 0, 145663, 146782, 147800, 149777, 0, 3238, 155842, 0, 0, 0, 0),
-(161904, 49, 1, 0, 1, 1, 4, 4, 9, 3, 0, 145663, 146782, 147800, 149777, 0, 3238, 155842, 0, 0, 0, 0);
+(161713, 49, 1, 0, 1, 1, 4, 4, 9, 3, 0, 0, 146782, 147800, 149777, 0, 3238, 155842, 0, 0, 0, 0),
+(161904, 49, 1, 0, 1, 1, 4, 4, 9, 3, 0, 0, 146782, 147800, 149777, 0, 3238, 155842, 0, 0, 0, 0);
 
 DELETE FROM `creature_template_addon` WHERE `entry` IN (161705, 161707);
 INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
@@ -154,12 +156,13 @@ VALUES
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `size`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `AIName`)
 VALUES
 (96001, 2, 164, 'Smudged Note', '', '', 0.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
-(2300500, 3, 300450, 'Lost Page I', '', '', 1, 1689, 2300500, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
+(685237, 10, 7717, 'Grappling Hook Rope', '', '', 0.075, 93, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
+(2300500, 3, 210, 'Lost Page I', '', '', 1, 1689, 2300500, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
 (2300501, 0, 300449, 'Dungeon Door', '', '', 1, 0, 0, 5000, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
-(2300503, 3, 300450, 'Lost Page II', '', '', 1, 1689, 2300503, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
-(2300504, 3, 300450, 'Lost Page III', '', '', 1, 1689, 2300504, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
-(2300505, 3, 300450, 'Lost Page IV', '', '', 1, 1689, 2300505, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
-(2300517, 3, 300450, 'Lost Page VI', '', '', 1, 1689, 2300517, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
+(2300503, 3, 210, 'Lost Page II', '', '', 1, 1689, 2300503, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
+(2300504, 3, 210, 'Lost Page III', '', '', 1, 1689, 2300504, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
+(2300505, 3, 210, 'Lost Page IV', '', '', 1, 1689, 2300505, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
+(2300517, 3, 210, 'Lost Page VI', '', '', 1, 1689, 2300517, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
 (2300520, 10, 1029136, 'Abbess’ Journal', '', '', 1, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
 (2300521, 10, 87111, 'Abbess’s Staff', '', '', 1.25, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
 (2300522, 10, 63523, 'Heretical Idol Purified', '', '', 1.5, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
@@ -285,7 +288,7 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 7. Spawns
 -- ---------------------------------------------------------------------------
-DELETE FROM `creature` WHERE `guid` IN (9001000, 9001001, 9001002, 9001003, 9001004, 9001005, 9001006, 9001007, 9001008, 9001009, 9001010, 9001011, 9001012, 9001013, 9001014, 9001015, 9001016, 9001017, 9001018, 9001019, 9001020, 9001021, 9001022, 9001023, 9001024, 9001025, 9001026, 9001027, 9001028, 9001029, 9001030, 9001031, 9001032, 9001033, 9001034, 9001035, 9001036, 9001037, 9001038, 9001039, 9001040, 9001041, 9001044, 9001045, 9001046, 9001047, 9001048, 9001049, 9001050, 9001051, 9001052, 9001053, 9001054, 9001055, 9001056, 9001057, 9001058, 9001059, 9001060, 9001061, 9001062, 9001063, 9001064, 9001065, 9001066, 9001067, 9001068, 9001069, 9001070, 9001071, 9001072, 9001073, 9001074, 9001075, 9001076, 9001077, 9001078, 9001079, 9001080, 9001081, 9001082, 9001083, 9001084, 9001085, 9001086, 9001087);
+DELETE FROM `creature` WHERE `guid` IN (9001000, 9001001, 9001002, 9001003, 9001004, 9001005, 9001006, 9001007, 9001008, 9001009, 9001010, 9001011, 9001012, 9001013, 9001014, 9001015, 9001016, 9001017, 9001018, 9001019, 9001020, 9001021, 9001022, 9001023, 9001024, 9001025, 9001026, 9001027, 9001028, 9001029, 9001030, 9001031, 9001032, 9001033, 9001034, 9001035, 9001036, 9001037, 9001038, 9001039, 9001040, 9001041, 9001044, 9001045, 9001046, 9001047, 9001048, 9001049, 9001050, 9001051, 9001052, 9001053, 9001054, 9001055, 9001056, 9001057, 9001058, 9001059, 9001060, 9001061, 9001062, 9001063, 9001064, 9001065, 9001069, 9001073, 9001075, 9001076, 9001077, 9001078, 9001079, 9001080, 9001081, 9001082, 9001083, 9001084, 9001085, 9001086, 9001087);
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES
 (9001000, 161701, 0, 0, 0, 1, 1, 0, -8900.59, -197.321, 81.941, 2.98, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, QuestSuperTrack 8641 turn-in point, inside the abbey at the bookshelf, reading'),
@@ -352,15 +355,8 @@ VALUES
 (9001063, 161717, 0, 0, 0, 1, 1, 0, -8584, -534, 145.555, 0, 300, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, Shadewell village, meadow south of the south huts'),
 (9001064, 161717, 0, 0, 0, 1, 1, 0, -8575, -523, 145.392, 1.571, 300, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, Shadewell village, meadow west of the hut row'),
 (9001065, 161717, 0, 0, 0, 1, 1, 0, -8611, -519, 145.603, 1.571, 300, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, slope between the village and the river bank'),
-(9001066, 161736, 0, 0, 0, 1, 1, 0, -8817.66, -396.86, 83.655, 1.22, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, on the lower spiral ramp by the east wall'),
-(9001067, 161736, 0, 0, 0, 1, 1, 0, -8821.3, -386.8, 88.415, 5.76, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, on the spiral ramp at its west turn'),
-(9001068, 161736, 0, 0, 0, 1, 1, 0, -8820.6, -393.9, 100.017, 0.6, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, on the upper spiral ramp'),
 (9001069, 161736, 0, 0, 0, 1, 1, 0, -8815.5, -384.4, 104.795, 3.66, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, guarding the top of the ramp where the hidden path begins'),
-(9001070, 161736, 0, 0, 0, 1, 1, 0, -8806, -397.5, 110.875, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, lookout on the north end of the roof'),
-(9001071, 161736, 0, 0, 0, 1, 1, 0, -8796, -380, 75.283, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, north yard facing the village road'),
-(9001072, 161736, 0, 0, 0, 1, 1, 0, -8807.5, -407.5, 75.254, 5.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, east yard by the crate stacks'),
 (9001073, 161736, 0, 0, 0, 1, 1, 0, -8840.5, -391, 75.283, 2.06, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, south edge of the yard watching the riverside approach'),
-(9001074, 161736, 0, 0, 0, 1, 1, 0, -8790, -395, 80.693, 0, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, ruined tower, north-east terrace above the yard'),
 (9001075, 161708, 0, 0, 0, 1, 1, 0, -8727, -268, 62.256, 3.93, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, Secret Inquisitorial Dungeon, west bay of the first chamber below the cellar stair, facing the stair'),
 (9001076, 161708, 0, 0, 0, 1, 1, 0, -8699, -296, 57.991, 1.571, 300, 4, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, dungeon, second chamber beside the chained skeleton on its east wall'),
 (9001077, 161708, 0, 0, 0, 1, 1, 0, -8678, -302, 53.724, 1.571, 300, 3, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, dungeon, east cell of the south wing by the chained skeleton and the barrels'),
@@ -375,7 +371,7 @@ VALUES
 (9001086, 161708, 0, 0, 0, 1, 1, 0, -8632, -404, 53.728, 1.571, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, library gallery, guarding the Abbess''s Staff, facing the way in'),
 (9001087, 161708, 0, 0, 0, 1, 1, 0, -8580, -302, 53.724, 3.142, 300, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, 'CoA Northshire: hand placement, dungeon, north-east reading room between the round table and the bookshelves');
 
-DELETE FROM `gameobject` WHERE `guid` IN (7910000, 7910001, 7910002, 7910003, 7910004, 7910005, 7910006, 7910007, 7910008, 7910009, 7910010);
+DELETE FROM `gameobject` WHERE `guid` IN (7910000, 7910001, 7910002, 7910003, 7910004, 7910005, 7910006, 7910007, 7910008, 7910009, 7910010, 7910011, 7910012, 7910013);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
 (7910000, 2300500, 0, 0, 0, 1, 1, -8912.93, -209.89, 82.99, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page I'),
@@ -384,20 +380,24 @@ VALUES
 (7910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 54.72, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Abbess''s Staff'),
 (7910004, 96001, 0, 0, 0, 1, 1, -8906.66, -705.67, 70.67, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Smudged Note'),
 (7910005, 2300503, 0, 0, 0, 1, 1, -8857.02, -187.281, 90.383, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8643 position for Lost Page II, on the upper library floor'),
-(7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 81.94, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8644 position for Lost Page III, on the abbey hall floor'),
+(7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 83.119, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Lost Page III'),
 (7910007, 2300505, 0, 0, 0, 1, 1, -8857.35, -185.58, 83.119, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8645 position for Lost Page IV, on the library desk'),
 (7910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
 (7910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
-(7910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall');
+(7910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall'),
+(7910011, 685237, 0, 0, 0, 1, 1, -8612.6, -563.6, 145.825, 4.13, 0, 0, 0.880347, -0.474331, 120, 100, 1, '', 'CoA Northshire: beside the vines at the south deck of the ruin, by the street lamp'),
+(7910012, 685237, 0, 0, 0, 1, 1, -8603.5, -582.6, 146.711, 4.51, 0, 0, 0.774923, -0.632056, 120, 100, 1, '', 'CoA Northshire: beside the vines at the east deck of the ruin'),
+(7910013, 685237, 0, 0, 0, 1, 1, -8590, -559.4, 147.803, 3.74, 0, 0, 0.955572, -0.294759, 120, 100, 1, '', 'CoA Northshire: beside the vines at the north deck of the ruin');
 
 -- ---------------------------------------------------------------------------
 -- 8. The Wayward Theologian
 -- ---------------------------------------------------------------------------
 -- He melees, casts Shadow Bolt at his target and Shadowfury, a 5 second cast that stuns everyone within
 -- 8 yards of him for 3 seconds. Every 30-60 seconds while unshielded he casts Dark Reality (4 seconds,
--- interruptible). When it completes he takes Shadow Shield (all damage taken -100%), two portals open in
--- the estate's yard and an image of him steps out of each, casting Shadow Bolt; killing both images
--- removes the shield and closes the portals, and the cycle can repeat. Repeat intervals follow the observed
+-- interruptible). When it completes he takes Shadow Shield (all damage taken -100%), a portal opens on each
+-- raised deck of the ruins around him and three images step onto each, casting Shadow Bolt; killing all
+-- nine removes the shield and closes the portals, and the cycle can repeat. A rope by each deck lifts players
+-- up. Repeat intervals follow the observed
 -- casts (Shadowfury 5-32 s, Dark Reality 29-64 s); first casts and the Shadow Bolt pace are INFERRED. An
 -- evade or his death clears the shield, portals, images and counter. Engaging him credits the ruined
 -- estate, for a player who reached it without crossing the ridge trigger; his death credits players
@@ -409,14 +409,22 @@ VALUES
 (161713, 0, 1, 0, 0, 0, 100, 0, 8000, 12000, 5000, 32000, 0, 0, 11, 256486, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat - Cast Shadowfury around himself'),
 (161713, 0, 2, 0, 0, 1, 100, 0, 25000, 30000, 30000, 60000, 0, 0, 11, 256762, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Cast Dark Reality'),
 (161713, 0, 3, 4, 8, 0, 100, 0, 256762, 0, 0, 0, 0, 0, 11, 256763, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On Dark Reality completed - Cast Shadow Shield'),
-(161713, 0, 4, 5, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 2 (shielded)'),
-(161713, 0, 5, 6, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8619, -557, 145.744, 5.573, 'Wayward Theologian - Linked - Open Portal 01 in the yard south-west of the estate door, between the door lamp and the tree stump'),
-(161713, 0, 6, 7, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161909, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8586, -584, 145.101, 2.474, 'Wayward Theologian - Linked - Open Portal 02 in the yard north-east of the ruin, inside the broken gate under the oak'),
-(161713, 0, 7, 8, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8619, -557, 145.744, 5.573, 'Wayward Theologian - Linked - Summon an image at Portal 01'),
-(161713, 0, 8, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8586, -584, 145.101, 2.474, 'Wayward Theologian - Linked - Summon an image at Portal 02'),
+(161713, 0, 4, 100, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 2 (shielded)'),
+(161713, 0, 100, 101, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8616, -573, 149.653, 0.399, 'Wayward Theologian - Linked - Open a portal on the south deck by the street lamp'),
+(161713, 0, 101, 102, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8615.5, -567.5, 149.652, 6.174, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
+(161713, 0, 102, 103, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8616, -573, 149.653, 0.399, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
+(161713, 0, 103, 104, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8615.5, -579, 149.658, 0.807, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
+(161713, 0, 104, 105, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161909, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8601.5, -585.8, 150.301, 1.801, 'Wayward Theologian - Linked - Open a portal on the east deck'),
+(161713, 0, 105, 106, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8599, -584, 150.316, 1.972, 'Wayward Theologian - Linked - Summon an image on the east deck'),
+(161713, 0, 106, 107, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8601.5, -585.8, 150.301, 1.801, 'Wayward Theologian - Linked - Summon an image on the east deck'),
+(161713, 0, 107, 108, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8608, -583.5, 150.288, 1.407, 'Wayward Theologian - Linked - Summon an image on the east deck'),
+(161713, 0, 108, 109, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595.5, -568, 150.806, 3.2, 'Wayward Theologian - Linked - Open a portal on the north deck'),
+(161713, 0, 109, 110, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8596, -563, 150.808, 3.672, 'Wayward Theologian - Linked - Summon an image on the north deck'),
+(161713, 0, 110, 111, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595.5, -568, 150.806, 3.2, 'Wayward Theologian - Linked - Summon an image on the north deck'),
+(161713, 0, 111, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595, -572, 150.806, 2.828, 'Wayward Theologian - Linked - Summon an image on the north deck'),
 (161713, 0, 9, 0, 0, 1, 100, 0, 15000, 20000, 60000, 75000, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Say mercy'),
 (161713, 0, 10, 0, 82, 0, 100, 0, 161904, 0, 0, 0, 0, 0, 63, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On image died - Add 1 to counter 1'),
-(161713, 0, 11, 12, 77, 0, 100, 0, 1, 2, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On counter 1 = 2 - Remove Shadow Shield'),
+(161713, 0, 11, 12, 77, 0, 100, 0, 1, 9, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On every image dead - Remove Shadow Shield'),
 (161713, 0, 12, 13, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
 (161713, 0, 13, 14, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 1 (unshielded)'),
 (161713, 0, 14, 15, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
@@ -476,6 +484,26 @@ VALUES
 (2300521, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161824, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300521 - On use - Credit purifying the staff'),
 (2300522, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161825, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300522 - On use - Credit purifying the idol'),
 (2300523, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161826, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300523 - On use - Credit purifying the jewel');
+
+-- Looting a Lost Page summons one Living Heresy (user, 2026-09-23). Each rope lifts its user onto its deck.
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300500, 2300503, 2300504, 2300505, 2300517) AND `source_type` = 1;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(2300500, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page I - On looted, once per spawn - Summon a Living Heresy'),
+(2300503, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page II - On looted, once per spawn - Summon a Living Heresy'),
+(2300504, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page III - On looted, once per spawn - Summon a Living Heresy'),
+(2300505, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page IV - On looted, once per spawn - Summon a Living Heresy'),
+(2300517, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page VI - On looted, once per spawn - Summon a Living Heresy');
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (-7910011, -7910012, -7910013) AND `source_type` = 1;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(-7910011, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -8614.5, -566.5, 149.652, 6.05, 'Grappling Hook Rope - On use - Lift the user onto the south deck'),
+(-7910012, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -8604, -585, 150.321, 1.664, 'Grappling Hook Rope - On use - Lift the user onto the east deck'),
+(-7910013, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -8595, -562.8, 150.81, 3.644, 'Grappling Hook Rope - On use - Lift the user onto the north deck');
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 161711 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(161711, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 25, 15, 1, 0, 0, 0, 0, 0, 0, 'Living Heresy - On summoned - Attack the closest player within 15 yards');
 
 -- His lines are INFERRED: no source records any speech or voice for him, so they carry no sound.
 DELETE FROM `creature_text` WHERE `CreatureID` = 161713;
