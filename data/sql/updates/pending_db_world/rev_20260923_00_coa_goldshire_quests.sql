@@ -21,8 +21,10 @@
 --   vendors  the four market sellers and their ingredients are tied together by the cache (questItem).
 --   appearance  STAND-IN displays: every CoA display of this cast is missing from the client.
 --   credits  the Mirror Shard and Kobold Warren objects credit their hidden markers when used, then
---     despawn until they respawn. 'Stay a While' credits from a gossip option shown only during the quest;
---     no source keeps the lecture itself.
+--     despawn until they respawn. 'Stay a While': the option sends the player to the gatehouse tower top
+--     (objective point 8843) with CoA's Teleporting visual 267032, cast only by Aliscar and his projection;
+--     the projection gives the lesson, then credits and sends the player back to the stall. Only its opener
+--     (85160) and 'A mighty view' (85159) are sourced; the lesson lines are INFERRED.
 --   dialogue  the greetings of Aliscar Lend (85190) and the mayor (85163, 85164) are from the cache, as
 --     is the projection's (85160, linked to it by its words about the view from the arch: INFERRED).
 --
@@ -356,4 +358,28 @@ DELETE FROM `smart_scripts` WHERE `entryorguid` = 162806 AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (162806, 0, 0, 1, 62, 0, 100, 0, 85190, 0, 0, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend - On Gossip Option 0 Selected - Close Gossip'),
-(162806, 0, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 162921, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend - Linked - Credit listening to him');
+(162806, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 83, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend - Linked - Hide the option during the lesson'),
+(162806, 0, 2, 3, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 267032, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend - Linked - Cast Teleporting'),
+(162806, 0, 3, 4, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -9408.46, -7.11, 78.219, 0, 'Aliscar Lend - Linked - Send the player to the gatehouse tower top'),
+(162806, 0, 4, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 80, 16280600, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend - Linked - Start the lesson');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 16280600 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(16280600, 9, 0, 0, 0, 0, 100, 0, 2000, 2000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Opener'),
+(16280600, 9, 1, 0, 0, 0, 100, 0, 7000, 7000, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 1'),
+(16280600, 9, 2, 0, 0, 0, 100, 0, 8000, 8000, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 2'),
+(16280600, 9, 3, 0, 0, 0, 100, 0, 8000, 8000, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 3'),
+(16280600, 9, 4, 0, 0, 0, 100, 0, 7000, 7000, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Closing'),
+(16280600, 9, 5, 0, 0, 0, 100, 0, 4000, 4000, 0, 0, 0, 0, 33, 162921, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Credit listening to him'),
+(16280600, 9, 6, 0, 0, 0, 100, 0, 500, 500, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -9399.9, -12.9, 62.243, 0.209, 'Aliscar Lend lesson - Send the player back to the stall'),
+(16280600, 9, 7, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 82, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Show the option again');
+
+DELETE FROM `creature_text` WHERE `CreatureID` = 162943;
+INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Probability`, `comment`)
+VALUES
+(162943, 0, 0, 'Best views in all Goldshire, believe me! Well… except for the town hall clock tower.', 12, 100, 'Arcane Projection of Aliscar - lesson 0 (npccache 85160)'),
+(162943, 1, 0, 'Goldshire takes its name from the gold the first settlers found in these hills. Fargodeep and Jasperlode were dug by the same families who raised this village.', 12, 100, 'Arcane Projection of Aliscar - lesson 1 (INFERRED)'),
+(162943, 2, 0, 'When the veins ran thin, the village stayed. Travelers on the road to Stormwind have kept the Lion''s Pride full ever since, and our farms feed half the city.', 12, 100, 'Arcane Projection of Aliscar - lesson 2 (INFERRED)'),
+(162943, 3, 0, 'Now kobolds hold the old mines, and the Defias raid the farms we were once so proud of. Remember what this place was, $N. It could be that again.', 12, 100, 'Arcane Projection of Aliscar - lesson 3 (INFERRED)'),
+(162943, 4, 0, 'A mighty view, don''t you think? Come now, back down with you.', 12, 100, 'Arcane Projection of Aliscar - lesson 4 (npccache 85159 + INFERRED)');
