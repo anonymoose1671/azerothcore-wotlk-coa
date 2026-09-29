@@ -291,9 +291,9 @@ UPDATE `creature` SET `position_x` = -9453.86, `position_y` = 44.74, `position_z
 UPDATE `creature` SET `position_x` = -9593.82, `position_y` = 48.035, `position_z` = 59.666, `orientation` = 0 WHERE `guid` = 56324 AND `id` = 14871;
 -- Elder Stormbrow (70557): turn-in point of 8649; facing the village
 UPDATE `creature` SET `position_x` = -9391.43, `position_y` = 142.467, `position_z` = 61.14, `orientation` = 4.11 WHERE `guid` = 70557 AND `id` = 15565;
--- Marshal McBride (79970): turn-in point of 7, 15, 21 and 783 (-8909.23, -131.39), 0.6 yd away to clear the
---   Northshire mailbox 6901512 there; outside the abbey front, facing the human start point
-UPDATE `creature` SET `position_x` = -8909.6, `position_y` = -130.9, `position_z` = 80.77, `orientation` = 3.17 WHERE `guid` = 79970 AND `id` = 197;
+-- Marshal McBride (79970): turn-in point of 7, 15, 21 and 783 (-8909.23, -131.39), 1.8 yd west of it, clear of the
+--   Northshire mailbox 6901512; outside the abbey front, facing the human start point
+UPDATE `creature` SET `position_x` = -8909.6, `position_y` = -129.6, `position_z` = 80.95, `orientation` = 3.17 WHERE `guid` = 79970 AND `id` = 197;
 -- Brother Neals (79968): turn-in point of 3905; same abbey upper floor as the stock spawn, stock facing
 UPDATE `creature` SET `position_x` = -8892.94, `position_y` = -172.944, `position_z` = 113.158, `orientation` = 0.87 WHERE `guid` = 79968 AND `id` = 952;
 
