@@ -27,6 +27,7 @@ HARNESS = r'''
 #include <unordered_map>
 #include <utility>
 #include <vector>
+using int8 = std::int8_t;
 using uint8 = std::uint8_t;
 using uint16 = std::uint16_t;
 using uint32 = std::uint32_t;
@@ -259,6 +260,9 @@ def build_harness(source):
     grid += "#pragma warning(pop)\n" if os.name == "nt" else ""
     instanceable = re.search(r"\[\[nodiscard\]\] bool Instanceable\(\) const \{[^\n]*\}", dbc_structure).group(0)
     body = "\n".join(line for line in source.splitlines() if not line.startswith("#include"))
+    body, removed = re.subn(r"\nstruct npc_coa_caravan_cart : public VehicleAI\n\{.*?\n\};\n", "\n", body, flags=re.S)
+    assert removed == 1, "the cart AI is outside this grid-loading harness"
+    body = body.replace("    RegisterCreatureAI(npc_coa_caravan_cart);\n", "")
 
     spawns, expected, cart_spawns = spawns_and_expectation(cart_entries(source))
     spawn_rows = ",\n".join(f"        {{ {guid}, {{ {entry}, {map_id}, {x!r}f, {y!r}f }} }}"

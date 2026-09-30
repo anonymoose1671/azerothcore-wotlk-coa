@@ -36,7 +36,7 @@
     { "action": "assert", "actor": "artisan", "metric": "gossip_options", "equals": 2, "label": "the page is offered again" },
     { "action": "gossip_select", "actor": "artisan", "option": 1, "label": "choose \"I would like to browse your goods.\"" },
     { "action": "assert", "actor": "artisan", "metric": "vendor_list_packets", "equals": 1, "label": "the second option opens a vendor list" },
-    { "action": "assert", "actor": "artisan", "metric": "vendor_items", "equals": 29, "label": "the shop is Edna Mullby's own 29 rows" },
+    { "action": "assert", "actor": "artisan", "metric": "vendor_items", "equals": 31, "label": "the shop is Edna Mullby's own 31 rows, CoA's Hot and Soothing Spices included" },
     { "action": "assert", "actor": "artisan", "metric": "vendor_price", "item": 2320, "equals": 10, "label": "Coarse Thread at her price" },
     { "action": "assert", "actor": "artisan", "metric": "vendor_price", "item": 14341, "equals": 5000, "label": "Rune Thread at her price" },
     { "action": "assert", "actor": "artisan", "metric": "vendor_price", "item": 20856, "equals": 1500, "label": "and the one limited-stock design she carries" },
@@ -87,7 +87,7 @@
     { "action": "gossip_hello", "actor": "artisan", "target": "beginner", "label": "and its page again" },
     { "action": "gossip_select", "actor": "artisan", "option": 1, "label": "browse its goods" },
     { "action": "assert", "actor": "artisan", "metric": "vendor_list_packets", "equals": 2, "label": "the beginner's book has the same shops" },
-    { "action": "assert", "actor": "artisan", "metric": "vendor_items", "equals": 29, "label": "the same 29 rows" },
+    { "action": "assert", "actor": "artisan", "metric": "vendor_items", "equals": 31, "label": "the same 31 rows" },
     { "action": "assert", "actor": "artisan", "metric": "vendor_price_sum", "equals": 41440, "label": "at the same prices" }
   ]
 }
