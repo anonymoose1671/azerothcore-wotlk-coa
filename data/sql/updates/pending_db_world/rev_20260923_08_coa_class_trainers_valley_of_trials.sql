@@ -18,8 +18,9 @@
 --   chain places  hand-placed where the texts send the player (the den, the hill above it, the imp
 --     cave, the canyon before it, the eastern desert, the southern mountains), each point checked on the
 --     server floor, headroom and navmesh; drop chances SOURCED-EXILES.
---   stock trainers  every one stays standing as a plain NPC (core 05), except Frang (guid 7651), 2.0 yd from
---     Omogulg's turn-in point, and Ken'jai (guid 4912), whose post the Cultist kill copy takes.
+--   stock trainers  every one keeps its post and role. Frang (guid 7651) stands 2.0 yd from Omogulg's
+--     turn-in point; Ken'jai (guid 4912) is hidden while the Cultist kill copy stands at his post
+--     (rev_20260924_13).
 --   Reaper  Zul’raja the Harvester is CoA's unspawned trainer record 501296; CoA shipped no Valley Reaper
 --     letter or chain, so his post, letter 9302430, page and "Call of the Shadowlands" copy 9302431 are INFERRED.
 --
@@ -727,19 +728,6 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 9. Spawns
 -- ---------------------------------------------------------------------------
--- stock Frang (guid 7651) deleted: 2.0 yd from Omogulg the Truthbearer on the 52013 turn-in point, which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)
--- stock Ken'jai (guid 4912) deleted: 0.0 yd from the Cultist kill copy 299239, which the quest text sends to Ken'jai's post outside the den, which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)
-DELETE FROM `creature_addon` WHERE `guid` IN (4912, 7651);
-DELETE FROM `creature` WHERE `guid` IN (4912, 7651);
-
--- stock letter 2383 Simple Parchment (orc Warrior): its only ender 3153 had the single spawn 7651,
---   deleted above, so Gornek no longer offers it
--- stock letter 3065 Simple Tablet (troll Warrior): its only ender 3153 had the single spawn 7651,
---   deleted above, so Gornek no longer offers it
--- stock letter 3085 Hallowed Tablet (troll Priest): its only ender 3707 had the single spawn 4912,
---   deleted above, so Gornek no longer offers it
-DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((3143, 2383), (3143, 3065), (3143, 3085));
-
 DELETE FROM `creature_addon` WHERE `guid` IN (9003500, 9003501, 9003502, 9003503, 9003504, 9003505, 9003506, 9003507, 9003508, 9003509, 9003510, 9003511, 9003512, 9003513, 9003514, 9003515, 9003516, 9003517, 9003520, 9003521, 9003522, 9003523, 9003524, 9003525, 9003526, 9003527, 9003528, 9003529, 9003530) OR `guid` BETWEEN 9003500 AND 9003699;
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
 VALUES

@@ -29,8 +29,8 @@
 --   western mountains, and CoA-only props (the Elune statue with candles, the wrecked wagon, the inn's canopy
 --   bed, the candle-lit tombstones).
 --   drop chances  SOURCED-EXILES creature_loot where it has them; unique holders drop 100%.
---   stock trainer removed  Dannal Stern (guid 28464) stood 2.48 yd from Dabbert Staze's sourced point; his quest
---   copy 299240 takes his alcove. Every other stock trainer stays as a plain NPC.
+--   stock trainers  every one keeps its post and role. Dannal Stern (guid 28464), 2.48 yd from Dabbert Staze's
+--   sourced point, is hidden while his quest copy 299240 stands in his alcove (rev_20260924_13).
 --   stock patrols  two waypoint turnarounds that walked onto a trainer post and Marla's Grave are moved by hand
 --   (INFERRED, the nearest open floor on the same route); claimed in coordination/ct-deathknell.md.
 --
@@ -798,15 +798,6 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 8. Spawns
 -- ---------------------------------------------------------------------------
--- stock Dannal Stern (guid 28464) deleted: 2.5 yd from Dabbert Staze's SOURCED post (53011), which must stand at
---   that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23); his kill copy
---   299240 takes his alcove.
-DELETE FROM `creature_addon` WHERE `guid` = 28464;
-DELETE FROM `creature` WHERE `guid` = 28464 AND `id` = 2119;
-
--- stock letter 3095 Simple Scroll (undead Warrior): its only ender 2119 had the single spawn 28464, deleted
---   above, so Shadow Priest Sarvis no longer offers it.
-DELETE FROM `creature_queststarter` WHERE `id` = 1569 AND `quest` = 3095;
 
 -- Maquell Ebonwood 2315 (guid 31916) path: the inn turnaround (1861.98, 1563.01) was 0.69 yd from Cadmus
 --   Emberblaze's sourced post (53008). He now turns on the open floor 7.8 yd inside the front door, 3.4 yd from

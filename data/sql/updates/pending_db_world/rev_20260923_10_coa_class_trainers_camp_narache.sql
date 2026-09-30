@@ -23,9 +23,9 @@
 --     (INFERRED). The falcon Note 662316 (page 11112) is shared by all six ranger chains and is
 --     written once, by the Deathknell class trainer migration (its bulletin claim).
 --
--- Stock rows: Gart Mistrunner (guid 26898, stock druid trainer, stripped to a plain NPC by 05) is
--- deleted with his creature_addon row: he stands 0.17 yd from Sunwalker Thunderhorn's SOURCED post.
--- The other kept Camp Narache NPCs stay where they are.
+-- Stock rows: Gart Mistrunner (guid 26898, stock druid trainer) stands 0.17 yd from Sunwalker
+-- Thunderhorn's SOURCED post and steps aside in rev_20260924_13. The other Camp Narache NPCs stay
+-- where they are.
 --
 --
 -- Id blocks: creature guid 9003900-9004099, gameobject guid 7912500-7912599, creature entry 9300300-9300349,
@@ -511,16 +511,6 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 8. Spawns
 -- ---------------------------------------------------------------------------
--- Gart Mistrunner: stock Gart Mistrunner (guid 26898) deleted: 0.2 yd from Sunwalker Thunderhorn on the SOURCED
---   55103 turn-in point, which must stand at that post; every other stock class trainer stays as a plain NPC (user
---   decision 2026-09-23).
-DELETE FROM `creature_addon` WHERE `guid` = 26898;
-DELETE FROM `creature` WHERE `guid` = 26898 AND `id` = 3060;
-
--- stock letter 3094 Verdant Note (tauren Druid): its only ender 3060 had the single spawn 26898, deleted above, so
---   Grull Hawkwind no longer offers it.
-DELETE FROM `creature_queststarter` WHERE `id` = 2980 AND `quest` = 3094;
-
 DELETE FROM `creature` WHERE `guid` IN (9003900, 9003901, 9003902, 9003903, 9003904, 9003905, 9003906, 9003907, 9003908, 9003909, 9003910, 9003911, 9003912, 9003913, 9003914, 9003915, 9003916) OR `guid` BETWEEN 9003900 AND 9004099;
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`)
 VALUES

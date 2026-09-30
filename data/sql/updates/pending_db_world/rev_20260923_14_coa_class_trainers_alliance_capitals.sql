@@ -8,8 +8,8 @@
 --     the 6-prefix twin pattern and the cache capture counts (research/class-trainers/trainers.md).
 --   posts  INFERRED: no source gives a capital trainer position. Every post was hand-picked in the hall
 --     of a related stock class or at a landmark that suits the class, checked with surface.check on the
---     server floor, and kept at least 2.5 yd from every kept NPC (user decision 2026-09-23: stock class
---     trainers stay standing as plain NPCs) and from every walking NPC's waypoint path and wander
+--     server floor, and kept at least 2.5 yd from every stock NPC (the stock class trainers keep their
+--     posts) and from every walking NPC's waypoint path and wander
 --     radius. No stock spawn is deleted or moved here. Stormwind posts are checked against the
 --     positions migration 03 gives the stock spawns.
 --   facings  toward where players stand or come in, with no wall within 3 yd ahead (reason per post).

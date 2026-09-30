@@ -1,7 +1,7 @@
 -- Conquest of Azeroth class trainers in Shadowglen (Teldrassil): the 19 CoA trainers of Aldrassil and
 -- its grounds, the intro letters Conservator Ilthalaine hands out after The Balance of Nature, each
 -- class's first quest chain (27 quests) and every creature and object those chains need. Builds on
--- rev_20260923_05 (class kits, class menus, stock trainers as plain NPCs, shared chain templates).
+-- rev_20260923_05 (class kits, class menus, shared chain templates).
 --
 -- WHERE EACH VALUE COMES FROM
 --   trainer points  SOURCED-CLIENT: the QuestSuperTrack turn-in point of each letter (z from the server
@@ -16,8 +16,8 @@
 --   chains  SOURCED-CACHE quests; starters, enders and places from their texts; chain links by
 --     PrevQuestID only. Drop chances SOURCED-EXILES. Every target, holder, object and marker is placed
 --     by hand at a named landmark; where no source exists the choice is marked INFERRED.
---   stock spawns deleted  Frahun Shadewhisper (46179) and Alyissia (46178): each stands within 1.7 yd
---     of a CoA trainer point (user decision 2026-09-23). Every other stock NPC stays.
+--   stock trainers  Frahun Shadewhisper (46179) stands within 1.7 yd of a CoA trainer point and steps
+--     aside; Alyissia (46178) is hidden while her Cultist kill copy stands in (rev_20260924_13).
 --   stock spawn moved  Lyrai (46171), 2.5 yd west to stand beside Kaleidormu on his point (INFERRED).
 --   map markers  quest_poi for 200046 and 200056, whose texts mark the map (INFERRED points).
 --
@@ -765,17 +765,6 @@ VALUES
 (7912619, 9301354, 1, 0, 0, 1, 1, 10501, 1044, 1325.23, 3.9, 0, 0, 0.92896, -0.370181, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, east edge'),
 (7912620, 9301354, 1, 0, 0, 1, 1, 10489, 1041, 1327.119, 5.9, 0, 0, 0.190423, -0.981702, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, south-east edge by the big tree'),
 (7912621, 9301354, 1, 0, 0, 1, 1, 10514, 1058, 1323.933, 2.7, 0, 0, 0.975723, 0.219007, 90, 100, 1, '', 'CoA Shadowglen: grell camp 3, north edge on the level ground beside the totem');
-
--- stock Frahun Shadewhisper (guid 46179) deleted: 1.1 yd from Saelina Shedana's sourced point (650144), which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)
--- stock Alyissia (guid 46178) deleted: 1.6 yd from Huntress Naalia's sourced point (650153), which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)
-DELETE FROM `creature_addon` WHERE `guid` IN (46179, 46178);
-DELETE FROM `creature` WHERE `guid` IN (46179, 46178);
-
--- stock letter 3116 Simple Sigil (night elf Warrior): its only ender 3593 had the single spawn 46178, deleted
---   above, so Conservator Ilthalaine no longer offers it.
--- stock letter 3118 Encrypted Sigil (night elf Rogue): its only ender 3594 had the single spawn 46179, deleted
---   above, so Conservator Ilthalaine no longer offers it.
-DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((2079, 3116), (2079, 3118));
 
 -- Lyrai (46171): Kaleidormu's sourced point (650143) is 1.7 yd behind her stock spot between two garden benches,
 -- where no spot within 2 yd of the point is clear of her and the benches except directly behind her; she moves

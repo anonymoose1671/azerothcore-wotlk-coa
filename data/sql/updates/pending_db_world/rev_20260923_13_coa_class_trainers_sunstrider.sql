@@ -8,8 +8,8 @@
 --   spots  hand-placed after inspect_area.py, surface.check and a wall-ray survey of each spot, z from
 --     surface.floor (map 530 CoA data equals stock here). Every spot is at least 15 yd from the next
 --     trainer, no trainer has more than two others within 30 yd, and none stands within 12 yd of a
---     hostile spawn. The stock class trainers of the Sunspire stay standing as plain NPCs (user decision
---     2026-09-23), so the three hall trainers take free spots in the hall, not the stock posts. The
+--     hostile spawn. The stock class trainers of the Sunspire keep their posts, so the three hall
+--     trainers take free spots in the hall. The
 --     never-running Arena Tournament (game_event 31) pedestals are kept 1.5 yd clear.
 --   facings  toward the way players arrive (the landing, the hall door, the ramp top, the road).
 --   looks  creature_display_preset stand-ins (no SMSG_MIRRORIMAGE_DATA capture of any CoA trainer

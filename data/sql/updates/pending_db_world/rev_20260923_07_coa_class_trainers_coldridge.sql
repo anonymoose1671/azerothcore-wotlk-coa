@@ -23,10 +23,9 @@
 --     witch); Gyrothor beside Zipak at the Kharanos grave (200199 "in this very room").
 --   drops  SOURCED-EXILES creature_loot chances (724: 45/55/45% bones, flesh, skull, 33% power core;
 --     707: 25% small sword); Scorch 100%.
---   stock spawns  every stock class trainer stays a plain NPC (05) except two that would stand on a CoA
---     one: guid 403 Bromos Grummner, whose post the Cultist kill copy takes, and guid 1025 Marryk
---     Nurribit, 0.24 yd from Grelin Ironbeard's point. Their stock letters 3107 and 3114 lose Sten's
---     starter rows, since nothing is left to end them.
+--   stock spawns  every stock class trainer keeps its post and role. Marryk Nurribit (guid 1025), 0.24 yd
+--     from Grelin Ironbeard's point, steps aside and Bromos Grummner (guid 403) is hidden while the
+--     Cultist kill copy stands at his post (rev_20260924_13).
 --
 -- Blocks: creature guid 9003300-9003499, gameobject guid 7912200-7912299, creature entry 9300150-9300199,
 -- gameobject entry 9301150-9301199, gossip and npc_text 930250-930299.
@@ -220,18 +219,6 @@ VALUES
 (14, 930250, 287575, 0, 0, 15, 0, 2048, 0, 0, 1, 0, 0, '', 'Show gossip text if player is not a Barbarian'),
 (15, 930250, 0, 0, 0, 15, 0, 2048, 0, 0, 0, 0, 0, '', 'Show gossip option if player is a Barbarian'),
 (15, 930251, 0, 0, 0, 9, 0, 200199, 0, 0, 0, 0, 0, '', 'Gyrothor Turbospark - option only while Call of the Shadowlands is taken');
-
--- ---------------------------------------------------------------------------
--- 3. Stock class trainers that would stand on a CoA NPC, and their stranded letters
--- ---------------------------------------------------------------------------
--- stock Bromos Grummner (guid 403) deleted: 0.0 yd from the Cultist kill copy 299236 (quest 200072), which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)
--- stock Marryk Nurribit (guid 1025) deleted: 0.2 yd from Grelin Ironbeard's SOURCED point (quest 51011), which must stand at that post; every other stock class trainer stays as a plain NPC (user decision 2026-09-23)
-DELETE FROM `creature_addon` WHERE `guid` IN (403, 1025);
-DELETE FROM `creature` WHERE `guid` IN (403, 1025);
-
--- stock letter 3107 Consecrated Rune (dwarf Paladin): its only ender 926 had the single spawn 403, deleted above, so Sten Stoutarm no longer offers it
--- stock letter 3114 Glyphic Memorandum (gnome Mage): its only ender 944 had the single spawn 1025, deleted above, so Sten Stoutarm no longer offers it
-DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((658, 3107), (658, 3114));
 
 -- ---------------------------------------------------------------------------
 -- 4. Chain NPCs

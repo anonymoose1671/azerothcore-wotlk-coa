@@ -15,9 +15,9 @@
 --     Northshire trainers look alike (reason on each preset). Weapons are stock items.
 --   menus  Amanda (87576) and Norman Goldshire (25018/125018) keep their own CoA texts; Doctor Yara, a
 --     human, gets neutral texts instead of the troll-spoken class menu (INFERRED, 930202/930203).
---   stock trainers  every stock class trainer stays standing as a plain NPC (core migration) except the
---     two that would stand on a CoA post: Priestess Anetta (0.28 yd from Nysoni's point) and Brother
---     Sammuel, whose post the Cultist kill copy takes.
+--   stock trainers  every stock class trainer keeps its post and role. Priestess Anetta, 0.28 yd from
+--     Nysoni's point, steps aside and Brother Sammuel is hidden while the Cultist kill copy stands in
+--     (rev_20260924_13).
 --   quests  the realm's questcache (D13 mapping). Letters: starter McBride after Kobold Camp Cleanup
 --     (the stock letter pattern 3100-3105, INFERRED), ender the trainer, the letter a provided item. Chains
 --     are linked by PrevQuestID only; each quest is gated to its class.
@@ -693,23 +693,6 @@ VALUES
 (9301102, 0, 661330),
 (9301103, 0, 663319),
 (9301104, 0, 663320);
-
--- ---------------------------------------------------------------------------
--- 7. Stock class trainers on a CoA post
--- ---------------------------------------------------------------------------
--- stock Priestess Anetta (guid 79963) deleted: 0.3 yd from Chaplain Nysoni's SOURCED turn-in point (49986),
---   which must stand at that post; every other stock class trainer stays as a plain NPC (user decision
---   2026-09-23).
--- stock Brother Sammuel (guid 79967) deleted: the Going MAD! kill copy 299235 is Brother Sammuel, now in the
---   Library Wing as 200071 says, so no second Sammuel stays at the stock post.
-DELETE FROM `creature_addon` WHERE `guid` IN (79963, 79967);
-DELETE FROM `creature` WHERE `guid` IN (79963, 79967);
-
--- stock letter 3101 Consecrated Letter (human Paladin): its only ender 925 had the single spawn 79967, deleted
---   above, so Marshal McBride no longer offers it.
--- stock letter 3103 Hallowed Letter (human Priest): its only ender 375 had the single spawn 79963, deleted
---   above, so Marshal McBride no longer offers it.
-DELETE FROM `creature_queststarter` WHERE (`id`, `quest`) IN ((197, 3101), (197, 3103));
 
 -- ---------------------------------------------------------------------------
 -- 8. Spawns

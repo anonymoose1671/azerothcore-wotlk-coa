@@ -9,8 +9,8 @@
 --     the stock-client creature list and the Exiles export; undead may be Barbarians in CharBaseInfo.dbc.
 --   posts  INFERRED: no source gives a capital trainer position. Every post was hand-picked in the stock
 --     hall of a related class or at a landmark that suits the class, checked with surface.check on the
---     server floor, and kept at least 2.5 yd from every kept NPC (user decision 2026-09-23: stock class
---     trainers stay standing as plain NPCs). No stock spawn is deleted or moved here.
+--     server floor, and kept at least 2.5 yd from every stock NPC (the stock class trainers keep their
+--     posts). No stock spawn is deleted or moved here.
 --   facings  toward where players stand or come in (reason per post below). Rays at 0.3, 0.7, 1.0 and
 --     1.6 yd find no wall or prop within 5 yd straight ahead; the only low hits are the fire-pit rim, ramp
 --     or rising floor a trainer faces. No post is in a kept NPC's front space (within 8 yd and 30 deg of
