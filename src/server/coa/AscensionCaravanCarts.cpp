@@ -39,7 +39,7 @@ struct npc_coa_caravan_cart : public VehicleAI
 {
     explicit npc_coa_caravan_cart(Creature* creature) : VehicleAI(creature) { }
 
-    void PassengerBoarded(Unit* /*passenger*/, int8 /*seatId*/, bool apply) override
+    void PassengerBoarded(Unit*, int8, bool apply) override
     {
         if (apply)
             HarnessBeasts();
@@ -52,7 +52,7 @@ struct npc_coa_caravan_cart : public VehicleAI
                 beast->RemoveAurasDueToSpell(SPELL_RUN_STATE);
     }
 
-    void WaypointStarted(uint32 /*nodeId*/, uint32 /*pathId*/) override
+    void WaypointStarted(uint32, uint32) override
     {
         for (Creature* beast : Beasts())
             if (!beast->HasAura(SPELL_RUN_STATE))

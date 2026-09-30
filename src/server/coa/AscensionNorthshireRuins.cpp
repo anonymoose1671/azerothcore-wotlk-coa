@@ -101,7 +101,7 @@ class spell_coa_abbess_relic_prayer : public SpellScript
 {
     PrepareSpellScript(spell_coa_abbess_relic_prayer);
 
-    void HandlePrayer(SpellEffIndex /*effIndex*/)
+    void HandlePrayer(SpellEffIndex)
     {
         Player* player = GetCaster() ? GetCaster()->ToPlayer() : nullptr;
         GameObject* go = GetHitGObj();
