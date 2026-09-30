@@ -300,12 +300,30 @@ UPDATE `creature` SET `position_x` = -8892.94, `position_y` = -172.944, `positio
 -- ---------------------------------------------------------------------------
 -- 4. Stock spawns out of new walls, floors and ground
 -- ---------------------------------------------------------------------------
--- Kobold Worker (80105): kobold worker off the roof of the Old Northshire ruins (playtest); back in the kobold
---   camp north of them
-UPDATE `creature` SET `position_x` = -8785, `position_y` = -261, `position_z` = 79.73, `orientation` = 1.05 WHERE `guid` = 80105 AND `id` = 257;
--- Kobold Worker (80107): kobold worker that wandered onto the Old Northshire ruins (playtest); kobold camp, 8+ yd
---   clear of them
-UPDATE `creature` SET `position_x` = -8771.5, `position_y` = -256.5, `position_z` = 79.82, `orientation` = 2.59 WHERE `guid` = 80107 AND `id` = 257;
+-- Kobold Worker (80105): kobold worker off the roof of the Old Northshire ruins (playtest); kobold camp, 32+ yd
+--   from the village
+UPDATE `creature` SET `position_x` = -8779, `position_y` = -244.5, `position_z` = 83.32, `orientation` = 1.05 WHERE `guid` = 80105 AND `id` = 257;
+-- Kobold Worker (80107): kobold worker that wandered onto the Old Northshire ruins (playtest); kobold camp, 32+ yd
+--   from the village
+UPDATE `creature` SET `position_x` = -8768.5, `position_y` = -244.5, `position_z` = 83.51, `orientation` = 2.59 WHERE `guid` = 80107 AND `id` = 257;
+-- Kobold Vermin (80100): kobold crowding the Old Northshire village (playtest); kobold camp, 32+ yd from its
+--   ruined buildings
+UPDATE `creature` SET `position_x` = -8774.4, `position_y` = -247.8, `position_z` = 82.93, `orientation` = 3.87 WHERE `guid` = 80100 AND `id` = 6;
+-- Kobold Worker (80103): kobold crowding the Old Northshire village (playtest); kobold camp, 32+ yd from its
+--   ruined buildings
+UPDATE `creature` SET `position_x` = -8781.8, `position_y` = -240.3, `position_z` = 83.68, `orientation` = 1.81 WHERE `guid` = 80103 AND `id` = 257;
+-- Kobold Vermin (80116): kobold crowding the Old Northshire village (playtest); kobold camp, 32+ yd from its
+--   ruined buildings
+UPDATE `creature` SET `position_x` = -8790.9, `position_y` = -247.1, `position_z` = 82.63, `orientation` = 2.71 WHERE `guid` = 80116 AND `id` = 6;
+-- Kobold Worker (80117): kobold crowding the Old Northshire village (playtest); kobold camp, 32+ yd from its
+--   ruined buildings
+UPDATE `creature` SET `position_x` = -8788.4, `position_y` = -241.8, `position_z` = 82.97, `orientation` = 2.23 WHERE `guid` = 80117 AND `id` = 257;
+-- Kobold Worker (80121): kobold crowding the Old Northshire village (playtest); kobold camp, 32+ yd from its
+--   ruined buildings
+UPDATE `creature` SET `position_x` = -8819.6, `position_y` = -240.9, `position_z` = 82.22, `orientation` = 0.52 WHERE `guid` = 80121 AND `id` = 257;
+-- Kobold Worker (80122): kobold crowding the Old Northshire village (playtest); kobold camp, 32+ yd from its
+--   ruined buildings
+UPDATE `creature` SET `position_x` = -8818, `position_y` = -245.7, `position_z` = 82.38, `orientation` = 3.19 WHERE `guid` = 80122 AND `id` = 257;
 -- Timber Wolf (80106): timber wolf out of the ruined farmhouse of Old Northshire (playtest); open woods south of
 --   it
 UPDATE `creature` SET `position_x` = -8745, `position_y` = -322, `position_z` = 82.39, `orientation` = 5.62 WHERE `guid` = 80106 AND `id` = 69;
