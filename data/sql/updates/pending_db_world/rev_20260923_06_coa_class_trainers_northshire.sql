@@ -49,8 +49,8 @@
 --   dark, changed as listed; weapons Witching Stave.
 -- 50325 Deacon Frost (Witch Hunter): name and subname from creaturecache 50325 (SOURCED-CACHE); look is a stand-
 --   in, no SMSG_MIRRORIMAGE_DATA capture of this trainer exists: human male from Night Watch watcher (display
---   2392) with a Gilnean hunter's hat, grey hair and a full beard, changed as listed; weapons Torch of Holy
---   Flame and Silver Crossbow.
+--   2392) with a black buckled hat, grey hair and a full beard, changed as listed; weapons Torch of Holy Flame
+--   and Silver Crossbow.
 -- 502770 Niki Thesla (Stormbringer): name and subname from creaturecache 502770 (SOURCED-CACHE); look is a
 --   stand-in, no SMSG_MIRRORIMAGE_DATA capture of this trainer exists: human female from Dalaran Summoner
 --   (display 3718) robes without the Kirin Tor tabard, hair 18 storm-white, changed as listed; weapons Windstorm
@@ -144,7 +144,7 @@ INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, 
 VALUES
 (50295, 50, 1, 1, 1, 3, 4, 14, 3, 0, 0, 0, 145970, 147283, 148669, 150366, 3381, 154524, 0, 156979, 0, 0),
 (502960, 50, 1, 1, 1, 5, 8, 7, 1, 0, 0, 0, 0, 147375, 148708, 150440, 5571, 154611, 0, 157057, 0, 0),
-(50325, 49, 1, 0, 1, 2, 9, 6, 8, 7, 0, 54666, 0, 5944, 0, 5926, 5927, 5928, 0, 5929, 0, 0),
+(50325, 49, 1, 0, 1, 2, 9, 6, 8, 7, 0, 142792, 0, 5944, 0, 5926, 5927, 5928, 0, 5929, 0, 0),
 (502770, 50, 1, 1, 1, 0, 7, 18, 9, 1, 0, 0, 145956, 0, 148633, 150312, 152256, 154463, 0, 0, 0, 0),
 (50324, 49, 1, 0, 1, 2, 6, 3, 1, 5, 0, 11653, 4916, 4628, 0, 4629, 4630, 4656, 0, 5063, 0, 0),
 (50280, 49, 1, 0, 1, 3, 5, 5, 2, 0, 0, 0, 2932, 255, 627, 2436, 149, 546, 0, 670, 0, 0),
