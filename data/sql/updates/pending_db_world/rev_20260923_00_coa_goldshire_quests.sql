@@ -25,6 +25,8 @@
 --     (objective point 8843) with CoA's Teleporting visual 267032, cast only by Aliscar and his projection;
 --     the projection gives the lesson, then credits and sends the player back to the stall. Only its opener
 --     (85160) and 'A mighty view' (85159) are sourced; the lesson lines are INFERRED.
+--   ambush  from PR #5751 (PithoDalle): a used Kobold Warren has a 50% chance to release a Kobold
+--     Prospector (162915, CoA creature cache) that attacks the player; its stats follow the Kobold Miner.
 --   dialogue  the greetings of Aliscar Lend (85190) and the mayor (85163, 85164) are from the cache, as
 --     is the projection's (85160, linked to it by its words about the view from the arch: INFERRED).
 --
@@ -58,10 +60,11 @@ VALUES
 (162943, 'Arcane Projection of Aliscar', NULL, 12, 12, 0, 35, 1, 0, 8, 0, 7, 0, '', 0, 1, 1, 1, 1, 0, 162921, 85160),
 (162920, '[TG] kharanos hops', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
 (162921, '[KC] Listen to Aliscar Lend', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
-(162940, '[KC] Kobold Warren Destroyed', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0)
+(162940, '[KC] Kobold Warren Destroyed', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
+(162915, 'Kobold Prospector', NULL, 6, 7, 0, 26, 0, 0, 1, 0, 7, 40, '', 0, 1, 1, 1, 1, 0, 0, 0)
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `subname` = VALUES(`subname`), `minlevel` = VALUES(`minlevel`), `maxlevel` = VALUES(`maxlevel`), `exp` = VALUES(`exp`), `faction` = VALUES(`faction`), `npcflag` = VALUES(`npcflag`), `rank` = VALUES(`rank`), `unit_class` = VALUES(`unit_class`), `unit_flags` = VALUES(`unit_flags`), `type` = VALUES(`type`), `lootid` = VALUES(`lootid`), `AIName` = VALUES(`AIName`), `MovementType` = VALUES(`MovementType`), `HealthModifier` = VALUES(`HealthModifier`), `ManaModifier` = VALUES(`ManaModifier`), `ArmorModifier` = VALUES(`ArmorModifier`), `RegenHealth` = VALUES(`RegenHealth`), `flags_extra` = VALUES(`flags_extra`), `KillCredit1` = VALUES(`KillCredit1`), `gossip_menu_id` = VALUES(`gossip_menu_id`);
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` IN (162800, 162801, 162802, 162803, 162805, 162806, 162807, 162808, 162809, 162811, 162814, 162817, 162818, 162819, 162820, 162821, 162822, 162823, 162824, 162826, 162920, 162921, 162940, 162943);
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (162800, 162801, 162802, 162803, 162805, 162806, 162807, 162808, 162809, 162811, 162814, 162817, 162818, 162819, 162820, 162821, 162822, 162823, 162824, 162826, 162915, 162920, 162921, 162940, 162943);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`)
 VALUES
 (162800, 0, 3367, 1, 1),
@@ -87,7 +90,9 @@ VALUES
 (162943, 0, 5080, 1, 1),
 (162920, 0, 11686, 1, 1),
 (162921, 0, 11686, 1, 1),
-(162940, 0, 11686, 1, 1);
+(162940, 0, 11686, 1, 1),
+(162915, 0, 139, 1, 0.5),
+(162915, 1, 373, 1, 0.5);
 
 DELETE FROM `creature_template_addon` WHERE `entry` = 162803;
 INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
@@ -352,7 +357,8 @@ VALUES
 (2300546, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 162920, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Mirror Shard - On use - Credit the inspection'),
 (2300546, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Mirror Shard - Linked - Despawn until it respawns'),
 (2300579, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 162940, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Kobold Warren - On use - Credit destroying the warren'),
-(2300579, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Kobold Warren - Linked - Despawn until it respawns');
+(2300579, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Kobold Warren - Linked - Despawn until it respawns'),
+(2300579, 1, 2, 0, 64, 0, 50, 0, 1, 0, 0, 0, 0, 0, 12, 162915, 6, 30000, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Kobold Warren - On use - 50% Summon Kobold Prospector (ambush from PR #5751)');
 
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 162806 AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)

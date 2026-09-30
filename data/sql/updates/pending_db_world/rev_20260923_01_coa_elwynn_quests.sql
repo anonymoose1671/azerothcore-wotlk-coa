@@ -249,15 +249,14 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 5. Loot
 -- ---------------------------------------------------------------------------
-DELETE FROM `creature_loot_template` WHERE (`Entry`, `Item`) IN ((43, 157001), (471, 157001), (474, 157002), (97, 157007), (478, 157008), (996119, 5055565));
+DELETE FROM `creature_loot_template` WHERE (`Entry`, `Item`) IN ((43, 157001), (471, 157001), (474, 157002), (97, 157007), (478, 157008));
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
 VALUES
 (43, 157001, 0, 100, 1, 1, 0, 1, 1, 'Mine Spider - Gem Encrusted Spider Silk (creaturecache, Exiles creature_loot 100%)'),
 (471, 157001, 0, 100, 1, 1, 0, 1, 1, 'Mother Fang - Gem Encrusted Spider Silk (creaturecache, Exiles creature_loot 100%)'),
 (474, 157002, 0, 100, 1, 1, 0, 1, 1, 'Defias Rogue Wizard - Depleted Mana Gem (creaturecache, Exiles creature_loot 100%)'),
 (97, 157007, 0, 100, 1, 1, 0, 1, 1, 'Riverpaw Runt - Gnoll Sword (creaturecache, Exiles creature_loot 100%)'),
-(478, 157008, 0, 100, 1, 1, 0, 1, 1, 'Riverpaw Outrunner - Gnoll Axe (creaturecache, Exiles creature_loot 100%)'),
-(996119, 5055565, 0, 100, 0, 1, 0, 1, 1, 'Defias Sentry - Tattered Orders (inferred carrier)');
+(478, 157008, 0, 100, 1, 1, 0, 1, 1, 'Riverpaw Outrunner - Gnoll Axe (creaturecache, Exiles creature_loot 100%)');
 
 DELETE FROM `creature_questitem` WHERE (`CreatureEntry`, `Idx`) IN ((43, 0), (471, 0), (474, 2), (97, 1), (478, 1));
 INSERT INTO `creature_questitem` (`CreatureEntry`, `Idx`, `ItemId`)
@@ -297,7 +296,7 @@ VALUES
 (9002202, 996114, 0, 0, 0, 1, 1, 0, -9451.46, 79.9, 57.49, 4.37, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Goldshire lane outside the smithy at the 254107 SuperTrack turn-in point, facing down the lane to the inn'),
 (9002203, 996115, 0, 0, 0, 1, 1, 0, -9783.61, -404.56, 60.29, 4.71, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: 254038 SuperTrack turn-in point: the rendezvous on the west cliff above the Bastion''s mine, overlooking the camp'),
 (9002204, 764542, 0, 0, 0, 1, 1, 0, -5200.66, -3521.83, 303.97, 0.17, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Loch Modan shore at the 254051 SuperTrack turn-in point, facing the trogg island'),
-(9002205, 996119, 0, 0, 0, 1, 1, 1, -9790, -484, 30.6, 4.99, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, inside the farmhouse at the desk by the book stack, deep in the camp; carries the Tattered Orders'),
+(9002205, 996119, 0, 0, 0, 1, 1, 1, -9790, -484, 30.6, 4.99, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, inside the farmhouse at the desk by the book stack, deep in the camp'),
 (9002206, 116, 0, 0, 0, 1, 1, 1, -9746.5, -427.5, 44.6, 0, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, gate walkway above the north ravine, watching the approach over the barricade'),
 (9002207, 116, 0, 0, 0, 1, 1, 1, -9756, -430, 33.27, 0, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, foot of the gate stairs, guarding the ravine path'),
 (9002208, 116, 0, 0, 0, 1, 1, 1, -9776, -432, 33.4, 1.19, 180, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, 'CoA Elwynn: Bandit''s Bastion, training yard, sparring with the west dummy'),
