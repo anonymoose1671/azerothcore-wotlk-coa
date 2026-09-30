@@ -27,8 +27,8 @@
 --     (85160) and 'A mighty view' (85159) are sourced; the lesson lines are INFERRED. After the second
 --     line the projection offers 'I've heard enough', which credits and sends the player down at once.
 --     The projection is translucent (37800) with purple arcane motes (28126) and hovers.
---   ambush  from PR #5751 (PithoDalle): a used Kobold Warren has a 50% chance to release a Kobold
---     Prospector (162915, CoA creature cache) that attacks the player; its stats follow the Kobold Miner.
+--   ambush  from PR #5751 (PithoDalle): destroying a Kobold Warren (a 3 s cast with a fire burst,
+--     go_coa_abbess_relic) has a 50% chance to release a Kobold Prospector (162915) that attacks.
 --   dialogue  the greetings of Aliscar Lend (85190) and the mayor (85163, 85164) are from the cache, as
 --     is the projection's (85160, linked to it by its words about the view from the arch: INFERRED).
 --
@@ -164,7 +164,7 @@ VALUES
 (2300547, 3, 60, 'Pumpkin', '', 0.5, '', 1689, 2300547, 0, 1, 0, 0, 0, 0, 1660059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2300548, 3, 332, 'Melon', '', 0.7, '', 1689, 2300548, 0, 1, 0, 0, 0, 0, 1660059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2300549, 3, 433, 'Apple', '', 0.5, '', 1689, 2300549, 0, 1, 0, 0, 0, 0, 1660059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2300579, 10, 1017889, 'Kobold Warren', '', 0.3, 'SmartGameObjectAI', 0, 1660058, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+(2300579, 10, 1017889, 'Kobold Warren', '', 0.3, '', 0, 1660058, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `AIName` = VALUES(`AIName`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`);
 
 DELETE FROM `gameobject_loot_template` WHERE `Entry` IN (2300547, 2300548, 2300549);
@@ -365,11 +365,9 @@ DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300546, 2300579) AND `sourc
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (2300546, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 162920, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Mirror Shard - On use - Credit the inspection'),
-(2300546, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Mirror Shard - Linked - Despawn until it respawns'),
-(2300579, 1, 0, 1, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 162940, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Kobold Warren - On use - Credit destroying the warren'),
-(2300579, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Kobold Warren - Linked - Despawn until it respawns'),
-(2300579, 1, 2, 0, 64, 0, 50, 0, 1, 0, 0, 0, 0, 0, 12, 162915, 6, 30000, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Kobold Warren - On use - 50% Summon Kobold Prospector (ambush from PR #5751)');
+(2300546, 1, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Mirror Shard - Linked - Despawn until it respawns');
 
+UPDATE `gameobject_template` SET `AIName` = '', `ScriptName` = 'go_coa_abbess_relic' WHERE `entry` = 2300579;
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 162806 AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES

@@ -1,7 +1,10 @@
 /* Copyright (C) 2016+ AzerothCore, GNU AGPL v3. */
 #include "GameObject.h"
 #include "GameObjectScript.h"
+#include "ObjectMgr.h"
 #include "Player.h"
+#include "Random.h"
+#include "TemporarySummon.h"
 #include "ScriptMgr.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
@@ -12,20 +15,25 @@
 namespace
 {
 constexpr uint32 QUEST_ACCURSED_SISTERHOOD = 1660003;
-constexpr std::chrono::seconds RelicRespawn = std::chrono::seconds(120);
+constexpr uint32 QUEST_WORM_EATEN_APPLE = 1660058;
+constexpr uint32 NPC_KOBOLD_PROSPECTOR = 162915;
 
 struct Relic
 {
     uint32 gameObject;
     uint32 spell;
     uint32 credit;
+    uint32 quest;
+    std::chrono::seconds respawn;
+    uint32 ambusher;
 };
 
-constexpr std::array<Relic, 4> Relics = {{
-    {2300520, 256701, 161715},
-    {2300521, 256726, 161824},
-    {2300522, 256701, 161825},
-    {2300523, 256726, 161826},
+constexpr std::array<Relic, 5> Relics = {{
+    {2300520, 256701, 161715, QUEST_ACCURSED_SISTERHOOD, std::chrono::seconds(120), 0},
+    {2300521, 256726, 161824, QUEST_ACCURSED_SISTERHOOD, std::chrono::seconds(120), 0},
+    {2300522, 256701, 161825, QUEST_ACCURSED_SISTERHOOD, std::chrono::seconds(120), 0},
+    {2300523, 256726, 161826, QUEST_ACCURSED_SISTERHOOD, std::chrono::seconds(120), 0},
+    {2300579, 256726, 162940, QUEST_WORM_EATEN_APPLE, std::chrono::seconds(60), NPC_KOBOLD_PROSPECTOR},
 }};
 
 struct RopeLanding
@@ -51,8 +59,13 @@ Relic const* FindRelic(uint32 gameObject)
 
 bool ObjectiveOpen(Player* player, Relic const& relic)
 {
-    return player->GetQuestStatus(QUEST_ACCURSED_SISTERHOOD) == QUEST_STATUS_INCOMPLETE &&
-        player->GetReqKillOrCastCurrentCount(QUEST_ACCURSED_SISTERHOOD, int32(relic.credit)) == 0;
+    Quest const* quest = sObjectMgr->GetQuestTemplate(relic.quest);
+    if (!quest || player->GetQuestStatus(relic.quest) != QUEST_STATUS_INCOMPLETE)
+        return false;
+    for (uint8 i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
+        if (quest->RequiredNpcOrGo[i] == int32(relic.credit))
+            return player->GetReqKillOrCastCurrentCount(relic.quest, int32(relic.credit)) < quest->RequiredNpcOrGoCount[i];
+    return false;
 }
 
 class go_coa_abbess_relic : public GameObjectScript
@@ -97,7 +110,10 @@ class spell_coa_abbess_relic_prayer : public SpellScript
             return;
 
         player->KilledMonsterCredit(relic->credit);
-        go->DespawnOrUnsummon(0ms, RelicRespawn);
+        if (relic->ambusher && roll_chance_i(50))
+            if (TempSummon* ambusher = go->SummonCreature(relic->ambusher, *go, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000))
+                ambusher->AI()->AttackStart(player);
+        go->DespawnOrUnsummon(0ms, relic->respawn);
     }
 
     void Register() override
