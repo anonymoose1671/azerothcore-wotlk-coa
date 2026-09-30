@@ -11,7 +11,8 @@
 --   control the cart, so it keeps its road path while players ride; the ride is refused in combat.
 --   The Pack Kodo cart (50470, Mulgore and Durotar) has its kodos in the model; the invisible Caravan
 --   Harness 9303000 fills its empty draft seat 2 so a second rider does not land on the road.
---   Beasts loop the Run animation through CoA's aura 992478 RUN (State).
+--   Beasts loop the Run animation through CoA's aura 992478 RUN (State) while the cart moves;
+--   npc_coa_caravan_cart lifts it at each stop and gives every beast a Rope Beam (43785) to the driver.
 --   Each cart runs its road at 14 yd/s (RUN) and waits 45 s at each stop facing the way it leaves: it
 --   turns back at the two end stops, and the Durotar, Three Corners and Westfall carts also stop on
 --   both passes at a middle stop. Paths are points 1..N out and N-1..2 back, smoothTransition 1 (one
@@ -62,11 +63,11 @@
 --   Brown Horse, seat 3 314871 Brown Horse
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `IconName`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `unit_flags2`, `type`, `type_flags`, `VehicleId`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `RegenHealth`, `flags_extra`, `ScriptName`)
 VALUES
-(50470, 'Pack Kodo Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 29, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1527, '', 0, 1, 1, 1, 1, 8194, ''),
-(50473, 'Tirisfal Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 68, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1529, '', 0, 1, 1, 1, 1, 8194, ''),
-(50474, 'Dun Morogh Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 55, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1530, '', 0, 1, 1, 1, 1, 8194, ''),
-(50475, 'Teldrassil Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 80, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1531, '', 0, 1, 1, 1, 1, 8194, ''),
-(50476, 'Elwynn Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 12, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1532, '', 0, 1, 1, 1, 1, 8194, ''),
+(50470, 'Pack Kodo Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 29, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1527, '', 0, 1, 1, 1, 1, 8194, 'npc_coa_caravan_cart'),
+(50473, 'Tirisfal Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 68, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1529, '', 0, 1, 1, 1, 1, 8194, 'npc_coa_caravan_cart'),
+(50474, 'Dun Morogh Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 55, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1530, '', 0, 1, 1, 1, 1, 8194, 'npc_coa_caravan_cart'),
+(50475, 'Teldrassil Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 80, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1531, '', 0, 1, 1, 1, 1, 8194, 'npc_coa_caravan_cart'),
+(50476, 'Elwynn Caravan Cart', NULL, 'vehichleCursor', 1, 1, 0, 12, 16777216, 1, 1.14286, 2000, 2000, 1, 768, 2048, 9, 2048, 1532, '', 0, 1, 1, 1, 1, 8194, 'npc_coa_caravan_cart'),
 (314872, 'Human Caravan Master', NULL, NULL, 1, 1, 0, 12, 0, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 8194, ''),
 (314868, 'Dwarf Caravan Master', NULL, NULL, 1, 1, 0, 55, 0, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 8194, ''),
 (314870, 'Nightelf Caravan Master', NULL, NULL, 1, 1, 0, 80, 0, 1, 1.14286, 2000, 2000, 1, 768, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 8194, ''),
