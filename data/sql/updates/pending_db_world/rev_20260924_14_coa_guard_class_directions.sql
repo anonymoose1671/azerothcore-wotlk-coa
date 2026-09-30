@@ -1,7 +1,8 @@
--- Conquest of Azeroth: guards direct players to CoA class trainers instead of stock ones.
+-- Conquest of Azeroth: guards direct each class to its own class trainers.
 --
--- Guards stop offering directions to the stock class trainers and point each CoA class to its own
--- trainers in that city.
+-- The stock class-trainer directions stay for the stock classes a realm may still offer. Where CoA class trainers
+-- stand, the guard gains a second "Class Trainer" option that points each CoA class to its own trainers in that
+-- city. Class conditions show the stock option to the stock classes and the CoA option to the CoA classes.
 --
 -- WHERE EACH VALUE COMES FROM
 --   option and POI keys  SOURCED-DB: research/trainers-guards-markers/guard-directions.md (+ .json), re-derived on
@@ -9,189 +10,45 @@
 --     Shaman, Warlock, Warrior); none names a Death Knight or a CoA class.
 --   core path  SOURCED-CORE: a GOSSIP_OPTION_GOSSIP option sends its ActionPoiID as a map flag and then opens its
 --     ActionMenuID (PlayerGossip.cpp:302-313); an option shows when OptionNpcFlag & npcflag (PlayerGossip.cpp:65;
---     every guard here has npcflag 1). Guard directions exist only as these rows: guards.cpp holds only the
---     Shattrath combat AIs, the only script SendPointOfInterest is culling_of_stratholme.cpp:1240's wave POIs
---     (1000+), and no smart_scripts row sends (action 98) or handles (event 62) these menus.
+--     every guard here has npcflag 1) and its conditions hold. Guard directions exist only as these rows:
+--     guards.cpp holds only the Shattrath combat AIs, the only script SendPointOfInterest is
+--     culling_of_stratholme.cpp:1240's wave POIs (1000+), and no smart_scripts row sends (action 98) or handles
+--     (event 62) these menus.
 --   stock directions  DERIVED: the stock "Class Trainer" / "A class trainer" root options, their per-class submenu
---     options and the points only those send go. The root options of the 9 places where CoA class trainers stand
---     come back in section 5 under the same MenuID, OptionID, icon and broadcast text, so the root menus keep
---     their order, but they now lead to a CoA submenu. Every other root menu keeps 5 or more options (Dalaran
---     10082 keeps 2), so none falls back to menu 0 (PlayerGossip.cpp:40-42).
+--     options, their points of interest and all their locale rows are kept. Section 2 shows each stock root
+--     option only to the stock classes (CONDITION_CLASS mask 1535), the 18 guard root options and Dalaran's
+--     10082/1 alike, so a CoA class is never sent to a trainer that cannot train it.
 --   CoA trainers  SOURCED-DB: the 111 class-trainer spawns (trainer Type 0, Requirement 12-32) that stand in a
 --     city or town with guard directions, read from coa_grd2 = scratch acore_world plus every updater-pending file
 --     in name order (effective positions). Stormwind 16, Ironforge 11, Darnassus 13 (with Mathrengyl Bearwalker
 --     4217), the Exodar 14, Orgrimmar 15, the Undercity 18, Thunder Bluff 7, Silvermoon 16 and Kharanos 1 (Zipak
 --     Cogweight, Reaper). Every trainer has its city's faction. No CoA class trainer stands in Dalaran, Shattrath,
 --     Razor Hill, Bloodhoof Village, Brill, Goldshire, Dolanaar, Azure Watch or Falconwing Square, so those guards
---     get no option.
+--     get no CoA option.
+--   CoA root options  DESIGN: the 11 root menus of those 9 places get a CoA "Class Trainer" option with the next
+--     OptionID free in gossip_menu_option and in its locale table (stock keeps orphan locale rows such as 2121/13),
+--     the stock option's icon and broadcast text (so it is localised like the stock one), leading to the CoA
+--     submenu. It is shown only to the CoA classes 12-32 (CONDITION_CLASS mask 4294965248).
 --   class names  SOURCED-CLIENT: ChrClasses.dbc 12-32 of the CoA client data; the options are ordered by class
 --     name.
 --   places  SOURCED-CLIENT (server maps/vmaps): the AreaTable id of the spawn cell and the WMOAreaTable name of
 --     the WMO group under each spawn, plus the named NPCs and stock POIs within 15/40 yd in coa_grd2; each leaf
 --     menu comment below names what was checked. INFERRED: the wording of every text (modelled on the stock guard
 --     texts of the same city).
---   points of interest  SOURCED-DB: the 98 stock ids deleted below are used by no other gossip option, script or
---     table; the gossip loader would zero an unknown ActionPoiID anyway (ObjectMgr.cpp:10349-10352). Each new
---     point stands on its trainer's spawn, Icon 7, Flags 99, Importance 0 like the stock class-trainer points;
---     points_of_interest rows need valid map coordinates (ObjectMgr.cpp:8477).
+--   points of interest  each new point stands on its trainer's spawn, Icon 7, Flags 99, Importance 0 like the stock
+--     class-trainer points; points_of_interest rows need valid map coordinates (ObjectMgr.cpp:8477).
 --   menus and texts  the gossip loader drops a gossip_menu row whose TextID has no npc_text (ObjectMgr.cpp:10283)
 --     and an npc_text BroadcastTextID that does not exist (ObjectMgr.cpp:6767); each submenu text copies the
 --     city's stock submenu text with its broadcast text id. The id block holds 100 menus, so trainers who stand in
 --     the same hall share one leaf menu whose text names each of them.
---   kept  the stock submenus, leaf menus and npc_text rows (unreachable, stock, harmless); Dalaran menu 10097 with
---     its quarter options and POIs 129/130 (other Dalaran menus send those POIs); every other direction.
 --
--- Counts: 136 stock gossip_menu_option keys deleted (+ their locale rows),
--- 98 stock points_of_interest ids deleted (+ locale rows);
--- 11 root options restored, 9 CoA submenus with 111 options, 84 leaf menus, 111 points of interest.
--- Exact-key deletes before every insert; re-applying the file is a no-op.
+-- Counts: no stock row deleted or changed; 11 CoA root options, 9 CoA submenus with 111 options, 84 leaf menus,
+-- 111 points of interest; 30 class conditions.
 
 -- ---------------------------------------------------------------------------
--- 1. The "Class Trainer" option of each guard and city directory menu
+-- 1. Directions to CoA class trainers
 -- ---------------------------------------------------------------------------
--- 435/14 Stormwind: Stormwind City Guard 68, City Patroller 1976, Harbor Guard 29712 -> submenu 401
--- 721/9 Thunder Bluff: Bluffwatcher 3084 -> submenu 740
--- 1951/12 Orgrimmar: Orgrimmar Grunt 3296 -> submenu 1949
--- 2121/11 Ironforge: Ironforge Guard 5595 -> submenu 2144
--- 2352/9 Darnassus: Darnassus Sentinel 4262 -> submenu 2343
--- 10265/9 Darnassus: no user (orphan copy of 2352) -> submenu 2343
--- 2849/12 Undercity: Undercity Guardian 5624 -> submenu 2848
--- 10769/12 Undercity: Kor'kron Overseer 36213 -> submenu 10768
--- 3285/4 Razor Hill: Razor Hill Grunt 5953 -> submenu 3283
--- 3331/4 Bloodhoof Village: Bloodhoof Braves 3212, 3215, 3217-3224 -> submenu 3329
--- 3356/4 Brill: Brill Deathguards 1496, 1652, 1735, 1738, 1742-1746, 2209, 2210, 5725 -> submenu 3354
--- 3506/5 Goldshire: Stormwind Guard 1423 -> submenu 3519
--- 3533/5 Kharanos: Ironforge Mountaineer 727 -> submenu 3545
--- 3580/5 Dolanaar: Teldrassil Sentinel 3571 -> submenu 3564
--- 7633/9 Silvermoon City: Silvermoon City Guardian 16222 -> submenu 7649
--- 7777/9 The Exodar: Exodar Peacekeeper 16733 -> submenu 7787
--- 8129/5 Azure Watch: Azuremyst Peacekeeper 18038 -> submenu 8137
--- 8185/4 Falconwing Square: Silvermoon Guardian 16221 -> submenu 8196
-DELETE FROM `gossip_menu_option_locale` WHERE (`MenuID`, `OptionID`) IN (
-    (435, 14), (721, 9), (1951, 12), (2121, 11), (2352, 9), (10265, 9), (2849, 12), (10769, 12), (3285, 4),
-    (3331, 4), (3356, 4), (3506, 5), (3533, 5), (3580, 5), (7633, 9), (7777, 9), (8129, 5), (8185, 4));
-DELETE FROM `gossip_menu_option` WHERE (`MenuID`, `OptionID`) IN (
-    (435, 14), (721, 9), (1951, 12), (2121, 11), (2352, 9), (10265, 9), (2849, 12), (10769, 12), (3285, 4),
-    (3331, 4), (3356, 4), (3506, 5), (3533, 5), (3580, 5), (7633, 9), (7777, 9), (8129, 5), (8185, 4));
-
--- ---------------------------------------------------------------------------
--- 2. Dalaran directory (menu 10043 "Trainers" -> 10082)
--- ---------------------------------------------------------------------------
--- Users: Archivist Betha 30726, Grezla the Hag 32683 and 15 Dalaran citizens 32676-32681, 32685-32693 (menu 10043
---     "Trainers" -> 10082).
--- 10082/1 "Class Trainer" -> menu 10097 "Dalaran's only class trainers are mages".
--- 10082/3 "Portal Trainer" -> menu 10081 "The city's mage and portal trainers", POI 150.
-DELETE FROM `gossip_menu_option_locale` WHERE (`MenuID`, `OptionID`) IN (
-    (10082, 1), (10082, 3));
-DELETE FROM `gossip_menu_option` WHERE (`MenuID`, `OptionID`) IN (
-    (10082, 1), (10082, 3));
-
--- ---------------------------------------------------------------------------
--- 3. Per-class options of the class-trainer submenus
--- ---------------------------------------------------------------------------
--- 401 Stormwind: 0 Druid (POI 32), 1 Hunter (POI 33), 2 Mage (POI 34), 3 Paladin (POI 35), 4 Priest (POI 35), 5
---     Rogue (POI 36), 6 Shaman (POI 37), 7 Warlock (POI 38), 8 Warrior (POI 39)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 401 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7, 8);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 401 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7, 8);
-
--- 740 Thunder Bluff: 0 Druid (POI 285), 1 Hunter (POI 286), 2 Mage (POI 287), 3 Priest (POI 287), 4 Shaman (POI
---     288), 5 Warrior (POI 286)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 740 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 740 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-
--- 1949 Orgrimmar: 0 Hunter (POI 300), 1 Mage (POI 301), 2 Priest (POI 302), 3 Shaman (POI 303), 4 Rogue (POI 304),
---     5 Warlock (POI 305), 6 Warrior (POI 306), 7 Paladin (POI 303)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 1949 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 1949 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7);
-
--- 2144 Ironforge: 0 Hunter (POI 61), 1 Mage (POI 62), 2 Paladin (POI 62), 3 Priest (POI 62), 4 Rogue (POI 63), 5
---     Warlock (POI 64), 6 Warrior (POI 61), 7 Shaman (POI 65)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 2144 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 2144 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7);
-
--- 2343 Darnassus: 0 Druid (POI 98), 1 Hunter (POI 99), 2 Mage (POI 265), 3 Paladin (POI 266), 4 Priest (POI 267),
---     5 Rogue (POI 100), 6 Warrior (POI 101)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 2343 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 2343 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-
--- 2848 Undercity: 0 Mage (POI 331), 1 Paladin (POI 330), 2 Priest (POI 332), 3 Rogue (POI 333), 4 Warlock (POI
---     334), 5 Warrior (POI 335)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 2848 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 2848 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-
--- 10768 Undercity: 0 Mage (POI 331), 1 Paladin (POI 330), 2 Priest (POI 332), 3 Rogue (POI 333), 4 Warlock (POI
---     334), 5 Warrior (POI 335)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 10768 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 10768 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-
--- 3283 Razor Hill: 0 Hunter (POI 405), 1 Mage (POI 406), 2 Priest (POI 407), 3 Rogue (POI 408), 4 Shaman (POI
---     409), 5 Warlock (POI 410), 6 Warrior (POI 411)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 3283 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 3283 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-
--- 3329 Bloodhoof Village: 0 Druid (POI 421), 1 Hunter (POI 422), 2 Shaman (POI 423), 3 Warrior (POI 424)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 3329 AND `OptionID` IN (0, 1, 2, 3);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 3329 AND `OptionID` IN (0, 1, 2, 3);
-
--- 3354 Brill: 0 Mage (POI 433), 1 Paladin, 2 Priest (POI 434), 3 Rogue (POI 435), 4 Warlock (POI 436), 5 Warrior
---     (POI 437)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 3354 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 3354 AND `OptionID` IN (0, 1, 2, 3, 4, 5);
-
--- 3519 Goldshire: 0 Druid, 1 Hunter, 2 Mage (POI 2), 3 Paladin (POI 3), 4 Priest (POI 4), 5 Rogue (POI 5), 6
---     Shaman, 7 Warlock (POI 6), 8 Warrior (POI 7)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 3519 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7, 8);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 3519 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6, 7, 8);
-
--- 3545 Kharanos: 0 Hunter (POI 78), 1 Mage (POI 79), 2 Paladin (POI 80), 3 Priest (POI 81), 4 Rogue (POI 82), 5
---     Warlock (POI 83), 6 Warrior (POI 84)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 3545 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 3545 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-
--- 3564 Dolanaar: 0 Druid (POI 113), 1 Hunter (POI 114), 2 Priest (POI 115), 3 Rogue (POI 116), 4 Warrior (POI 117)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 3564 AND `OptionID` IN (0, 1, 2, 3, 4);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 3564 AND `OptionID` IN (0, 1, 2, 3, 4);
-
--- 7649 Silvermoon City: 0 Druid (POI 361), 1 Hunter (POI 362), 2 Mage (POI 363), 3 Paladin (POI 364), 4 Priest
---     (POI 365), 5 Rogue (POI 366), 6 Warlock (POI 367)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 7649 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 7649 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-
--- 7787 The Exodar: 0 Druid (POI 198), 1 Hunter (POI 199), 2 Mage (POI 200), 3 Paladin (POI 201), 4 Priest (POI
---     202), 5 Shaman (POI 203), 6 Warrior (POI 204)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 7787 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 7787 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-
--- 8137 Azure Watch: 0 Druid, 1 Hunter (POI 221), 2 Mage (POI 222), 3 Paladin (POI 223), 4 Priest (POI 224), 5
---     Shaman (POI 225), 6 Warrior (POI 226)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 8137 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 8137 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-
--- 8196 Falconwing Square: 0 Druid, 1 Hunter (POI 385), 2 Mage (POI 386), 3 Paladin (POI 387), 4 Priest (POI 388),
---     5 Rogue (POI 389), 6 Warlock (POI 390)
-DELETE FROM `gossip_menu_option_locale` WHERE `MenuID` = 8196 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-DELETE FROM `gossip_menu_option` WHERE `MenuID` = 8196 AND `OptionID` IN (0, 1, 2, 3, 4, 5, 6);
-
--- ---------------------------------------------------------------------------
--- 4. Map points only those options sent
--- ---------------------------------------------------------------------------
-DELETE FROM `points_of_interest_locale` WHERE `ID` IN (
-    2, 3, 4, 5, 6, 7, 32, 33, 34, 35, 36, 37, 38, 39, 61, 62, 63, 64, 65, 78, 79, 80, 81, 82, 83, 84, 98, 99,
-    100, 101, 113, 114, 115, 116, 117, 150, 198, 199, 200, 201, 202, 203, 204, 221, 222, 223, 224, 225, 226,
-    265, 266, 267, 285, 286, 287, 288, 300, 301, 302, 303, 304, 305, 306, 330, 331, 332, 333, 334, 335, 361,
-    362, 363, 364, 365, 366, 367, 385, 386, 387, 388, 389, 390, 405, 406, 407, 408, 409, 410, 411, 421, 422,
-    423, 424, 433, 434, 435, 436, 437);
-DELETE FROM `points_of_interest` WHERE `ID` IN (
-    2, 3, 4, 5, 6, 7, 32, 33, 34, 35, 36, 37, 38, 39, 61, 62, 63, 64, 65, 78, 79, 80, 81, 82, 83, 84, 98, 99,
-    100, 101, 113, 114, 115, 116, 117, 150, 198, 199, 200, 201, 202, 203, 204, 221, 222, 223, 224, 225, 226,
-    265, 266, 267, 285, 286, 287, 288, 300, 301, 302, 303, 304, 305, 306, 330, 331, 332, 333, 334, 335, 361,
-    362, 363, 364, 365, 366, 367, 385, 386, 387, 388, 389, 390, 405, 406, 407, 408, 409, 410, 411, 421, 422,
-    423, 424, 433, 434, 435, 436, 437);
-
--- ---------------------------------------------------------------------------
--- 5. Directions to CoA class trainers
--- ---------------------------------------------------------------------------
--- Stormwind: submenu 932100 (text copied from stock npc_text 898), 16 class options, reached from 435/14
+-- Stormwind: submenu 932100 (text copied from stock npc_text 898), 16 class options, reached from 435/16
 --     (Stormwind City Guard 68, City Patroller 1976, Harbor Guard 29712).
 --   leaf 932110: Barbarian Connor the Barbarian guid 9004500 POI 9321000; checked at the spawn: Command Center,
 --       Old Town (WMO A01Sw_Oldtown_Commandcenter)
@@ -303,7 +160,7 @@ VALUES
 (932100, 14, 0, 'Witch Doctor', 0, 1, 1, 932113, 9321004, 0, 0, '', 0, 0),
 (932100, 15, 0, 'Witch Hunter', 0, 1, 1, 932114, 9321005, 0, 0, '', 0, 0);
 
--- Ironforge: submenu 932101 (text copied from stock npc_text 2766), 11 class options, reached from 2121/11
+-- Ironforge: submenu 932101 (text copied from stock npc_text 2766), 11 class options, reached from 2121/14
 --     (Ironforge Guard 5595).
 --   leaf 932122: Barbarian Modor Tarmund guid 9004516 POI 9321020, Guardian Dagnan the Blade guid 9004517 POI
 --       9321021; checked at the spawn: Hall of Arms, Military Ward (WMO area Hall of Arms)
@@ -386,8 +243,8 @@ VALUES
 (932101, 9, 0, 'Templar', 0, 1, 1, 932124, 9321023, 0, 0, '', 0, 0),
 (932101, 10, 0, 'Tinker', 0, 1, 1, 932126, 9321027, 0, 0, '', 0, 0);
 
--- Darnassus: submenu 932102 (text copied from stock npc_text 3022), 13 class options, reached from 2352/9
---     (Darnassus Sentinel 4262), 10265/9 (no user (orphan copy of 2352)).
+-- Darnassus: submenu 932102 (text copied from stock npc_text 3022), 13 class options, reached from 2352/12
+--     (Darnassus Sentinel 4262), 10265/12 (no user (orphan copy of 2352)).
 --   leaf 932130: Felsworn Pelinor Felsight guid 9004527 POI 9321040, Knight of Xoroth Zeltur'atha the Exile guid
 --       9004528 POI 9321041; checked at the spawn: Warrior's Terrace upper walk (AreaTable 1660; stock POI 101
 --       12.8 yd)
@@ -483,7 +340,7 @@ VALUES
 (932102, 11, 0, 'Templar', 0, 1, 1, 932132, 9321043, 0, 0, '', 0, 0),
 (932102, 12, 0, 'Tinker', 0, 1, 1, 932138, 9321051, 0, 0, '', 0, 0);
 
--- The Exodar: submenu 932103 (text copied from stock npc_text 9533), 14 class options, reached from 7777/9 (Exodar
+-- The Exodar: submenu 932103 (text copied from stock npc_text 9533), 14 class options, reached from 7777/11 (Exodar
 --     Peacekeeper 16733).
 --   leaf 932140: Felsworn Haraaz Felscar guid 9004814 POI 9321060; checked at the spawn: Hunters' Sanctum terrace,
 --       Trader's Tier (WMO area Trader's Tier)
@@ -600,7 +457,7 @@ VALUES
 (932103, 12, 0, 'Templar', 0, 1, 1, 932144, 9321064, 0, 0, '', 0, 0),
 (932103, 13, 0, 'Tinker', 0, 1, 1, 932150, 9321070, 0, 0, '', 0, 0);
 
--- Orgrimmar: submenu 932104 (text copied from stock npc_text 2599), 15 class options, reached from 1951/12
+-- Orgrimmar: submenu 932104 (text copied from stock npc_text 2599), 15 class options, reached from 1951/15
 --     (Orgrimmar Grunt 3296).
 --   leaf 932154: Barbarian Zulaka'jin guid 9004650 POI 9321080, Guardian Grunt Korthaka guid 9004651 POI 9321081;
 --       checked at the spawn: Hall of the Brave, Valley of Honor (WMO area Hall of the Brave)
@@ -707,8 +564,8 @@ VALUES
 (932104, 13, 0, 'Venomancer', 0, 1, 1, 932161, 9321089, 0, 0, '', 0, 0),
 (932104, 14, 0, 'Witch Doctor', 0, 1, 1, 932160, 9321088, 0, 0, '', 0, 0);
 
--- Undercity: submenu 932105 (text copied from stock npc_text 3542), 18 class options, reached from 2849/12
---     (Undercity Guardian 5624), 10769/12 (Kor'kron Overseer 36213).
+-- Undercity: submenu 932105 (text copied from stock npc_text 3542), 18 class options, reached from 2849/14
+--     (Undercity Guardian 5624), 10769/14 (Kor'kron Overseer 36213).
 --   leaf 932165: Felsworn Thimakria Dilanore guid 9004665 POI 9321100, Necromancer Kobidus the Lich guid 9004666
 --       POI 9321101; checked at the spawn: Magic Quarter trainers' pit, z -61 (WMO area Magic Quarter; stock POIs
 --       331/334 7.7 yd)
@@ -816,7 +673,7 @@ VALUES
 (932105, 16, 0, 'Tinker', 0, 1, 1, 932173, 9321116, 0, 0, '', 0, 0),
 (932105, 17, 0, 'Witch Hunter', 0, 1, 1, 932172, 9321114, 0, 0, '', 0, 0);
 
--- Thunder Bluff: submenu 932106 (text copied from stock npc_text 1300), 7 class options, reached from 721/9
+-- Thunder Bluff: submenu 932106 (text copied from stock npc_text 1300), 7 class options, reached from 721/13
 --     (Bluffwatcher 3084).
 --   leaf 932174: Barbarian Thokor Galanthoof guid 9004682 POI 9321120, Guardian Gohok Bighoof guid 9004683 POI
 --       9321121; checked at the spawn: Hunter's Hall tent, Hunter Rise (AreaTable 1641; Taurenhuntertent.wmo
@@ -876,7 +733,7 @@ VALUES
 (932106, 5, 0, 'Starcaller', 0, 1, 1, 932175, 9321123, 0, 0, '', 0, 0),
 (932106, 6, 0, 'Sun Cleric', 0, 1, 1, 932175, 9321124, 0, 0, '', 0, 0);
 
--- Silvermoon City: submenu 932107 (text copied from stock npc_text 9331), 16 class options, reached from 7633/9
+-- Silvermoon City: submenu 932107 (text copied from stock npc_text 9331), 16 class options, reached from 7633/12
 --     (Silvermoon City Guardian 16222).
 --   leaf 932178: Felsworn Veyrin Felshroud guid 9004914 POI 9321140; checked at the spawn: The Sanctum under
 --       Murder Row (stock warlock POI 367 10.0 yd)
@@ -1001,7 +858,7 @@ VALUES
 (932107, 14, 0, 'Templar', 0, 1, 1, 932182, 9321144, 0, 0, '', 0, 0),
 (932107, 15, 0, 'Tinker', 0, 1, 1, 932191, 9321154, 0, 0, '', 0, 0);
 
--- Kharanos: submenu 932108 (text copied from stock npc_text 4292), 1 class options, reached from 3533/5 (Ironforge
+-- Kharanos: submenu 932108 (text copied from stock npc_text 4292), 1 class options, reached from 3533/7 (Ironforge
 --     Mountaineer 727).
 --   leaf 932193: Reaper Zipak Cogweight guid 9003314 POI 9321160; checked at the spawn: grave scene on the knoll
 --       east of the Thunderbrew Distillery (AreaTable 131 Kharanos; lampposts, candles and dirt mound 6-13 yd; z
@@ -1036,20 +893,63 @@ INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionTex
 VALUES
 (932108, 0, 0, 'Reaper', 0, 1, 1, 932193, 9321160, 0, 0, '', 0, 0);
 
--- Root options restored: the stock row of each key with ActionMenuID set to the CoA submenu.
+-- ---------------------------------------------------------------------------
+-- 2. Class Trainer options and who sees them
+-- ---------------------------------------------------------------------------
+-- The CoA option of each root menu, after the stock ones and their locale rows.
 DELETE FROM `gossip_menu_option` WHERE (`MenuID`, `OptionID`) IN (
-    (435, 14), (721, 9), (1951, 12), (2121, 11), (2352, 9), (2849, 12), (3533, 5), (7633, 9), (7777, 9), (10265,
-    9), (10769, 12));
+    (435, 16), (2121, 14), (2352, 12), (10265, 12), (7777, 11), (1951, 15), (2849, 14), (10769, 14), (721, 13),
+    (7633, 12), (3533, 7));
 INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`, `VerifiedBuild`)
 VALUES
-(435, 14, 0, 'Class Trainer', 45378, 1, 1, 932100, 0, 0, 0, '', 0, 0),
-(2121, 11, 0, 'Class Trainer', 45378, 1, 1, 932101, 0, 0, 0, '', 0, 0),
-(2352, 9, 0, 'Class Trainer', 45378, 1, 1, 932102, 0, 0, 0, '', 0, 0),
-(10265, 9, 0, 'Class Trainer', 45378, 1, 1, 932102, 0, 0, 0, '', 0, 0),
-(7777, 9, 0, 'Class Trainer', 45378, 1, 1, 932103, 0, 0, 0, '', 0, 0),
-(1951, 12, 0, 'A class trainer', 6792, 1, 1, 932104, 0, 0, 0, '', 0, 0),
-(2849, 12, 0, 'A class trainer', 6792, 1, 1, 932105, 0, 0, 0, '', 0, 0),
-(10769, 12, 0, 'A class trainer', 6792, 1, 1, 932105, 0, 0, 0, '', 0, 0),
-(721, 9, 0, 'A class trainer', 6792, 1, 1, 932106, 0, 0, 0, '', 0, 0),
-(7633, 9, 0, 'Class Trainer', 45378, 1, 1, 932107, 0, 0, 0, '', 0, 0),
-(3533, 5, 0, 'Class Trainer', 45378, 1, 1, 932108, 0, 0, 0, '', 0, 0);
+(435, 16, 0, 'Class Trainer', 45378, 1, 1, 932100, 0, 0, 0, '', 0, 0),
+(2121, 14, 0, 'Class Trainer', 45378, 1, 1, 932101, 0, 0, 0, '', 0, 0),
+(2352, 12, 0, 'Class Trainer', 45378, 1, 1, 932102, 0, 0, 0, '', 0, 0),
+(10265, 12, 0, 'Class Trainer', 45378, 1, 1, 932102, 0, 0, 0, '', 0, 0),
+(7777, 11, 0, 'Class Trainer', 45378, 1, 1, 932103, 0, 0, 0, '', 0, 0),
+(1951, 15, 0, 'A class trainer', 6792, 1, 1, 932104, 0, 0, 0, '', 0, 0),
+(2849, 14, 0, 'A class trainer', 6792, 1, 1, 932105, 0, 0, 0, '', 0, 0),
+(10769, 14, 0, 'A class trainer', 6792, 1, 1, 932105, 0, 0, 0, '', 0, 0),
+(721, 13, 0, 'A class trainer', 6792, 1, 1, 932106, 0, 0, 0, '', 0, 0),
+(7633, 12, 0, 'Class Trainer', 45378, 1, 1, 932107, 0, 0, 0, '', 0, 0),
+(3533, 7, 0, 'Class Trainer', 45378, 1, 1, 932108, 0, 0, 0, '', 0, 0);
+
+-- Stock root options for the stock classes, CoA root options for the CoA classes.
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 15 AND `ConditionTypeOrReference` = 15 AND
+    (`SourceGroup`, `SourceEntry`) IN (
+    (435, 14), (721, 9), (1951, 12), (2121, 11), (2352, 9), (10265, 9), (2849, 12), (10769, 12), (3285, 4),
+    (3331, 4), (3356, 4), (3506, 5), (3533, 5), (3580, 5), (7633, 9), (7777, 9), (8129, 5), (8185, 4), (10082, 1),
+    (435, 16), (2121, 14), (2352, 12), (10265, 12), (7777, 11), (1951, 15), (2849, 14), (10769, 14), (721, 13),
+    (7633, 12), (3533, 7));
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`)
+VALUES
+(15, 435, 14, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Stormwind - stock class trainer directions for the stock classes'),
+(15, 721, 9, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Thunder Bluff - stock class trainer directions for the stock classes'),
+(15, 1951, 12, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Orgrimmar - stock class trainer directions for the stock classes'),
+(15, 2121, 11, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Ironforge - stock class trainer directions for the stock classes'),
+(15, 2352, 9, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Darnassus - stock class trainer directions for the stock classes'),
+(15, 10265, 9, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Darnassus - stock class trainer directions for the stock classes'),
+(15, 2849, 12, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Undercity - stock class trainer directions for the stock classes'),
+(15, 10769, 12, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Undercity - stock class trainer directions for the stock classes'),
+(15, 3285, 4, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Razor Hill - stock class trainer directions for the stock classes'),
+(15, 3331, 4, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Bloodhoof Village - stock class trainer directions for the stock classes'),
+(15, 3356, 4, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Brill - stock class trainer directions for the stock classes'),
+(15, 3506, 5, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Goldshire - stock class trainer directions for the stock classes'),
+(15, 3533, 5, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Kharanos - stock class trainer directions for the stock classes'),
+(15, 3580, 5, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Dolanaar - stock class trainer directions for the stock classes'),
+(15, 7633, 9, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Silvermoon City - stock class trainer directions for the stock classes'),
+(15, 7777, 9, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'The Exodar - stock class trainer directions for the stock classes'),
+(15, 8129, 5, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Azure Watch - stock class trainer directions for the stock classes'),
+(15, 8185, 4, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Falconwing Square - stock class trainer directions for the stock classes'),
+(15, 10082, 1, 0, 0, 15, 0, 1535, 0, 0, 0, 0, 0, '', 'Dalaran - stock class trainer directions for the stock classes'),
+(15, 435, 16, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Stormwind - CoA class trainer directions for the CoA classes'),
+(15, 2121, 14, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Ironforge - CoA class trainer directions for the CoA classes'),
+(15, 2352, 12, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Darnassus - CoA class trainer directions for the CoA classes'),
+(15, 10265, 12, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Darnassus - CoA class trainer directions for the CoA classes'),
+(15, 7777, 11, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'The Exodar - CoA class trainer directions for the CoA classes'),
+(15, 1951, 15, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Orgrimmar - CoA class trainer directions for the CoA classes'),
+(15, 2849, 14, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Undercity - CoA class trainer directions for the CoA classes'),
+(15, 10769, 14, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Undercity - CoA class trainer directions for the CoA classes'),
+(15, 721, 13, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Thunder Bluff - CoA class trainer directions for the CoA classes'),
+(15, 7633, 12, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Silvermoon City - CoA class trainer directions for the CoA classes'),
+(15, 3533, 7, 0, 0, 15, 0, 4294965248, 0, 0, 0, 0, 0, '', 'Kharanos - CoA class trainer directions for the CoA classes');
