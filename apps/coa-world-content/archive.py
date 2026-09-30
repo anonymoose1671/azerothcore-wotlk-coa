@@ -15,7 +15,9 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CACHE = ROOT / '.cache/coa-world-content'
-DATASET_URL = 'https://raw.githubusercontent.com/hertigservices/ascension-data/main/datasets/cache.json'
+DATASET_COMMIT = 'e54620b179904343b6aedc3953a75caa21f14a5c'
+DATASET_URL = f'https://raw.githubusercontent.com/hertigservices/ascension-data/{DATASET_COMMIT}/datasets/cache.json'
+DATASET_SHA256 = '6e457e15937396b2133ce5b8cb5019bf2794bc49f97553b0f2e941e443a28e85'
 PAGES_URL = 'https://hertigservices.github.io/ascension-data/'
 TIMEOUT = 300
 SAFE_NAME = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_/'
@@ -43,14 +45,21 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def read_dataset(cache, offline):
-    stored = cache / 'cache.json'
-    if stored.exists():
-        return json.loads(stored.read_text(encoding='utf-8'))
-    data = download(DATASET_URL, offline)
+def verified_dataset(data):
+    if digest(data) != DATASET_SHA256:
+        raise ValueError(f'Dataset manifest checksum mismatch: expected {DATASET_SHA256}')
     manifest = json.loads(data)
     if manifest.get('schema') != 'ascension-dataset-1':
         raise ValueError('Unsupported dataset schema')
+    return manifest
+
+
+def read_dataset(cache, offline):
+    stored = cache / 'cache.json'
+    if stored.exists() and digest(stored.read_bytes()) == DATASET_SHA256:
+        return verified_dataset(stored.read_bytes())
+    data = download(DATASET_URL, offline)
+    manifest = verified_dataset(data)
     stored.parent.mkdir(parents=True, exist_ok=True)
     stored.write_bytes(data)
     return manifest
@@ -112,15 +121,31 @@ def fetch_cache_files(manifest, selected, cache, offline):
     return release, sorted(wanted), written
 
 
-def fetch_atlas(zones, cache, offline):
+def read_atlas_lock(path):
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding='utf-8'))
+
+
+def fetch_atlas(zones, cache, offline, refresh=False):
     target = cache / 'atlas'
     target.mkdir(parents=True, exist_ok=True)
+    lock_path = target / 'lock.json'
+    lock = read_atlas_lock(lock_path)
     manifest_path = target / 'atlas-manifest.json.gz'
-    if not manifest_path.exists():
-        manifest_path.write_bytes(download(PAGES_URL + 'atlas-manifest.json.gz', offline))
-    manifest = json.loads(gzip.decompress(manifest_path.read_bytes()))
+    if refresh or not manifest_path.exists():
+        data = download(PAGES_URL + 'atlas-manifest.json.gz', offline)
+    else:
+        data = manifest_path.read_bytes()
+    manifest_sha256 = digest(data)
+    if lock.get('manifest') not in (None, manifest_sha256) and not refresh:
+        raise ValueError('Atlas manifest does not match atlas/lock.json; pass --refresh-atlas to accept the new one')
+    manifest = json.loads(gzip.decompress(data))
     if manifest.get('schema') != 'ascension-atlas-1':
         raise ValueError('Unsupported atlas schema')
+    if lock.get('manifest') != manifest_sha256:
+        lock = {'manifest': manifest_sha256, 'revision': manifest['revision'], 'files': {}}
+    manifest_path.write_bytes(data)
     written = []
     matched = []
     for zone in manifest['zones']:
@@ -131,13 +156,20 @@ def fetch_atlas(zones, cache, offline):
         relative = zone.get('file')
         if not relative:
             continue
-        destination = cache / 'atlas' / safe_relative(relative)
-        if destination.exists():
+        destination = target / safe_relative(relative)
+        locked = lock['files'].get(relative)
+        if locked and destination.exists() and digest(destination.read_bytes()) == locked:
             continue
+        payload = download(PAGES_URL + relative, offline)
+        if locked and digest(payload) != locked:
+            raise ValueError(f'Atlas file checksum mismatch: {relative}')
+        json.loads(gzip.decompress(payload))
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes(download(PAGES_URL + relative, offline))
+        destination.write_bytes(payload)
+        lock['files'][relative] = digest(payload)
         written.append(relative)
-    return manifest['revision'], matched, written
+    lock_path.write_text(json.dumps(lock, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+    return manifest['revision'], manifest_sha256, matched, written
 
 
 def record(cache, entry):
@@ -155,6 +187,7 @@ def main(argv=None):
     parser.add_argument('--zone', action='append', default=[])
     parser.add_argument('--cache', type=Path, default=DEFAULT_CACHE)
     parser.add_argument('--offline', action='store_true')
+    parser.add_argument('--refresh-atlas', action='store_true')
     args = parser.parse_args(argv)
     try:
         args.cache.mkdir(parents=True, exist_ok=True)
@@ -166,8 +199,9 @@ def main(argv=None):
             entry = {'command': 'cache', 'at': stamp, 'release': release,
                      'selected': selected, 'files': available, 'downloaded': written}
         else:
-            revision, matched, written = fetch_atlas(args.zone, args.cache, args.offline)
-            entry = {'command': 'atlas', 'at': stamp, 'revision': revision,
+            revision, manifest_sha256, matched, written = fetch_atlas(args.zone, args.cache, args.offline,
+                                                                     args.refresh_atlas)
+            entry = {'command': 'atlas', 'at': stamp, 'revision': revision, 'manifest_sha256': manifest_sha256,
                      'zones': matched, 'downloaded': written}
         record(args.cache, entry)
         print(json.dumps(entry, indent=2))
