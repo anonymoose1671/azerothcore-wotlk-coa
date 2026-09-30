@@ -235,12 +235,12 @@ UPDATE `waypoint_data` SET `position_x` = -8515.37, `position_y` = 426.32, `posi
 UPDATE `waypoint_data` SET `position_x` = -8508.34, `position_y` = 417.43, `position_z` = 112.23 WHERE `id` = 105270 AND `point` = 3;
 UPDATE `waypoint_data` SET `position_x` = -8497.15, `position_y` = 403.56, `position_z` = 115.72 WHERE `id` = 105270 AND `point` = 4;
 UPDATE `waypoint_data` SET `position_x` = -8487.69, `position_y` = 391.55, `position_z` = 115.84 WHERE `id` = 105270 AND `point` = 5;
-UPDATE `waypoint_data` SET `position_x` = -8477.11, `position_y` = 378.39, `position_z` = 115.34 WHERE `id` = 105270 AND `point` = 6;
--- Stormwind Royal Guard 10527 path: end node moved out of the CoA fountain basin to 9.5 yd from its centre on the same
---   approach line
-UPDATE `waypoint_data` SET `position_x` = -8475.69, `position_y` = 374.45, `position_z` = 115.34 WHERE `id` = 105270 AND `point` = 7;
+-- Stormwind Royal Guard 10527 path: it turned around inside the fountain at the top of the keep steps (playtest);
+--   it now turns on the keep terrace before the grass bed and the fountain
+UPDATE `waypoint_data` SET `position_x` = -8482.5, `position_y` = 385, `position_z` = 115.86 WHERE `id` = 105270 AND `point` = 6;
+UPDATE `waypoint_data` SET `position_x` = -8481.9, `position_y` = 384.3, `position_z` = 115.86 WHERE `id` = 105270 AND `point` = 7;
+UPDATE `waypoint_data` SET `position_x` = -8482.5, `position_y` = 385, `position_z` = 115.86 WHERE `id` = 105270 AND `point` = 8;
 -- Stormwind Royal Guard 10527 path: same approach from the keep bridge to the lower courtyard; re-z to the CoA floor
-UPDATE `waypoint_data` SET `position_x` = -8477.11, `position_y` = 378.39, `position_z` = 115.34 WHERE `id` = 105270 AND `point` = 8;
 UPDATE `waypoint_data` SET `position_x` = -8487.69, `position_y` = 391.55, `position_z` = 115.84 WHERE `id` = 105270 AND `point` = 9;
 UPDATE `waypoint_data` SET `position_x` = -8497.15, `position_y` = 403.56, `position_z` = 115.72 WHERE `id` = 105270 AND `point` = 10;
 UPDATE `waypoint_data` SET `position_x` = -8508.34, `position_y` = 417.43, `position_z` = 112.23 WHERE `id` = 105270 AND `point` = 11;
@@ -275,7 +275,15 @@ UPDATE `waypoint_data` SET `position_x` = -8414.96, `position_y` = 295.77, `posi
 --   floor at the foot of the dais on her side, 8 yd from her and 5.6 yd from her Portal to Undercity 2133395, flat
 --   (slope 0.5, headroom 46), the 3.1 yd disc clear of the east wall by 1.2 yd and of guard 10513 by 2.4 yd; the dais
 --   in front of her holds the throne party and its steps; stock facing kept
-UPDATE `smart_scripts` SET `target_x` = -8374.5, `target_y` = 228.5, `target_z` = 155.323 WHERE `entryorguid` = 3234600 AND `source_type` = 9 AND `id` = 4;
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 3234600 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(3234600, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Script9 - Set Npc Flags'),
+(3234600, 9, 1, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 21, 20, 0, 0, 0, 0, 0, 0, 0, 'Script9 - Talk'),
+(3234600, 9, 2, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 11, 60904, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Script9 - Cast Spell'),
+(3234600, 9, 3, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Script9 - Talk'),
+(3234600, 9, 4, 0, 0, 0, 100, 0, 2000, 2000, 0, 0, 0, 0, 50, 193948, 20, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8374.5, 228.5, 155.323, 0, 'Script9 - Summon GO'),
+(3234600, 9, 5, 0, 0, 0, 100, 0, 10000, 10000, 0, 0, 0, 0, 81, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Script9 - Set Npc Flags');
 -- Highback Chair: deleted; decorative; its stock west room (4 Inntablesmall round (-8505.8,339.2), floor 120.9) is
 --   gone: CoA terrain and keep grounds there; CoA's only 4-table room (war room) takes the war-room chairs
 DELETE FROM `gameobject` WHERE `guid` IN (13877, 13878, 13879, 13880, 13898, 13899, 13900, 13901, 13902, 13903, 13908, 13913);
@@ -2674,7 +2682,21 @@ UPDATE `waypoints` SET `position_x` = -8839.1, `position_y` = 968.26, `position_
 -- Billy - On Data Set 1 6 - Move to POS: Billy joins Adam at his canal pause (Adam 1366 node 39); the stock point was
 --   on the removed fishing platform, now canal water; beside Adam on the Park quay walkway, 1.8 yd inland of him, same
 --   facing
-UPDATE `smart_scripts` SET `target_x` = -8837.93, `target_y` = 969.66, `target_z` = 99.726 WHERE `entryorguid` = 1367 AND `source_type` = 0 AND `id` = 5;
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1367 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1367, 0, 0, 0, 38, 0, 100, 512, 1, 0, 0, 0, 0, 0, 29, 0, 330, 0, 0, 0, 0, 10, 79702, 1366, 0, 0, 0, 0, 0, 0, 'Billy - On Data Set 1 0 - Set Follow'),
+(1367, 0, 1, 0, 38, 0, 100, 0, 1, 2, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8746.15, 534.447, 96.338, 0.942478, 'Billy - On Data Set 1 2 - Move to POS'),
+(1367, 0, 2, 0, 38, 0, 100, 512, 1, 4, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0.942478, 'Billy - On Data Set 1 4 - Set Orientation'),
+(1367, 0, 3, 0, 38, 0, 100, 0, 1, 3, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8793.93, 771.825, 96.338, 1.6493, 'Billy - On Data Set 1 3 - Move to POS'),
+(1367, 0, 4, 0, 38, 0, 100, 512, 1, 5, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 1.6493, 'Billy - On Data Set 1 5 - Set Orientation'),
+(1367, 0, 5, 0, 38, 0, 100, 0, 1, 6, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8837.93, 969.66, 99.726, 5.40947, 'Billy - On Data Set 1 6 - Move to POS'),
+(1367, 0, 6, 0, 38, 0, 100, 512, 1, 7, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 5.40947, 'Billy - On Data Set 1 7 - Set Orientation'),
+(1367, 0, 7, 0, 38, 0, 100, 512, 1, 8, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Billy - On Data Set 1 8 - Set Phase 1'),
+(1367, 0, 8, 0, 38, 0, 100, 512, 1, 9, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Billy - On Data Set 1 9 - Set Phase 0'),
+(1367, 0, 9, 0, 38, 0, 100, 0, 1, 10, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Billy - On Data Set 1 10 - Say Line 1'),
+(1367, 0, 10, 0, 1, 0, 100, 512, 30000, 30000, 90000, 160000, 0, 0, 80, 136700, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Billy - OOC - Run Script'),
+(1367, 0, 11, 0, 1, 1, 20, 512, 8000, 8000, 90000, 150000, 0, 0, 80, 136701, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Billy - OOC - Run Script (Phase 1)');
 -- Brandon SmartAI path node 30, Brandon SmartAI path node 34: same spot on the Cathedral-side quay; CoA quay floor
 --   97.99 (stock node 96.96 lies 1.0 yd under it)
 UPDATE `waypoints` SET `position_x` = -8663.31, `position_y` = 909.1, `position_z` = 97.992 WHERE `entry` = 1370 AND `pointid` = 30;
@@ -2693,11 +2715,27 @@ UPDATE `waypoints` SET `position_x` = -8666.25, `position_y` = 906.34, `position
 -- Justin - On Data Set 1 3 - Move to POS: Justin joins Brandon at his canal pause (Brandon 1370 node 32); the stock
 --   point was on the removed fishing platform, now canal water; on the Cathedral quay walkway 2 yd north-west of
 --   Brandon, facing along the quay toward him as before
-UPDATE `smart_scripts` SET `target_x` = -8664.82, `target_y` = 907.75, `target_z` = 98.013 WHERE `entryorguid` = 1368 AND `source_type` = 0 AND `id` = 3;
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1368 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1368, 0, 0, 0, 38, 0, 100, 512, 1, 0, 0, 0, 0, 0, 29, 0, 75, 0, 0, 0, 0, 10, 79817, 1370, 0, 0, 0, 0, 0, 0, 'Justin - On Data Set 1 0 - Set Follow'),
+(1368, 0, 1, 0, 38, 0, 100, 0, 1, 2, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8582.03, 633.634, 96.3386, 5.0381, 'Justin - On Data Set 1 2 - Move to POS'),
+(1368, 0, 2, 0, 38, 0, 100, 512, 1, 4, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 5.0381, 'Justin - On Data Set 1 4 - Set Orientation'),
+(1368, 0, 3, 0, 38, 0, 100, 0, 1, 3, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8664.82, 907.75, 98.013, 3.768, 'Justin - On Data Set 1 3 - Move to POS'),
+(1368, 0, 4, 0, 38, 0, 100, 512, 1, 5, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 3.768, 'Justin - On Data Set 1 5 - Set Orientation'),
+(1368, 0, 5, 0, 1, 0, 100, 512, 30000, 30000, 80000, 160000, 0, 0, 80, 136800, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Justin - OOC - Run Script');
 -- Roman - On Data Set 1 3 - Move to POS: Roman joins Brandon at his canal pause (Brandon 1370 node 32); the stock
 --   point was on the removed fishing platform, now canal water; on the Cathedral quay walkway 1.8 yd south-east of
 --   Brandon, facing the canal as before
-UPDATE `smart_scripts` SET `target_x` = -8667.48, `target_y` = 905.02, `target_z` = 97.957 WHERE `entryorguid` = 1371 AND `source_type` = 0 AND `id` = 4;
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1371 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1371, 0, 0, 0, 38, 0, 100, 512, 1, 0, 0, 0, 0, 0, 29, 0, 285, 0, 0, 0, 0, 10, 79817, 1370, 0, 0, 0, 0, 0, 0, 'Roman - On Data Set 1 0 - Set Follow'),
+(1371, 0, 1, 0, 38, 0, 100, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Roman - On Data Set 1 1 - Say Random 0'),
+(1371, 0, 2, 0, 38, 0, 100, 0, 1, 2, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8583.88, 633.127, 96.3386, 5.0381, 'Roman - On Data Set 1 2 - Move to POS'),
+(1371, 0, 3, 0, 38, 0, 100, 512, 1, 4, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 5.0381, 'Roman - On Data Set 1 4 - Set Orientation'),
+(1371, 0, 4, 0, 38, 0, 100, 0, 1, 3, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8667.48, 905.02, 97.957, 2.282, 'Roman - On Data Set 1 3 - Move to POS'),
+(1371, 0, 5, 0, 38, 0, 100, 512, 1, 5, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 2.282, 'Roman - On Data Set 1 5 - Set Orientation');
 -- Christmas Tree (Medium): Winter Veil tree at the Mage Quarter; same spot, CoA terrain 117.60 (sat 0.36 yd sunk)
 UPDATE `gameobject` SET `position_x` = -8934.1, `position_y` = 972.866, `position_z` = 117.599, `orientation` = 5.02655 WHERE `guid` = 298 AND `id` = 178667;
 -- Banner: Lunar Festival standing banner in the Park; same spot, CoA terrain 96.53 (sat 0.37 yd sunk)
@@ -2723,7 +2761,10 @@ UPDATE `spell_target_position` SET `PositionX` = -8748.48, `PositionY` = 1073.61
 -- Sealed Crate - On Quest 'The Legend of Stalvan' Taken - Summon Creature 'Forlorn Spirit': quest 74: the Forlorn
 --   Spirit that must be killed for item 916 was summoned 1.3 yd under the CoA Park terrain (summons use target_z
 --   verbatim); same spot, z on the terrain 100.008 (open, slope 5.5), 11.6 yd from the Sealed Crate
-UPDATE `smart_scripts` SET `target_x` = -8841.93, `target_y` = 985.171, `target_z` = 100.008 WHERE `entryorguid` = 1561 AND `source_type` = 1 AND `id` = 0;
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1561 AND `source_type` = 1;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1561, 1, 0, 0, 19, 0, 100, 0, 74, 0, 0, 0, 0, 0, 12, 2044, 1, 30000, 0, 0, 0, 8, 0, 0, 0, 0, -8841.93, 985.171, 100.008, 6.00926, 'Sealed Crate - On Quest ''The Legend of Stalvan'' Taken - Summon Creature ''Forlorn Spirit''');
 -- Stormwind Harbor Guard: canal guard; same spot, z on the corrected CoA terrain with the stock 0.08 offset (floated
 --   0.46)
 UPDATE `creature` SET `position_x` = -8642.95, `position_y` = 956.384, `position_z` = 99.298, `orientation` = 5.23599 WHERE `guid` = 120637 AND `id` = 29712;

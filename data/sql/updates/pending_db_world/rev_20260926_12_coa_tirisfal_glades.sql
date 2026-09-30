@@ -325,17 +325,37 @@ VALUES
 (449251, 0, 0, 1, 8, 0, 100, 0, 355164, 0, 5000, 5000, 0, 0, 33, 449251, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Edwin''s Darkhound - On Spellhit Feed Duskhound - Quest Credit Edwin''s Darkhound Fed'),
 (449251, 0, 1, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Edwin''s Darkhound - Linked - Play Emote Eat');
 
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (1520, 1522, 1523, 1530, 1534) AND `source_type` = 0 AND `id` BETWEEN 100 AND 109;
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1520 AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (1520, 0, 100, 101, 8, 0, 100, 0, 355193, 0, 5000, 5000, 0, 0, 33, 254956, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Rattlecage Soldier - On Spellhit Rod''s Concoction - Quest Credit Concoction Tested on Skeletons'),
-(1520, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Rattlecage Soldier - Linked - Despawn In 2 Seconds'),
+(1520, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Rattlecage Soldier - Linked - Despawn In 2 Seconds');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1522 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1522, 0, 0, 0, 0, 0, 100, 0, 0, 0, 4000, 5000, 0, 0, 11, 13322, 64, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Darkeye Bonecaster - In Combat CMC - Cast ''Frostbolt'''),
 (1522, 0, 100, 101, 8, 0, 100, 0, 355193, 0, 5000, 5000, 0, 0, 33, 254956, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Darkeye Bonecaster - On Spellhit Rod''s Concoction - Quest Credit Concoction Tested on Skeletons'),
-(1522, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Darkeye Bonecaster - Linked - Despawn In 2 Seconds'),
+(1522, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Darkeye Bonecaster - Linked - Despawn In 2 Seconds');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1523 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1523, 0, 0, 0, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 589, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Cracked Skull Soldier - On Aggro - Cast ''589'''),
 (1523, 0, 100, 101, 8, 0, 100, 0, 355193, 0, 5000, 5000, 0, 0, 33, 254956, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Cracked Skull Soldier - On Spellhit Rod''s Concoction - Quest Credit Concoction Tested on Skeletons'),
-(1523, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Cracked Skull Soldier - Linked - Despawn In 2 Seconds'),
+(1523, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Cracked Skull Soldier - Linked - Despawn In 2 Seconds');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1530 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1530, 0, 0, 0, 0, 0, 100, 0, 2700, 3400, 9800, 12100, 0, 0, 11, 3322, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Rotting Ancestor - In Combat - Cast ''3322'''),
 (1530, 0, 100, 101, 8, 0, 100, 0, 355193, 0, 5000, 5000, 0, 0, 33, 254957, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Rotting Ancestor - On Spellhit Rod''s Concoction - Quest Credit Concoction Tested on Zombies'),
-(1530, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Rotting Ancestor - Linked - Despawn In 2 Seconds'),
+(1530, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Rotting Ancestor - Linked - Despawn In 2 Seconds');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 1534 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(1534, 0, 0, 0, 0, 0, 75, 0, 12000, 12000, 24000, 24000, 0, 0, 11, 7713, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wailing Ancestor - In Combat - Cast ''Wailing Dead'' (No Repeat)'),
 (1534, 0, 100, 101, 8, 0, 100, 0, 355193, 0, 5000, 5000, 0, 0, 33, 254958, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Wailing Ancestor - On Spellhit Rod''s Concoction - Quest Credit Concoction Tested on Banshees'),
 (1534, 0, 101, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 2000, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wailing Ancestor - Linked - Despawn In 2 Seconds');
 

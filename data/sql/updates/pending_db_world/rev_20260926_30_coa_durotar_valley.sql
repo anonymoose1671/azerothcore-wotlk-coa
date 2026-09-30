@@ -466,24 +466,180 @@ UPDATE `gameobject` SET `position_x` = -455, `position_y` = -4215, `position_z` 
 UPDATE `gameobject` SET `position_x` = -463, `position_y` = -4237, `position_z` = 50.093 WHERE `guid` = 12441; -- Cactus Apple: off the west climb to the south-west floor
 UPDATE `gameobject` SET `position_x` = -440, `position_y` = -4248, `position_z` = 49.827 WHERE `guid` = 12457; -- Cactus Apple: off the west climb to the south floor
 
-UPDATE `smart_scripts` SET `target_x` = -275.24, `target_y` = -4144.08, `target_z` = 54.581 WHERE `entryorguid` = 737500 AND `source_type` = 9 AND `id` IN (2, 11); -- peon 7375: beside its re-placed pile
-UPDATE `smart_scripts` SET `target_x` = -275.24, `target_y` = -4144.08, `target_z` = 54.581 WHERE `entryorguid` = 737501 AND `source_type` = 9 AND `id` IN (5, 15); -- peon 7375: beside its re-placed pile
-UPDATE `smart_scripts` SET `target_x` = -263.703, `target_y` = -4144.72, `target_z` = 56.818 WHERE `entryorguid` = 737500 AND `source_type` = 9 AND `id` IN (7, 16); -- peon 7375: second chopping spot, re-floored
-UPDATE `smart_scripts` SET `target_x` = -263.703, `target_y` = -4144.72, `target_z` = 56.818 WHERE `entryorguid` = 737501 AND `source_type` = 9 AND `id` IN (11, 20); -- peon 7375: second chopping spot, re-floored
-UPDATE `smart_scripts` SET `target_x` = -269.336, `target_y` = -4144.42, `target_z` = 55.62 WHERE `entryorguid` = 737500 AND `source_type` = 9 AND `id` = 20; -- peon 7375: back to its bed, re-floored
-UPDATE `smart_scripts` SET `target_x` = -269.336, `target_y` = -4144.42, `target_z` = 55.62 WHERE `entryorguid` = 737501 AND `source_type` = 9 AND `id` = 24; -- peon 7375: back to its bed, re-floored
-UPDATE `smart_scripts` SET `target_x` = -476.958, `target_y` = -4217.09, `target_z` = 50.059 WHERE `entryorguid` = 652600 AND `source_type` = 9 AND `id` IN (2, 11); -- peon 6526: beside its pile
-UPDATE `smart_scripts` SET `target_x` = -476.958, `target_y` = -4217.09, `target_z` = 50.059 WHERE `entryorguid` = 652601 AND `source_type` = 9 AND `id` IN (5, 15); -- peon 6526: beside its pile
-UPDATE `smart_scripts` SET `target_x` = -482.625, `target_y` = -4215.31, `target_z` = 50.16 WHERE `entryorguid` = 652600 AND `source_type` = 9 AND `id` IN (7, 16); -- peon 6526: second chopping spot
-UPDATE `smart_scripts` SET `target_x` = -482.625, `target_y` = -4215.31, `target_z` = 50.16 WHERE `entryorguid` = 652601 AND `source_type` = 9 AND `id` IN (11, 20); -- peon 6526: second chopping spot
-UPDATE `smart_scripts` SET `target_x` = -478.917, `target_y` = -4211.71, `target_z` = 50.405 WHERE `entryorguid` = 652600 AND `source_type` = 9 AND `id` = 20; -- peon 6526: back to its bed
-UPDATE `smart_scripts` SET `target_x` = -478.917, `target_y` = -4211.71, `target_z` = 50.405 WHERE `entryorguid` = 652601 AND `source_type` = 9 AND `id` = 24; -- peon 6526: back to its bed
-UPDATE `smart_scripts` SET `target_x` = -312.647, `target_y` = -4166.21, `target_z` = 53.243 WHERE `entryorguid` = 652300 AND `source_type` = 9 AND `id` IN (2, 11); -- peon 6523: beside its pile
-UPDATE `smart_scripts` SET `target_x` = -312.647, `target_y` = -4166.21, `target_z` = 53.243 WHERE `entryorguid` = 652301 AND `source_type` = 9 AND `id` IN (5, 15); -- peon 6523: beside its pile
-UPDATE `smart_scripts` SET `target_x` = -311.264, `target_y` = -4157, `target_z` = 53.207 WHERE `entryorguid` = 652300 AND `source_type` = 9 AND `id` IN (7, 16); -- peon 6523: second chopping spot
-UPDATE `smart_scripts` SET `target_x` = -311.264, `target_y` = -4157, `target_z` = 53.207 WHERE `entryorguid` = 652301 AND `source_type` = 9 AND `id` IN (11, 20); -- peon 6523: second chopping spot
-UPDATE `smart_scripts` SET `target_x` = -315, `target_y` = -4160, `target_z` = 53.23 WHERE `entryorguid` = 652300 AND `source_type` = 9 AND `id` = 20; -- peon 6523: back to its bed
-UPDATE `smart_scripts` SET `target_x` = -315, `target_y` = -4160, `target_z` = 53.23 WHERE `entryorguid` = 652301 AND `source_type` = 9 AND `id` = 24; -- peon 6523: back to its bed
+-- Lazy Peon action list 737500 (peon 7375): ids 2, 11 beside its re-placed pile; ids 7, 16 second chopping spot,
+--   re-floored; id 20 back to its bed, re-floored
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 737500 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(737500, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Peon Sleeping'''),
+(737500, 9, 1, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run Off'),
+(737500, 9, 2, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -275.24, -4144.08, 54.581, 1.37121, 'Lazy Peon - On Script - Move To Position'),
+(737500, 9, 3, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737500, 9, 4, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(737500, 9, 5, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(737500, 9, 6, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(737500, 9, 7, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -263.703, -4144.72, 56.818, 5.55737, 'Lazy Peon - On Script - Move To Position'),
+(737500, 9, 8, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(737500, 9, 9, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(737500, 9, 10, 0, 0, 0, 100, 0, 30000, 30000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737500, 9, 11, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -275.24, -4144.08, 54.581, 1.37121, 'Lazy Peon - On Script - Move To Position'),
+(737500, 9, 12, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737500, 9, 13, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(737500, 9, 14, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(737500, 9, 15, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(737500, 9, 16, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -263.703, -4144.72, 56.818, 5.55737, 'Lazy Peon - On Script - Move To Position'),
+(737500, 9, 17, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(737500, 9, 18, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(737500, 9, 19, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737500, 9, 20, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -269.336, -4144.42, 55.62, 4.24184, 'Lazy Peon - On Script - Move To Position'),
+(737500, 9, 21, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 11, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Cast ''Peon Sleeping''');
+-- Lazy Peon action list 737501 (peon 7375): ids 5, 15 beside its re-placed pile; ids 11, 20 second chopping spot,
+--   re-floored; id 24 back to its bed, re-floored
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 737501 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(737501, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Peon Sleeping'''),
+(737501, 9, 1, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Talk line 0'),
+(737501, 9, 2, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 115, 6292, 6294, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound Rndmsound 6292 6294'),
+(737501, 9, 3, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 10556, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Kill Monstercredit'),
+(737501, 9, 4, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 59, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run On'),
+(737501, 9, 5, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -275.24, -4144.08, 54.581, 1.37121, 'Lazy Peon - On Script - Move To Position'),
+(737501, 9, 6, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737501, 9, 7, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run Off'),
+(737501, 9, 8, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(737501, 9, 9, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(737501, 9, 10, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(737501, 9, 11, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -263.703, -4144.72, 56.818, 5.55737, 'Lazy Peon - On Script - Move To Position'),
+(737501, 9, 12, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(737501, 9, 13, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(737501, 9, 14, 0, 0, 0, 100, 0, 30000, 30000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737501, 9, 15, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -275.24, -4144.08, 54.581, 1.37121, 'Lazy Peon - On Script - Move To Position'),
+(737501, 9, 16, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737501, 9, 17, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(737501, 9, 18, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(737501, 9, 19, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(737501, 9, 20, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -263.703, -4144.72, 56.818, 5.55737, 'Lazy Peon - On Script - Move To Position'),
+(737501, 9, 21, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(737501, 9, 22, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(737501, 9, 23, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(737501, 9, 24, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -269.336, -4144.42, 55.62, 4.24184, 'Lazy Peon - On Script - Move To Position'),
+(737501, 9, 25, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 11, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Cast ''Peon Sleeping''');
+-- Lazy Peon action list 652600 (peon 6526): ids 2, 11 beside its pile; ids 7, 16 second chopping spot; id 20 back
+--   to its bed
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 652600 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(652600, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Peon Sleeping'''),
+(652600, 9, 1, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run Off'),
+(652600, 9, 2, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -476.958, -4217.09, 50.059, 5.22157, 'Lazy Peon - On Script - Move To Position'),
+(652600, 9, 3, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652600, 9, 4, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652600, 9, 5, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652600, 9, 6, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652600, 9, 7, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -482.625, -4215.31, 50.16, 2.83788, 'Lazy Peon - On Script - Move To Position'),
+(652600, 9, 8, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652600, 9, 9, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652600, 9, 10, 0, 0, 0, 100, 0, 30000, 30000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652600, 9, 11, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -476.958, -4217.09, 50.059, 5.22157, 'Lazy Peon - On Script - Move To Position'),
+(652600, 9, 12, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652600, 9, 13, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652600, 9, 14, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652600, 9, 15, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652600, 9, 16, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -482.625, -4215.31, 50.16, 2.83788, 'Lazy Peon - On Script - Move To Position'),
+(652600, 9, 17, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652600, 9, 18, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652600, 9, 19, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652600, 9, 20, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -478.917, -4211.71, 50.405, 1.33777, 'Lazy Peon - On Script - Move To Position'),
+(652600, 9, 21, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 11, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Cast ''Peon Sleeping''');
+-- Lazy Peon action list 652601 (peon 6526): ids 5, 15 beside its pile; ids 11, 20 second chopping spot; id 24 back
+--   to its bed
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 652601 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(652601, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Peon Sleeping'''),
+(652601, 9, 1, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Talk line 0'),
+(652601, 9, 2, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 115, 6292, 6294, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound Rndmsound 6292 6294'),
+(652601, 9, 3, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 10556, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Kill Monstercredit'),
+(652601, 9, 4, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 59, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run On'),
+(652601, 9, 5, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -476.958, -4217.09, 50.059, 5.22157, 'Lazy Peon - On Script - Move To Position'),
+(652601, 9, 6, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652601, 9, 7, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run Off'),
+(652601, 9, 8, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652601, 9, 9, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652601, 9, 10, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652601, 9, 11, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -482.625, -4215.31, 50.16, 2.83788, 'Lazy Peon - On Script - Move To Position'),
+(652601, 9, 12, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652601, 9, 13, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652601, 9, 14, 0, 0, 0, 100, 0, 30000, 30000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652601, 9, 15, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -476.958, -4217.09, 50.059, 5.22157, 'Lazy Peon - On Script - Move To Position'),
+(652601, 9, 16, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652601, 9, 17, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652601, 9, 18, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652601, 9, 19, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652601, 9, 20, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -482.625, -4215.31, 50.16, 2.83788, 'Lazy Peon - On Script - Move To Position'),
+(652601, 9, 21, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652601, 9, 22, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652601, 9, 23, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652601, 9, 24, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -478.917, -4211.71, 50.405, 1.33777, 'Lazy Peon - On Script - Move To Position'),
+(652601, 9, 25, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 11, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Cast ''Peon Sleeping''');
+-- Lazy Peon action list 652300 (peon 6523): ids 2, 11 beside its pile; ids 7, 16 second chopping spot; id 20 back
+--   to its bed
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 652300 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(652300, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Peon Sleeping'''),
+(652300, 9, 1, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run Off'),
+(652300, 9, 2, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -312.647, -4166.21, 53.243, 0.337633, 'Lazy Peon - On Script - Move To Position'),
+(652300, 9, 3, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652300, 9, 4, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652300, 9, 5, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652300, 9, 6, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652300, 9, 7, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -311.264, -4157, 53.207, 1.36258, 'Lazy Peon - On Script - Move To Position'),
+(652300, 9, 8, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652300, 9, 9, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652300, 9, 10, 0, 0, 0, 100, 0, 30000, 30000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652300, 9, 11, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -312.647, -4166.21, 53.243, 0.337633, 'Lazy Peon - On Script - Move To Position'),
+(652300, 9, 12, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652300, 9, 13, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652300, 9, 14, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652300, 9, 15, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652300, 9, 16, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -311.264, -4157, 53.207, 1.36258, 'Lazy Peon - On Script - Move To Position'),
+(652300, 9, 17, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652300, 9, 18, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652300, 9, 19, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652300, 9, 20, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -315, -4160, 53.23, 3.5617, 'Lazy Peon - On Script - Move To Position'),
+(652300, 9, 21, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 11, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Cast ''Peon Sleeping''');
+-- Lazy Peon action list 652301 (peon 6523): ids 5, 15 beside its pile; ids 11, 20 second chopping spot; id 24 back
+--   to its bed
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 652301 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(652301, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Peon Sleeping'''),
+(652301, 9, 1, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Talk line 0'),
+(652301, 9, 2, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 115, 6292, 6294, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound Rndmsound 6292 6294'),
+(652301, 9, 3, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 10556, 0, 0, 0, 0, 0, 12, 1, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Kill Monstercredit'),
+(652301, 9, 4, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 59, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run On'),
+(652301, 9, 5, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -312.647, -4166.21, 53.243, 0.337633, 'Lazy Peon - On Script - Move To Position'),
+(652301, 9, 6, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652301, 9, 7, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Run Off'),
+(652301, 9, 8, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652301, 9, 9, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652301, 9, 10, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652301, 9, 11, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -311.264, -4157, 53.207, 1.36258, 'Lazy Peon - On Script - Move To Position'),
+(652301, 9, 12, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652301, 9, 13, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652301, 9, 14, 0, 0, 0, 100, 0, 30000, 30000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652301, 9, 15, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -312.647, -4166.21, 53.243, 0.337633, 'Lazy Peon - On Script - Move To Position'),
+(652301, 9, 16, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652301, 9, 17, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 20, 175784, 10, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Orientation Closest Gameobject ''LumberPile'''),
+(652301, 9, 18, 0, 0, 0, 100, 0, 2500, 2500, 0, 0, 0, 0, 75, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Add Aura ''Kneel'''),
+(652301, 9, 19, 0, 0, 0, 100, 0, 3000, 3000, 0, 0, 0, 0, 28, 68442, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Remove Aura ''Kneel'''),
+(652301, 9, 20, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -311.264, -4157, 53.207, 1.36258, 'Lazy Peon - On Script - Move To Position'),
+(652301, 9, 21, 0, 0, 0, 100, 0, 6000, 6000, 0, 0, 0, 0, 4, 6197, 1, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Play Sound 6197'),
+(652301, 9, 22, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 173, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 173'),
+(652301, 9, 23, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Set Emote State 0'),
+(652301, 9, 24, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, -315, -4160, 53.23, 3.5617, 'Lazy Peon - On Script - Move To Position'),
+(652301, 9, 25, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 11, 17743, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lazy Peon - On Script - Cast ''Peon Sleeping''');
 
 -- ---------------------------------------------------------------------------
 -- 8. Scripts
