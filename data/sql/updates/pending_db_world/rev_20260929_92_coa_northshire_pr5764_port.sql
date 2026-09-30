@@ -23,7 +23,6 @@ UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 501266;
 UPDATE `creature_template` SET `HoverHeight` = 1 WHERE `entry` IN (161857, 161858, 161895, 161897);
 DELETE FROM `creature_template_model` WHERE `CreatureID` IN (537, 161710, 161841, 161842, 161844, 161857, 161858, 161895, 161897, 399223, 501266, 522923, 721111);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES
-(537, 0, 50, 1.0000, 1.00, 12340),
 (161710, 0, 2408, 1.0000, 1.00, 12340),
 (161841, 0, 757, 1.0000, 1.00, 12340),
 (161842, 0, 4419, 1.0000, 1.00, 12340),
@@ -35,7 +34,9 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 (399223, 0, 2299, 1.0000, 1.00, 12340),
 (501266, 0, 49, 1.0000, 1.00, 12340),
 (522923, 0, 775, 0.6000, 1.00, 12340),
-(721111, 0, 5555, 1.0000, 1.00, 12340);
+(721111, 0, 5555, 1.0000, 1.00, 12340),
+(537, 0, 5035, 1, 0.5, NULL),
+(537, 1, 5036, 1, 0.5, NULL);
 DELETE FROM `creature_template_addon` WHERE `entry` IN (537, 161710, 161841, 161842, 161844, 161857, 161858, 161895, 161897, 399223, 501266, 522923, 721111);
 INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
 (161710, 0, 0, 0, 1, 0, ''),
@@ -51,7 +52,6 @@ INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `b
 DELETE FROM `creature_template_movement` WHERE `CreatureId` IN (161857, 161858, 161895, 161897);
 DELETE FROM `creature_display_preset` WHERE `entry` IN (161844, 161857, 501266, 537);
 INSERT INTO `creature_display_preset` (`entry`, `display_id`, `race`, `gender`, `class`, `skin`, `face`, `hair`, `haircolor`, `facialhair`, `guild_id`, `item_head`, `item_shoulders`, `item_body`, `item_chest`, `item_waist`, `item_legs`, `item_feet`, `item_wrists`, `item_hands`, `item_back`, `item_tabard`) VALUES
-(537, 50, 1, 1, 8, 4, 0, 3, 9, 0, 0, 144944, 0, 0, 148561, 150152, 152077, 154288, 0, 0, 0, 0),
 (161844, 49, 1, 0, 1, 3, 3, 3, 9, 3, 0, 11995, 11365, 0, 9657, 13132, 0, 155314, 0, 0, 0, 0),
 (161857, 49, 1, 0, 1, 9, 9, 9, 9, 8, 0, 0, 21024, 148383, 24528, 0, 21021, 21064, 0, 21065, 0, 0),
 (501266, 49, 1, 0, 6, 12, 0, 11, 13, 8, 0, 0, 169327, 148037, 9, 12, 13, 14, 0, 11, 0, 0);
