@@ -262,6 +262,9 @@ def build_harness(source):
     body = "\n".join(line for line in source.splitlines() if not line.startswith("#include"))
     body, removed = re.subn(r"\nstruct npc_coa_caravan_cart : public VehicleAI\n\{.*?\n\};\n", "\n", body, flags=re.S)
     assert removed == 1, "the cart AI is outside this grid-loading harness"
+    body, removed = re.subn(r"\nconstexpr \w+ (SPELL_RUN_STATE|SPELL_REINS|NPC_CARAVAN_HARNESS|DRIVER_SEAT) = [^;\n]+;",
+                            "", body)
+    assert removed == 4, "the cart AI's constants are outside this grid-loading harness"
     body = body.replace("    RegisterCreatureAI(npc_coa_caravan_cart);\n", "")
 
     spawns, expected, cart_spawns = spawns_and_expectation(cart_entries(source))
