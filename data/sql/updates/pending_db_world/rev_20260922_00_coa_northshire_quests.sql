@@ -380,7 +380,7 @@ VALUES
 (7910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 54.72, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Abbess''s Staff'),
 (7910004, 96001, 0, 0, 0, 1, 1, -8906.66, -705.67, 70.67, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Smudged Note'),
 (7910005, 2300503, 0, 0, 0, 1, 1, -8857.02, -187.281, 90.383, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8643 position for Lost Page II, on the upper library floor'),
-(7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 83.119, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Lost Page III'),
+(7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 82.27, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Lost Page III'),
 (7910007, 2300505, 0, 0, 0, 1, 1, -8857.35, -185.58, 83.119, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8645 position for Lost Page IV, on the library desk'),
 (7910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
 (7910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
