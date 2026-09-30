@@ -804,3 +804,9 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 VALUES
 (22, 3, 9301100, 1, 0, 9, 0, 200042, 0, 0, 0, 0, 0, '', 'Ritual Circle - re-summon only while Call of the Dead is taken'),
 (22, 3, 9301100, 1, 0, 29, 1, 299232, 20, 0, 1, 0, 0, '', 'Ritual Circle - re-summon only if no living Undead Monstrosity is within 20 yd');
+
+DELETE FROM `conditions` WHERE `SourceEntry` IN (299235, 9301102) AND `SourceTypeOrReferenceId` = 30;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`)
+VALUES
+(30, 0, 299235, 0, 0, 9, 0, 200071, 0, 0, 0, 0, 0, '', 'Brother Sammuel - visible only while Going MAD! (200071) is taken'),
+(30, 1, 9301102, 0, 0, 9, 0, 200109, 0, 0, 0, 0, 0, '', 'Eye of the Beholder - visible only while Runes of Power (200109) is taken');
