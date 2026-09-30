@@ -470,8 +470,6 @@ UPDATE `creature` SET `position_x` = -9455.02, `position_y` = -29.2894, `positio
 UPDATE `creature` SET `position_x` = -9224.23, `position_y` = 418.613, `position_z` = 86.33, `orientation` = 0.047608 WHERE `guid` = 79876 AND `id` = 525;
 -- Mangy Wolf (80382): around the Spada manor: CoA lowered the ground 3.17 yd; same spot, CoA floor
 UPDATE `creature` SET `position_x` = -9239.91, `position_y` = 421.35, `position_z` = 84.03, `orientation` = 0.125324 WHERE `guid` = 80382 AND `id` = 525;
--- Kobold Worker (80103): Northshire: CoA lowered the ground 0.83 yd; same spot, CoA floor
-UPDATE `creature` SET `position_x` = -8778.08, `position_y` = -254.596, `position_z` = 81.36, `orientation` = 1.81161 WHERE `guid` = 80103 AND `id` = 257;
 -- Diseased Timber Wolf (80131): Northshire: CoA lowered the ground 3.29 yd; same spot, CoA floor
 UPDATE `creature` SET `position_x` = -8827.58, `position_y` = -292.02, `position_z` = 76.07, `orientation` = 0.334482 WHERE `guid` = 80131 AND `id` = 69;
 -- Diseased Timber Wolf (80144): Northshire: CoA raised the ground 0.41 yd; same spot, CoA floor

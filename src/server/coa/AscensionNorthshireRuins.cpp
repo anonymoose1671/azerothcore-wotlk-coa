@@ -17,6 +17,7 @@ namespace
 constexpr uint32 QUEST_ACCURSED_SISTERHOOD = 1660003;
 constexpr uint32 QUEST_WORM_EATEN_APPLE = 1660058;
 constexpr uint32 NPC_KOBOLD_PROSPECTOR = 162915;
+constexpr uint32 AmbusherIdleLifetimeMs = 30000;
 
 struct Relic
 {
@@ -111,7 +112,8 @@ class spell_coa_abbess_relic_prayer : public SpellScript
 
         player->KilledMonsterCredit(relic->credit);
         if (relic->ambusher && roll_chance_i(50))
-            if (TempSummon* ambusher = go->SummonCreature(relic->ambusher, *go, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000))
+            if (TempSummon* ambusher = go->SummonCreature(relic->ambusher, *go, TEMPSUMMON_TIMED_DESPAWN_OOC_ALIVE,
+                                                          AmbusherIdleLifetimeMs))
                 ambusher->AI()->AttackStart(player);
         go->DespawnOrUnsummon(0ms, relic->respawn);
     }
