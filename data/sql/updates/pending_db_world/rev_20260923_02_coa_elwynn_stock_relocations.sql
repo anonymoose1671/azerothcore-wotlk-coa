@@ -300,6 +300,15 @@ UPDATE `creature` SET `position_x` = -8892.94, `position_y` = -172.944, `positio
 -- ---------------------------------------------------------------------------
 -- 4. Stock spawns out of new walls, floors and ground
 -- ---------------------------------------------------------------------------
+-- Kobold Worker (80105): kobold worker off the roof of the Old Northshire ruins (playtest); back in the kobold
+--   camp north of them
+UPDATE `creature` SET `position_x` = -8785, `position_y` = -261, `position_z` = 79.73, `orientation` = 1.05 WHERE `guid` = 80105 AND `id` = 257;
+-- Kobold Worker (80107): kobold worker that wandered onto the Old Northshire ruins (playtest); kobold camp, 8+ yd
+--   clear of them
+UPDATE `creature` SET `position_x` = -8771.5, `position_y` = -256.5, `position_z` = 79.82, `orientation` = 2.59 WHERE `guid` = 80107 AND `id` = 257;
+-- Timber Wolf (80106): timber wolf out of the ruined farmhouse of Old Northshire (playtest); open woods south of
+--   it
+UPDATE `creature` SET `position_x` = -8745, `position_y` = -322, `position_z` = 82.39, `orientation` = 5.62 WHERE `guid` = 80106 AND `id` = 69;
 -- Defias Bandit (80381): Mirror Lake camp bandit out of the Spada manor house; Mirror Lake Orchard (quest 17008:
 --   'The Defias have overrun the Mirror Lake Orchard'), below the farmhouse's south wall facing the orchard
 UPDATE `creature` SET `position_x` = -9455.5, `position_y` = 463, `position_z` = 53.13, `orientation` = 3.14 WHERE `guid` = 80381 AND `id` = 116;
