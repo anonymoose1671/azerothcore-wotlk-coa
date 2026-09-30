@@ -300,15 +300,18 @@ UPDATE `creature` SET `position_x` = -8892.94, `position_y` = -172.944, `positio
 -- ---------------------------------------------------------------------------
 -- 4. Stock spawns out of new walls, floors and ground
 -- ---------------------------------------------------------------------------
--- Young Wolf (79648): wolf too close to Goldshire's north edge by the Northshire/Stormwind fork (playtest); 55+ yd
---   out in the woods
-UPDATE `creature` SET `position_x` = -9398.2, `position_y` = 78.1, `position_z` = 59.98, `orientation` = 3.16 WHERE `guid` = 79648 AND `id` = 299;
--- Young Wolf (80341): wolf too close to Goldshire's north edge by the Northshire/Stormwind fork (playtest); 55+ yd
---   out in the woods
-UPDATE `creature` SET `position_x` = -9373, `position_y` = 77.6, `position_z` = 61.64, `orientation` = 4.11 WHERE `guid` = 80341 AND `id` = 299;
--- Mangy Wolf (80342): wolf too close to Goldshire's north edge by the Northshire/Stormwind fork (playtest); 55+ yd
---   out in the woods
-UPDATE `creature` SET `position_x` = -9381.6, `position_y` = 79, `position_z` = 60.65, `orientation` = 2.74 WHERE `guid` = 80342 AND `id` = 525;
+-- Young Wolf (79648): wolf too close to the Stormwind/Northshire road fork (playtest); 45+ yd from both roads in
+--   the woods
+UPDATE `creature` SET `position_x` = -9414.8, `position_y` = 139.9, `position_z` = 58.46, `orientation` = 3.16 WHERE `guid` = 79648 AND `id` = 299;
+-- Young Wolf (80341): wolf too close to the Stormwind/Northshire road fork (playtest); 45+ yd from both roads in
+--   the woods
+UPDATE `creature` SET `position_x` = -9312, `position_y` = 77.6, `position_z` = 68.11, `orientation` = 4.11 WHERE `guid` = 80341 AND `id` = 299;
+-- Mangy Wolf (80342): wolf too close to the Stormwind/Northshire road fork (playtest); 45+ yd from both roads in
+--   the woods
+UPDATE `creature` SET `position_x` = -9323.6, `position_y` = 79, `position_z` = 61.58, `orientation` = 2.74 WHERE `guid` = 80342 AND `id` = 525;
+-- Young Wolf (79920): wolf too close to the Stormwind/Northshire road fork (playtest); 45+ yd from both roads in
+--   the woods
+UPDATE `creature` SET `position_x` = -9265.9, `position_y` = -3.8, `position_z` = 73.34, `orientation` = 5.7 WHERE `guid` = 79920 AND `id` = 299;
 -- Young Wolf (80343): wolf too close to Goldshire's north edge by the Northshire/Stormwind fork (playtest); 55+ yd
 --   out in the woods
 UPDATE `creature` SET `position_x` = -9336.3, `position_y` = 69.8, `position_z` = 60.76, `orientation` = 2.97 WHERE `guid` = 80343 AND `id` = 299;
@@ -463,8 +466,6 @@ UPDATE `creature` SET `position_x` = -9706.5, `position_y` = -450, `position_z` 
 UPDATE `gameobject` SET `position_x` = -9474.5, `position_y` = 14, `position_z` = 56.574, `orientation` = 1.506, `rotation2` = 0.683831, `rotation3` = 0.729641 WHERE `guid` = 26784 AND `id` = 142075;
 -- Rabbit (79644): Goldshire: CoA lowered the ground 2.18 yd; same spot, CoA floor
 UPDATE `creature` SET `position_x` = -9455.02, `position_y` = -29.2894, `position_z` = 57.33, `orientation` = 3.34436 WHERE `guid` = 79644 AND `id` = 721;
--- Diseased Young Wolf (79920): east of Goldshire: CoA lowered the ground 0.22 yd; same spot, CoA floor
-UPDATE `creature` SET `position_x` = -9290, `position_y` = -10.2439, `position_z` = 69.29, `orientation` = 5.69506 WHERE `guid` = 79920 AND `id` = 299;
 -- Mangy Wolf (79876): around the Spada manor: CoA lowered the ground 1.78 yd; same spot, CoA floor
 UPDATE `creature` SET `position_x` = -9224.23, `position_y` = 418.613, `position_z` = 86.33, `orientation` = 0.047608 WHERE `guid` = 79876 AND `id` = 525;
 -- Mangy Wolf (80382): around the Spada manor: CoA lowered the ground 3.17 yd; same spot, CoA floor
