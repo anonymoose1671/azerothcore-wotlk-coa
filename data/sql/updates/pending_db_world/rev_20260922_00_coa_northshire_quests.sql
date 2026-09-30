@@ -153,21 +153,21 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 3. World objects
 -- ---------------------------------------------------------------------------
-INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `size`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `AIName`)
+INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `size`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `AIName`, `ScriptName`)
 VALUES
-(96001, 2, 164, 'Smudged Note', '', '', 0.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
-(685237, 10, 7717, 'Grappling Hook Rope', '', '', 0.075, 93, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300500, 3, 210, 'Lost Page I', '', '', 1, 1689, 2300500, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300501, 0, 300449, 'Dungeon Door', '', '', 1, 0, 0, 5000, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''),
-(2300503, 3, 210, 'Lost Page II', '', '', 1, 1689, 2300503, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300504, 3, 210, 'Lost Page III', '', '', 1, 1689, 2300504, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300505, 3, 210, 'Lost Page IV', '', '', 1, 1689, 2300505, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300517, 3, 210, 'Lost Page VI', '', '', 1, 1689, 2300517, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300520, 10, 1029136, 'Abbess’ Journal', '', '', 1, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300521, 10, 87111, 'Abbess’s Staff', '', '', 1.25, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300522, 10, 63523, 'Heretical Idol Purified', '', '', 1.5, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI'),
-(2300523, 10, 7075, 'Jewel', '', '', 0.75, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI')
-ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `IconName` = VALUES(`IconName`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`), `AIName` = VALUES(`AIName`);
+(96001, 2, 164, 'Smudged Note', '', '', 0.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', ''),
+(685237, 10, 7717, 'Grappling Hook Rope', '', '', 0.075, 93, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_theologian_rope'),
+(2300500, 3, 210, 'Lost Page I', '', '', 1, 1689, 2300500, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300501, 0, 300449, 'Dungeon Door', '', '', 1, 0, 0, 5000, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', ''),
+(2300503, 3, 210, 'Lost Page II', '', '', 1, 1689, 2300503, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300504, 3, 210, 'Lost Page III', '', '', 1, 1689, 2300504, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300505, 3, 210, 'Lost Page IV', '', '', 1, 1689, 2300505, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300517, 3, 210, 'Lost Page VI', '', '', 1, 1689, 2300517, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300520, 10, 1029136, 'Abbess’ Journal', '', '', 1, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_abbess_relic'),
+(2300521, 10, 87111, 'Abbess’s Staff', '', '', 1.25, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_abbess_relic'),
+(2300522, 10, 63523, 'Heretical Idol Purified', '', '', 1.5, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_abbess_relic'),
+(2300523, 10, 7075, 'Jewel', '', '', 0.75, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_abbess_relic')
+ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `IconName` = VALUES(`IconName`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`), `AIName` = VALUES(`AIName`), `ScriptName` = VALUES(`ScriptName`);
 
 -- ---------------------------------------------------------------------------
 -- 4. Quests
@@ -243,7 +243,7 @@ VALUES
 (161702, 1660003),
 (161701, 1660004),
 (161705, 1660005),
-(161701, 1660036),
+(161844, 1660036),
 (161702, 1660038);
 
 -- ---------------------------------------------------------------------------
@@ -377,7 +377,7 @@ VALUES
 (7910000, 2300500, 0, 0, 0, 1, 1, -8912.93, -209.89, 82.99, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page I'),
 (7910001, 2300517, 0, 0, 0, 1, 1, -8912.76, -208.82, 82.99, 5.45, 0, 0, 0.404647, -0.914473, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page VI'),
 (7910002, 2300501, 0, 0, 0, 1, 1, -8775.58, -278.45, 79.17, 3.141593, 0, 0, 1, 0, 120, 100, 1, '', 'CoA Northshire: hand placement, observed atlas position for Dungeon Door, turned to cover the stairwell opening'),
-(7910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 54.72, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Abbess''s Staff'),
+(7910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 53.93, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Abbess''s Staff'),
 (7910004, 96001, 0, 0, 0, 1, 1, -8906.66, -705.67, 70.67, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Smudged Note'),
 (7910005, 2300503, 0, 0, 0, 1, 1, -8857.02, -187.281, 90.383, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8643 position for Lost Page II, on the upper library floor'),
 (7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 82.27, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Lost Page III'),
@@ -385,7 +385,7 @@ VALUES
 (7910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
 (7910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
 (7910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall'),
-(7910011, 685237, 0, 0, 0, 1, 1, -8612.6, -563.6, 145.825, 4.13, 0, 0, 0.880347, -0.474331, 120, 100, 1, '', 'CoA Northshire: beside the vines at the south deck of the ruin, by the street lamp'),
+(7910011, 685237, 0, 0, 0, 1, 1, -8621.5, -573.5, 145.356, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
 (7910012, 685237, 0, 0, 0, 1, 1, -8603.5, -582.6, 146.711, 4.51, 0, 0, 0.774923, -0.632056, 120, 100, 1, '', 'CoA Northshire: beside the vines at the east deck of the ruin'),
 (7910013, 685237, 0, 0, 0, 1, 1, -8590, -559.4, 147.803, 3.74, 0, 0, 0.955572, -0.294759, 120, 100, 1, '', 'CoA Northshire: beside the vines at the north deck of the ruin');
 
@@ -395,9 +395,9 @@ VALUES
 -- He melees, casts Shadow Bolt at his target and Shadowfury, a 5 second cast that stuns everyone within
 -- 8 yards of him for 3 seconds. Every 30-60 seconds while unshielded he casts Dark Reality (4 seconds,
 -- interruptible). When it completes he takes Shadow Shield (all damage taken -100%), a portal opens on each
--- raised deck of the ruins around him and three images step onto each, casting Shadow Bolt; killing all
--- nine removes the shield and closes the portals, and the cycle can repeat. A rope by each deck lifts players
--- up. Repeat intervals follow the observed
+-- raised deck of the ruins around him and one image steps onto each, rooted, casting Shadow Bolt or meleeing;
+-- killing all three removes the shield and closes the portals, and the cycle can repeat. A rope by each deck
+-- lifts players up without leaving combat. Repeat intervals follow the observed
 -- casts (Shadowfury 5-32 s, Dark Reality 29-64 s); first casts and the Shadow Bolt pace are INFERRED. An
 -- evade or his death clears the shield, portals, images and counter. Engaging him credits the ruined
 -- estate, for a player who reached it without crossing the ridge trigger; his death credits players
@@ -411,20 +411,14 @@ VALUES
 (161713, 0, 3, 4, 8, 0, 100, 0, 256762, 0, 0, 0, 0, 0, 11, 256763, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On Dark Reality completed - Cast Shadow Shield'),
 (161713, 0, 4, 100, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 2 (shielded)'),
 (161713, 0, 100, 101, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8616, -573, 149.653, 0.399, 'Wayward Theologian - Linked - Open a portal on the south deck by the street lamp'),
-(161713, 0, 101, 102, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8615.5, -567.5, 149.652, 6.174, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
-(161713, 0, 102, 103, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8616, -573, 149.653, 0.399, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
-(161713, 0, 103, 104, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8615.5, -579, 149.658, 0.807, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
-(161713, 0, 104, 105, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161909, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8601.5, -585.8, 150.301, 1.801, 'Wayward Theologian - Linked - Open a portal on the east deck'),
-(161713, 0, 105, 106, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8599, -584, 150.316, 1.972, 'Wayward Theologian - Linked - Summon an image on the east deck'),
-(161713, 0, 106, 107, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8601.5, -585.8, 150.301, 1.801, 'Wayward Theologian - Linked - Summon an image on the east deck'),
-(161713, 0, 107, 108, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8608, -583.5, 150.288, 1.407, 'Wayward Theologian - Linked - Summon an image on the east deck'),
-(161713, 0, 108, 109, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595.5, -568, 150.806, 3.2, 'Wayward Theologian - Linked - Open a portal on the north deck'),
-(161713, 0, 109, 110, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8596, -563, 150.808, 3.672, 'Wayward Theologian - Linked - Summon an image on the north deck'),
-(161713, 0, 110, 111, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595.5, -568, 150.806, 3.2, 'Wayward Theologian - Linked - Summon an image on the north deck'),
-(161713, 0, 111, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595, -572, 150.806, 2.828, 'Wayward Theologian - Linked - Summon an image on the north deck'),
+(161713, 0, 101, 102, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8616, -573, 149.653, 0.399, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
+(161713, 0, 102, 103, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161909, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8601.5, -585.8, 150.301, 1.801, 'Wayward Theologian - Linked - Open a portal on the east deck'),
+(161713, 0, 103, 104, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8601.5, -585.8, 150.301, 1.801, 'Wayward Theologian - Linked - Summon an image on the east deck'),
+(161713, 0, 104, 105, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595.5, -568, 150.806, 3.2, 'Wayward Theologian - Linked - Open a portal on the north deck'),
+(161713, 0, 105, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8595.5, -568, 150.806, 3.2, 'Wayward Theologian - Linked - Summon an image on the north deck'),
 (161713, 0, 9, 0, 0, 1, 100, 0, 15000, 20000, 60000, 75000, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Say mercy'),
 (161713, 0, 10, 0, 82, 0, 100, 0, 161904, 0, 0, 0, 0, 0, 63, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On image died - Add 1 to counter 1'),
-(161713, 0, 11, 12, 77, 0, 100, 0, 1, 9, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On every image dead - Remove Shadow Shield'),
+(161713, 0, 11, 12, 77, 0, 100, 0, 1, 3, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On every image dead - Remove Shadow Shield'),
 (161713, 0, 12, 13, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
 (161713, 0, 13, 14, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 1 (unshielded)'),
 (161713, 0, 14, 15, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
@@ -442,8 +436,10 @@ VALUES
 (161713, 0, 26, 27, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
 (161713, 0, 27, 28, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
 (161713, 0, 28, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say death'),
-(161904, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 25, 60, 1, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - On summoned - Attack the closest player within 60 yards'),
-(161904, 0, 1, 0, 0, 0, 100, 0, 0, 1000, 5000, 5500, 0, 0, 11, 256738, 1088, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - In combat - Cast Shadow Bolt on its target from range'),
+(161904, 0, 0, 1, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 103, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - On summoned - Root on its deck'),
+(161904, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - Linked - Never chase'),
+(161904, 0, 2, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 25, 60, 1, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - Linked - Attack the closest player within 60 yards'),
+(161904, 0, 3, 0, 0, 0, 100, 0, 0, 1000, 5000, 5500, 0, 0, 11, 256738, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian image - In combat - Cast Shadow Bolt on its target'),
 (161908, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 256761, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian Portal 01 - On summoned - Cast Portal'),
 (161909, 0, 0, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 256761, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian Portal 02 - On summoned - Cast Portal');
 
@@ -478,12 +474,20 @@ VALUES
 (6136, 2, 0, 0, 46, 0, 100, 0, 6136, 0, 0, 0, 0, 0, 33, 161704, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Areatrigger 6136 - On trigger - Credit the ruined estate');
 
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300520, 2300521, 2300522, 2300523) AND `source_type` = 1;
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
-VALUES
-(2300520, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161715, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300520 - On use - Credit purifying the journal'),
-(2300521, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161824, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300521 - On use - Credit purifying the staff'),
-(2300522, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161825, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300522 - On use - Credit purifying the idol'),
-(2300523, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 33, 161826, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Relic 2300523 - On use - Credit purifying the jewel');
+DELETE FROM `spell_script_names` WHERE `ScriptName` = 'spell_coa_abbess_relic_prayer';
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
+(256701, 'spell_coa_abbess_relic_prayer'),
+(256726, 'spell_coa_abbess_relic_prayer');
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 30 AND `SourceEntry` IN (2300520, 2300521, 2300522, 2300523);
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `Comment`) VALUES
+(30, 1, 2300520, 0, 0, 48, 0, 1660003, 0, 1, 1, 'Hide the journal once purified'),
+(30, 1, 2300520, 0, 0, 8, 0, 1660003, 0, 0, 1, 'Keep the journal hidden after the reward'),
+(30, 1, 2300521, 0, 0, 48, 0, 1660003, 1, 1, 1, 'Hide the staff once purified'),
+(30, 1, 2300521, 0, 0, 8, 0, 1660003, 0, 0, 1, 'Keep the staff hidden after the reward'),
+(30, 1, 2300522, 0, 0, 48, 0, 1660003, 2, 1, 1, 'Hide the idol once purified'),
+(30, 1, 2300522, 0, 0, 8, 0, 1660003, 0, 0, 1, 'Keep the idol hidden after the reward'),
+(30, 1, 2300523, 0, 0, 48, 0, 1660003, 3, 1, 1, 'Hide the jewel once purified'),
+(30, 1, 2300523, 0, 0, 8, 0, 1660003, 0, 0, 1, 'Keep the jewel hidden after the reward');
 
 -- Looting a Lost Page summons one Living Heresy (user, 2026-09-23). Each rope lifts its user onto its deck.
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300500, 2300503, 2300504, 2300505, 2300517) AND `source_type` = 1;
@@ -495,11 +499,6 @@ VALUES
 (2300505, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page IV - On looted, once per spawn - Summon a Living Heresy'),
 (2300517, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page VI - On looted, once per spawn - Summon a Living Heresy');
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (-7910011, -7910012, -7910013) AND `source_type` = 1;
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
-VALUES
-(-7910011, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -8614.5, -566.5, 149.652, 6.05, 'Grappling Hook Rope - On use - Lift the user onto the south deck'),
-(-7910012, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -8604, -585, 150.321, 1.664, 'Grappling Hook Rope - On use - Lift the user onto the east deck'),
-(-7910013, 1, 0, 0, 64, 0, 100, 0, 1, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -8595, -562.8, 150.81, 3.644, 'Grappling Hook Rope - On use - Lift the user onto the north deck');
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 161711 AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
