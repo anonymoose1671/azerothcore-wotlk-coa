@@ -28,22 +28,22 @@ constexpr uint32 ClassMask(Classes playerClass)
     return uint32(1) << (playerClass - 1);
 }
 
-class AuthoredClassQuest : public Quest
+class LoadedClassQuest : public Quest
 {
 public:
-    AuthoredClassQuest(::Field* questRecord, uint32 authoredClassMask) : Quest(questRecord)
+    LoadedClassQuest(::Field* questRecord, uint32 questTemplateAddonClassMask) : Quest(questRecord)
     {
-        RequiredClasses = authoredClassMask;
+        RequiredClasses = ExpandLegacyQuestClassMask(questTemplateAddonClassMask);
     }
 };
 
 class QuestClassMaskTest : public IntegrationTestFixture
 {
 protected:
-    AuthoredClassQuest MakeQuest(uint32 authoredClassMask)
+    LoadedClassQuest MakeQuest(uint32 questTemplateAddonClassMask)
     {
         std::array<::Field, 106> emptyQuestRecord;
-        return AuthoredClassQuest(emptyQuestRecord.data(), authoredClassMask);
+        return LoadedClassQuest(emptyQuestRecord.data(), questTemplateAddonClassMask);
     }
 
     bool CanTakeQuest(Classes playerClass, Quest const& quest)
@@ -51,6 +51,17 @@ protected:
         TestPlayer* player = CreateTestPlayer(++_guid);
         player->SetByteValue(UNIT_FIELD_BYTES_0, 1, uint8(playerClass));
         return player->SatisfyQuestClass(&quest, false);
+    }
+
+    void ExpectCustomClassesOfStockFamilies(uint32 stockClassMask)
+    {
+        LoadedClassQuest quest = MakeQuest(stockClassMask);
+
+        for (uint8 classId = CLASS_BARBARIAN; classId < MAX_CLASSES; ++classId)
+        {
+            bool familyAllowed = (stockClassMask & ClassMask(GetLegacyClassForCustomClass(Classes(classId)))) != 0;
+            EXPECT_EQ(CanTakeQuest(Classes(classId), quest), familyAllowed) << stockClassMask << " " << uint32(classId);
+        }
     }
 
 private:
@@ -74,41 +85,59 @@ TEST_F(QuestClassMaskTest, StockClassQuestsStayClosedToMappedCustomClasses)
              StockClassQuest{CLASS_SHAMAN, CLASS_SPIRIT_MAGE},
              StockClassQuest{CLASS_ROGUE, CLASS_MONK}})
     {
-        AuthoredClassQuest quest = MakeQuest(ClassMask(stockQuest.stockClass));
+        LoadedClassQuest quest = MakeQuest(ClassMask(stockQuest.stockClass));
 
         EXPECT_TRUE(CanTakeQuest(stockQuest.stockClass, quest)) << uint32(stockQuest.stockClass);
         EXPECT_FALSE(CanTakeQuest(stockQuest.mappedCustomClass, quest)) << uint32(stockQuest.mappedCustomClass);
     }
 }
 
-TEST_F(QuestClassMaskTest, MultiClassStockQuestsAdmitNoCustomClass)
+TEST_F(QuestClassMaskTest, GearFamilyQuestsAdmitTheCustomClassesOfTheirFamilies)
 {
-    AuthoredClassQuest quest = MakeQuest(ClassMask(CLASS_PRIEST) | ClassMask(CLASS_MAGE) | ClassMask(CLASS_WARLOCK));
+    ExpectCustomClassesOfStockFamilies(ClassMask(CLASS_PRIEST) | ClassMask(CLASS_MAGE) | ClassMask(CLASS_WARLOCK));
+    ExpectCustomClassesOfStockFamilies(
+        ClassMask(CLASS_WARRIOR) | ClassMask(CLASS_PALADIN) | ClassMask(CLASS_DEATH_KNIGHT));
+    ExpectCustomClassesOfStockFamilies(ClassMask(CLASS_ROGUE) | ClassMask(CLASS_DRUID));
+}
 
+TEST_F(QuestClassMaskTest, QuestsForAllButOneStockClassAdmitEveryOtherFamily)
+{
+    uint32 allStockClasses = CLASSMASK_ALL_PLAYABLE & 0x7FFu;
+
+    ExpectCustomClassesOfStockFamilies(allStockClasses & ~ClassMask(CLASS_DEATH_KNIGHT));
+    ExpectCustomClassesOfStockFamilies(allStockClasses & ~ClassMask(CLASS_PRIEST));
+    ExpectCustomClassesOfStockFamilies(allStockClasses & ~ClassMask(CLASS_DRUID));
+
+    LoadedClassQuest allButDeathKnight = MakeQuest(allStockClasses & ~ClassMask(CLASS_DEATH_KNIGHT));
     for (uint8 classId = CLASS_BARBARIAN; classId < MAX_CLASSES; ++classId)
-        EXPECT_FALSE(CanTakeQuest(Classes(classId), quest)) << uint32(classId);
+        EXPECT_TRUE(CanTakeQuest(Classes(classId), allButDeathKnight)) << uint32(classId);
 }
 
 TEST_F(QuestClassMaskTest, AuthoredCustomClassQuestsAdmitOnlyTheirClasses)
 {
-    AuthoredClassQuest cultistQuest = MakeQuest(ClassMask(CLASS_CULTIST));
+    LoadedClassQuest cultistQuest = MakeQuest(ClassMask(CLASS_CULTIST));
     EXPECT_TRUE(CanTakeQuest(CLASS_CULTIST, cultistQuest));
     EXPECT_FALSE(CanTakeQuest(CLASS_PALADIN, cultistQuest));
 
-    AuthoredClassQuest runemasterQuest = MakeQuest(ClassMask(CLASS_SPIRIT_MAGE));
+    LoadedClassQuest runemasterQuest = MakeQuest(ClassMask(CLASS_SPIRIT_MAGE));
     EXPECT_TRUE(CanTakeQuest(CLASS_SPIRIT_MAGE, runemasterQuest));
     EXPECT_FALSE(CanTakeQuest(CLASS_SHAMAN, runemasterQuest));
+
+    LoadedClassQuest mixedQuest = MakeQuest(ClassMask(CLASS_NECROMANCER) | ClassMask(CLASS_SHAMAN));
+    EXPECT_TRUE(CanTakeQuest(CLASS_NECROMANCER, mixedQuest));
+    EXPECT_TRUE(CanTakeQuest(CLASS_SHAMAN, mixedQuest));
+    EXPECT_FALSE(CanTakeQuest(CLASS_SPIRIT_MAGE, mixedQuest));
 }
 
 TEST_F(QuestClassMaskTest, UnrestrictedQuestsAdmitEveryCustomClass)
 {
-    AuthoredClassQuest quest = MakeQuest(0);
+    LoadedClassQuest quest = MakeQuest(0);
 
     for (uint8 classId = CLASS_BARBARIAN; classId < MAX_CLASSES; ++classId)
         EXPECT_TRUE(CanTakeQuest(Classes(classId), quest)) << uint32(classId);
 }
 
-TEST_F(QuestClassMaskTest, ItemsKeepExpandingTheMasksQuestsDoNot)
+TEST_F(QuestClassMaskTest, ItemsExpandTheSingleClassMasksQuestsKeep)
 {
     uint32 paladinMask = ClassMask(CLASS_PALADIN);
 
