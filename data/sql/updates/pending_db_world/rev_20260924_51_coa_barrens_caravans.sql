@@ -3,8 +3,8 @@
 -- .agents/plans/coa-world/tools/gen_caravans_barrens.py from the car3 route research
 -- (research/caravans/route-barrens-taurajo.md, route-barrens-morshan.md, progress/car3-needles.md).
 --
--- THE CARAVANS (the user, 2026-09-24: "horde caravan from crossroads to camp taurajo by mulgore.
---   Another crossroads to ashenvale (the blockade), and then crossroads to thousand needles")
+-- THE CARAVANS (DESIGN: the Crossroads to Camp Taurajo by Mulgore, to the Ashenvale blockade and to
+--   Thousand Needles)
 --   A 9006200 Crossroads <-> Camp Taurajo, driver 314860 Tauren Caravan Master.
 --   B 9006201 Crossroads <-> the Mor'shan Rampart (the Horde gate on the Ashenvale border), driver
 --     314858 Durotar Caravan Master.
@@ -22,7 +22,7 @@
 --   would leave together and drive through each other; C is timed against A instead (section 3).
 --
 -- WHERE EACH VALUE COMES FROM
---   the three routes and their ends  USER (the three caravans); the stops and every point
+--   the three routes and their ends  DESIGN (the three caravans); the stops and every point
 --     hand-traced on the CoA road texture by the car3 tracers, every z the server floor (DERIVED,
 --     surface.py).
 --   cart 50470 on these roads  ATLAS sighting (-877.06, -2540.08) on A/C's Gold Road (19 sightings,
@@ -31,8 +31,8 @@
 --   314858 template  SOURCED-CACHE creaturecache (name, type, modifiers); the flags and faction copy
 --     migration 50's 314873 (same name and role); display 4464 is a stand-in: its cached display
 --     449159 (Kerak Ironhoof, Traveling Riding Trainer) does not resolve in the client (G3 gap).
---   speed 14 yd/s, a 100% mount (base run 7 x 2)  USER
---     (2026-09-24, as migration 50).
+--   speed 14 yd/s, a 100% mount (base run 7 x 2)  DESIGN
+--     (as migration 50).
 --   A/B's 45-s stops  INFERRED (as migration 50); C's stops and spawn point  DERIVED from the server
 --     spline durations (research/caravans/car3-build/timing.py, car-speed/retime.py).
 --
@@ -65,7 +65,7 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- A 9006200: driver 314860 Tauren Caravan Master: Tauren Caravan Master 314860 was seen seated 3.5 yd up (the
 --   driver-seat height) outside the Crossroads south gate on this road (ATLAS), and cart 50470 was seen on this road
---   0.9 yd from the line (ATLAS); Camp Taurajo is the tauren camp by Mulgore (USER).
+--   0.9 yd from the line (ATLAS); Camp Taurajo is the tauren camp by Mulgore (DESIGN).
 -- B 9006201: driver 314858 Durotar Caravan Master: Durotar Caravan Master 314858 was seen seated 3.5 yd up in the
 --   Crossroads north gate gap, the gate this road leaves by (ATLAS, 18 sightings); its cache modes are exactly those
 --   of cart 50470 (CACHE).

@@ -27,14 +27,14 @@
 --   route points  hand-traced on the CoA road textures (research/caravans/routes, car2, car2-durotar,
 --     car3-westend, car3-westfall), every z the server floor (DERIVED, surface.py); hand fixes are noted
 --     on the points themselves.
---   routes  the user (2026-09-24): Goldshire - Northshire kept; Three Corners through Goldshire to the
+--   routes  DESIGN: Goldshire - Northshire kept; Three Corners through Goldshire to the
 --     Elwynn side of the Westfall bridge past Westbrook Garrison; a separate Westfall cart from Old
 --     Blanchy's spot through Sentinel Hill to the Duskwood bridge;
 --     Orgrimmar - Razor Hill - Sen'jin Village; Mulgore stays on the road at the Bloodhoof junction.
 --     Dun Morogh, Teldrassil and Tirisfal: starting-area exit and first town next to the Novice Rider
 --     SuperTrack points (INFERRED). The exact stop spots are INFERRED from the road layout.
---   speed 14 yd/s, a 100% mount (base run 7 x 2)  USER
---     (2026-09-24: "The carts should move at the same speed as a 100% mount").
+--   speed 14 yd/s, a 100% mount (base run 7 x 2)  DESIGN
+--     (the carts move at the speed of a 100% mount).
 --   stops 45 s, combat condition, visibility Large  INFERRED.
 --
 -- Id blocks: creature guid 9006000-9006199 (9006000-9006007 used), creature entry 9303000-9303099

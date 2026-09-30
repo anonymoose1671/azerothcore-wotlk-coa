@@ -1,8 +1,7 @@
 -- Conquest of Azeroth: guards direct players to CoA class trainers instead of stock ones.
 --
--- User requests (2026-09-24): "Remove the guard directions for non-coa classes from guards." and
--- "Add the directions for CoA trainers, be careful to give the right directions for the right city and
--- class."
+-- Guards stop offering directions to the stock class trainers and point each CoA class to its own
+-- trainers in that city.
 --
 -- WHERE EACH VALUE COMES FROM
 --   option and POI keys  SOURCED-DB: research/trainers-guards-markers/guard-directions.md (+ .json), re-derived on

@@ -1,6 +1,6 @@
 -- Conquest of Azeroth: quest map markers follow the NPCs and objects CoA moved.
 --
--- User request (2026-09-24): "Move quest markers to the accurate coa locations when we are confident."
+-- Markers move only where a CoA source places the quest target with confidence.
 --
 -- WHERE EACH VALUE COMES FROM
 --   what the player sees  SOURCED-CORE + SOURCED-CLIENT: the world-map and tracker markers are the server
@@ -26,9 +26,9 @@
 --     in CoA's starting zones. CoA also has its own starting-zone maps (WorldMapArea 1237-1244); whether the
 --     client shows parent-zone markers on them is open (research Q1).
 --   turn-ins at the ender (10 quests)  DERIVED: quests with no QuestSuperTrack turn-in whose ender is far from the
---     giver, hand-placed or out of sight (user decision 2026-09-26): the same row pattern at the ender's spawn
---     (within 1 yd). 254108's objective: its QuestSuperTrack point carried through the inn transform (DERIVED,
---     D6), poi id 0 with the turn-in as poi id 1 (the stock order).
+--     giver, hand-placed or out of sight: the same row pattern at the ender's spawn (within 1 yd). 254108's
+--     objective: its QuestSuperTrack point carried through the inn transform (DERIVED, D6), poi id 0 with the
+--     turn-in as poi id 1 (the stock order).
 --   quest_template POIx/POIy  SOURCED-CORE: only copied into the quest query (QuestDef.cpp:486-489) and read by no
 --     CoA interface file. Of the quests here only 135 has a value (-8752, 384), which is not the old marker point,
 --     so none is stale and none is changed.

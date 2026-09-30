@@ -1,6 +1,6 @@
 -- CoA Kharanos and its hills: the Thunderbrews' hops, Ikoras's automata, Gornarn's range, Gravedigger
 -- Nonuid, Mirsinth and Jun'Kon, and Coldhewn Camp (quests 254003, 254004, 1660076-1660080, 500005 and
--- 500006); Yori Crackhelm to the Thunderbrew inn, his 5841 turn-in point (user decision).
+-- 500006); Yori Crackhelm to the Thunderbrew inn, his 5841 turn-in point (DESIGN).
 -- Creature guids 9008480-9008799, gameobject guids 7914120-7914299, gossip menus 932240-932269.
 
 -- ---------------------------------------------------------------------------
@@ -365,5 +365,5 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 7. Yori Crackhelm (stock 348) to the Thunderbrew inn
 -- ---------------------------------------------------------------------------
--- To the 5841 turn-in point ST1715 on the inn's upper floor (user decision); facing kept.
+-- To the 5841 turn-in point ST1715 on the inn's upper floor (DESIGN); facing kept.
 UPDATE `creature` SET `position_x` = -5592.95, `position_y` = -529.919, `position_z` = 399.652, `orientation` = 0.925025 WHERE `guid` = 348 AND `id` = 11941;

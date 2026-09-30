@@ -1,6 +1,6 @@
 -- Conquest of Azeroth class trainers in the Exodar: one new draenei trainer for each of CoA's 14
--- draenei classes, spread through the city. User decision 2026-09-23 (BUILD-PLAN section 0 item 2):
--- "Add new trainers there". No quests; every trainer serves its class kit from migration 05.
+-- draenei classes, spread through the city. No quests; every trainer serves its class kit from
+-- migration 05.
 --
 -- WHERE EACH VALUE COMES FROM
 --   classes  the draenei classes of CoA (RACE-CLASS.md: CharBaseInfo.dbc race 11): Felsworn,
