@@ -126,7 +126,7 @@ VALUES
 (161708, 0, 4629, 1, 1),
 (161713, 0, 49, 1, 1),
 (161904, 0, 49, 1, 1),
-(161711, 0, 19110, 1, 1),
+(161711, 0, 19110, 0.5, 1),
 (161736, 1, 4419, 1, 1),
 (161703, 0, 11686, 1, 1),
 (161704, 0, 11686, 1, 1),
@@ -385,9 +385,9 @@ VALUES
 (7910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
 (7910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
 (7910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall'),
-(7910011, 685237, 0, 0, 0, 1, 1, -8613.5, -564.5, 145.061, 4.451, 0, 0, 0.793228, -0.608924, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
-(7910012, 685237, 0, 0, 0, 1, 1, -8602, -584, 146, 4.189, 0, 0, 0.865973, -0.500091, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
-(7910013, 685237, 0, 0, 0, 1, 1, -8599.5, -559.3, 146.297, 5.76, 0, 0, 0.258619, -0.965979, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope');
+(7910011, 685237, 0, 0, 0, 1, 1, -8613.6, -565.5, 145.001, 2.094, 0, 0, 0.865927, 0.500171, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
+(7910012, 685237, 0, 0, 0, 1, 1, -8602.55, -580, 145.72, 3.142, 0, 0, 1, -0.000204, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
+(7910013, 685237, 0, 0, 0, 1, 1, -8600, -564, 146.19, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope');
 
 -- ---------------------------------------------------------------------------
 -- 8. The Wayward Theologian
