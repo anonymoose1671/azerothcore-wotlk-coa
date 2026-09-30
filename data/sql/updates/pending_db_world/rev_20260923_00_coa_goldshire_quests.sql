@@ -24,7 +24,9 @@
 --     despawn until they respawn. 'Stay a While': the option sends the player to the gatehouse tower top
 --     (objective point 8843) with CoA's Teleporting visual 267032, cast only by Aliscar and his projection;
 --     the projection gives the lesson, then credits and sends the player back to the stall. Only its opener
---     (85160) and 'A mighty view' (85159) are sourced; the lesson lines are INFERRED.
+--     (85160) and 'A mighty view' (85159) are sourced; the lesson lines are INFERRED. After the second
+--     line the projection offers 'I've heard enough', which credits and sends the player down at once.
+--     The projection is translucent (37800) with purple arcane motes (28126) and hovers.
 --   ambush  from PR #5751 (PithoDalle): a used Kobold Warren has a 50% chance to release a Kobold
 --     Prospector (162915, CoA creature cache) that attacks the player; its stats follow the Kobold Miner.
 --   dialogue  the greetings of Aliscar Lend (85190) and the mayor (85163, 85164) are from the cache, as
@@ -57,7 +59,7 @@ VALUES
 (162822, 'Goldshire Farmer', NULL, 6, 6, 0, 12, 0, 0, 1, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0, 0, 0),
 (162823, 'Goldshire Farmer', NULL, 6, 6, 0, 12, 0, 0, 1, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0, 0, 0),
 (162824, 'Goldshire Farmer', NULL, 6, 6, 0, 12, 0, 0, 1, 0, 7, 0, '', 0, 0.96, 1, 1, 1, 0, 0, 0),
-(162943, 'Arcane Projection of Aliscar', NULL, 12, 12, 0, 35, 1, 0, 8, 0, 7, 0, '', 0, 1, 1, 1, 1, 0, 162921, 85160),
+(162943, 'Arcane Projection of Aliscar', NULL, 12, 12, 0, 35, 0, 0, 8, 0, 7, 0, 'SmartAI', 0, 1, 1, 1, 1, 0, 162921, 85160),
 (162920, '[TG] kharanos hops', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
 (162921, '[KC] Listen to Aliscar Lend', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
 (162940, '[KC] Kobold Warren Destroyed', NULL, 1, 1, 0, 35, 0, 0, 1, 33555202, 10, 0, '', 0, 1, 1, 1, 1, 130, 0, 0),
@@ -94,11 +96,18 @@ VALUES
 (162915, 0, 139, 1, 0.5),
 (162915, 1, 373, 1, 0.5);
 
-DELETE FROM `creature_template_addon` WHERE `entry` = 162803;
+DELETE FROM `creature_template_addon` WHERE `entry` IN (162803, 162943);
 INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
 VALUES
-(162803, 0, 0, 3, 1, 0, 0, NULL);
+(162803, 0, 0, 3, 1, 0, 0, NULL),
+(162943, 0, 0, 0, 1, 0, 0, '37800 28126');
 
+DELETE FROM `creature_template_movement` WHERE `CreatureId` = 162943;
+INSERT INTO `creature_template_movement` (`CreatureId`, `Ground`, `Swim`, `Flight`, `Rooted`, `Chase`, `Random`)
+VALUES
+(162943, 2, 0, 1, 1, 0, 0);
+
+UPDATE `creature_template` SET `HoverHeight` = 1.5 WHERE `entry` = 162943;
 DELETE FROM `npc_vendor` WHERE `entry` IN (162809, 162811, 162814, 162826);
 INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`)
 VALUES
@@ -134,9 +143,10 @@ VALUES
 (85164, 85164),
 (85190, 85190);
 
-DELETE FROM `gossip_menu_option` WHERE `MenuID` IN (85163, 85190);
+DELETE FROM `gossip_menu_option` WHERE `MenuID` IN (85160, 85163, 85190);
 INSERT INTO `gossip_menu_option` (`MenuID`, `OptionID`, `OptionIcon`, `OptionText`, `OptionBroadcastTextID`, `OptionType`, `OptionNpcFlag`, `ActionMenuID`, `ActionPoiID`, `BoxCoded`, `BoxMoney`, `BoxText`, `BoxBroadcastTextID`)
 VALUES
+(85160, 0, 0, 'Thank you, I''ve heard enough.', 0, 1, 1, 0, 0, 0, 0, '', 0),
 (85163, 0, 0, 'Who governs Goldshire?', 0, 1, 1, 85164, 0, 0, 0, '', 0),
 (85190, 0, 0, 'I have a moment. Tell me about Goldshire.', 0, 1, 1, 0, 0, 0, 0, '', 0);
 
@@ -373,13 +383,29 @@ DELETE FROM `smart_scripts` WHERE `entryorguid` = 16280600 AND `source_type` = 9
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
 (16280600, 9, 0, 0, 0, 0, 100, 0, 2000, 2000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Opener'),
-(16280600, 9, 1, 0, 0, 0, 100, 0, 7000, 7000, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 1'),
-(16280600, 9, 2, 0, 0, 0, 100, 0, 8000, 8000, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 2'),
-(16280600, 9, 3, 0, 0, 0, 100, 0, 8000, 8000, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 3'),
-(16280600, 9, 4, 0, 0, 0, 100, 0, 7000, 7000, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Closing'),
-(16280600, 9, 5, 0, 0, 0, 100, 0, 4000, 4000, 0, 0, 0, 0, 33, 162921, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Credit listening to him'),
-(16280600, 9, 6, 0, 0, 0, 100, 0, 500, 500, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -9399.9, -12.9, 62.243, 0.209, 'Aliscar Lend lesson - Send the player back to the stall'),
-(16280600, 9, 7, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 82, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Show the option again');
+(16280600, 9, 1, 0, 0, 0, 100, 0, 10000, 10000, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 1'),
+(16280600, 9, 2, 0, 0, 0, 100, 0, 14000, 14000, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 2'),
+(16280600, 9, 3, 0, 0, 0, 100, 0, 1000, 1000, 0, 0, 0, 0, 82, 1, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Offer to end the lesson early'),
+(16280600, 9, 4, 0, 0, 0, 100, 0, 14000, 14000, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Lesson 3'),
+(16280600, 9, 5, 0, 0, 0, 100, 0, 14000, 14000, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Closing'),
+(16280600, 9, 6, 0, 0, 0, 100, 0, 5000, 5000, 0, 0, 0, 0, 83, 1, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Projection - Withdraw the early ending'),
+(16280600, 9, 7, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 162921, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Credit listening to him'),
+(16280600, 9, 8, 0, 0, 0, 100, 0, 500, 500, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -9399.9, -12.9, 62.243, 0.209, 'Aliscar Lend lesson - Send the player back to the stall'),
+(16280600, 9, 9, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 82, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aliscar Lend lesson - Show the option again');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 16280601 AND `source_type` = 9;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(16280601, 9, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 83, 1, 0, 0, 0, 0, 0, 10, 9002020, 162943, 0, 0, 0, 0, 0, 0, 'Aliscar lesson ended early - Projection - Withdraw the early ending'),
+(16280601, 9, 1, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 82, 1, 0, 0, 0, 0, 0, 10, 9002004, 162806, 0, 0, 0, 0, 0, 0, 'Aliscar lesson ended early - Aliscar - Show the option again');
+
+DELETE FROM `smart_scripts` WHERE `entryorguid` = 162943 AND `source_type` = 0;
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
+VALUES
+(162943, 0, 0, 1, 62, 0, 100, 0, 85160, 0, 0, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Projection - On heard enough - Close Gossip'),
+(162943, 0, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 162921, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Projection - Linked - Credit listening to him'),
+(162943, 0, 2, 3, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, -9399.9, -12.9, 62.243, 0.209, 'Projection - Linked - Send the player back down'),
+(162943, 0, 3, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 80, 16280601, 0, 0, 0, 0, 0, 10, 9002004, 162806, 0, 0, 0, 0, 0, 0, 'Projection - Linked - End the lesson');
 
 DELETE FROM `creature_text` WHERE `CreatureID` = 162943;
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Probability`, `comment`)
