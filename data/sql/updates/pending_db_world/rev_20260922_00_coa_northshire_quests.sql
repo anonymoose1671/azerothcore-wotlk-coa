@@ -385,16 +385,17 @@ VALUES
 (7910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
 (7910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
 (7910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall'),
-(7910011, 685237, 0, 0, 0, 1, 1, -8621.5, -573.5, 145.356, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
-(7910012, 685237, 0, 0, 0, 1, 1, -8603.5, -582.6, 146.711, 4.51, 0, 0, 0.774923, -0.632056, 120, 100, 1, '', 'CoA Northshire: beside the vines at the east deck of the ruin'),
-(7910013, 685237, 0, 0, 0, 1, 1, -8590, -559.4, 147.803, 3.74, 0, 0, 0.955572, -0.294759, 120, 100, 1, '', 'CoA Northshire: beside the vines at the north deck of the ruin');
+(7910011, 685237, 0, 0, 0, 1, 1, -8613.5, -564.5, 145.061, 4.451, 0, 0, 0.793228, -0.608924, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
+(7910012, 685237, 0, 0, 0, 1, 1, -8602, -584, 146, 4.189, 0, 0, 0.865973, -0.500091, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope'),
+(7910013, 685237, 0, 0, 0, 1, 1, -8599.5, -559.3, 146.297, 5.76, 0, 0, 0.258619, -0.965979, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Grappling Hook Rope');
 
 -- ---------------------------------------------------------------------------
 -- 8. The Wayward Theologian
 -- ---------------------------------------------------------------------------
 -- He melees, casts Shadow Bolt at his target and Shadowfury, a 5 second cast that stuns everyone within
 -- 8 yards of him for 3 seconds. Every 30-60 seconds while unshielded he casts Dark Reality (4 seconds,
--- interruptible). When it completes he takes Shadow Shield (all damage taken -100%), a portal opens on each
+-- interruptible). When it completes he takes Shadow Shield (all damage taken -100%) and stands channelling
+-- (rooted, no melee or spells) while a portal opens on each
 -- raised deck of the ruins around him and one image steps onto each, rooted, casting Shadow Bolt or meleeing;
 -- killing all three removes the shield and closes the portals, and the cycle can repeat. A rope by each deck
 -- lifts players up without leaving combat. Repeat intervals follow the observed
@@ -405,11 +406,15 @@ VALUES
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (161713, 161904, 161908, 161909) AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
-(161713, 0, 0, 0, 0, 0, 100, 0, 2000, 4000, 5000, 8000, 0, 0, 11, 256737, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat - Cast Shadow Bolt on his target'),
-(161713, 0, 1, 0, 0, 0, 100, 0, 8000, 12000, 5000, 32000, 0, 0, 11, 256486, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat - Cast Shadowfury around himself'),
+(161713, 0, 0, 0, 0, 1, 100, 0, 2000, 4000, 5000, 8000, 0, 0, 11, 256737, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Cast Shadow Bolt on his target'),
+(161713, 0, 1, 0, 0, 1, 100, 0, 8000, 12000, 5000, 32000, 0, 0, 11, 256486, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Cast Shadowfury around himself'),
 (161713, 0, 2, 0, 0, 1, 100, 0, 25000, 30000, 30000, 60000, 0, 0, 11, 256762, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - In combat, unshielded - Cast Dark Reality'),
 (161713, 0, 3, 4, 8, 0, 100, 0, 256762, 0, 0, 0, 0, 0, 11, 256763, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On Dark Reality completed - Cast Shadow Shield'),
-(161713, 0, 4, 100, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 2 (shielded)'),
+(161713, 0, 4, 29, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 2 (shielded)'),
+(161713, 0, 29, 30, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 103, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Root'),
+(161713, 0, 30, 31, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Stop chasing'),
+(161713, 0, 31, 32, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Stop melee'),
+(161713, 0, 32, 100, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 468, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Channel while shielded'),
 (161713, 0, 100, 101, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161908, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8616, -573, 149.653, 0.399, 'Wayward Theologian - Linked - Open a portal on the south deck by the street lamp'),
 (161713, 0, 101, 102, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161904, 5, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8616, -573, 149.653, 0.399, 'Wayward Theologian - Linked - Summon an image on the south deck by the street lamp'),
 (161713, 0, 102, 103, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161909, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, -8601.5, -585.8, 150.301, 1.801, 'Wayward Theologian - Linked - Open a portal on the east deck'),
@@ -422,12 +427,20 @@ VALUES
 (161713, 0, 12, 13, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
 (161713, 0, 13, 14, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 1 (unshielded)'),
 (161713, 0, 14, 15, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
-(161713, 0, 15, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
+(161713, 0, 15, 33, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
+(161713, 0, 33, 34, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 103, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Unroot'),
+(161713, 0, 34, 35, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 21, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Chase again'),
+(161713, 0, 35, 36, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 20, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Melee again'),
+(161713, 0, 36, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - End the channel'),
 (161713, 0, 16, 17, 7, 0, 100, 0, 0, 0, 0, 0, 0, 0, 28, 256763, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On evade - Remove Shadow Shield'),
 (161713, 0, 17, 18, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161904, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Despawn the images'),
 (161713, 0, 18, 19, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161908, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 01'),
 (161713, 0, 19, 20, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 204, 161909, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Close Portal 02'),
-(161713, 0, 20, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
+(161713, 0, 20, 37, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 63, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Reset counter 1'),
+(161713, 0, 37, 38, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 103, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Unroot'),
+(161713, 0, 38, 39, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 21, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Chase again'),
+(161713, 0, 39, 40, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 20, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Melee again'),
+(161713, 0, 40, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - End the channel'),
 (161713, 0, 21, 22, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 33, 161704, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - On aggro - Credit the ruined estate'),
 (161713, 0, 22, 23, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 22, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Set phase 1 (unshielded)'),
 (161713, 0, 23, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Wayward Theologian - Linked - Say pull'),
