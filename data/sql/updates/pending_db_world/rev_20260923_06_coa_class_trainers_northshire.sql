@@ -257,8 +257,8 @@ VALUES
 --   neutral so nobody but the Cultist has reason to fight him.
 -- 299325 Gerald: Welcome to the Warband rookie, named by 200104; stock mercenary look (display 3987) and a
 --   barbaric axe, INFERRED; neutral, he only fights back.
--- 9300100 Defias Blood Wizard: Blood Is Power tome holder, named by 200017; Defias Rogue Wizard looks and staff,
---   Defias Thug faction.
+-- 9300100 Defias Blood Wizard: Blood Is Power tome holder, named by 200017; Defias Rogue Wizard looks and staff;
+--   hostile like the Defias Thugs (faction 14, playtest).
 -- 9300101 Scorch: The Way of the Pyromancer: a rogue fire elemental bound to a campfire (200120); small flame
 --   elemental look (display 1070 at 0.6), INFERRED.
 -- 9300102 Jo: Owen of Moonbrook's falcon, named by 199999; eagle model at the 0.25 display scale, INFERRED.
@@ -272,7 +272,7 @@ VALUES
 (299223, 'Zipi', 'The Bully', 0, 3, 3, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1.5, 1, 1, 1, 0, ''),
 (299235, 'Brother Sammuel', NULL, 0, 4, 4, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 0, ''),
 (299325, 'Gerald', NULL, 0, 3, 3, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, '', 0, 1, 1, 1, 1, 0, ''),
-(9300100, 'Defias Blood Wizard', NULL, 0, 4, 4, 0, 7, 0, 1, 1.14286, 20, 0, 2000, 2000, 8, 0, 2048, 7, 0, 9300100, '', 0, 1, 1, 1, 1, 0, ''),
+(9300100, 'Defias Blood Wizard', NULL, 0, 4, 4, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 8, 0, 2048, 7, 0, 9300100, '', 0, 1, 1, 1, 1, 0, ''),
 (9300101, 'Scorch', NULL, 0, 4, 4, 0, 14, 0, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 4, 0, 9300101, '', 0, 1, 1, 1, 1, 0, ''),
 (9300102, 'Jo', 'Owen''s Falcon', 0, 2, 2, 0, 35, 2, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 1, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 0, ''),
 (9300103, 'Old Man Jenkins', NULL, 930204, 5, 5, 0, 12, 1, 1, 1.14286, 20, 0, 2000, 2000, 1, 0, 2048, 7, 0, 0, 'SmartAI', 0, 1, 1, 1, 1, 0, ''),
