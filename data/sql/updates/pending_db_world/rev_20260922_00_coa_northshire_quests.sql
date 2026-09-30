@@ -157,12 +157,12 @@ INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconNa
 VALUES
 (96001, 2, 164, 'Smudged Note', '', '', 0.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', ''),
 (685237, 10, 7717, 'Grappling Hook Rope', '', '', 0.075, 93, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_theologian_rope'),
-(2300500, 3, 210, 'Lost Page I', '', '', 1, 1689, 2300500, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300500, 3, 210, 'Lost Page I', '', '', 1, 1689, 2300500, 0, 1, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
 (2300501, 0, 300449, 'Dungeon Door', '', '', 1, 0, 0, 5000, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', ''),
-(2300503, 3, 210, 'Lost Page II', '', '', 1, 1689, 2300503, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
-(2300504, 3, 210, 'Lost Page III', '', '', 1, 1689, 2300504, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
-(2300505, 3, 210, 'Lost Page IV', '', '', 1, 1689, 2300505, 0, 0, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
-(2300517, 3, 210, 'Lost Page VI', '', '', 1, 1689, 2300517, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300503, 3, 210, 'Lost Page II', '', '', 1, 1689, 2300503, 0, 1, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300504, 3, 210, 'Lost Page III', '', '', 1, 1689, 2300504, 0, 1, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300505, 3, 210, 'Lost Page IV', '', '', 1, 1689, 2300505, 0, 1, 0, 0, 0, 0, 1660001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
+(2300517, 3, 210, 'Lost Page VI', '', '', 1, 1689, 2300517, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartGameObjectAI', ''),
 (2300520, 10, 1029136, 'Abbess’ Journal', '', '', 1, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_abbess_relic'),
 (2300521, 10, 87111, 'Abbess’s Staff', '', '', 1.25, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_abbess_relic'),
 (2300522, 10, 63523, 'Heretical Idol Purified', '', '', 1.5, 0, 1660003, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 'go_coa_abbess_relic'),
@@ -374,14 +374,14 @@ VALUES
 DELETE FROM `gameobject` WHERE `guid` IN (7910000, 7910001, 7910002, 7910003, 7910004, 7910005, 7910006, 7910007, 7910008, 7910009, 7910010, 7910011, 7910012, 7910013);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`)
 VALUES
-(7910000, 2300500, 0, 0, 0, 1, 1, -8912.93, -209.89, 82.99, 2.6, 0, 0, 0.963558, 0.267499, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page I'),
-(7910001, 2300517, 0, 0, 0, 1, 1, -8912.76, -208.82, 82.99, 5.45, 0, 0, 0.404647, -0.914473, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page VI'),
+(7910000, 2300500, 0, 0, 0, 1, 1, -8912.93, -209.89, 82.99, 2.6, 0, 0, 0.963558, 0.267499, 30, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page I'),
+(7910001, 2300517, 0, 0, 0, 1, 1, -8912.76, -208.82, 82.99, 5.45, 0, 0, 0.404647, -0.914473, 30, 100, 1, '', 'CoA Northshire: observed atlas position for Lost Page VI'),
 (7910002, 2300501, 0, 0, 0, 1, 1, -8775.58, -278.45, 79.17, 3.141593, 0, 0, 1, 0, 120, 100, 1, '', 'CoA Northshire: hand placement, observed atlas position for Dungeon Door, turned to cover the stairwell opening'),
 (7910003, 2300521, 0, 0, 0, 1, 1, -8638.85, -404.45, 53.93, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Abbess''s Staff'),
 (7910004, 96001, 0, 0, 0, 1, 1, -8906.66, -705.67, 70.67, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Northshire: observed atlas position for Smudged Note'),
-(7910005, 2300503, 0, 0, 0, 1, 1, -8857.02, -187.281, 90.383, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8643 position for Lost Page II, on the upper library floor'),
-(7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 82.27, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: placement read back from the game, Lost Page III'),
-(7910007, 2300505, 0, 0, 0, 1, 1, -8857.35, -185.58, 83.119, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8645 position for Lost Page IV, on the library desk'),
+(7910005, 2300503, 0, 0, 0, 1, 1, -8857.02, -187.281, 90.383, 0, 0, 0, 0, 1, 30, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8643 position for Lost Page II, on the upper library floor'),
+(7910006, 2300504, 0, 0, 0, 1, 1, -8881.75, -182.758, 82.27, 0, 0, 0, 0, 1, 30, 100, 1, '', 'CoA Northshire: placement read back from the game, Lost Page III'),
+(7910007, 2300505, 0, 0, 0, 1, 1, -8857.35, -185.58, 83.119, 0, 0, 0, 0, 1, 30, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8645 position for Lost Page IV, on the library desk'),
 (7910008, 2300520, 0, 0, 0, 1, 1, -8575.76, -253.217, 53.723, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8650 position for the Abbess’ Journal, in the burning books by the Censor'),
 (7910009, 2300522, 0, 0, 0, 1, 1, -8619.05, -278.116, 57.693, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8652 position for the Heretical Idol, on the footlocker on the table'),
 (7910010, 2300523, 0, 0, 0, 1, 1, -8658.67, -318.016, 53.725, 0, 0, 0, 0, 1, 120, 100, 1, '', 'CoA Northshire: QuestSuperTrack 8653 position for the Jewel, beside the barrel in the dungeon hall'),
@@ -506,11 +506,11 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (2300500, 2300503, 2300504, 2300505, 2300517) AND `source_type` = 1;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
 VALUES
-(2300500, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page I - On looted, once per spawn - Summon a Living Heresy'),
-(2300503, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page II - On looted, once per spawn - Summon a Living Heresy'),
-(2300504, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page III - On looted, once per spawn - Summon a Living Heresy'),
-(2300505, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page IV - On looted, once per spawn - Summon a Living Heresy'),
-(2300517, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page VI - On looted, once per spawn - Summon a Living Heresy');
+(2300500, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page I - On looted, once per spawn - Summon a Living Heresy at the looter'),
+(2300503, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page II - On looted, once per spawn - Summon a Living Heresy at the looter'),
+(2300504, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page III - On looted, once per spawn - Summon a Living Heresy at the looter'),
+(2300505, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page IV - On looted, once per spawn - Summon a Living Heresy at the looter'),
+(2300517, 1, 0, 0, 70, 0, 100, 1, 2, 0, 0, 0, 0, 0, 12, 161711, 4, 60000, 0, 0, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Lost Page VI - On looted, once per spawn - Summon a Living Heresy at the looter');
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (-7910011, -7910012, -7910013) AND `source_type` = 1;
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 161711 AND `source_type` = 0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`)
