@@ -739,43 +739,31 @@ UPDATE `gameobject` SET `position_x` = -8507.68, `position_y` = 806.04, `positio
 -- Wooden Chair: Cathedral lower library and crypt moved in CoA: translation (+3.314, -4.169) fitted on 42 matched
 --   tables/coffins/iron maidens, residual 0.002 yd; same floor
 UPDATE `gameobject` SET `position_x` = -8495.06, `position_y` = 818.24, `position_z` = 96.679, `orientation` = 5.3843 WHERE `guid` = 11132 AND `id` = 24694;
--- Grandmaster's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the
---   paved square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3)
---   (-8760.5,388.1): north row by the Old Town street edge, facing the yard
-UPDATE `creature` SET `position_x` = -8747, `position_y` = 392, `position_z` = 101.139, `orientation` = 3.1416 WHERE `guid` = 201241 AND `id` = 31144;
--- Grandmaster's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the
---   paved square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3)
---   (-8760.5,388.1): north row, 3.4 yd from the rack at (-8739.6,380.3), facing the yard
-UPDATE `creature` SET `position_x` = -8743, `position_y` = 380.5, `position_z` = 101.131, `orientation` = 3.1416 WHERE `guid` = 201239 AND `id` = 31144;
--- Heroic Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the paved
---   square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3) (-8760.5,388.1):
---   north row centre, facing the yard
-UPDATE `creature` SET `position_x` = -8749, `position_y` = 387.5, `position_z` = 101.139, `orientation` = 3.1416 WHERE `guid` = 201242 AND `id` = 31146;
--- Grandmaster's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the
---   paved square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3)
---   (-8760.5,388.1): north row by the lamp post, 4.7 yd from Osborne, facing the yard
-UPDATE `creature` SET `position_x` = -8749, `position_y` = 381, `position_z` = 101.139, `orientation` = 3.1416 WHERE `guid` = 201236 AND `id` = 31144;
--- Grandmaster's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the
---   paved square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3)
---   (-8760.5,388.1): south row west end at the paving edge, facing north
-UPDATE `creature` SET `position_x` = -8752.5, `position_y` = 392, `position_z` = 101.139, `orientation` = 0 WHERE `guid` = 201237 AND `id` = 31144;
--- Expert's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the paved
---   square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3) (-8760.5,388.1):
---   south row, facing north across the yard
-UPDATE `creature` SET `position_x` = -8755.5, `position_y` = 385.5, `position_z` = 101.139, `orientation` = 0 WHERE `guid` = 202727 AND `id` = 32666;
--- Expert's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the paved
---   square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3) (-8760.5,388.1):
---   south row east end; stock spot is inside the CoA stable fence and haybail (-8781.5,368.9); survey class fits,
---   moved with its room
-UPDATE `creature` SET `position_x` = -8756, `position_y` = 380, `position_z` = 101.139, `orientation` = 0 WHERE `guid` = 202726 AND `id` = 32666;
--- Master's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the paved
---   square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3) (-8760.5,388.1):
---   south-west corner, 3.8 yd from the weapon rack, facing north
-UPDATE `creature` SET `position_x` = -8759.5, `position_y` = 391.5, `position_z` = 101.142, `orientation` = 0 WHERE `guid` = 202731 AND `id` = 32667;
--- Master's Training Dummy: stock training yard is gone (Command Center stands on it); CoA training yard is the paved
---   square between the Command Center and SI:7 with weapon racks at (-8748.0,373.8) (-8739.6,380.3) (-8760.5,388.1):
---   south-west, 4.1 yd from the weapon rack, facing north
-UPDATE `creature` SET `position_x` = -8760, `position_y` = 384, `position_z` = 101.139, `orientation` = 0 WHERE `guid` = 202730 AND `id` = 32667;
+-- Grandmaster's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; grass edge
+--   against the house wall, beside the dummy by the SI:7 wall
+UPDATE `creature` SET `position_x` = -8702, `position_y` = 346, `position_z` = 100.69, `orientation` = 3.095 WHERE `guid` = 201241 AND `id` = 31144;
+UPDATE `creature` SET `position_x` = -8709, `position_y` = 348, `position_z` = 100.79, `orientation` = 3.142 WHERE `guid` = 201239 AND `id` = 31144;
+-- Heroic Training Dummy: playtest: out of the Old Town square onto the edge of the training field; grass edge along
+--   the fence by the houses
+UPDATE `creature` SET `position_x` = -8711, `position_y` = 343, `position_z` = 100.8, `orientation` = 2.996 WHERE `guid` = 201242 AND `id` = 31146;
+-- Grandmaster's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; its stock
+--   spot on the grass edge by the houses, set on the ground
+UPDATE `creature` SET `position_x` = -8724.87, `position_y` = 333.107, `position_z` = 99.975, `orientation` = 2.505 WHERE `guid` = 201236 AND `id` = 31144;
+-- Grandmaster's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; its stock
+--   spot at the west edge of the grass, set on the ground
+UPDATE `creature` SET `position_x` = -8772.87, `position_y` = 358.009, `position_z` = 102.132, `orientation` = 5.938 WHERE `guid` = 201237 AND `id` = 31144;
+-- Expert's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; grass edge along
+--   the fence by the houses
+UPDATE `creature` SET `position_x` = -8714, `position_y` = 338, `position_z` = 100.43, `orientation` = 2.83 WHERE `guid` = 202727 AND `id` = 32666;
+-- Expert's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; grass edge
+--   against the house wall at the east end of the row
+UPDATE `creature` SET `position_x` = -8698, `position_y` = 347, `position_z` = 99.91, `orientation` = 3.12 WHERE `guid` = 202726 AND `id` = 32666;
+-- Master's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; grass edge by the
+--   houses at the east corner of the field
+UPDATE `creature` SET `position_x` = -8722, `position_y` = 326, `position_z` = 99.89, `orientation` = 2.378 WHERE `guid` = 202731 AND `id` = 32667;
+-- Master's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; grass edge along
+--   the fence by the houses
+UPDATE `creature` SET `position_x` = -8715, `position_y` = 334, `position_z` = 100.19, `orientation` = 2.705 WHERE `guid` = 202730 AND `id` = 32667;
 -- Lord Grayson Shadowbreaker: the Cathedral west side room is gone (open ground at 97-99); the nearest interior on
 --   that side is the vaulted west chapel off the crossing (floor 106.52, stone bench 13848): back of the chapel,
 --   facing the crossing
@@ -1080,10 +1068,9 @@ UPDATE `waypoints` SET `position_x` = -8745.79, `position_y` = 557.737, `positio
 -- Lil Timmy SmartAI path node 74: same spot on the Trade District canal bridge deck; CoA bridge surface 100.749 (the
 --   arched CoA bridge replaced the stock deck at 101.65)
 UPDATE `waypoints` SET `position_x` = -8734.46, `position_y` = 720.119, `position_z` = 100.749 WHERE `entry` = 8666 AND `pointid` = 74;
--- Grandmaster's Training Dummy: the tenth dummy of the stock SI:7/barracks yard, left behind by the pre-fix survey
---   (floats 0.58 yd by the SI:7 wall); joins its nine siblings in CoA's training yard, filling the gap in their south-
---   facing row between 201239 and 201242 (5-7 yd from each), same paving height as the row
-UPDATE `creature` SET `position_x` = -8744, `position_y` = 386.5, `position_z` = 101.139, `orientation` = 3.1416 WHERE `guid` = 201235 AND `id` = 31144;
+-- Grandmaster's Training Dummy: playtest: out of the Old Town square onto the edge of the training field; its stock
+--   spot on the grass edge by the SI:7 wall, set on the ground
+UPDATE `creature` SET `position_x` = -8705.84, `position_y` = 350.535, `position_z` = 100.522, `orientation` = 3.206 WHERE `guid` = 201235 AND `id` = 31144;
 -- Mailbox: Cathedral Square canal mailbox; same spot, CoA floor 99.82 (sat 0.30 yd sunk)
 UPDATE `gameobject` SET `position_x` = -8620.95, `position_y` = 929.647, `position_z` = 99.822, `orientation` = 3.86591 WHERE `guid` = 150742 AND `id` = 195612;
 -- Stormwind City Guard: Cathedral canal guard; same post, z on the corrected CoA terrain (sat 0.37 yd sunk)
