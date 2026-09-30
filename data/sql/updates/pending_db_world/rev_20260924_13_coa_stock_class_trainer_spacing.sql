@@ -1,7 +1,9 @@
 -- Stock class trainers keep their spawns and their trainer role: a realm may still offer the stock
--- classes, and a CoA class cannot train with them (Trainer.cpp checks the exact class). The CoA class
--- trainers and chain NPCs of migrations 05-17 took some of their posts, so the ones that would now stand
--- on or inside another NPC step aside.
+-- classes, and a CoA class cannot train with them (Trainer.cpp checks the exact class). The one exception is
+-- Mathrengyl Bearwalker 4217, CoA's Darnassus Primalist (rev_20260923_05): a creature has one trainer, and
+-- Denatharion 4218 and Fylerian Nightwing 4219 still train Druids beside him in the Cenarion Enclave. The CoA
+-- class trainers and chain NPCs of migrations 05-17 took some of their posts, so the ones that would now
+-- stand on or inside another NPC step aside.
 --
 -- WHERE EACH VALUE COMES FROM
 --   Thotar  moved to the turn-in point of his CoA quests (section 1).

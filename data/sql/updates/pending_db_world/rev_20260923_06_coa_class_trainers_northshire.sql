@@ -1,7 +1,7 @@
 -- Conquest of Azeroth class trainers in Northshire Valley: the 16 trainers CoA placed at the abbey, the
 -- "seek out your trainer" letters Marshal McBride hands out after Kobold Camp Cleanup, and the first quest
 -- chain of every class with the creatures and objects it needs. Builds on
--- rev_20260923_05_coa_class_trainer_core.sql (trainer spells, class menus, stripped stock trainers).
+-- rev_20260923_05_coa_class_trainer_core.sql (trainer spells, class menus, Mathrengyl Bearwalker's Primalist role).
 --
 -- WHERE EACH VALUE COMES FROM
 --   trainer spots  SOURCED-CLIENT: the QuestSuperTrack turn-in point of each letter (z from the server
