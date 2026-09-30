@@ -107,19 +107,21 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- 3. World objects and loot
 -- ---------------------------------------------------------------------------
--- The tree takes the plain lock 1689 (the cache's Woodcutting lock 1876 is unknown to the core).
+-- The Coldhewn quest tree is its own entry 2300580 with the Dun Morogh Tree look: 244620 is main's Woodcutting
+-- node (lock 1876, Forestwood logs), so reusing it would turn those nodes into quest trees. It takes the
+-- plain lock 1689.
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `size`, `AIName`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`)
 VALUES
 (2300550, 10, 7702, 'Thunderbrew Hop', '', '', 0.4, 'SmartGameObjectAI', 0, 1660077, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(244620, 3, 170005, 'Dun Morogh Tree', 'AxeCursor', 'Collecting', 1, '', 1689, 244620, 0, 1, 1, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+(2300580, 3, 170005, 'Dun Morogh Tree', 'AxeCursor', 'Collecting', 1, '', 1689, 2300580, 0, 1, 1, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId`), `name` = VALUES(`name`), `IconName` = VALUES(`IconName`), `castBarCaption` = VALUES(`castBarCaption`), `size` = VALUES(`size`), `AIName` = VALUES(`AIName`), `Data0` = VALUES(`Data0`), `Data1` = VALUES(`Data1`), `Data2` = VALUES(`Data2`), `Data3` = VALUES(`Data3`), `Data4` = VALUES(`Data4`), `Data5` = VALUES(`Data5`), `Data6` = VALUES(`Data6`), `Data7` = VALUES(`Data7`), `Data8` = VALUES(`Data8`), `Data9` = VALUES(`Data9`), `Data10` = VALUES(`Data10`), `Data11` = VALUES(`Data11`), `Data12` = VALUES(`Data12`), `Data13` = VALUES(`Data13`), `Data14` = VALUES(`Data14`), `Data15` = VALUES(`Data15`), `Data16` = VALUES(`Data16`), `Data17` = VALUES(`Data17`), `Data18` = VALUES(`Data18`), `Data19` = VALUES(`Data19`), `Data20` = VALUES(`Data20`), `Data21` = VALUES(`Data21`), `Data22` = VALUES(`Data22`), `Data23` = VALUES(`Data23`);
 
 -- Flags 4 (GO_FLAG_INTERACT_COND): usable only while the quest needs them.
-DELETE FROM `gameobject_template_addon` WHERE `entry` IN (244620, 2300550);
+DELETE FROM `gameobject_template_addon` WHERE `entry` IN (2300550, 2300580);
 INSERT INTO `gameobject_template_addon` (`entry`, `faction`, `flags`)
 VALUES
 (2300550, 0, 4),
-(244620, 0, 4);
+(2300580, 0, 4);
 
 -- Jun'Kon's totem, the automata parts and the Frostpine log: 100 %, quest-only.
 DELETE FROM `creature_loot_template` WHERE `Entry` IN (162888, 162889, 162890, 254006);
@@ -130,10 +132,10 @@ VALUES
 (162889, 558965, 0, 100, 1, 1, 0, 1, 1, 'Out-of-Control Automaton v1.2 - Reusable Mechanical Parts'),
 (162890, 558965, 0, 100, 1, 1, 0, 1, 1, 'Out-of-Control Automaton v1.3 - Reusable Mechanical Parts');
 
-DELETE FROM `gameobject_loot_template` WHERE `Entry` = 244620;
+DELETE FROM `gameobject_loot_template` WHERE `Entry` = 2300580;
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
 VALUES
-(244620, 662336, 0, 100, 1, 1, 0, 1, 1, 'Dun Morogh Tree - Frostpine Log');
+(2300580, 662336, 0, 100, 1, 1, 0, 1, 1, 'Dun Morogh Tree - Frostpine Log');
 
 DELETE FROM `creature_questitem` WHERE `CreatureEntry` IN (162888, 162889, 162890, 254006);
 INSERT INTO `creature_questitem` (`CreatureEntry`, `Idx`, `ItemId`)
@@ -143,10 +145,10 @@ VALUES
 (162889, 0, 558965),
 (162890, 0, 558965);
 
-DELETE FROM `gameobject_questitem` WHERE `GameObjectEntry` = 244620;
+DELETE FROM `gameobject_questitem` WHERE `GameObjectEntry` = 2300580;
 INSERT INTO `gameobject_questitem` (`GameObjectEntry`, `Idx`, `ItemId`)
 VALUES
-(244620, 0, 662336);
+(2300580, 0, 662336);
 
 -- ---------------------------------------------------------------------------
 -- 4. Quests
@@ -308,36 +310,36 @@ VALUES
 (7914139, 2300550, 0, 0, 0, 1, 1, -5720.9, -569.8, 398.554, 4.4, 0, 0, 0.808496, -0.588501, 60, 100, 1, '', 'CoA Kharanos hop field: Thunderbrew Hop; north-east rows, between three bushes'),
 (7914140, 2300550, 0, 0, 0, 1, 1, -5738.5, -560, 398.552, 1.9, 0, 0, 0.813416, 0.581683, 60, 100, 1, '', 'CoA Kharanos hop field: Thunderbrew Hop; west rows, between two bushes'),
 (7914141, 2300550, 0, 0, 0, 1, 1, -5720.5, -559.8, 398.545, 5.6, 0, 0, 0.334988, -0.942222, 60, 100, 1, '', 'CoA Kharanos hop field: Thunderbrew Hop; middle rows, between two bushes'),
-(7914150, 244620, 0, 0, 0, 1, 1, -5734.5, -1188.5, 379.316, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, beside the small snow pines of the Questie sighting'),
-(7914151, 244620, 0, 0, 0, 1, 1, -5725.5, -1186, 380.563, 2, 0, 0, 0.841471, 0.540302, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, beside the axe-cut stump'),
-(7914152, 244620, 0, 0, 0, 1, 1, -5721, -1196.5, 382.071, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, south of the stump and the old snow tree'),
-(7914153, 244620, 0, 0, 0, 1, 1, -5736, -1201, 382.593, 5.5, 0, 0, 0.381661, -0.924302, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, on the slope below the big snow pine'),
-(7914154, 244620, 0, 0, 0, 1, 1, -5681, -1206, 387.234, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-east grove of the cut stumps, its edge inside the circle'),
-(7914155, 244620, 0, 0, 0, 1, 1, -5700.5, -1246, 389.695, 3.3, 0, 0, 0.996865, -0.079121, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; east grove, beside the small snow pines of the Questie sighting'),
-(7914156, 244620, 0, 0, 0, 1, 1, -5700, -1264, 389.949, 0.8, 0, 0, 0.389418, 0.921061, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; east grove, south of the old broadleaf'),
-(7914157, 244620, 0, 0, 0, 1, 1, -5689, -1248, 389.211, 2.7, 0, 0, 0.975723, 0.219007, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; east grove, among its tall snow trees'),
-(7914158, 244620, 0, 0, 0, 1, 1, -5705, -1256, 390.25, 4.6, 0, 0, 0.745705, -0.666276, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; west edge of the east grove'),
-(7914159, 244620, 0, 0, 0, 1, 1, -5671, -1252, 389.657, 1.9, 0, 0, 0.813416, 0.581683, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south-east grove, beside the mid snow tree'),
-(7914160, 244620, 0, 0, 0, 1, 1, -5674, -1268, 389.984, 5.1, 0, 0, 0.557684, -0.830054, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south-east grove, by the snow pine'),
-(7914161, 244620, 0, 0, 0, 1, 1, -5677, -1258, 389.609, 0.5, 0, 0, 0.247404, 0.968912, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south-east grove, between its snow trees'),
-(7914162, 244620, 0, 0, 0, 1, 1, -5752, -1212, 388.42, 3.7, 0, 0, 0.961275, -0.27559, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; the rise north of the camp, above the copper vein'),
-(7914163, 244620, 0, 0, 0, 1, 1, -5737, -1227, 383.141, 2.2, 0, 0, 0.891207, 0.453596, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north of the camp, beside the big mid snow tree'),
-(7914164, 244620, 0, 0, 0, 1, 1, -5765, -1230, 378.86, 6, 0, 0, 0.14112, -0.989992, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north of the camp, by the small snow pines'),
-(7914165, 244620, 0, 0, 0, 1, 1, -5795, -1193, 377.073, 1, 0, 0, 0.479426, 0.877583, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, by the small snow pines of the Questie sighting'),
-(7914166, 244620, 0, 0, 0, 1, 1, -5786.5, -1198.5, 375.915, 3.9, 0, 0, 0.92896, -0.370181, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, between its tall snow trees'),
-(7914167, 244620, 0, 0, 0, 1, 1, -5779.5, -1188, 378.227, 2.5, 0, 0, 0.948985, 0.315322, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, east edge'),
-(7914168, 244620, 0, 0, 0, 1, 1, -5796, -1212.5, 376.729, 4.9, 0, 0, 0.637765, -0.770231, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, south edge by the snow pine'),
-(7914169, 244620, 0, 0, 0, 1, 1, -5757, -1178.5, 376.563, 0.6, 0, 0, 0.29552, 0.955336, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north grove, by the old broadleaf'),
-(7914170, 244620, 0, 0, 0, 1, 1, -5767, -1190, 380.102, 3.1, 0, 0, 0.999784, 0.020795, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north grove, on the slope between its trees'),
-(7914171, 244620, 0, 0, 0, 1, 1, -5748, -1187, 380.44, 5.8, 0, 0, 0.239249, -0.970958, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north grove, by the snow pine'),
-(7914172, 244620, 0, 0, 0, 1, 1, -5745, -1294, 387.64, 1.6, 0, 0, 0.717356, 0.696707, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south of the camp, by the small snow pine of the Questie sighting'),
-(7914173, 244620, 0, 0, 0, 1, 1, -5755, -1300, 388.499, 4.3, 0, 0, 0.836899, -0.547358, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south of the camp, beyond the snow pines'),
-(7914174, 244620, 0, 0, 0, 1, 1, -5745, -1321, 391.261, 2.8, 0, 0, 0.98545, 0.169967, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south grove, beside the small snow pines of the Questie sighting'),
-(7914175, 244620, 0, 0, 0, 1, 1, -5758, -1318, 389.826, 0.1, 0, 0, 0.049979, 0.99875, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south grove, between the snow pine and the broadleaf'),
-(7914176, 244620, 0, 0, 0, 1, 1, -5767, -1314, 388.54, 5.3, 0, 0, 0.472031, -0.881582, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south grove, west edge toward the two-storey house'),
-(7914177, 244620, 0, 0, 0, 1, 1, -5716, -1226, 387.893, 3.5, 0, 0, 0.983986, -0.178246, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; a lone young tree on the open slope between the camp and the east grove'),
-(7914178, 244620, 0, 0, 0, 1, 1, -5712, -1276, 390.218, 1.3, 0, 0, 0.605186, 0.796084, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; a lone young tree on the open slope south-east of the camp'),
-(7914179, 244620, 0, 0, 0, 1, 1, -5728, -1312, 392.011, 4, 0, 0, 0.909297, -0.416147, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; a young tree on the slope east of the south grove');
+(7914150, 2300580, 0, 0, 0, 1, 1, -5734.5, -1188.5, 379.316, 0.3, 0, 0, 0.149438, 0.988771, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, beside the small snow pines of the Questie sighting'),
+(7914151, 2300580, 0, 0, 0, 1, 1, -5725.5, -1186, 380.563, 2, 0, 0, 0.841471, 0.540302, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, beside the axe-cut stump'),
+(7914152, 2300580, 0, 0, 0, 1, 1, -5721, -1196.5, 382.071, 4.1, 0, 0, 0.887362, -0.461073, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, south of the stump and the old snow tree'),
+(7914153, 2300580, 0, 0, 0, 1, 1, -5736, -1201, 382.593, 5.5, 0, 0, 0.381661, -0.924302, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north logging site, on the slope below the big snow pine'),
+(7914154, 2300580, 0, 0, 0, 1, 1, -5681, -1206, 387.234, 1.2, 0, 0, 0.564642, 0.825336, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-east grove of the cut stumps, its edge inside the circle'),
+(7914155, 2300580, 0, 0, 0, 1, 1, -5700.5, -1246, 389.695, 3.3, 0, 0, 0.996865, -0.079121, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; east grove, beside the small snow pines of the Questie sighting'),
+(7914156, 2300580, 0, 0, 0, 1, 1, -5700, -1264, 389.949, 0.8, 0, 0, 0.389418, 0.921061, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; east grove, south of the old broadleaf'),
+(7914157, 2300580, 0, 0, 0, 1, 1, -5689, -1248, 389.211, 2.7, 0, 0, 0.975723, 0.219007, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; east grove, among its tall snow trees'),
+(7914158, 2300580, 0, 0, 0, 1, 1, -5705, -1256, 390.25, 4.6, 0, 0, 0.745705, -0.666276, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; west edge of the east grove'),
+(7914159, 2300580, 0, 0, 0, 1, 1, -5671, -1252, 389.657, 1.9, 0, 0, 0.813416, 0.581683, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south-east grove, beside the mid snow tree'),
+(7914160, 2300580, 0, 0, 0, 1, 1, -5674, -1268, 389.984, 5.1, 0, 0, 0.557684, -0.830054, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south-east grove, by the snow pine'),
+(7914161, 2300580, 0, 0, 0, 1, 1, -5677, -1258, 389.609, 0.5, 0, 0, 0.247404, 0.968912, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south-east grove, between its snow trees'),
+(7914162, 2300580, 0, 0, 0, 1, 1, -5752, -1212, 388.42, 3.7, 0, 0, 0.961275, -0.27559, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; the rise north of the camp, above the copper vein'),
+(7914163, 2300580, 0, 0, 0, 1, 1, -5737, -1227, 383.141, 2.2, 0, 0, 0.891207, 0.453596, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north of the camp, beside the big mid snow tree'),
+(7914164, 2300580, 0, 0, 0, 1, 1, -5765, -1230, 378.86, 6, 0, 0, 0.14112, -0.989992, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north of the camp, by the small snow pines'),
+(7914165, 2300580, 0, 0, 0, 1, 1, -5795, -1193, 377.073, 1, 0, 0, 0.479426, 0.877583, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, by the small snow pines of the Questie sighting'),
+(7914166, 2300580, 0, 0, 0, 1, 1, -5786.5, -1198.5, 375.915, 3.9, 0, 0, 0.92896, -0.370181, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, between its tall snow trees'),
+(7914167, 2300580, 0, 0, 0, 1, 1, -5779.5, -1188, 378.227, 2.5, 0, 0, 0.948985, 0.315322, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, east edge'),
+(7914168, 2300580, 0, 0, 0, 1, 1, -5796, -1212.5, 376.729, 4.9, 0, 0, 0.637765, -0.770231, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north-west grove, south edge by the snow pine'),
+(7914169, 2300580, 0, 0, 0, 1, 1, -5757, -1178.5, 376.563, 0.6, 0, 0, 0.29552, 0.955336, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north grove, by the old broadleaf'),
+(7914170, 2300580, 0, 0, 0, 1, 1, -5767, -1190, 380.102, 3.1, 0, 0, 0.999784, 0.020795, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north grove, on the slope between its trees'),
+(7914171, 2300580, 0, 0, 0, 1, 1, -5748, -1187, 380.44, 5.8, 0, 0, 0.239249, -0.970958, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; north grove, by the snow pine'),
+(7914172, 2300580, 0, 0, 0, 1, 1, -5745, -1294, 387.64, 1.6, 0, 0, 0.717356, 0.696707, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south of the camp, by the small snow pine of the Questie sighting'),
+(7914173, 2300580, 0, 0, 0, 1, 1, -5755, -1300, 388.499, 4.3, 0, 0, 0.836899, -0.547358, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south of the camp, beyond the snow pines'),
+(7914174, 2300580, 0, 0, 0, 1, 1, -5745, -1321, 391.261, 2.8, 0, 0, 0.98545, 0.169967, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south grove, beside the small snow pines of the Questie sighting'),
+(7914175, 2300580, 0, 0, 0, 1, 1, -5758, -1318, 389.826, 0.1, 0, 0, 0.049979, 0.99875, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south grove, between the snow pine and the broadleaf'),
+(7914176, 2300580, 0, 0, 0, 1, 1, -5767, -1314, 388.54, 5.3, 0, 0, 0.472031, -0.881582, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; south grove, west edge toward the two-storey house'),
+(7914177, 2300580, 0, 0, 0, 1, 1, -5716, -1226, 387.893, 3.5, 0, 0, 0.983986, -0.178246, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; a lone young tree on the open slope between the camp and the east grove'),
+(7914178, 2300580, 0, 0, 0, 1, 1, -5712, -1276, 390.218, 1.3, 0, 0, 0.605186, 0.796084, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; a lone young tree on the open slope south-east of the camp'),
+(7914179, 2300580, 0, 0, 0, 1, 1, -5728, -1312, 392.011, 4, 0, 0, 0.909297, -0.416147, 120, 100, 1, '', 'CoA Coldhewn woods: Dun Morogh Tree; a young tree on the slope east of the south grove');
 
 -- ---------------------------------------------------------------------------
 -- 6. Scripts
