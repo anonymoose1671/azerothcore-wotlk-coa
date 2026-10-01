@@ -20,6 +20,7 @@ constexpr uint32 MODEL_INVISIBLE = 11686;
 constexpr uint8 SAY_NEAR_DEATH = 0;
 constexpr uint32 SPLIT_HEALTH_PCT = 30;
 constexpr uint32 NEAR_DEATH_HEALTH_PCT = 5;
+constexpr uint32 BREATH_AIM_HOLD_MS = 2000;
 
 enum ProgenyEvents
 {
@@ -63,6 +64,7 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
         _isHidden = false;
         _saidNearDeath = false;
         _copiesSlain = 0;
+        _breathHoldMs = 0;
         Reappear();
     }
 
@@ -125,7 +127,11 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
         if (me->HasUnitState(UNIT_STATE_CASTING))
             return;
 
-        me->RemoveAurasDueToSpell(SPELL_CONE_TELEGRAPH);
+        if (_breathHoldMs)
+        {
+            HoldBreathAim(diff);
+            return;
+        }
 
         if (!UpdateVictim())
             return;
@@ -159,8 +165,31 @@ private:
             me->SetFacingToObject(victim);
         }
 
+        me->SetControlled(true, UNIT_STATE_ROOT);
+        me->SetTarget();
+        _breathHoldMs = BREATH_AIM_HOLD_MS;
         DoCastSelf(SPELL_CONE_TELEGRAPH, true);
         DoCastSelf(SPELL_FLAME_BREATH);
+    }
+
+    void HoldBreathAim(uint32 diff)
+    {
+        if (_breathHoldMs > diff)
+        {
+            _breathHoldMs -= diff;
+            return;
+        }
+
+        ReleaseBreathAim();
+    }
+
+    void ReleaseBreathAim()
+    {
+        _breathHoldMs = 0;
+        me->RemoveAurasDueToSpell(SPELL_CONE_TELEGRAPH);
+        me->SetControlled(false, UNIT_STATE_ROOT);
+        if (Unit* victim = me->GetVictim())
+            me->SetTarget(victim->GetGUID());
     }
 
     void Vanish()
@@ -168,6 +197,7 @@ private:
         _hasSplit = true;
         _isHidden = true;
         _events.CancelEvent(EVENT_FLAME_BREATH);
+        _breathHoldMs = 0;
         me->InterruptNonMeleeSpells(true);
         me->RemoveAllAuras();
         me->AttackStop();
@@ -199,6 +229,7 @@ private:
     bool _isHidden = false;
     bool _saidNearDeath = false;
     uint32 _copiesSlain = 0;
+    uint32 _breathHoldMs = 0;
 };
 
 void AddSC_AscensionCainManor()
