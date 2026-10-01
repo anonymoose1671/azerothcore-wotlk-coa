@@ -7,6 +7,8 @@
 #include "ScriptedCreature.h"
 #include "Spell.h"
 #include "SpellInfo.h"
+#include "SpellMgr.h"
+#include <algorithm>
 #include <array>
 
 namespace
@@ -21,6 +23,9 @@ constexpr uint8 SAY_NEAR_DEATH = 0;
 constexpr uint32 SPLIT_HEALTH_PCT = 30;
 constexpr uint32 NEAR_DEATH_HEALTH_PCT = 5;
 constexpr uint32 BREATH_AIM_HOLD_MS = 2000;
+constexpr uint32 CONE_TELEGRAPH_DECAY_MS = 1000;
+constexpr int32 FLAME_BREATH_TICKS = 4;
+constexpr uint32 FLAME_BREATH_TICK_MS = 500;
 
 enum ProgenyEvents
 {
@@ -65,6 +70,7 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
         _saidNearDeath = false;
         _copiesSlain = 0;
         _breathHoldMs = 0;
+        _breathTicksLeft = 0;
         Reappear();
     }
 
@@ -101,6 +107,22 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
 
         if (Spell* breath = me->GetCurrentSpell(CURRENT_GENERIC_SPELL))
             me->FocusTarget(breath, me);
+    }
+
+    void OnSpellCast(SpellInfo const* spell) override
+    {
+        if (spell->Id != SPELL_FLAME_BREATH || _breathHoldMs)
+            return;
+
+        _breathHoldMs = BREATH_AIM_HOLD_MS;
+        _breathTicksLeft = FLAME_BREATH_TICKS - 1;
+        _breathTickMs = FLAME_BREATH_TICK_MS;
+    }
+
+    void OnSpellFailed(SpellInfo const* spell) override
+    {
+        if (spell->Id == SPELL_FLAME_BREATH)
+            ReleaseBreathAim();
     }
 
     void JustSummoned(Creature* summon) override
@@ -167,16 +189,41 @@ private:
 
         me->SetControlled(true, UNIT_STATE_ROOT);
         me->SetTarget();
-        _breathHoldMs = BREATH_AIM_HOLD_MS;
         DoCastSelf(SPELL_CONE_TELEGRAPH, true);
-        DoCastSelf(SPELL_FLAME_BREATH);
+        int32 tickDamage = BreathTickBasePoints();
+        if (me->CastCustomSpell(SPELL_FLAME_BREATH, SPELLVALUE_BASE_POINT0, tickDamage, me) != SPELL_CAST_OK)
+            ReleaseBreathAim();
+    }
+
+    static int32 BreathTickBasePoints()
+    {
+        SpellEffectInfo const& damage = sSpellMgr->AssertSpellInfo(SPELL_FLAME_BREATH)->Effects[EFFECT_0];
+        int32 averageRoll = (damage.DieSides + 1) / 2;
+        return std::max(1, (damage.BasePoints + averageRoll) / FLAME_BREATH_TICKS - averageRoll);
     }
 
     void HoldBreathAim(uint32 diff)
     {
+        if (_breathTicksLeft)
+        {
+            if (_breathTickMs > diff)
+            {
+                _breathTickMs -= diff;
+            }
+            else
+            {
+                --_breathTicksLeft;
+                _breathTickMs = FLAME_BREATH_TICK_MS;
+                me->CastCustomSpell(SPELL_FLAME_BREATH, SPELLVALUE_BASE_POINT0, BreathTickBasePoints(), me,
+                    TRIGGERED_FULL_MASK);
+            }
+        }
+
         if (_breathHoldMs > diff)
         {
             _breathHoldMs -= diff;
+            if (_breathHoldMs <= CONE_TELEGRAPH_DECAY_MS)
+                me->RemoveAurasDueToSpell(SPELL_CONE_TELEGRAPH);
             return;
         }
 
@@ -186,6 +233,7 @@ private:
     void ReleaseBreathAim()
     {
         _breathHoldMs = 0;
+        _breathTicksLeft = 0;
         me->RemoveAurasDueToSpell(SPELL_CONE_TELEGRAPH);
         me->SetControlled(false, UNIT_STATE_ROOT);
         if (Unit* victim = me->GetVictim())
@@ -230,6 +278,8 @@ private:
     bool _saidNearDeath = false;
     uint32 _copiesSlain = 0;
     uint32 _breathHoldMs = 0;
+    uint32 _breathTickMs = 0;
+    int32 _breathTicksLeft = 0;
 };
 
 void AddSC_AscensionCainManor()
