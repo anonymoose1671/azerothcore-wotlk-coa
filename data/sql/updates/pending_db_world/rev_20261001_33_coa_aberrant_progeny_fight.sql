@@ -31,7 +31,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (161757, 0, 4, 5, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 3, 0, 11686, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Linked - Vanish'),
 (161757, 0, 5, 6, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Linked - Set Passive'),
 (161757, 0, 6, 7, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 103, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Linked - Root'),
-(161757, 0, 7, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 80, 16175700, 1, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Linked - Split into four copies'),
+(161757, 0, 7, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 80, 16175700, 2, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Linked - Split into four copies'),
 (161757, 0, 8, 0, 82, 2, 100, 0, 9300259, 0, 0, 0, 0, 0, 63, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Copy Dies - Count It'),
 (161757, 0, 9, 10, 77, 2, 100, 0, 1, 4, 0, 0, 0, 0, 19, 33554432, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Four Copies Dead - Become Targetable'),
 (161757, 0, 10, 11, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Aberrant Progeny - Linked - Reappear'),
