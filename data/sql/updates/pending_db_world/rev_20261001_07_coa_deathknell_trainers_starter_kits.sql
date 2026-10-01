@@ -4,12 +4,6 @@
 -- slot is set from the kit and the rest cleared; one-hand, off-hand and ranged kit weapons go to ItemID1-3; every
 -- display is in the client's ItemDisplayInfo. Dar'danis (rev_20261001_04) and Sunspeaker Talethia, whose CoA
 -- robe is known (rev_20261001_06), keep theirs. Race, face and hair stay.
--- Alessia 502951, Barbarian: Savage Cloth, Savage Treads, Savage Harness, Worn Battleaxe, Savage Pad
-UPDATE `creature_display_preset` SET `item_head` = 0, `item_shoulders` = 143935, `item_body` = 0,
-    `item_chest` = 143933, `item_waist` = 0, `item_legs` = 143934, `item_feet` = 10996,
-    `item_wrists` = 0, `item_hands` = 0, `item_back` = 0, `item_tabard` = 0 WHERE `entry` = 502951;
-UPDATE `creature_equip_template` SET `ItemID1` = 12282, `ItemID2` = 0, `ItemID3` = 0
-    WHERE `CreatureID` = 502951 AND `ID` = 1;
 -- Bailey Horrorhate 50275, Witch Hunter: Grim Greaves, Grim Gambeson, Grim Chains, Worn Dagger, Witching Crossbow,
 --   Grim Shroud
 UPDATE `creature_display_preset` SET `item_head` = 22024, `item_shoulders` = 0, `item_body` = 0,
