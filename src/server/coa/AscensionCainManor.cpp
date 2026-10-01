@@ -4,10 +4,36 @@
 #include "GameObjectScript.h"
 #include "Player.h"
 #include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "Spell.h"
+#include "SpellInfo.h"
+#include <array>
 
 namespace
 {
 constexpr uint32 ITEM_REPAIRED_CELLAR_KEY = 559141;
+
+constexpr uint32 NPC_PROGENY_COPY = 9300259;
+constexpr uint32 SPELL_FLAME_BREATH = 256748;
+constexpr uint32 SPELL_CONE_TELEGRAPH = 354902;
+constexpr uint32 MODEL_INVISIBLE = 11686;
+constexpr uint8 SAY_NEAR_DEATH = 0;
+constexpr uint32 SPLIT_HEALTH_PCT = 30;
+constexpr uint32 NEAR_DEATH_HEALTH_PCT = 5;
+
+enum ProgenyEvents
+{
+    EVENT_FLAME_BREATH = 1,
+    EVENT_SPLIT
+};
+
+std::array<Position, 4> const CopySpots =
+{ {
+    { 1935.89f, 1957.86f, 148.652f, 3.14f },
+    { 1931.89f, 1961.86f, 148.653f, 4.71f },
+    { 1927.89f, 1957.86f, 148.653f, 0.0f },
+    { 1931.89f, 1953.86f, 148.653f, 1.57f }
+} };
 }
 
 class go_coa_cain_cellar_door : public GameObjectScript
@@ -25,7 +51,158 @@ public:
     }
 };
 
+struct npc_coa_aberrant_progeny : public ScriptedAI
+{
+    explicit npc_coa_aberrant_progeny(Creature* creature) : ScriptedAI(creature), _copies(creature) { }
+
+    void Reset() override
+    {
+        _events.Reset();
+        _copies.DespawnAll();
+        _hasSplit = false;
+        _isHidden = false;
+        _saidNearDeath = false;
+        _copiesSlain = 0;
+        Reappear();
+    }
+
+    void JustEngagedWith(Unit*) override
+    {
+        _events.ScheduleEvent(EVENT_FLAME_BREATH, 6s, 8s);
+    }
+
+    void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
+    {
+        if (_isHidden)
+        {
+            damage = 0;
+            return;
+        }
+
+        if (!_hasSplit && me->HealthBelowPctDamaged(SPLIT_HEALTH_PCT, damage))
+        {
+            Vanish();
+            return;
+        }
+
+        if (!_saidNearDeath && me->HealthBelowPctDamaged(NEAR_DEATH_HEALTH_PCT, damage))
+        {
+            _saidNearDeath = true;
+            Talk(SAY_NEAR_DEATH);
+        }
+    }
+
+    void OnSpellStart(SpellInfo const* spell) override
+    {
+        if (spell->Id != SPELL_FLAME_BREATH)
+            return;
+
+        if (Spell* breath = me->GetCurrentSpell(CURRENT_GENERIC_SPELL))
+            me->FocusTarget(breath, me);
+    }
+
+    void JustSummoned(Creature* summon) override
+    {
+        _copies.Summon(summon);
+        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 60.0f, true))
+            summon->AI()->AttackStart(target);
+    }
+
+    void SummonedCreatureDies(Creature* summon, Unit*) override
+    {
+        _copies.Despawn(summon);
+        if (++_copiesSlain == CopySpots.size())
+            Return();
+    }
+
+    void JustDied(Unit*) override
+    {
+        _copies.DespawnAll();
+    }
+
+    void UpdateAI(uint32 diff) override
+    {
+        if (me->HasUnitState(UNIT_STATE_CASTING))
+            return;
+
+        me->RemoveAurasDueToSpell(SPELL_CONE_TELEGRAPH);
+
+        if (!UpdateVictim())
+            return;
+
+        _events.Update(diff);
+
+        switch (_events.ExecuteEvent())
+        {
+            case EVENT_FLAME_BREATH:
+                BreatheFlame();
+                _events.Repeat(14s, 16s);
+                return;
+            case EVENT_SPLIT:
+                for (Position const& spot : CopySpots)
+                    me->SummonCreature(NPC_PROGENY_COPY, spot, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+                return;
+            default:
+                break;
+        }
+
+        if (!_isHidden)
+            DoMeleeAttackIfReady();
+    }
+
+private:
+    void BreatheFlame()
+    {
+        if (Unit* victim = me->GetVictim())
+        {
+            me->StopMoving();
+            me->SetFacingToObject(victim);
+        }
+
+        DoCastSelf(SPELL_CONE_TELEGRAPH, true);
+        DoCastSelf(SPELL_FLAME_BREATH);
+    }
+
+    void Vanish()
+    {
+        _hasSplit = true;
+        _isHidden = true;
+        _events.CancelEvent(EVENT_FLAME_BREATH);
+        me->InterruptNonMeleeSpells(true);
+        me->RemoveAllAuras();
+        me->AttackStop();
+        me->SetReactState(REACT_PASSIVE);
+        me->SetControlled(true, UNIT_STATE_ROOT);
+        me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+        me->SetDisplayId(MODEL_INVISIBLE);
+        _events.ScheduleEvent(EVENT_SPLIT, 3s);
+    }
+
+    void Return()
+    {
+        _isHidden = false;
+        Reappear();
+        _events.ScheduleEvent(EVENT_FLAME_BREATH, 4s, 6s);
+    }
+
+    void Reappear()
+    {
+        me->SetDisplayId(me->GetNativeDisplayId(), me->GetNativeObjectScale());
+        me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+        me->SetControlled(false, UNIT_STATE_ROOT);
+        me->SetReactState(REACT_AGGRESSIVE);
+    }
+
+    EventMap _events;
+    SummonList _copies;
+    bool _hasSplit = false;
+    bool _isHidden = false;
+    bool _saidNearDeath = false;
+    uint32 _copiesSlain = 0;
+};
+
 void AddSC_AscensionCainManor()
 {
     new go_coa_cain_cellar_door();
+    RegisterCreatureAI(npc_coa_aberrant_progeny);
 }
