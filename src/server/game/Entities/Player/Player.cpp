@@ -13944,9 +13944,11 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
     }
     if (previous != replacement && IsInWorld() && HasActiveSpell(original))
     {
+        sScriptMgr->OnPlayerTemporarySpellReplacementNotice(this, previous, replacement, false);
         WorldPacket packet(SMSG_SUPERCEDED_SPELL, 8);
         packet << previous << replacement;
         GetSession()->SendPacket(&packet);
+        sScriptMgr->OnPlayerTemporarySpellReplacementNotice(this, previous, replacement, true);
     }
 }
 

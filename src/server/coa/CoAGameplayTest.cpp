@@ -366,6 +366,8 @@ struct Actor
     std::map<uint32, uint32> supersededFor;
     std::set<uint32> clientSpells;
     std::map<uint32, uint32> clientSpellbookCopies;
+    std::map<uint32, bool> clientNotable;
+    std::map<uint32, uint32> loudSupersedes;
     std::vector<std::pair<uint32, uint32>> announcements;
     uint32 lastBuyOrdinal = 0;
     uint32 lastBuyCues = 0;
@@ -743,7 +745,11 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         WorldPacket row(packet);
         uint32 rowId = 0;
         uint32 marked = 0;
-        row >> rowId >> marked;
+        uint32 firstAttributes = 0;
+        uint32 secondAttributes = 0;
+        uint32 thirdAttributes = 0;
+        row >> rowId >> marked >> firstAttributes >> secondAttributes >> thirdAttributes;
+        actor.clientNotable[marked] = (thirdAttributes & 0x400) != 0;
         ++actor.notifyRows[marked];
         ++actor.notifyRowTotal;
         actor.notifiedAt.emplace(marked, actor.packetOrdinal);
@@ -805,6 +811,9 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         actor.clientSpellbookCopies.erase(previous);
         actor.clientSpells.insert(replacement);
         ++actor.clientSpellbookCopies[replacement];
+        auto const notable = actor.clientNotable.find(replacement);
+        if (notable == actor.clientNotable.end() || notable->second)
+            ++actor.loudSupersedes[replacement];
         actor.announcements.emplace_back(actor.packetOrdinal, replacement);
     }
 
@@ -2215,6 +2224,18 @@ private:
             auto const& swaps = _actors.at(step.get<std::string>("actor")).supersededFor;
             auto const found = swaps.find(spell);
             return found == swaps.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "spellbook_loud_supersedes_for")
+        {
+            auto const& loud = _actors.at(step.get<std::string>("actor")).loudSupersedes;
+            auto const found = loud.find(spell);
+            return found == loud.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "spellbook_client_notable")
+        {
+            auto const& notable = _actors.at(step.get<std::string>("actor")).clientNotable;
+            auto const found = notable.find(spell);
+            return found == notable.end() ? -1.0 : double(found->second);
         }
         if (metric == "spellbook_cues_in_last_buy")
             return double(_actors.at(step.get<std::string>("actor")).lastBuyCues);

@@ -70,7 +70,8 @@ METRICS = {
     'spellbook_notify_rows', 'spellbook_notified_spells', 'spellbook_unnotified_buys',
     'trainer_list_packets', 'trainer_window_rows', 'trainer_window_state', 'trainer_window_ability',
     'vendor_list_packets', 'vendor_items', 'vendor_price', 'vendor_price_sum',
-    'spellbook_superseded_packets', 'spellbook_superseded_for',
+    'spellbook_superseded_packets', 'spellbook_superseded_for', 'spellbook_loud_supersedes_for',
+    'spellbook_client_notable',
     'spellbook_cues_in_last_buy', 'spellbook_last_buy_cued',
     'spellbook_silent_buys', 'spellbook_multi_announced_buys',
     'cast_speed_multiplier', 'spell_crit_chance', 'spell_power_cost', 'spell_damage_done', 'melee_damage_done',
@@ -607,7 +608,8 @@ def validate(scenario):
                     'spell_effective_heal_total', 'spell_energize_count', 'spell_energize_total',
                     'spell_proc_count', 'spell_proc_chance', 'aura_proc_rate', 'temporary_spell_replacement',
                     'cast_failure',
-                    'trainer_window_state', 'trainer_window_ability', 'spellbook_superseded_for'}:
+                    'trainer_window_state', 'trainer_window_ability', 'spellbook_superseded_for',
+                    'spellbook_loud_supersedes_for', 'spellbook_client_notable'}:
                 require('spell' in step, f'{where}: metric needs spell')
             for key in ('pet', 'critical'):
                 if key in step:
@@ -805,7 +807,7 @@ def validate(scenario):
                           'trainer_list_packets', 'trainer_window_rows', 'trainer_window_state',
                           'trainer_window_ability', 'vendor_list_packets', 'vendor_items',
                           'vendor_price', 'vendor_price_sum', 'spellbook_superseded_packets',
-                          'spellbook_superseded_for',
+                          'spellbook_superseded_for', 'spellbook_loud_supersedes_for', 'spellbook_client_notable',
                           'spellbook_cues_in_last_buy', 'spellbook_last_buy_cued',
                           'cast_speed_multiplier', 'spell_crit_chance', 'spell_power_cost',
                           'spell_damage_done', 'melee_damage_done',
