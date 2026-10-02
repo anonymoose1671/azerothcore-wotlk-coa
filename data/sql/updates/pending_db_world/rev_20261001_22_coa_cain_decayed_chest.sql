@@ -3,8 +3,7 @@
 -- the module's other Worldforged chests use) and Exiles its one loot row, the Cain Family Heirloom wand 824402;
 -- mod-worldforged-pickups never restored it and no source gives its position. It is set up exactly like the
 -- module's pickups (worldforged_pickup, Data10/12/18 = 1, its own item at 100%) and stands on the room floor beside
--- the Crystal Ball's table, between it and the barrels (surface.floor 176.8 on GUILDHOUSEB_ABANDONED.WMO, clear of
--- the tower wall), facing into the room (INFERRED spot).
+-- the barrel next to the Crystal Ball's table, where the author recalls it from CoA (INFERRED spot), facing the rug.
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `size`, `Data0`, `Data1`, `Data10`, `Data12`, `Data18`, `AIName`, `ScriptName`)
 VALUES
 (516984, 3, 1, 'Decayed Chest', '', '', 1, 1689, 516984, 1, 1, 1, '', 'worldforged_pickup')
@@ -17,4 +16,4 @@ INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, 
 (516984, 824402, 0, 100, 0, 1, 0, 1, 1, 'Decayed Chest - Cain Family Heirloom (Exiles gameobject_loot)');
 DELETE FROM `gameobject` WHERE `guid` = 7916721;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`) VALUES
-(7916721, 516984, 0, 0, 0, 1, 1, 1925.93, 1957.26, 176.803, 5.1079, 0, 0, 0.554386, -0.832260, 0, 0, 1, 'worldforged_pickup', 'CoA Cain manor upper room: Worldforged Decayed Chest behind the Crystal Ball');
+(7916721, 516984, 0, 0, 0, 1, 1, 1923.78, 1952.57, 176.799, 0.3346, 0, 0, 0.166521, 0.986038, 0, 0, 1, 'worldforged_pickup', 'CoA Cain manor upper room: Worldforged Decayed Chest behind the Crystal Ball');
