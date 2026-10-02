@@ -4,7 +4,7 @@
 -- Buccaneer's Robes appearance (item display 22298), with long full hair (style 4, the longest Forsaken female
 -- hair mesh) in pale blonde (colour 13) (author's choice; INFERRED). rev_20260926_10 spawned her twice, at CoA's
 -- track point ST8684 and at a Questie point 23 yd away; the author saw one maid on CoA, so the Questie copy goes.
--- She sits a little up the lake shore from ST8684 at the author's spot, facing the water 5 yd to the north-east
+-- She sits a little up the lake shore from ST8684 at the author's spot, facing the water 5 yd to the north-west
 -- (surface.liquid). SmartAI on AGGRO (4), say (12).
 DELETE FROM `creature_template_model` WHERE `CreatureID` = 161754;
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
