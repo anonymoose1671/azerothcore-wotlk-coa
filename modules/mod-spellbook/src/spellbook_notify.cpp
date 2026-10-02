@@ -40,6 +40,9 @@ namespace
 
     constexpr char const *ENABLE_KEY = "Spellbook.Notify.Enable";
 
+    /// The bit of the third attribute dword the client's learn handler tests before it announces.
+    constexpr uint32 NOTABLE_BIT = 0x400;
+
     /// A row as the client's reader consumes it: eleven dwords, no length prefix, no count.
     constexpr std::size_t ROW_FIELDS = 11;
     constexpr std::size_t ROW_BYTES = ROW_FIELDS * sizeof(uint32);
@@ -103,5 +106,22 @@ namespace SpellbookNotify
     {
         for (uint32 spellId : spellIds)
             Push(player, spellId);
+    }
+
+    void Mute(Player *player, uint32 spellId)
+    {
+        if (!player || !player->GetSession() || !Enabled())
+            return;
+
+        SpellbookNotifyData::Row const *row = FindRow(spellId);
+        if (!row || !(row->Field4 & NOTABLE_BIT))
+            return;
+
+        SpellbookNotifyData::Row muted = *row;
+        muted.Field4 &= ~NOTABLE_BIT;
+        SendRow(player, muted);
+
+        if (AddsRow(*row))
+            SendRow(player, SpellbookNotifyData::RefreshRow);
     }
 }

@@ -24,6 +24,12 @@ namespace SpellbookNotify
     /// The same for a list, in order. The bulk "learn everything" action uses it per spell, so
     /// each learn arrives announced exactly as a single purchase is.
     void Push(Player *player, std::vector<std::uint32_t> const &spellIds);
+
+    /// Takes the notable bit off one spell's row, so the client does not announce it, until Push
+    /// puts it back. A temporary spell replacement that ends tells the client it "learned" the
+    /// spell it hands back; wrapped in Mute and Push, that notice stays silent while a genuine
+    /// learn of the same spell is still announced.
+    void Mute(Player *player, std::uint32_t spellId);
 }
 
 #endif
