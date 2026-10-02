@@ -8,4 +8,4 @@ DELETE FROM `gameobject_questender` WHERE `id` = 9301257 AND `quest` = 200081;
 INSERT INTO `gameobject_questender` (`id`, `quest`) VALUES (9301257, 200081);
 DELETE FROM `quest_offer_reward` WHERE `ID` = 200081;
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`) VALUES
-(200081, 'The paladin''s stone face is worn smooth by wind and rain, yet the hidden gap has kept it whole. Whoever raised it after the Third War did so in secret, and few have climbed here since.$B$BYou rest a hand on the cold stone. The wind falls quiet, and for a long moment there is nothing but your breath and the steady beat of your heart.$B$BAt the statue''s feet lies a pair of gauntlets, left for whoever made the climb.');
+(200081, 'A weathered statue of a paladin stands in the gap, hidden where few would think to look.$B$BHere the noise of the world falls away. You can see why Vaelion makes the climb.$B$BA pair of gauntlets rests at the statue''s base, left for whoever found the way.');
