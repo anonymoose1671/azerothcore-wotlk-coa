@@ -13960,13 +13960,15 @@ uint32 Player::GetTemporarySpellReplacement(uint32 original) const
 uint32 Player::GetSavedActionButtonSpell(uint32 action)
 {
     // A temporary replacement is never saved, so the next login would drop a button holding it: save the spell it
-    // replaces, which the replacement takes over again once its owner re-applies it.
+    // replaces, which the replacement takes over again once its owner re-applies it. A timed replacement may already
+    // be unlearned while a button still holds it, which the next login would drop just the same.
     for (uint8 depth = 0; depth < 4; ++depth)
     {
         auto spell = m_spells.find(action);
         auto origin = m_temporarySpellReplacementOrigins.find(action);
-        if (spell == m_spells.end() || spell->second->State != PLAYERSPELL_TEMPORARY ||
-            origin == m_temporarySpellReplacementOrigins.end() || !HasSpell(origin->second))
+        bool const unsaved = spell == m_spells.end() || spell->second->State == PLAYERSPELL_TEMPORARY ||
+            spell->second->State == PLAYERSPELL_REMOVED;
+        if (!unsaved || origin == m_temporarySpellReplacementOrigins.end() || !HasSpell(origin->second))
             break;
         action = origin->second;
     }
