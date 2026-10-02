@@ -2,14 +2,15 @@
 -- drops or aggro (the Exiles rows are empty placeholders), so each takes a stock analogue of its kind and level:
 -- Kobold Desecrator the Kobold Worker 257, Ghoul, Zombie and the Brainless the Rattlecage Skeleton 1890, the
 -- Aberrant Progeny the Rot Hide Graverobber 1941, without those tables' quest items. Necrotic Bears drop low-level
--- bear trash at stock bear rates and no coin. Aggro range is Deathknell's stock 10 yd (the Progeny keeps 20).
+-- bear trash at stock bear rates and no coin. Aggro range is Deathknell's stock 10 yd; the Progeny boss, 15.
 UPDATE `creature_template` SET `lootid` = `entry`, `mingold` = 1, `maxgold` = 5, `detection_range` = 10
     WHERE `entry` IN (161749, 161751, 161752);
 UPDATE `creature_template` SET `mingold` = 1, `maxgold` = 5, `detection_range` = 10
     WHERE `entry` IN (161753, 161754, 161755);
 UPDATE `creature_template` SET `lootid` = `entry`, `mingold` = 0, `maxgold` = 0, `detection_range` = 10
     WHERE `entry` = 161743;
-UPDATE `creature_template` SET `lootid` = `entry`, `mingold` = 10, `maxgold` = 25 WHERE `entry` = 161757;
+UPDATE `creature_template` SET `lootid` = `entry`, `mingold` = 10, `maxgold` = 25, `detection_range` = 15
+    WHERE `entry` = 161757;
 DELETE FROM `creature_loot_template` WHERE `Entry` IN (161743, 161749, 161751, 161752, 161757)
     OR (`Entry` IN (161753, 161754, 161755) AND `Item` IN (0, 3262));
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`,
