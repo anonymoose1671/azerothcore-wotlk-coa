@@ -1,9 +1,14 @@
 -- Restless Family Members 1660025: each relative speaks CoA's line when its remains summon it (CoA footage,
 -- transcribed by the playtester). SmartAI on JUST_SUMMONED (54), say (12). Cousin Salem is a woman in CoA: the
 -- female Spectral Citizen 10486 (grey cloth, translucent), the same Stratholme set as the male 10483 she had.
+-- Mother is a ghost in civilian clothes too: the other female Spectral Citizen 10485, replacing the dark-robed
+-- 11835 (playtest). CoA's own displays (652013-652015) are not in the client DBCs. Father keeps 3222 at player size:
+-- 3222 draws at 1.2x, 11835 drew at 1.25x.
 UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN (161762, 161763, 161764, 161765);
-DELETE FROM `creature_template_model` WHERE `CreatureID` = 161764;
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (161762, 161763, 161764);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
+(161762, 0, 10485, 1, 1),
+(161763, 0, 3222, 0.8333, 1),
 (161764, 0, 10486, 1, 1);
 DELETE FROM `creature_text` WHERE `CreatureID` IN (161762, 161763, 161764, 161765);
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Probability`, `comment`)
