@@ -1,7 +1,8 @@
 -- A Quiet Life 200081 is turned in by clicking the Hidden Statue, but the client draws a quest giver's floating
 -- question mark only over creatures, never over a gameobject. An invisible, unselectable creature (display 11686)
--- hovering on the statue's head is a second ender for the quest, so its mark shows players where to turn in; every
--- click still lands on the statue (author's request; INFERRED).
+-- at the statue is a second ender for the quest, so its mark shows players where to turn in; every click still lands
+-- on the statue (author's request; INFERRED). The mark draws about 3.7 yd above the creature (in game), so it hovers
+-- 1.2 yd below the statue's base to put the mark just over the 2 yd statue's head.
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`,
     `faction`, `npcflag`, `speed_walk`, `speed_run`, `detection_range`, `rank`, `BaseAttackTime`, `RangeAttackTime`,
     `unit_class`, `unit_flags`, `unit_flags2`, `type`, `type_flags`, `lootid`, `AIName`, `MovementType`,
@@ -33,5 +34,5 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `p
     `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, `currentwaypoint`,
     `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`,
     `CreateObject`, `Comment`) VALUES
-(9003730, 9300260, 0, 0, 0, 1, 1, 0, 1722.6, 1811, 172.9, 0.1, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0,
-    'CoA Deathknell: western mountains, on the Hidden Statue''s head; turn-in mark for A Quiet Life');
+(9003730, 9300260, 0, 0, 0, 1, 1, 0, 1722.6, 1811, 169.6, 0.1, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0,
+    'CoA Deathknell: western mountains, under the Hidden Statue; its mark floats over the statue''s head');
