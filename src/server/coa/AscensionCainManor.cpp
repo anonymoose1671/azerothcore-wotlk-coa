@@ -14,6 +14,7 @@
 namespace
 {
 constexpr uint32 ITEM_REPAIRED_CELLAR_KEY = 559141;
+constexpr uint32 QUEST_A_QUIET_LIFE = 200081;
 
 constexpr uint32 NPC_PROGENY_COPY = 9300259;
 constexpr uint32 SPELL_FLAME_BREATH = 256748;
@@ -54,6 +55,18 @@ public:
 
         ChatHandler(player->GetSession()).SendNotification("The door is locked.");
         return true;
+    }
+};
+
+class go_coa_deathknell_hidden_statue : public GameObjectScript
+{
+public:
+    go_coa_deathknell_hidden_statue() : GameObjectScript("go_coa_deathknell_hidden_statue") { }
+
+    bool OnGossipHello(Player* player, GameObject*) override
+    {
+        QuestStatus status = player->GetQuestStatus(QUEST_A_QUIET_LIFE);
+        return status == QUEST_STATUS_NONE || status == QUEST_STATUS_REWARDED;
     }
 };
 
@@ -285,5 +298,6 @@ private:
 void AddSC_AscensionCainManor()
 {
     new go_coa_cain_cellar_door();
+    new go_coa_deathknell_hidden_statue();
     RegisterCreatureAI(npc_coa_aberrant_progeny);
 }
