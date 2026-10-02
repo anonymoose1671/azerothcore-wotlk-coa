@@ -77,11 +77,10 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
     void Reset() override
     {
         _events.Reset();
+        _isHidden = false;
         _copies.DespawnAll();
         _hasSplit = false;
-        _isHidden = false;
         _saidNearDeath = false;
-        _copiesSlain = 0;
         _breathHoldMs = 0;
         _breathTicksLeft = 0;
         Reappear();
@@ -102,6 +101,7 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
 
         if (!_hasSplit && me->HealthBelowPctDamaged(SPLIT_HEALTH_PCT, damage))
         {
+            damage = std::min<uint32>(damage, me->GetHealth() - 1);
             Vanish();
             return;
         }
@@ -147,9 +147,12 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
 
     void SummonedCreatureDies(Creature* summon, Unit*) override
     {
-        _copies.Despawn(summon);
-        if (++_copiesSlain == CopySpots.size())
-            Return();
+        ForgetCopy(summon);
+    }
+
+    void SummonedCreatureDespawn(Creature* summon) override
+    {
+        ForgetCopy(summon);
     }
 
     void JustDied(Unit*) override
@@ -182,6 +185,8 @@ struct npc_coa_aberrant_progeny : public ScriptedAI
             case EVENT_SPLIT:
                 for (Position const& spot : CopySpots)
                     me->SummonCreature(NPC_PROGENY_COPY, spot, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+                if (_copies.empty())
+                    Return();
                 return;
             default:
                 break;
@@ -269,6 +274,13 @@ private:
         _events.ScheduleEvent(EVENT_SPLIT, 3s);
     }
 
+    void ForgetCopy(Creature* summon)
+    {
+        _copies.Despawn(summon);
+        if (_isHidden && _copies.empty())
+            Return();
+    }
+
     void Return()
     {
         _isHidden = false;
@@ -289,7 +301,6 @@ private:
     bool _hasSplit = false;
     bool _isHidden = false;
     bool _saidNearDeath = false;
-    uint32 _copiesSlain = 0;
     uint32 _breathHoldMs = 0;
     uint32 _breathTickMs = 0;
     int32 _breathTicksLeft = 0;
