@@ -8,4 +8,4 @@ DELETE FROM `gameobject_questender` WHERE `id` = 9301257 AND `quest` = 200081;
 INSERT INTO `gameobject_questender` (`id`, `quest`) VALUES (9301257, 200081);
 DELETE FROM `quest_offer_reward` WHERE `ID` = 200081;
 INSERT INTO `quest_offer_reward` (`ID`, `RewardText`) VALUES
-(200081, 'A weathered statue of a paladin stands in the gap, hidden where few would think to look.$B$BHere the noise of the world falls away. You can see why Vaelion makes the climb.$B$BA pair of gauntlets rests at the statue''s base, left for whoever found the way.');
+(200081, 'A weathered statue of a paladin stands in the gap, hidden where few would think to look.$B$BHere the noise of the world falls away. You can see why Vaelion makes the climb.');
