@@ -14,6 +14,6 @@ ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `displayId` = VALUES(`displayId
 DELETE FROM `gameobject_loot_template` WHERE `Entry` = 516984;
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (516984, 824402, 0, 100, 0, 1, 0, 1, 1, 'Decayed Chest - Cain Family Heirloom (Exiles gameobject_loot)');
-DELETE FROM `gameobject` WHERE `guid` = 7916721;
+DELETE FROM `gameobject` WHERE `guid` = 7916020;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `Comment`) VALUES
-(7916721, 516984, 0, 0, 0, 1, 1, 1923.78, 1952.57, 176.799, 0.3346, 0, 0, 0.166521, 0.986038, 0, 0, 1, 'worldforged_pickup', 'CoA Cain manor upper room: Worldforged Decayed Chest behind the Crystal Ball');
+(7916020, 516984, 0, 0, 0, 1, 1, 1923.78, 1952.57, 176.799, 0.3346, 0, 0, 0.166521, 0.986038, 0, 0, 1, 'worldforged_pickup', 'CoA Cain manor upper room: Worldforged Decayed Chest behind the Crystal Ball');

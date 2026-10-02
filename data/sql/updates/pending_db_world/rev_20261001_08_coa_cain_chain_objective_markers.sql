@@ -2,7 +2,7 @@
 -- incomplete quest such as Restless Family Members 1660025 had no map marker although the client's own
 -- QuestSuperTrack points draw its 3D arrows. Objective markers from those points (SOURCED-CLIENT); NPC
 -- objectives are index 0-3, item objectives 4-7 (as stock 376). 1660029 has no track points: its three areas
--- are the outlines of its zombie, ghoul and bear spawns (DERIVED).
+-- are the outlines of its bear, ghoul and zombie spawns (DERIVED).
 DELETE FROM `quest_poi` WHERE `QuestID` IN (1660025, 1660026, 1660027, 1660028, 1660029, 1660042) AND `id` > 0;
 INSERT INTO `quest_poi` (`QuestID`, `id`, `ObjectiveIndex`, `MapID`, `WorldMapAreaId`, `Floor`, `Priority`, `Flags`) VALUES
 (1660025, 1, 0, 0, 20, 0, 0, 1),
@@ -35,13 +35,14 @@ INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`) VALUES
 (1660028, 2, 0, 1921, 1931),
 (1660028, 3, 0, 1925, 1955),
 (1660028, 4, 0, 1939, 1945),
-(1660029, 1, 0, 1803, 1961),
-(1660029, 1, 1, 1830, 1890),
-(1660029, 1, 2, 1845, 1885),
-(1660029, 1, 3, 1968, 1939),
-(1660029, 1, 4, 1977, 1952),
-(1660029, 1, 5, 1975, 1968),
-(1660029, 1, 6, 1905, 1997),
+(1660029, 1, 0, 1775, 1947),
+(1660029, 1, 1, 1802, 1908),
+(1660029, 1, 2, 1826, 1889),
+(1660029, 1, 3, 1892, 1896),
+(1660029, 1, 4, 1951, 1924),
+(1660029, 1, 5, 1977, 1952),
+(1660029, 1, 6, 1965, 1970),
+(1660029, 1, 7, 1910, 1984),
 (1660029, 2, 0, 1893, 1959),
 (1660029, 2, 1, 1915, 1910),
 (1660029, 2, 2, 1948, 1924),
