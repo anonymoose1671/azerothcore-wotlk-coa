@@ -743,6 +743,26 @@ namespace
     };
 }
 
+/// SMSG_SUPERCEDED_SPELL is how a temporary spell replacement swaps the client's bars, and the client
+/// announces the spell it swaps in as "learned" when that spell is notable. A talent's variant (Spirit
+/// Volley, Falconstrike) carries no notable bit, but the book spell it hands back when it ends
+/// (Reclamation, Quick Shot) does, so every revert drew the "New Spell Learned" toast. The spell is
+/// muted for exactly that one notice and made notable again right after it.
+class spellbook_swap_notice final : public PlayerScript
+{
+public:
+    spellbook_swap_notice() : PlayerScript("spellbook_swap_notice", {PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE}) { }
+
+    void OnPlayerTemporarySpellReplacementNotice(Player *player, uint32 /*previous*/, uint32 replacement,
+                                                 bool sent) override
+    {
+        if (sent)
+            SpellbookNotify::Push(player, replacement);
+        else
+            SpellbookNotify::Mute(player, replacement);
+    }
+};
+
 class spellbook_metric_provider final : public WorldScript
 {
 public:
@@ -761,6 +781,7 @@ public:
 void AddSpellbookScripts()
 {
     new spellbook_metric_provider();
+    new spellbook_swap_notice();
     new SpellbookBookScript();
     new SpellbookServerScript();
 }

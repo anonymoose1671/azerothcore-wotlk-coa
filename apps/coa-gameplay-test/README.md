@@ -632,6 +632,10 @@ or reload the character from the database. Use it to exercise a repair against d
 Hooks read character rows synchronously, so the step first waits for a marker query queued behind every character
 database write already queued, as a real login's queries are; with several character database workers a write that
 another worker is still running when the marker returns can remain uncommitted.
+`spellbook_loud_supersedes_for` requires `spell` and counts the `SMSG_SUPERCEDED_SPELL` notices that swapped that spell in
+while the client still held it notable, the bit of its `SpellCustomAttr` row the "New Spell Learned" toast tests: no row
+pushed yet, or the last one pushed carrying the bit. `spellbook_client_notable` reports the last pushed row's bit for
+`spell`: 1, 0, or -1 when none was pushed.
 `temporary_spell_replacement` requires `spell` and returns the spell ID currently standing in for it on the
 player's bars. `Player::GetTemporarySpellReplacement` returns the queried spell itself when nothing replaces
 it, so the unreplaced reading is that spell's own ID, never zero. It reads server-side state, not what the
