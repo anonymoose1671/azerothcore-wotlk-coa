@@ -2148,6 +2148,12 @@ private:
                 return action ? action->packedData : 0;
             return action && action->GetType() == ACTION_BUTTON_SPELL ? action->GetAction() : 0;
         }
+        if (metric == "persisted_action_button")
+        {
+            ActionButton const* action = player->GetActionButton(uint8(step.get<uint32>("button")));
+            return action && action->GetType() == ACTION_BUTTON_SPELL ?
+                player->GetSavedActionButtonSpell(action->GetAction()) : 0;
+        }
         if (metric == "action_bar_unknown_spells")
         {
             uint32 unknown = 0;
