@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "name": "Witch Doctor: Spirit Volley swaps only the highest known Reclamation rank",
-  "contract": "Spirit Volley Ready (505158) makes AscensionWitchDoctor::SyncReplacements retarget the Reclamation action-bar slot to Spirit Volley (504582); casting Spirit Volley consumes the buff and the slot reverts to Reclamation. Reclamation ranks are registered in spell_ranks (806288 chain) and are mana spells, so every learned rank stays active in the spellbook. Only the highest known rank sits on the action bar, so gaining the buff and casting Spirit Volley each send exactly one SMSG_SUPERCEDED_SPELL packet (rendered by the client as a learned-spell notice) regardless of how many lower Reclamation ranks remain known, and lower ranks are never retargeted.",
+  "name": "Witch Doctor: Spirit Volley swaps only the highest known Reclamation rank, through a bar redraw",
+  "contract": "Spirit Volley Ready (505158) makes AscensionWitchDoctor::SyncReplacements retarget the Reclamation action-bar slot to Spirit Volley (504582); casting Spirit Volley consumes the buff and the slot reverts to Reclamation. Reclamation ranks are registered in spell_ranks (806288 chain) and are mana spells, so every learned rank stays active in the spellbook. Only the highest known rank is retargeted, and lower ranks are never touched. The swap reaches the client as a resent action bar, not as SMSG_SUPERCEDED_SPELL (which the client answers with a learned-spell chat line, #5762): neither gaining the buff nor casting Spirit Volley sends a superseded-spell packet.",
   "timeout_ms": 90000,
   "players": [
     {
@@ -33,6 +33,8 @@
       "action": "assert", "label": "SETUP: the highest learned Reclamation rank is known",
       "actor": "caster", "metric": "knows_spell", "spell": 680904, "equals": 1
     },
+    { "action": "set_action_button", "actor": "caster", "button": 1, "spell": 680904 },
+    { "action": "set_action_button", "actor": "caster", "button": 2, "spell": 806288 },
     { "action": "wait", "ms": 1200 },
     {
       "action": "snapshot", "actor": "caster", "metric": "spellbook_superseded_packets",
@@ -46,13 +48,21 @@
     },
     { "action": "wait", "label": "Let the throttled sync run again", "ms": 1200 },
     {
-      "action": "assert", "label": "One superseded-spell packet regardless of how many Reclamation ranks are known",
+      "action": "assert", "label": "No superseded-spell packet, however many Reclamation ranks are known",
       "actor": "caster", "metric": "spellbook_superseded_packets",
-      "relative_to": "packets_before_ready", "equals": 1
+      "relative_to": "packets_before_ready", "equals": 0
+    },
+    {
+      "action": "assert", "label": "The client's Reclamation button carries Spirit Volley",
+      "actor": "caster", "metric": "client_action_button", "button": 1, "equals": 504582
     },
     {
       "action": "assert", "label": "Lower Reclamation ranks are left untouched",
       "actor": "caster", "metric": "temporary_spell_replacement", "spell": 806288, "equals": 806288
+    },
+    {
+      "action": "assert", "label": "The lower rank's button is left untouched",
+      "actor": "caster", "metric": "client_action_button", "button": 2, "equals": 806288
     },
     {
       "action": "snapshot", "actor": "caster", "metric": "spellbook_superseded_packets",
@@ -70,9 +80,13 @@
     },
     { "action": "wait", "label": "Let the throttled sync run again", "ms": 1200 },
     {
-      "action": "assert", "label": "Casting Spirit Volley sends one superseded-spell packet, not one per Reclamation rank",
+      "action": "assert", "label": "Casting Spirit Volley sends no superseded-spell packet either",
       "actor": "caster", "metric": "spellbook_superseded_packets",
-      "relative_to": "packets_before_cast", "equals": 1
+      "relative_to": "packets_before_cast", "equals": 0
+    },
+    {
+      "action": "assert", "label": "The client's button carries Reclamation again",
+      "actor": "caster", "metric": "client_action_button", "button": 1, "equals": 680904
     }
   ]
 }

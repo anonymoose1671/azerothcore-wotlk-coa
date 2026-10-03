@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "name": "Witch Doctor: Umbral Glaive takes over every Hex of Malice button quietly and hands each back its own rank (#5761)",
+  "contract": "The Umbral Glaive buff 504588 makes AscensionWitchDoctor::SyncReplacements replace every known Hex of Malice rank with Umbral Glaive 501134 through Player::SetTemporarySpellReplacement, and the buff's end hands them back. The swap used to reach the client as one SMSG_SUPERCEDED_SPELL per rank, which the client answers with a 'You have learned a new spell' chat line each time (#1506), and the reverts arrived in map order, so a button could come back holding rank 2 instead of the rank it had (#5761). With CoA.TemporarySpellReplacement.RedrawActionBar on, no superseded-spell packet is sent: the server writes the replacement into every button holding a Hex rank, records which rank each button held, resends the bar, and on revert restores each button's own rank. The saved bar never holds the temporary spell.",
+  "timeout_ms": 90000,
+  "players": [
+    { "id": "caster", "race": 1, "class": 13, "level": 60 }
+  ],
+  "steps": [
+    { "action": "wait", "label": "Let login hooks and class synchronisation settle", "ms": 4000 },
+    { "action": "learn", "actor": "caster", "spell": 501153 },
+    { "action": "learn", "actor": "caster", "spell": 501154 },
+    { "action": "learn", "actor": "caster", "spell": 501158 },
+    { "action": "set_action_button", "actor": "caster", "button": 1, "spell": 501158 },
+    { "action": "set_action_button", "actor": "caster", "button": 2, "spell": 501154 },
+    { "action": "set_action_button", "actor": "caster", "button": 3, "spell": 501153 },
+    { "action": "wait", "ms": 1200 },
+    {
+      "action": "snapshot", "actor": "caster", "metric": "spellbook_superseded_packets",
+      "save_as": "swap_packets_before"
+    },
+    {
+      "action": "snapshot", "actor": "caster", "metric": "action_bar_packets",
+      "save_as": "bar_packets_before"
+    },
+    { "action": "set_aura", "actor": "caster", "spell": 504588, "stacks": 1 },
+    {
+      "action": "assert", "label": "The buff replaces the highest Hex of Malice rank with Umbral Glaive",
+      "actor": "caster", "metric": "temporary_spell_replacement", "spell": 501158, "equals": 501134,
+      "within_ms": 3000
+    },
+    { "action": "wait", "label": "Let the throttled sync run again", "ms": 1200 },
+    {
+      "action": "assert", "label": "No superseded-spell packet is sent for the swap",
+      "actor": "caster", "metric": "spellbook_superseded_packets",
+      "relative_to": "swap_packets_before", "equals": 0
+    },
+    {
+      "action": "assert", "label": "The bar is resent instead",
+      "actor": "caster", "metric": "action_bar_packets",
+      "relative_to": "bar_packets_before", "min": 1
+    },
+    {
+      "action": "assert", "label": "The client's rank 6 button carries Umbral Glaive",
+      "actor": "caster", "metric": "client_action_button", "button": 1, "equals": 501134
+    },
+    {
+      "action": "assert", "label": "The client's rank 2 button carries Umbral Glaive",
+      "actor": "caster", "metric": "client_action_button", "button": 2, "equals": 501134
+    },
+    {
+      "action": "assert", "label": "The client's rank 1 button carries Umbral Glaive",
+      "actor": "caster", "metric": "client_action_button", "button": 3, "equals": 501134
+    },
+    {
+      "action": "assert", "label": "The server's copy of the bar holds Umbral Glaive too",
+      "actor": "caster", "metric": "action_button", "button": 1, "equals": 501134
+    },
+    {
+      "action": "assert", "label": "The rank 6 button is saved as rank 6, never as the temporary spell",
+      "actor": "caster", "metric": "persisted_action_button", "button": 1, "equals": 501158
+    },
+    {
+      "action": "assert", "label": "The rank 2 button is saved as rank 2",
+      "actor": "caster", "metric": "persisted_action_button", "button": 2, "equals": 501154
+    },
+    { "action": "set_aura", "actor": "caster", "spell": 504588, "stacks": 0 },
+    {
+      "action": "assert", "label": "The buff's end hands Hex of Malice back",
+      "actor": "caster", "metric": "temporary_spell_replacement", "spell": 501158, "equals": 501158,
+      "within_ms": 3000
+    },
+    { "action": "wait", "label": "Let the throttled sync run again", "ms": 1200 },
+    {
+      "action": "assert", "label": "No superseded-spell packet is sent for the revert either",
+      "actor": "caster", "metric": "spellbook_superseded_packets",
+      "relative_to": "swap_packets_before", "equals": 0
+    },
+    {
+      "action": "assert", "label": "The rank 6 button gets rank 6 back (#5761)",
+      "actor": "caster", "metric": "client_action_button", "button": 1, "equals": 501158
+    },
+    {
+      "action": "assert", "label": "The rank 2 button gets rank 2 back",
+      "actor": "caster", "metric": "client_action_button", "button": 2, "equals": 501154
+    },
+    {
+      "action": "assert", "label": "The rank 1 button gets rank 1 back",
+      "actor": "caster", "metric": "client_action_button", "button": 3, "equals": 501153
+    },
+    {
+      "action": "assert", "label": "The server's copy of the bar holds rank 6 again",
+      "actor": "caster", "metric": "action_button", "button": 1, "equals": 501158
+    }
+  ]
+}

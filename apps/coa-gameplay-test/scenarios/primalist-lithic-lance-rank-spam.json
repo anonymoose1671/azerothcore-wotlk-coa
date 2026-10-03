@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "name": "Lithic Lance Ready supersedes only the highest known Geode Barrage rank",
-  "contract": "Lithic Lance Ready retargets one action-bar slot, the highest Geode Barrage rank the caster knows, to Lithic Lance. Gaining or losing the buff sends exactly one SMSG_SUPERCEDED_SPELL packet regardless of how many earlier Geode Barrage ranks remain in the spellbook.",
+  "contract": "Lithic Lance Ready retargets one action-bar slot, the highest Geode Barrage rank the caster knows, to Lithic Lance. Gaining or losing the buff retargets no other rank, however many earlier Geode Barrage ranks remain in the spellbook, and sends no SMSG_SUPERCEDED_SPELL at all: the swap is written into the bar server side and the bar is resent, so the client prints no learned-spell line.",
   "players": [
     {
       "id": "primalist",
@@ -24,9 +24,9 @@
     { "action": "set_aura", "actor": "primalist", "spell": 807048, "stacks": 1 },
     { "action": "assert", "actor": "primalist", "metric": "aura", "spell": 807048, "equals": 1 },
     {
-      "action": "assert", "label": "One superseded-spell packet regardless of how many ranks are known",
+      "action": "assert", "label": "No superseded-spell packet: the bar is redrawn instead",
       "actor": "primalist", "metric": "spellbook_superseded_packets",
-      "relative_to": "packets_before_apply", "equals": 1
+      "relative_to": "packets_before_apply", "equals": 0
     },
     {
       "action": "assert", "label": "Only the highest known rank is retargeted to Lithic Lance",
@@ -43,9 +43,9 @@
     { "action": "set_aura", "actor": "primalist", "spell": 807048, "stacks": 0 },
     { "action": "assert", "actor": "primalist", "metric": "aura", "spell": 807048, "equals": 0 },
     {
-      "action": "assert", "label": "One superseded-spell packet again when the buff drops",
+      "action": "assert", "label": "No superseded-spell packet when the buff drops either",
       "actor": "primalist", "metric": "spellbook_superseded_packets",
-      "relative_to": "packets_before_remove", "equals": 1
+      "relative_to": "packets_before_remove", "equals": 0
     },
     {
       "action": "assert", "label": "The action bar reverts to the highest rank",

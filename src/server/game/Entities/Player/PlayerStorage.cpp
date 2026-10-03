@@ -5798,6 +5798,7 @@ bool Player::isAllowedToLoot(Creature const* creature)
 void Player::_LoadActions(PreparedQueryResult result)
 {
     m_actionButtons.clear();
+    m_replacedActionButtons.clear();
 
     if (result)
     {
@@ -7329,7 +7330,7 @@ void Player::_SaveActions(CharacterDatabaseTransaction trans)
     {
         uint32 action = itr->second.GetAction();
         if (itr->second.GetType() == ACTION_BUTTON_SPELL)
-            action = GetSavedActionButtonSpell(action);
+            action = GetSavedActionButtonSpell(itr->first, action);
 
         switch (itr->second.uState)
         {

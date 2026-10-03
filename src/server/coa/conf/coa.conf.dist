@@ -289,3 +289,16 @@ Ascension.CallboardCache.PreviousStageOnly = 0
 #        Default:     6
 
 Ascension.CallboardCache.ItemLevelAllowance = 6
+
+#
+#    CoA.TemporarySpellReplacement.RedrawActionBar
+#        Description: How a temporary spell swap (Spirit Volley for Reclamation, Umbral
+#                     Glaive for Hex of Malice, Falconstrike for Quick Shot, ...) reaches
+#                     the client. The client prints "You have learned a new spell" for
+#                     every SMSG_SUPERCEDED_SPELL it receives.
+#                     1 - Write the swap into the action bar server side and resend the
+#                         bar: no chat line, no "New Spell Learned" toast.
+#                     0 - Send SMSG_SUPERCEDED_SPELL as before.
+#        Default:     1
+
+CoA.TemporarySpellReplacement.RedrawActionBar = 1

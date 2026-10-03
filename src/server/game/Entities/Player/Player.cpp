@@ -13863,12 +13863,81 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
     }
     if (previous != replacement && IsInWorld())
     {
+        // The client prints "You have learned a new spell" for every SMSG_SUPERCEDED_SPELL and nothing the server
+        // sends switches that off, so by default the swap is written into the bar here and the bar is resent.
+        if (RedrawsActionBarForReplacements())
+        {
+            RedrawReplacedActionButtons(original, previous, replacement);
+            return;
+        }
         sScriptMgr->OnPlayerTemporarySpellReplacementNotice(this, previous, replacement, false);
         WorldPacket packet(SMSG_SUPERCEDED_SPELL, 8);
         packet << previous << replacement;
         GetSession()->SendPacket(&packet);
         sScriptMgr->OnPlayerTemporarySpellReplacementNotice(this, previous, replacement, true);
     }
+}
+
+bool Player::RedrawsActionBarForReplacements()
+{
+    static bool const redraw = sConfigMgr->GetOption<bool>("CoA.TemporarySpellReplacement.RedrawActionBar", true);
+    return redraw;
+}
+
+void Player::RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement)
+{
+    bool const reverting = replacement == original;
+    bool changed = false;
+    for (auto& [button, action] : m_actionButtons)
+    {
+        if (action.uState == ACTIONBUTTON_DELETED || action.GetType() != ACTION_BUTTON_SPELL ||
+            action.GetAction() != previous)
+            continue;
+        auto recorded = m_replacedActionButtons.find(button);
+        if (reverting)
+        {
+            // Several originals can share one replacement (every known rank of a spell): a button goes back to
+            // the original it was taken from, not to whichever original happens to revert first.
+            if (recorded != m_replacedActionButtons.end() && recorded->second != original)
+                continue;
+        }
+        else if (recorded == m_replacedActionButtons.end())
+            m_replacedActionButtons.emplace(button, original);
+        action.SetActionAndType(replacement, ACTION_BUTTON_SPELL);
+        changed = true;
+    }
+    if (reverting)
+        std::erase_if(m_replacedActionButtons, [original](auto const& entry) { return entry.second == original; });
+    if (changed)
+        SendActionButtons(1);
+}
+
+bool Player::ApplyTemporarySpellReplacementsToActionBar()
+{
+    if (!RedrawsActionBarForReplacements())
+        return false;
+    bool changed = false;
+    for (auto const& [original, replacement] : m_temporarySpellReplacements)
+    {
+        if (GetTemporarySpellReplacement(original) == original)
+            continue;
+        for (auto& [button, action] : m_actionButtons)
+        {
+            if (action.uState == ACTIONBUTTON_DELETED || action.GetType() != ACTION_BUTTON_SPELL ||
+                action.GetAction() != original || m_replacedActionButtons.contains(button))
+                continue;
+            m_replacedActionButtons.emplace(button, original);
+            action.SetActionAndType(replacement, ACTION_BUTTON_SPELL);
+            changed = true;
+        }
+    }
+    return changed;
+}
+
+void Player::SendInitialActionButtons()
+{
+    ApplyTemporarySpellReplacementsToActionBar();
+    SendActionButtons(1);
 }
 
 uint32 Player::GetTemporarySpellReplacement(uint32 original) const
@@ -13878,11 +13947,19 @@ uint32 Player::GetTemporarySpellReplacement(uint32 original) const
         itr->second : original;
 }
 
-uint32 Player::GetSavedActionButtonSpell(uint32 action)
+uint32 Player::GetSavedActionButtonSpell(uint8 button, uint32 action)
 {
     // A temporary replacement is never saved, so the next login would drop a button holding it: save the spell it
     // replaces, which the replacement takes over again once its owner re-applies it. A timed replacement may already
     // be unlearned while a button still holds it, which the next login would drop just the same.
+    if (auto recorded = m_replacedActionButtons.find(button);
+        recorded != m_replacedActionButtons.end() && HasSpell(recorded->second))
+    {
+        auto spell = m_spells.find(action);
+        if (spell == m_spells.end() || spell->second->State == PLAYERSPELL_TEMPORARY ||
+            spell->second->State == PLAYERSPELL_REMOVED)
+            action = recorded->second;
+    }
     for (uint8 depth = 0; depth < 4; ++depth)
     {
         auto spell = m_spells.find(action);
@@ -16178,6 +16255,7 @@ void Player::LoadActions(PreparedQueryResult result)
     if (result)
         _LoadActions(result);
 
+    ApplyTemporarySpellReplacementsToActionBar();
     SendActionButtons(1);
 }
 

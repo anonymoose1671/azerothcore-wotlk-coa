@@ -351,6 +351,8 @@ struct Actor
     uint32 buysUnannounced = 0;
     uint32 buysMisannounced = 0;
     uint32 supersededPackets = 0;
+    uint32 actionBarPackets = 0;
+    std::map<uint8, uint32> clientActionButtons;
     std::map<uint32, uint32> supersededFor;
     std::map<uint32, bool> clientNotable;
     std::map<uint32, uint32> loudSupersedes;
@@ -734,6 +736,22 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         if (notable == actor.clientNotable.end() || notable->second)
             ++actor.loudSupersedes[replacement];
         actor.announcements.emplace_back(actor.packetOrdinal, replacement);
+    }
+
+    if (packet.GetOpcode() == SMSG_ACTION_BUTTONS)
+    {
+        ++actor.actionBarPackets;
+        WorldPacket bar(packet);
+        uint8 state = 0;
+        bar >> state;
+        actor.clientActionButtons.clear();
+        if (state != 2)
+            for (uint8 button = 0; button < MAX_ACTION_BUTTONS; ++button)
+            {
+                uint32 packed = 0;
+                bar >> packed;
+                actor.clientActionButtons[button] = packed;
+            }
     }
 
     if (packet.GetOpcode() == SMSG_LEARNED_SPELL)
@@ -1824,7 +1842,7 @@ private:
         {
             ActionButton const* action = player->GetActionButton(uint8(step.get<uint32>("button")));
             return action && action->GetType() == ACTION_BUTTON_SPELL ?
-                player->GetSavedActionButtonSpell(action->GetAction()) : 0;
+                player->GetSavedActionButtonSpell(uint8(step.get<uint32>("button")), action->GetAction()) : 0;
         }
         if (metric == "action_bar_unknown_spells")
         {
@@ -1877,6 +1895,17 @@ private:
         }
         if (metric == "spellbook_superseded_packets")
             return double(_actors.at(step.get<std::string>("actor")).supersededPackets);
+        if (metric == "action_bar_packets")
+            return double(_actors.at(step.get<std::string>("actor")).actionBarPackets);
+        if (metric == "client_action_button")
+        {
+            auto const& buttons = _actors.at(step.get<std::string>("actor")).clientActionButtons;
+            auto const found = buttons.find(uint8(step.get<uint32>("button")));
+            if (found == buttons.end())
+                return -1.0;
+            return ACTION_BUTTON_TYPE(found->second) == ACTION_BUTTON_SPELL ?
+                double(ACTION_BUTTON_ACTION(found->second)) : 0.0;
+        }
         if (metric == "spellbook_silent_buys" || metric == "spellbook_multi_announced_buys")
         {
             Actor const& actor = _actors.at(step.get<std::string>("actor"));

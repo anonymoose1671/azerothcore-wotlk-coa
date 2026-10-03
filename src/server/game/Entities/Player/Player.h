@@ -1814,7 +1814,8 @@ public:
     // Transient action replacements; never written to character spell ownership.
     void SetTemporarySpellReplacement(uint32 original, uint32 replacement);
     [[nodiscard]] uint32 GetTemporarySpellReplacement(uint32 original) const;
-    [[nodiscard]] uint32 GetSavedActionButtonSpell(uint32 action);
+    [[nodiscard]] uint32 GetSavedActionButtonSpell(uint8 button, uint32 action);
+    [[nodiscard]] static bool RedrawsActionBarForReplacements();
     [[nodiscard]] bool CanUseTwoHandWithShield(ItemTemplate const* main, ItemTemplate const* off) const;
     [[nodiscard]] float GetMeleeAbilityRangeBonus() const;
 
@@ -1899,7 +1900,7 @@ public:
     ActionButton* addActionButton(uint8 button, uint32 action, uint8 type);
     void removeActionButton(uint8 button);
     ActionButton const* GetActionButton(uint8 button);
-    void SendInitialActionButtons() const { SendActionButtons(1); }
+    void SendInitialActionButtons();
     void SendActionButtons(uint32 state) const;
     bool IsActionButtonDataValid(uint8 button, uint32 action, uint8 type);
 
@@ -2959,6 +2960,9 @@ protected:
     PlayerSpellMap m_spells;
     std::map<uint32, uint32> m_temporarySpellReplacements;
     std::map<uint32, uint32> m_temporarySpellReplacementOrigins;
+    std::map<uint8, uint32> m_replacedActionButtons;
+    void RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement);
+    bool ApplyTemporarySpellReplacementsToActionBar();
     PlayerTalentMap m_talents;
     uint32 m_lastPotionId;                              // last used health/mana potion in combat, that block next potion use
 

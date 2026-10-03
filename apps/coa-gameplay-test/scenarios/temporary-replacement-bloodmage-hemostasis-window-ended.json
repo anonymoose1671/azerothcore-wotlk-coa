@@ -102,7 +102,7 @@
     },
     {
       "action": "assert",
-      "label": "The button that still holds Blood Burst is saved as Hemostasis",
+      "label": "The Blood Burst button is saved as Hemostasis",
       "actor": "bloodmage",
       "metric": "persisted_action_button",
       "button": 2,

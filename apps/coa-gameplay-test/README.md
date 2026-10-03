@@ -634,6 +634,10 @@ database write already queued, as a real login's queries are; with several chara
 another worker is still running when the marker returns can remain uncommitted.
 `persisted_action_button` requires `button` and returns the spell ID `Player::_SaveActions` writes for that action
 button, or zero if it holds no spell.
+`client_action_button` requires `button` and reads the last `SMSG_ACTION_BUTTONS` the session was sent: the spell
+ID that button carried, zero when it held no spell, or -1 when no bar has been sent yet. `action_bar_packets` counts
+those bar packets; a temporary spell replacement is delivered as one of them instead of `SMSG_SUPERCEDED_SPELL` while
+`CoA.TemporarySpellReplacement.RedrawActionBar` is on.
 `spellbook_loud_supersedes_for` requires `spell` and counts the `SMSG_SUPERCEDED_SPELL` notices that swapped that spell in
 while the client still held it notable, the bit of its `SpellCustomAttr` row the "New Spell Learned" toast tests: no row
 pushed yet, or the last one pushed carrying the bit. `spellbook_client_notable` reports the last pushed row's bit for
