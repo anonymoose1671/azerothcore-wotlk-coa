@@ -63,8 +63,8 @@
     },
     { "action": "cast", "label": "Try Falconstrike outside its swap", "actor": "ranger", "spell": 806443, "target": "ranger" },
     {
-      "action": "assert", "label": "The server refuses Falconstrike while it stands in for nothing (SPELL_FAILED_NOT_READY)",
-      "actor": "ranger", "metric": "cast_failure", "spell": 806443, "equals": 67
+      "action": "assert", "label": "The server refuses Falconstrike while it stands in for nothing (SPELL_FAILED_CASTER_AURASTATE)",
+      "actor": "ranger", "metric": "cast_failure", "spell": 806443, "equals": 22
     },
     {
       "action": "assert", "label": "The client still knows Quick Shot",

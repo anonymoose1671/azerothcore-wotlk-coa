@@ -417,7 +417,7 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
         }
         if (_player->IsIdleTemporarySpellReplacement(spellId))
         {
-            Spell::SendCastResult(_player, spellInfo, castCount, SPELL_FAILED_NOT_READY);
+            Spell::SendCastResult(_player, spellInfo, castCount, SPELL_FAILED_CASTER_AURASTATE);
             recvPacket.rfinish();
             return;
         }

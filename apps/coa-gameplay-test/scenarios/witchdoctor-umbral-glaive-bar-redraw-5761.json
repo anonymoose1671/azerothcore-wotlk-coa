@@ -89,8 +89,8 @@
     },
     { "action": "cast", "label": "Try Umbral Glaive outside its swap", "actor": "caster", "spell": 501134, "target": "caster" },
     {
-      "action": "assert", "label": "The server refuses Umbral Glaive while it stands in for nothing (SPELL_FAILED_NOT_READY)",
-      "actor": "caster", "metric": "cast_failure", "spell": 501134, "equals": 67
+      "action": "assert", "label": "The server refuses Umbral Glaive while it stands in for nothing (SPELL_FAILED_CASTER_AURASTATE)",
+      "actor": "caster", "metric": "cast_failure", "spell": 501134, "equals": 22
     },
     {
       "action": "assert", "label": "Nothing printed a line for Umbral Glaive",

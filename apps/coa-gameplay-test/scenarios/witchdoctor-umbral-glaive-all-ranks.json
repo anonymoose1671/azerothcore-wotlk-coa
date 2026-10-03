@@ -223,11 +223,11 @@
     },
     {
       "action": "assert",
-      "label": "The server refuses it (SPELL_FAILED_NOT_READY)",
+      "label": "The server refuses it (SPELL_FAILED_CASTER_AURASTATE)",
       "actor": "caster",
       "metric": "cast_failure",
       "spell": 501134,
-      "equals": 67
+      "equals": 22
     }
   ]
 }
