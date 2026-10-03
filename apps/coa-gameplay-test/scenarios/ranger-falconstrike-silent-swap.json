@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "name": "Falconstrike stands in for Quick Shot without a single chat line, and only while it is ready",
-  "contract": "Falconstrike Ready 573338 makes SyncFalconstrike learn Falconstrike 806443 as a temporary spell, replace Quick Shot 500074 with it, and remove it again when the buff ends. Each of those once reached the client as a packet it prints a line for: SMSG_LEARNED_SPELL ('You have learned a new spell'), SMSG_SUPERCEDED_SPELL (the same line) and SMSG_REMOVED_SPELL ('You have unlearned'). With CoA.TemporarySpellReplacement.Silent the temporary learn arrives with Falconstrike's SpellCustomAttr row quiet, the swap is an action bar redraw, and the end of the swap drops Falconstrike through SMSG_SUPERCEDED_SPELL to the hidden placeholder 22050, which the client neither announces nor shows. The client knows Falconstrike only while it stands in, and a second proc works the same way.",
+  "contract": "While the Falconstrike talent 573060 is taken, SyncFalconstrike learns Falconstrike 806443 once as a temporary spell (#6333), and its cast check refuses it until Falconstrike Ready 573338 is up. The buff replaces Quick Shot 500074 with Falconstrike, and its end hands Quick Shot back. Each of those once reached the client as a packet it prints a line for: SMSG_LEARNED_SPELL ('You have learned a new spell'), SMSG_SUPERCEDED_SPELL (the same line) and SMSG_REMOVED_SPELL ('You have unlearned'). With CoA.TemporarySpellReplacement.Silent the temporary learn arrives with Falconstrike's SpellCustomAttr row quiet, the swap is an action bar redraw, and the end of the swap drops Falconstrike through SMSG_SUPERCEDED_SPELL to the hidden placeholder 22050, which the client neither announces nor shows. The client knows Falconstrike from the talent until the first proc ends, then only while it stands in, and a second proc works the same way.",
   "timeout_ms": 60000,
   "players": [
     { "id": "ranger", "race": 1, "class": 21, "level": 80 }
@@ -21,8 +21,12 @@
       "save_as": "quick_shot_lines"
     },
     {
-      "action": "assert", "label": "SETUP: the client does not know Falconstrike before it is ready",
-      "actor": "ranger", "metric": "client_knows_spell", "spell": 806443, "equals": 0
+      "action": "assert", "label": "SETUP: the talent teaches the client Falconstrike before it is ready",
+      "actor": "ranger", "metric": "client_knows_spell", "spell": 806443, "equals": 1
+    },
+    {
+      "action": "assert", "label": "Learning Falconstrike from the talent printed nothing",
+      "actor": "ranger", "metric": "client_chat_lines_for", "spell": 806443, "equals": 0
     },
     { "action": "set_aura", "label": "Falconstrike is ready", "actor": "ranger", "spell": 573338, "stacks": 1 },
     {
