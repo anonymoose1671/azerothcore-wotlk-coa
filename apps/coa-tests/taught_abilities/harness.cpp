@@ -170,6 +170,11 @@ struct Player
 bool IsAscensionCustomClass(Player const* player) { return IsAscensionClass(player->getClass()); }
 void SynchronizeAscensionRunemasterEchoes(Player*, uint32) { }
 void RemoveAscensionPrimalistWeapons(Player*) { }
+namespace AscensionWildcard
+{
+constexpr std::array<uint32, 1> SPECIALIZATION_SWAP_SPELLS = { 979993 };
+bool IsWildcardHero(Player const*) { return false; }
+}
 
 struct AscensionClassService
 {
@@ -182,6 +187,7 @@ struct AscensionClassService
     }
     bool AffectsProficiencies(uint32) const { return false; }
     void SynchronizeProficiencies(Player*) { }
+    void SendActiveSlot(Player*) { }
     static void ReconcileRunemasterFists(Player*, uint32) { }
     // ACTUAL_SERVICE
 };
