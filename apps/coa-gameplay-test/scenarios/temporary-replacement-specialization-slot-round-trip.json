@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "name": "A swapped button survives a specialization slot round trip",
+  "contract": "Specialization slots (#6244) snapshot every action button's packed data when the player leaves a slot (LiveSlot) and re-add those ids when the player returns (SwitchSlot). A permanent talent swap leaves the variant on the bar: the Bloodmage's Transgression talent 504728 (advancement entry 31175) replaces Blood Curse 562720 with Transgression 801076, a temporary spell. Leaving slot I with Transgression on the bar stores 801076; slot II has no Transgression. Expected: returning to slot I puts the button back, showing Transgression, and it is still saved as Blood Curse so a relog keeps it.",
+  "timeout_ms": 120000,
+  "players": [
+    {
+      "id": "bloodmage",
+      "race": 1,
+      "class": 20,
+      "level": 20
+    }
+  ],
+  "steps": [
+    {
+      "action": "wait",
+      "label": "Let login state settle",
+      "ms": 5000
+    },
+    {
+      "action": "client_packet",
+      "actor": "bloodmage",
+      "opcode": 618,
+      "early": false,
+      "consumed": false,
+      "fields": [
+        {
+          "actor_guid": "bloodmage"
+        }
+      ],
+      "label": "Initialize native advancement after the local player is ready"
+    },
+    {
+      "action": "specialization",
+      "label": "Choose Sanguine",
+      "actor": "bloodmage",
+      "id": 26
+    },
+    {
+      "action": "learn",
+      "actor": "bloodmage",
+      "spell": 562720
+    },
+    {
+      "action": "advancement_rank",
+      "actor": "bloodmage",
+      "entry": 29543,
+      "rank": 1
+    },
+    {
+      "action": "advancement_rank",
+      "actor": "bloodmage",
+      "entry": 4025,
+      "rank": 1
+    },
+    {
+      "action": "advancement_rank",
+      "label": "Buy Transgression in slot I",
+      "actor": "bloodmage",
+      "entry": 31175,
+      "rank": 1
+    },
+    {
+      "action": "assert",
+      "label": "SETUP: Transgression replaces Blood Curse",
+      "actor": "bloodmage",
+      "metric": "temporary_spell_replacement",
+      "spell": 562720,
+      "equals": 801076,
+      "within_ms": 3000
+    },
+    {
+      "action": "set_action_button",
+      "actor": "bloodmage",
+      "button": 2,
+      "spell": 801076
+    },
+    {
+      "action": "assert",
+      "label": "SETUP: slot I's bar holds Transgression",
+      "actor": "bloodmage",
+      "metric": "action_button",
+      "button": 2,
+      "equals": 801076
+    },
+    {
+      "action": "learn",
+      "actor": "bloodmage",
+      "spell": 979994
+    },
+    {
+      "action": "cast",
+      "actor": "bloodmage",
+      "spell": 979994
+    },
+    {
+      "action": "wait",
+      "ms": 6000
+    },
+    {
+      "action": "assert",
+      "label": "Slot II is active",
+      "actor": "bloodmage",
+      "metric": "player_setting",
+      "source": "core.ascension_slot.active",
+      "index": 0,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "Slot II has no Transgression",
+      "actor": "bloodmage",
+      "metric": "knows_spell",
+      "spell": 504728,
+      "equals": 0
+    },
+    {
+      "action": "cast",
+      "actor": "bloodmage",
+      "spell": 979993
+    },
+    {
+      "action": "wait",
+      "ms": 6000
+    },
+    {
+      "action": "assert",
+      "label": "Slot I is active again",
+      "actor": "bloodmage",
+      "metric": "player_setting",
+      "source": "core.ascension_slot.active",
+      "index": 0,
+      "equals": 0
+    },
+    {
+      "action": "assert",
+      "label": "Transgression is back",
+      "actor": "bloodmage",
+      "metric": "temporary_spell_replacement",
+      "spell": 562720,
+      "equals": 801076,
+      "within_ms": 3000
+    },
+    {
+      "action": "assert",
+      "label": "DISCRIMINATING: slot I's swapped button survives the round trip",
+      "actor": "bloodmage",
+      "metric": "action_button",
+      "button": 2,
+      "min": 1
+    },
+    {
+      "action": "assert",
+      "label": "It shows the swap",
+      "actor": "bloodmage",
+      "metric": "action_button",
+      "button": 2,
+      "equals": 801076
+    },
+    {
+      "action": "assert",
+      "label": "It is saved as Blood Curse",
+      "actor": "bloodmage",
+      "metric": "persisted_action_button",
+      "button": 2,
+      "equals": 562720
+    },
+    {
+      "action": "relog",
+      "actor": "bloodmage"
+    },
+    {
+      "action": "wait",
+      "ms": 2000
+    },
+    {
+      "action": "assert",
+      "label": "The button survives a relog after the round trip",
+      "actor": "bloodmage",
+      "metric": "action_button",
+      "button": 2,
+      "equals": 801076,
+      "within_ms": 3000
+    }
+  ]
+}
