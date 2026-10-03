@@ -24,6 +24,7 @@
 #include "Configuration/Config.h"
 #include "Log.h"
 #include "Player.h"
+#include "World.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "SpellbookNotifyData.h"
@@ -31,6 +32,10 @@
 #include "spellbook_notify.h"
 
 #include <algorithm>
+#include <fstream>
+#include <iterator>
+#include <unordered_map>
+#include <vector>
 
 namespace
 {
@@ -42,6 +47,9 @@ namespace
 
     /// The bit of the third attribute dword the client's learn handler tests before it announces.
     constexpr uint32 NOTABLE_BIT = 0x400;
+
+    /// The bit of the fourth attribute dword that makes Extensions.dll mute the learn handler's chat lines.
+    constexpr uint32 QUIET_LEARN_BIT = 0x40000;
 
     /// A row as the client's reader consumes it: eleven dwords, no length prefix, no count.
     constexpr std::size_t ROW_FIELDS = 11;
@@ -62,6 +70,46 @@ namespace
     bool AddsRow(SpellbookNotifyData::Row const &row)
     {
         return row.RowId >= SpellbookNotifyData::FIRST_FRESH_ROW_ID;
+    }
+
+    /// Every row of the client's SpellCustomAttr table, read once from the server's copy of it, which is the
+    /// same file; the book's own table only covers the spells a book sells.
+    std::unordered_map<uint32, SpellbookNotifyData::Row> LoadTableRows()
+    {
+        std::unordered_map<uint32, SpellbookNotifyData::Row> rows;
+        std::string const path = sWorld->GetDataPath() + "dbc/SpellCustomAttr.dbc";
+        std::ifstream file(path, std::ios::binary);
+        std::vector<char> const data((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        uint32 header[5] = {};
+        if (data.size() >= sizeof(header))
+            std::copy_n(data.begin(), sizeof(header), reinterpret_cast<char *>(header));
+        uint32 const count = header[1];
+        bool const valid = data.size() >= sizeof(header) && header[0] == 0x43424457 && header[2] == ROW_FIELDS &&
+                           header[3] == ROW_BYTES && data.size() >= sizeof(header) + std::size_t(count) * ROW_BYTES;
+        if (!valid)
+        {
+            LOG_WARN("module.spellbook", "{} is missing or not the client's SpellCustomAttr table; temporary spells "
+                     "outside the books are learned with their chat line", path);
+            return rows;
+        }
+        for (uint32 index = 0; index < count; ++index)
+        {
+            uint32 fields[ROW_FIELDS];
+            std::copy_n(data.begin() + sizeof(header) + std::size_t(index) * ROW_BYTES, ROW_BYTES,
+                        reinterpret_cast<char *>(fields));
+            rows.emplace(fields[1], SpellbookNotifyData::Row{fields[1], fields[0], fields[2], fields[3], fields[4],
+                                                             fields[5], fields[6], fields[7], fields[8], fields[9],
+                                                             fields[10]});
+        }
+        LOG_INFO("module.spellbook", "Read {} SpellCustomAttr rows from {}", rows.size(), path);
+        return rows;
+    }
+
+    SpellbookNotifyData::Row const *FindTableRow(uint32 spellId)
+    {
+        static std::unordered_map<uint32, SpellbookNotifyData::Row> const rows = LoadTableRows();
+        auto const found = rows.find(spellId);
+        return found == rows.end() ? nullptr : &found->second;
     }
 
     SpellbookNotifyData::Row const *FindRow(uint32 spellId)
@@ -106,6 +154,43 @@ namespace SpellbookNotify
     {
         for (uint32 spellId : spellIds)
             Push(player, spellId);
+    }
+
+    void Quiet(Player *player, uint32 spellId)
+    {
+        if (!player || !player->GetSession())
+            return;
+
+        SpellbookNotifyData::Row const *row = FindRow(spellId);
+        if (!row)
+            row = FindTableRow(spellId);
+        if (!row)
+            return;
+
+        SpellbookNotifyData::Row quiet = *row;
+        quiet.Field5 |= QUIET_LEARN_BIT;
+        quiet.Field4 &= ~NOTABLE_BIT;
+        SendRow(player, quiet);
+
+        if (AddsRow(*row))
+            SendRow(player, SpellbookNotifyData::RefreshRow);
+    }
+
+    void Unquiet(Player *player, uint32 spellId)
+    {
+        if (!player || !player->GetSession())
+            return;
+
+        SpellbookNotifyData::Row const *row = FindRow(spellId);
+        if (!row)
+            row = FindTableRow(spellId);
+        if (!row)
+            return;
+
+        SendRow(player, *row);
+
+        if (AddsRow(*row))
+            SendRow(player, SpellbookNotifyData::RefreshRow);
     }
 
     void Mute(Player *player, uint32 spellId)

@@ -291,14 +291,18 @@ Ascension.CallboardCache.PreviousStageOnly = 0
 Ascension.CallboardCache.ItemLevelAllowance = 6
 
 #
-#    CoA.TemporarySpellReplacement.RedrawActionBar
+#    CoA.TemporarySpellReplacement.Silent
 #        Description: How a temporary spell swap (Spirit Volley for Reclamation, Umbral
 #                     Glaive for Hex of Malice, Falconstrike for Quick Shot, ...) reaches
 #                     the client. The client prints "You have learned a new spell" for
-#                     every SMSG_SUPERCEDED_SPELL it receives.
-#                     1 - Write the swap into the action bar server side and resend the
-#                         bar: no chat line, no "New Spell Learned" toast.
-#                     0 - Send SMSG_SUPERCEDED_SPELL as before.
+#                     every SMSG_SUPERCEDED_SPELL and SMSG_LEARNED_SPELL it receives and
+#                     "You have unlearned" for every SMSG_REMOVED_SPELL.
+#                     1 - Write the swap into the action bar server side and resend the bar,
+#                         teach the replacement with its quiet-learn bit set, and drop it
+#                         silently once the swap ends, so it only sits in the spellbook
+#                         while it stands in: no chat lines, no "New Spell Learned" toast.
+#                     0 - Send SMSG_SUPERCEDED_SPELL and the learn and remove packets as
+#                         before.
 #        Default:     1
 
-CoA.TemporarySpellReplacement.RedrawActionBar = 1
+CoA.TemporarySpellReplacement.Silent = 1

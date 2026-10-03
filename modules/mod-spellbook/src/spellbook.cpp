@@ -763,6 +763,22 @@ public:
     }
 };
 
+/// A temporary spell, or a temporary spell replacement shown again, is taught with its row quiet for exactly that
+/// SMSG_LEARNED_SPELL: no chat line, no toast. The row is put back right after it.
+class spellbook_quiet_learn final : public PlayerScript
+{
+public:
+    spellbook_quiet_learn() : PlayerScript("spellbook_quiet_learn", {PLAYERHOOK_ON_QUIET_SPELL_LEARN_NOTICE}) { }
+
+    void OnPlayerQuietSpellLearnNotice(Player *player, uint32 spellId, bool sent) override
+    {
+        if (sent)
+            SpellbookNotify::Unquiet(player, spellId);
+        else
+            SpellbookNotify::Quiet(player, spellId);
+    }
+};
+
 class spellbook_metric_provider final : public WorldScript
 {
 public:
@@ -782,6 +798,7 @@ void AddSpellbookScripts()
 {
     new spellbook_metric_provider();
     new spellbook_swap_notice();
+    new spellbook_quiet_learn();
     new SpellbookBookScript();
     new SpellbookServerScript();
 }

@@ -1734,7 +1734,7 @@ public:
 
     void SendProficiency(ItemClass itemClass, uint32 itemSubclassMask);
     void SendInitialSpells();
-    void SendLearnPacket(uint32 spellId, bool learn);
+    void SendLearnPacket(uint32 spellId, bool learn, bool quiet = false);
     bool addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool temporary = false, bool learnFromSkill = false);
     bool _addSpell(uint32 spellId, uint8 addSpecMask, bool temporary, bool learnFromSkill = false);
     void learnSpell(uint32 spellId, bool temporary = false, bool learnFromSkill = false);
@@ -1815,7 +1815,7 @@ public:
     void SetTemporarySpellReplacement(uint32 original, uint32 replacement);
     [[nodiscard]] uint32 GetTemporarySpellReplacement(uint32 original) const;
     [[nodiscard]] uint32 GetSavedActionButtonSpell(uint8 button, uint32 action);
-    [[nodiscard]] static bool RedrawsActionBarForReplacements();
+    [[nodiscard]] static bool SilencesTemporarySpellReplacements();
     [[nodiscard]] bool CanUseTwoHandWithShield(ItemTemplate const* main, ItemTemplate const* off) const;
     [[nodiscard]] float GetMeleeAbilityRangeBonus() const;
 
@@ -2961,7 +2961,9 @@ protected:
     std::map<uint32, uint32> m_temporarySpellReplacements;
     std::map<uint32, uint32> m_temporarySpellReplacementOrigins;
     std::map<uint8, uint32> m_replacedActionButtons;
+    std::set<uint32> m_clientDroppedSpells;
     void RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement);
+    void SendSilentSpellRemoval(uint32 spellId);
     bool ApplyTemporarySpellReplacementsToActionBar();
     PlayerTalentMap m_talents;
     uint32 m_lastPotionId;                              // last used health/mana potion in combat, that block next potion use

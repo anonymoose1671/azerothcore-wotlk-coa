@@ -97,6 +97,7 @@
 #include "WorldState.h"
 #include "WorldStateDefines.h"
 #include "WorldStatePackets.h"
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <queue>
@@ -106,6 +107,9 @@
 //  there is probably some underlying problem with imports which should properly addressed
 //  see: https://github.com/azerothcore/azerothcore-wotlk/issues/9766
 #include "GridNotifiersImpl.h"
+
+// "zzOldTesting Totem Dummy": every 3.3.5 client knows it as hidden (SPELL_ATTR0_DO_NOT_DISPLAY), one dummy effect
+static constexpr uint32 SILENT_REMOVAL_PLACEHOLDER = 22050;
 
 enum CustomEquipmentSpells : uint32
 {
@@ -3241,17 +3245,31 @@ void Player::_addTalentAurasAndSpells(uint32 spellId)
     }
 }
 
-void Player::SendLearnPacket(uint32 spellId, bool learn)
+void Player::SendLearnPacket(uint32 spellId, bool learn, bool quiet)
 {
     if (learn)
     {
+        m_clientDroppedSpells.erase(spellId);
+        bool const hushed = quiet && SilencesTemporarySpellReplacements();
+        if (hushed)
+            sScriptMgr->OnPlayerQuietSpellLearnNotice(this, spellId, false);
         WorldPacket data(SMSG_LEARNED_SPELL, 6);
         data << uint32(spellId);
         data << uint16(0);
         SendDirectMessage(&data);
+        if (hushed)
+            sScriptMgr->OnPlayerQuietSpellLearnNotice(this, spellId, true);
     }
     else
     {
+        if (m_clientDroppedSpells.erase(spellId))
+            return;
+        // SMSG_REMOVED_SPELL makes the client print "You have unlearned"; a temporary spell replacement leaves silently
+        if (SilencesTemporarySpellReplacements() && m_temporarySpellReplacementOrigins.contains(spellId))
+        {
+            SendSilentSpellRemoval(spellId);
+            return;
+        }
         WorldPacket data(SMSG_REMOVED_SPELL, 4);
         data << uint32(spellId);
         SendDirectMessage(&data);
@@ -3336,7 +3354,7 @@ bool Player::_addSpell(uint32 spellId, uint8 addSpecMask, bool temporary, bool l
     // condition mirrors the one Player::removeSpell uses for onlyTemporary. Player::learnSpell must not
     // announce the same grant again, or the client ends up with more copies than the server ever removes.
     if (IsInWorld() && !isBeingLoaded() && temporary && !learnFromSkill && (!spellInfo->HasAttribute(SpellAttr0(SPELL_ATTR0_PASSIVE | SPELL_ATTR0_DO_NOT_DISPLAY)) || !spellInfo->HasAnyAura()) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL))
-        SendLearnPacket(spellInfo->Id, true);
+        SendLearnPacket(spellInfo->Id, true, true);
 
     // xinef: DO NOT allow to learn spell with effect learn spell!
     // xinef: if spell possess spell learn effects only, learn those spells as temporary (eg. Metamorphosis, Tree of Life)
@@ -13864,10 +13882,23 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
     if (previous != replacement && IsInWorld())
     {
         // The client prints "You have learned a new spell" for every SMSG_SUPERCEDED_SPELL and nothing the server
-        // sends switches that off, so by default the swap is written into the bar here and the bar is resent.
-        if (RedrawsActionBarForReplacements())
+        // sends switches that off, so by default the swap is written into the bar here and the bar is resent. The
+        // replacement is taught quietly when the swap starts and dropped silently once nothing uses it, so it only
+        // sits in the spellbook while it stands in.
+        if (SilencesTemporarySpellReplacements())
         {
+            if (replacement != original && m_clientDroppedSpells.contains(replacement))
+                SendLearnPacket(replacement, true, true);
             RedrawReplacedActionButtons(original, previous, replacement);
+            auto const held = m_spells.find(previous);
+            if (previous != original && held != m_spells.end() && held->second->State == PLAYERSPELL_TEMPORARY &&
+                !m_clientDroppedSpells.contains(previous) &&
+                std::none_of(m_temporarySpellReplacements.begin(), m_temporarySpellReplacements.end(),
+                    [previous](auto const& entry) { return entry.second == previous; }))
+            {
+                SendSilentSpellRemoval(previous);
+                m_clientDroppedSpells.insert(previous);
+            }
             return;
         }
         sScriptMgr->OnPlayerTemporarySpellReplacementNotice(this, previous, replacement, false);
@@ -13878,10 +13909,29 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
     }
 }
 
-bool Player::RedrawsActionBarForReplacements()
+bool Player::SilencesTemporarySpellReplacements()
 {
-    static bool const redraw = sConfigMgr->GetOption<bool>("CoA.TemporarySpellReplacement.RedrawActionBar", true);
-    return redraw;
+    static bool const silent = []
+    {
+        if (!sConfigMgr->GetOption<bool>("CoA.TemporarySpellReplacement.Silent", true))
+            return false;
+        SpellInfo const* placeholder = sSpellMgr->GetSpellInfo(SILENT_REMOVAL_PLACEHOLDER);
+        if (placeholder && placeholder->HasAttribute(SPELL_ATTR0_DO_NOT_DISPLAY))
+            return true;
+        LOG_ERROR("entities.player", "Spell {} is missing or shown in the spellbook; temporary spell replacements "
+            "keep their chat lines", SILENT_REMOVAL_PLACEHOLDER);
+        return false;
+    }();
+    return silent;
+}
+
+void Player::SendSilentSpellRemoval(uint32 spellId)
+{
+    // The client's SMSG_SUPERCEDED_SPELL handler removes the old spell without a chat line and announces the new one
+    // only when it is shown in the spellbook, so swapping to a hidden placeholder drops a spell silently
+    WorldPacket packet(SMSG_SUPERCEDED_SPELL, 8);
+    packet << spellId << uint32(SILENT_REMOVAL_PLACEHOLDER);
+    SendDirectMessage(&packet);
 }
 
 void Player::RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement)
@@ -13914,7 +13964,7 @@ void Player::RedrawReplacedActionButtons(uint32 original, uint32 previous, uint3
 
 bool Player::ApplyTemporarySpellReplacementsToActionBar()
 {
-    if (!RedrawsActionBarForReplacements())
+    if (!SilencesTemporarySpellReplacements())
         return false;
     bool changed = false;
     for (auto const& [original, replacement] : m_temporarySpellReplacements)

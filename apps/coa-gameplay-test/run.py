@@ -62,7 +62,7 @@ METRICS = {
     'trainer_list_packets', 'trainer_window_rows', 'trainer_window_state', 'trainer_window_ability',
     'vendor_list_packets', 'vendor_items', 'vendor_price', 'vendor_price_sum',
     'spellbook_superseded_packets', 'action_bar_packets', 'client_action_button',
-    'spellbook_superseded_for', 'spellbook_loud_supersedes_for',
+    'spellbook_superseded_for', 'spellbook_loud_supersedes_for', 'client_knows_spell', 'client_chat_lines_for',
     'spellbook_client_notable',
     'spellbook_cues_in_last_buy', 'spellbook_last_buy_cued',
     'spellbook_silent_buys', 'spellbook_multi_announced_buys',
@@ -502,7 +502,8 @@ def validate(scenario):
                     'spell_effective_heal_total', 'spell_energize_count', 'spell_energize_total',
                     'spell_proc_count', 'temporary_spell_replacement', 'cast_failure',
                     'trainer_window_state', 'trainer_window_ability', 'spellbook_superseded_for',
-                    'spellbook_loud_supersedes_for', 'spellbook_client_notable'}:
+                    'spellbook_loud_supersedes_for', 'spellbook_client_notable', 'client_knows_spell',
+                    'client_chat_lines_for'}:
                 require('spell' in step, f'{where}: metric needs spell')
             for key in ('pet', 'critical'):
                 if key in step:
@@ -654,6 +655,7 @@ def validate(scenario):
                           'vendor_price', 'vendor_price_sum', 'spellbook_superseded_packets',
                           'action_bar_packets', 'client_action_button',
                           'spellbook_superseded_for', 'spellbook_loud_supersedes_for', 'spellbook_client_notable',
+                          'client_knows_spell', 'client_chat_lines_for',
                           'spellbook_cues_in_last_buy', 'spellbook_last_buy_cued',
                           'cast_speed_multiplier', 'spell_crit_chance', 'spell_power_cost',
                           'spell_damage_done', 'melee_damage_done',

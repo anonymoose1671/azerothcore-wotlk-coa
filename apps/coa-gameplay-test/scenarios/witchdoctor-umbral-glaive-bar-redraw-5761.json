@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "name": "Witch Doctor: Umbral Glaive takes over every Hex of Malice button quietly and hands each back its own rank (#5761)",
-  "contract": "The Umbral Glaive buff 504588 makes AscensionWitchDoctor::SyncReplacements replace every known Hex of Malice rank with Umbral Glaive 501134 through Player::SetTemporarySpellReplacement, and the buff's end hands them back. The swap used to reach the client as one SMSG_SUPERCEDED_SPELL per rank, which the client answers with a 'You have learned a new spell' chat line each time (#1506), and the reverts arrived in map order, so a button could come back holding rank 2 instead of the rank it had (#5761). With CoA.TemporarySpellReplacement.RedrawActionBar on, no superseded-spell packet is sent: the server writes the replacement into every button holding a Hex rank, records which rank each button held, resends the bar, and on revert restores each button's own rank. The saved bar never holds the temporary spell.",
+  "contract": "The Umbral Glaive buff 504588 makes AscensionWitchDoctor::SyncReplacements replace every known Hex of Malice rank with Umbral Glaive 501134 through Player::SetTemporarySpellReplacement, and the buff's end hands them back. The swap used to reach the client as one SMSG_SUPERCEDED_SPELL per rank, which the client answers with a 'You have learned a new spell' chat line each time (#1506), and the reverts arrived in map order, so a button could come back holding rank 2 instead of the rank it had (#5761). With CoA.TemporarySpellReplacement.Silent on, no superseded-spell packet is sent: the server writes the replacement into every button holding a Hex rank, records which rank each button held, resends the bar, and on revert restores each button's own rank, then drops Umbral Glaive from the client silently. The client prints no line for any of it, knows Umbral Glaive only while it stands in, and the saved bar never holds the temporary spell.",
   "timeout_ms": 90000,
   "players": [
     { "id": "caster", "race": 1, "class": 13, "level": 60 }
@@ -22,6 +22,14 @@
     {
       "action": "snapshot", "actor": "caster", "metric": "action_bar_packets",
       "save_as": "bar_packets_before"
+    },
+    {
+      "action": "snapshot", "actor": "caster", "metric": "client_chat_lines_for", "spell": 501134,
+      "save_as": "umbral_lines"
+    },
+    {
+      "action": "snapshot", "actor": "caster", "metric": "client_chat_lines_for", "spell": 501158,
+      "save_as": "hex_lines"
     },
     { "action": "set_aura", "actor": "caster", "spell": 504588, "stacks": 1 },
     {
@@ -64,6 +72,10 @@
       "action": "assert", "label": "The rank 2 button is saved as rank 2",
       "actor": "caster", "metric": "persisted_action_button", "button": 2, "equals": 501154
     },
+    {
+      "action": "assert", "label": "The client knows Umbral Glaive while it stands in",
+      "actor": "caster", "metric": "client_knows_spell", "spell": 501134, "equals": 1
+    },
     { "action": "set_aura", "actor": "caster", "spell": 504588, "stacks": 0 },
     {
       "action": "assert", "label": "The buff's end hands Hex of Malice back",
@@ -72,9 +84,18 @@
     },
     { "action": "wait", "label": "Let the throttled sync run again", "ms": 1200 },
     {
-      "action": "assert", "label": "No superseded-spell packet is sent for the revert either",
-      "actor": "caster", "metric": "spellbook_superseded_packets",
-      "relative_to": "swap_packets_before", "equals": 0
+      "action": "assert", "label": "Umbral Glaive leaves the client's spellbook",
+      "actor": "caster", "metric": "client_knows_spell", "spell": 501134, "equals": 0
+    },
+    {
+      "action": "assert", "label": "Nothing printed a line for Umbral Glaive",
+      "actor": "caster", "metric": "client_chat_lines_for", "spell": 501134,
+      "relative_to": "umbral_lines", "equals": 0
+    },
+    {
+      "action": "assert", "label": "Nothing printed a line for Hex of Malice",
+      "actor": "caster", "metric": "client_chat_lines_for", "spell": 501158,
+      "relative_to": "hex_lines", "equals": 0
     },
     {
       "action": "assert", "label": "The rank 6 button gets rank 6 back (#5761)",

@@ -30,6 +30,14 @@ namespace SpellbookNotify
     /// spell it hands back; wrapped in Mute and Push, that notice stays silent while a genuine
     /// learn of the same spell is still announced.
     void Mute(Player *player, std::uint32_t spellId);
+
+    /// Sends the spell's row with the client's quiet-learn bit set and the notable bit cleared, so the
+    /// SMSG_LEARNED_SPELL that follows prints no chat line and shows no toast. Any spell the client's
+    /// table has a row for qualifies, not only book spells; the rest are left alone.
+    void Quiet(Player *player, std::uint32_t spellId);
+
+    /// Puts back the row Quiet replaced: the book's own row for a book spell, the table's row otherwise.
+    void Unquiet(Player *player, std::uint32_t spellId);
 }
 
 #endif

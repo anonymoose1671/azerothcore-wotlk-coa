@@ -637,7 +637,12 @@ button, or zero if it holds no spell.
 `client_action_button` requires `button` and reads the last `SMSG_ACTION_BUTTONS` the session was sent: the spell
 ID that button carried, zero when it held no spell, or -1 when no bar has been sent yet. `action_bar_packets` counts
 those bar packets; a temporary spell replacement is delivered as one of them instead of `SMSG_SUPERCEDED_SPELL` while
-`CoA.TemporarySpellReplacement.RedrawActionBar` is on.
+`CoA.TemporarySpellReplacement.Silent` is on.
+`client_knows_spell` requires `spell` and is 1 while the packets the session was sent leave that spell in the client's
+spellbook: the login list, `SMSG_LEARNED_SPELL`, `SMSG_REMOVED_SPELL` and both halves of `SMSG_SUPERCEDED_SPELL`.
+`client_chat_lines_for` requires `spell` and counts the learned or unlearned chat lines the client prints for it: every
+`SMSG_LEARNED_SPELL` unless the last pushed `SpellCustomAttr` row set its quiet-learn bit, every `SMSG_REMOVED_SPELL`,
+and every `SMSG_SUPERCEDED_SPELL` that swaps it in, except for spells hidden from the spellbook.
 `spellbook_loud_supersedes_for` requires `spell` and counts the `SMSG_SUPERCEDED_SPELL` notices that swapped that spell in
 while the client still held it notable, the bit of its `SpellCustomAttr` row the "New Spell Learned" toast tests: no row
 pushed yet, or the last one pushed carrying the bit. `spellbook_client_notable` reports the last pushed row's bit for

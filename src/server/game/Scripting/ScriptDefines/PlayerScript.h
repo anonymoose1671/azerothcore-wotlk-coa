@@ -231,6 +231,7 @@ enum PlayerHook
     PLAYERHOOK_ON_GET_AMMO_DISPLAY,
     PLAYERHOOK_ON_NORMALIZE_ACTION_BUTTON_SPELL,
     PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE,
+    PLAYERHOOK_ON_QUIET_SPELL_LEARN_NOTICE,
     PLAYERHOOK_ON_SPELL_CHARGE_CONSUMED,
     PLAYERHOOK_ON_SPELL_COOLDOWN_CALCULATED,
     PLAYERHOOK_CAN_ENTER_MANASTORM,
@@ -423,6 +424,10 @@ public:
     // Called just before (sent false) and just after (sent true) SMSG_SUPERCEDED_SPELL tells the client a temporary
     // spell replacement started or ended
     virtual void OnPlayerTemporarySpellReplacementNotice(Player* /*player*/, uint32 /*previous*/, uint32 /*replacement*/, bool /*sent*/) { }
+
+    // Called just before (sent false) and just after (sent true) SMSG_LEARNED_SPELL teaches the client a spell it must
+    // not announce: a temporary spell, or a temporary spell replacement shown again
+    virtual void OnPlayerQuietSpellLearnNotice(Player* /*player*/, uint32 /*spellId*/, bool /*sent*/) { }
     virtual void OnPlayerSpellChargeConsumed(Player* /*player*/, SpellInfo const* /*spellInfo*/, Spell* /*spell*/, uint32 /*recoveryMs*/, uint64 /*nowEpochMs*/) { }
     virtual void OnPlayerSpellCooldownCalculated(Player* /*player*/, SpellInfo const* /*spellInfo*/, Spell* /*spell*/, uint32 /*recoveryMs*/) { }
 

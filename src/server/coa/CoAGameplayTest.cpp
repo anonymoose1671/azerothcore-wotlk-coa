@@ -116,6 +116,12 @@ void Require(bool condition, std::string const& message)
         throw std::runtime_error(message);
 }
 
+bool HiddenFromSpellbook(uint32 spellId)
+{
+    SpellInfo const* info = sSpellMgr->GetSpellInfo(spellId);
+    return info && info->HasAttribute(SPELL_ATTR0_DO_NOT_DISPLAY);
+}
+
 std::list<GameObject*> OwnedGameObjects(Player* player, uint32 entry)
 {
     Require(sObjectMgr->GetGameObjectTemplate(entry) != nullptr, "Unknown gameobject entry");
@@ -355,6 +361,9 @@ struct Actor
     std::map<uint8, uint32> clientActionButtons;
     std::map<uint32, uint32> supersededFor;
     std::map<uint32, bool> clientNotable;
+    std::map<uint32, bool> clientQuiet;
+    std::map<uint32, uint32> clientChatLines;
+    std::set<uint32> clientSpells;
     std::map<uint32, uint32> loudSupersedes;
     std::vector<std::pair<uint32, uint32>> announcements;
     uint32 lastBuyOrdinal = 0;
@@ -712,8 +721,10 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint32 firstAttributes = 0;
         uint32 secondAttributes = 0;
         uint32 thirdAttributes = 0;
-        row >> rowId >> marked >> firstAttributes >> secondAttributes >> thirdAttributes;
+        uint32 fourthAttributes = 0;
+        row >> rowId >> marked >> firstAttributes >> secondAttributes >> thirdAttributes >> fourthAttributes;
         actor.clientNotable[marked] = (thirdAttributes & 0x400) != 0;
+        actor.clientQuiet[marked] = (fourthAttributes & 0x40000) != 0;
         ++actor.notifyRows[marked];
         ++actor.notifyRowTotal;
         actor.notifiedAt.emplace(marked, actor.packetOrdinal);
@@ -731,6 +742,10 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint32 previous = 0;
         uint32 replacement = 0;
         swap >> previous >> replacement;
+        actor.clientSpells.erase(previous);
+        actor.clientSpells.insert(replacement);
+        if (!HiddenFromSpellbook(replacement))
+            ++actor.clientChatLines[replacement];
         ++actor.supersededFor[replacement];
         auto const notable = actor.clientNotable.find(replacement);
         if (notable == actor.clientNotable.end() || notable->second)
@@ -759,9 +774,38 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         WorldPacket announcement(packet);
         uint32 announced = 0;
         announcement >> announced;
+        actor.clientSpells.insert(announced);
+        auto const quiet = actor.clientQuiet.find(announced);
+        if (!HiddenFromSpellbook(announced) && (quiet == actor.clientQuiet.end() || !quiet->second))
+            ++actor.clientChatLines[announced];
         ++actor.learnedAlerts[announced];
         actor.announced.insert(announced);
         actor.announcements.emplace_back(actor.packetOrdinal, announced);
+    }
+
+    if (packet.GetOpcode() == SMSG_REMOVED_SPELL)
+    {
+        WorldPacket removal(packet);
+        uint32 removed = 0;
+        removal >> removed;
+        actor.clientSpells.erase(removed);
+        if (!HiddenFromSpellbook(removed))
+            ++actor.clientChatLines[removed];
+    }
+
+    if (packet.GetOpcode() == SMSG_INITIAL_SPELLS)
+    {
+        WorldPacket initial(packet);
+        uint8 talentReset = 0;
+        uint16 count = 0;
+        initial >> talentReset >> count;
+        for (uint16 index = 0; index < count; ++index)
+        {
+            uint32 known = 0;
+            uint16 unused = 0;
+            initial >> known >> unused;
+            actor.clientSpells.insert(known);
+        }
     }
 
     if (packet.GetOpcode() == SMSG_TRAINER_BUY_SUCCEEDED ||
@@ -1895,6 +1939,14 @@ private:
         }
         if (metric == "spellbook_superseded_packets")
             return double(_actors.at(step.get<std::string>("actor")).supersededPackets);
+        if (metric == "client_knows_spell")
+            return _actors.at(step.get<std::string>("actor")).clientSpells.contains(spell) ? 1.0 : 0.0;
+        if (metric == "client_chat_lines_for")
+        {
+            auto const& lines = _actors.at(step.get<std::string>("actor")).clientChatLines;
+            auto const found = lines.find(spell);
+            return found == lines.end() ? 0.0 : double(found->second);
+        }
         if (metric == "action_bar_packets")
             return double(_actors.at(step.get<std::string>("actor")).actionBarPackets);
         if (metric == "client_action_button")
