@@ -6,6 +6,7 @@
 #include "AscensionReaperTalents.h"
 #include "AccountMgr.h"
 #include "AscensionCoATalentState.h"
+#include "AscensionItemScaling.h"
 #include "AscensionQuestLog.h"
 #include "AscensionSpecialization.h"
 #include "AscensionWisdomball.h"
@@ -113,6 +114,7 @@ constexpr uint16 KnownEntriesUploadOpcode = 0x0727;
 constexpr uint16 UpdateEntriesResultOpcode = 0x072C;
 constexpr uint32 TalentRequestWindowMs = 2000;
 constexpr std::size_t QuestQueryFlagsOffset = 80;
+constexpr std::size_t QuestQueryFirstChoiceItemOffset = 136;
 
 void Require(bool condition, std::string const& message)
 {
@@ -406,11 +408,13 @@ struct Actor
     std::map<uint64, std::map<uint16, uint32>> unitValues;
     std::map<uint32, uint32> creatureQueryRank;
     std::map<uint32, uint32> questQueryFlags;
+    std::map<uint32, uint32> questQueryFirstChoiceItem;
     uint32 lastQuestWindow = 0;
     uint32 lastStableResult = 0;
     uint32 lfgProposalId = 0;
     std::map<uint16, uint32> extensionPackets;
     std::map<uint16, std::vector<std::string>> extensionPayloads;
+    std::map<std::pair<uint16, uint32>, std::string> selectedPacketRows;
     std::string observerError;
     std::unique_ptr<WorldSession> session;
     uint32 accountId = 0;
@@ -593,11 +597,18 @@ void ObserveUnitValues(Actor& actor, WorldPacket const& packet)
 
 void ObserveExtensionPacket(Actor& actor, WorldPacket const& packet)
 {
+    if (packet.size() >= sizeof(uint32))
+    {
+        auto selected = actor.selectedPacketRows.find({ packet.GetOpcode(), packet.read<uint32>(0) });
+        if (selected != actor.selectedPacketRows.end())
+            selected->second.assign(reinterpret_cast<char const*>(packet.contents()), packet.size());
+    }
     constexpr uint16 FirstExtensionOpcode = 0x520;
     constexpr std::size_t MaxPayloadsPerOpcode = 256;
     if (packet.GetOpcode() < FirstExtensionOpcode && packet.GetOpcode() != SMSG_MOVE_SET_CAN_FLY &&
         packet.GetOpcode() != SMSG_MOVE_UNSET_CAN_FLY && packet.GetOpcode() != SMSG_CONVERT_RUNE &&
-        packet.GetOpcode() != SMSG_ADD_RUNE_POWER)
+        packet.GetOpcode() != SMSG_ADD_RUNE_POWER && packet.GetOpcode() != SMSG_LEARNED_SPELL &&
+        packet.GetOpcode() != SMSG_SUPERCEDED_SPELL && packet.GetOpcode() != SMSG_REMOVED_SPELL)
         return;
 
     ++actor.extensionPackets[packet.GetOpcode()];
@@ -687,6 +698,9 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         ++actor.bankShows;
     if (packet.GetOpcode() == SMSG_QUEST_QUERY_RESPONSE && packet.size() >= QuestQueryFlagsOffset + sizeof(uint32))
         actor.questQueryFlags[packet.read<uint32>(0)] = packet.read<uint32>(QuestQueryFlagsOffset);
+    if (packet.GetOpcode() == SMSG_QUEST_QUERY_RESPONSE
+        && packet.size() >= QuestQueryFirstChoiceItemOffset + sizeof(uint32))
+        actor.questQueryFirstChoiceItem[packet.read<uint32>(0)] = packet.read<uint32>(QuestQueryFirstChoiceItemOffset);
     if (packet.GetOpcode() == SMSG_CREATURE_QUERY_RESPONSE)
     {
         WorldPacket response(packet);
@@ -982,6 +996,11 @@ public:
             Require(!id.empty() && !_actors.count(id), "Duplicate or empty player id");
             auto& actor = _actors[id];
             actor.definition = entry.second;
+            for (auto const& step : _steps)
+                if (step.second.get<std::string>("actor", "") == id)
+                    if (auto row = step.second.get_optional<uint32>("row"))
+                        actor.selectedPacketRows.try_emplace(
+                            std::pair{ uint16(step.second.get<uint32>("opcode")), *row });
             actor.account = "CT" + _runId + std::to_string(index);
             actor.name = FixtureName(entry.second, index++);
             actor.generatedName = _names && !entry.second.get_optional<std::string>("name");
@@ -1764,6 +1783,12 @@ private:
                 return -1;
             return (itr->second & AscensionQuestLog::ScaledQuestFlag) ? 1 : 0;
         }
+        if (metric == "quest_query_reward_choice")
+        {
+            Actor& actor = _actors.at(step.get<std::string>("actor"));
+            auto itr = actor.questQueryFirstChoiceItem.find(step.get<uint32>("quest"));
+            return itr == actor.questQueryFirstChoiceItem.end() ? -1 : int64(itr->second);
+        }
         if (metric == "creature_query_rank")
         {
             Actor& actor = _actors.at(step.get<std::string>("actor"));
@@ -2184,7 +2209,9 @@ private:
         }
         if (metric == "carried_money")
             return player->GetMoney();
-        if (metric == "loot_count" || metric == "loot_entry" || metric == "loot_gold")
+        if (metric == "loot_count" || metric == "loot_entry" || metric == "loot_gold" ||
+            metric == "loot_required_level" || metric == "loot_item_level" || metric == "loot_base_entry" ||
+            metric == "loot_item_armor")
         {
             Loot* window = nullptr;
             ObjectGuid const lootGuid = player->GetLootGUID();
@@ -2208,11 +2235,25 @@ private:
             if (metric == "loot_gold")
                 return window->gold;
             uint32 count = 0;
+            auto const wanted = step.get_optional<uint32>("item");
             for (LootItem const& item : window->items)
-                if (!item.is_looted)
+                if (!item.is_looted
+                    && (!wanted || item.itemid == *wanted || ItemScaling::BaseEntry(item.itemid) == *wanted))
                 {
+                    ItemTemplate const* proto = sObjectMgr->GetItemTemplate(item.itemid);
+                    if (!proto || (step.get_optional<uint32>("quality") &&
+                        proto->Quality != step.get<uint32>("quality")))
+                        continue;
                     if (metric == "loot_entry")
                         return item.itemid;
+                    if (metric == "loot_base_entry")
+                        return ItemScaling::BaseEntry(item.itemid);
+                    if (metric == "loot_required_level")
+                        return proto->RequiredLevel;
+                    if (metric == "loot_item_level")
+                        return proto->ItemLevel;
+                    if (metric == "loot_item_armor")
+                        return proto->Armor;
                     ++count;
                 }
             return count;
@@ -2994,6 +3035,28 @@ private:
                             countItem(item);
             return count;
         }
+        if (metric == "carried_item_level" || metric == "carried_item_required_level")
+        {
+            uint32 const baseEntry = step.get<uint32>("item");
+            Require(sObjectMgr->GetItemTemplate(baseEntry) != nullptr, "Unknown item in metric");
+            uint32 highest = 0;
+            auto inspect = [&](Item* item)
+            {
+                if (ItemScaling::BaseEntry(item->GetEntry()) != baseEntry)
+                    return;
+                ItemTemplate const* proto = item->GetTemplate();
+                highest = std::max(highest, metric == "carried_item_level" ? proto->ItemLevel : proto->RequiredLevel);
+            };
+            for (uint8 slot = EQUIPMENT_SLOT_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
+                if (Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
+                    inspect(item);
+            for (uint8 bag = INVENTORY_SLOT_BAG_START; bag < INVENTORY_SLOT_BAG_END; ++bag)
+                if (Bag* container = player->GetBagByPos(bag))
+                    for (uint32 slot = 0; slot < container->GetBagSize(); ++slot)
+                        if (Item* item = container->GetItemByPos(uint8(slot)))
+                            inspect(item);
+            return highest;
+        }
         if (metric == "quest_status" || metric == "quest_takeable")
         {
             uint32 quest = step.get<uint32>("quest");
@@ -3100,18 +3163,38 @@ private:
         }
         if (metric == "server_packet_u32")
         {
-            auto const& payloads = _actors.at(step.get<std::string>("actor")).extensionPayloads;
-            auto const found = payloads.find(uint16(step.get<uint32>("opcode")));
+            Actor const& actor = _actors.at(step.get<std::string>("actor"));
+            uint16 const opcode = uint16(step.get<uint32>("opcode"));
+            std::string const* payload = nullptr;
+            if (auto row = step.get_optional<uint32>("row"))
+            {
+                auto const found = actor.selectedPacketRows.find({ opcode, *row });
+                if (found != actor.selectedPacketRows.end())
+                    payload = &found->second;
+            }
+            else
+            {
+                auto const found = actor.extensionPayloads.find(opcode);
+                if (found != actor.extensionPayloads.end() && !found->second.empty())
+                    payload = &found->second.back();
+            }
             uint32 const index = step.get<uint32>("index", 0);
-            if (found == payloads.end() || found->second.empty())
+            if (!payload || payload->empty())
                 return -1;
-            std::string const& payload = found->second.back();
-            if (index >= payload.size() / sizeof(uint32))
+            std::size_t offset = step.get<uint32>("offset", 0);
+            for (uint32 strings = step.get<uint32>("skip_strings", 0); strings; --strings)
+            {
+                offset = payload->find('\0', offset);
+                if (offset == std::string::npos)
+                    return -1;
+                ++offset;
+            }
+            offset += std::size_t(index) * sizeof(uint32);
+            if (offset > payload->size() || payload->size() - offset < sizeof(uint32))
                 return -1;
-            std::size_t const offset = std::size_t(index) * sizeof(uint32);
             uint32 value = 0;
             for (uint32 byte = 0; byte < sizeof(uint32); ++byte)
-                value |= uint32(uint8(payload[offset + byte])) << (byte * 8);
+                value |= uint32(uint8((*payload)[offset + byte])) << (byte * 8);
             return value;
         }
         if (metric == "quest_log_sent_level" || metric == "quest_log_sent_xp")
@@ -3119,10 +3202,16 @@ private:
                 ? AscensionQuestLog::LevelField : AscensionQuestLog::RewardXPField);
         if (metric == "server_packet_contains")
         {
-            auto const& payloads = _actors.at(step.get<std::string>("actor")).extensionPayloads;
-            auto const found = payloads.find(uint16(step.get<uint32>("opcode")));
+            Actor const& actor = _actors.at(step.get<std::string>("actor"));
+            uint16 const opcode = uint16(step.get<uint32>("opcode"));
             std::string const needle = step.get<std::string>("text");
-            bool const contains = found != payloads.end() && std::any_of(found->second.begin(),
+            if (auto row = step.get_optional<uint32>("row"))
+            {
+                auto const found = actor.selectedPacketRows.find({ opcode, *row });
+                return found != actor.selectedPacketRows.end() && found->second.find(needle) != std::string::npos;
+            }
+            auto const found = actor.extensionPayloads.find(opcode);
+            bool const contains = found != actor.extensionPayloads.end() && std::any_of(found->second.begin(),
                 found->second.end(), [&needle](std::string const& payload)
                 { return payload.find(needle) != std::string::npos; });
             return contains ? 1.0 : 0.0;
@@ -3679,13 +3768,17 @@ private:
             uint32 slot = step.get<uint32>("slot", 0);
             if (auto entry = step.get_optional<uint32>("item"))
             {
-                Creature* creature = player->GetMap()->GetCreature(player->GetLootGUID());
-                Require(creature != nullptr, "Item-selected loot needs an open creature corpse");
-                Loot& loot = creature->loot;
+                Loot* source = nullptr;
+                if (Creature* creature = player->GetMap()->GetCreature(player->GetLootGUID()))
+                    source = &creature->loot;
+                else if (GameObject* chest = player->GetMap()->GetGameObject(player->GetLootGUID()))
+                    source = &chest->loot;
+                Require(source != nullptr, "Item-selected loot needs an open creature corpse or chest");
+                Loot& loot = *source;
                 slot = loot.GetMaxSlotInLootFor(player);
                 for (uint32 candidate = 0; candidate < loot.GetMaxSlotInLootFor(player); ++candidate)
                     if (LootItem* item = loot.LootItemInSlot(candidate, player))
-                        if (item->itemid == *entry)
+                        if (item->itemid == *entry || ItemScaling::BaseEntry(item->itemid) == *entry)
                         {
                             slot = candidate;
                             break;
@@ -4024,6 +4117,25 @@ private:
             packet << objects.front()->GetGUID();
             player->GetSession()->HandleGameObjectUseOpcode(packet);
             record.put("result", "submitted; verify effects with assertions");
+        }
+        else if (action == "summon_gameobject")
+        {
+            uint32 const entry = step.get<uint32>("entry");
+            Require(OwnedGameObjects(player, entry).empty(), "The player already owns this gameobject");
+            float const distance = step.get<float>("distance", 2.0f);
+            float const angle = player->GetOrientation();
+            GameObject* object = player->SummonGameObject(entry, player->GetPositionX() + distance * std::cos(angle),
+                player->GetPositionY() + distance * std::sin(angle), player->GetPositionZ(), angle, 0.0f, 0.0f, 0.0f,
+                0.0f, step.get<uint32>("duration_s", 300));
+            Require(object != nullptr, "Gameobject summon failed");
+        }
+        else if (action == "loot_gameobject")
+        {
+            std::list<GameObject*> objects = OwnedGameObjects(player, step.get<uint32>("entry"));
+            Require(objects.size() == 1, "Gameobject loot needs exactly one owned object");
+            Require(objects.front()->GetGoType() == GAMEOBJECT_TYPE_CHEST, "Gameobject loot needs a chest");
+            player->SendLoot(objects.front()->GetGUID(), LOOT_SKINNING);
+            Require(player->GetLootGUID() == objects.front()->GetGUID(), "The chest did not open its loot");
         }
         else if (action == "add_item")
             Require(player->AddItem(step.get<uint32>("item"), step.get<uint32>("count", 1)), "Item grant failed");

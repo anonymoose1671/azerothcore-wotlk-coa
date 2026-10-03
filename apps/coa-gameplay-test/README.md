@@ -451,6 +451,8 @@ assert stable maximums and final levels when testing damage coefficients.
 | `equip` | `actor`, `item`, `slot` (0..18 equipment, 19..22 bag slots): equip an owned item through the session handler. |
 | `use_item` | `actor`, `item`, `spell`, optional `target`, `target_item` (an owned item entry, sent as the item target instead of a unit) and `destination`: normal item-use handler. |
 | `use_gameobject` | `actor`, `entry`: native use request for the actor's single nearby owned gameobject. |
+| `summon_gameobject` | Player `actor`, `entry`, optional `distance` (yards in front, default 2) and `duration_s` (default 300): summon a gameobject the actor owns; fails if the actor already owns one of that entry. |
+| `loot_gameobject` | Player `actor`, `entry`: open the loot of the actor's single owned chest as a successful open-lock cast does, so chest loot is generated for that player. Lock, key and skill checks are not exercised. |
 | `set_skill` | `actor`, `skill`, `value`, `maximum`: fixture a native profession skill. |
 | `gather_skill` | `actor`, gathering `skill`, `required`: native gathering XP and skill-up attempt. |
 | `set_xp_enabled` | `actor`, boolean `enabled`: fixture the native XP-lock flag. |
@@ -597,6 +599,17 @@ talking to its flight master does, so a scenario can request a route through it.
 and `stable_result` is the code of the last `SMSG_STABLE_RESULT` they received (0 before any).
 `instance_binds_listed` decodes the player's last `SMSG_QUERY_INSTANCE_BINDS_RESULT` (0x06FE): the number of
 binds it lists, only those on map `id` when given, or -1 when it carries another result than `_OK`.
+`loot_count` and `loot_entry` accept `quality` to select only unlooted items of that exact quality in the open
+loot window. `loot_required_level` and `loot_item_level` read those fields from the first matching item.
+These values inspect generated loot through the native item template, without changing it.
+
+`server_packet_u32` and `server_packet_contains` accept `row` to capture a packet whose first 32-bit field is
+that value. Selected rows are retained independently of the ordinary 256-payload history limit, including core
+opcodes. `server_packet_u32` also accepts a byte `offset` and `skip_strings`: skip that many null-terminated
+strings at the offset, then read the 32-bit field at `index` relative to the resulting position.
+For an item query response, `offset: 16, skip_strings: 4` skips the four item names; indexes 9 and 10 are
+item level and required level. These observations cover server packet construction in socketless sessions.
+
 `spell_proc_count` requires `spell` and counts the procs of that spell's aura on the actor since the scenario
 started. What is counted is each spell the proc cast while the aura was named as its trigger, which is the one
 place the server records both the proc and its owner; an aura whose proc does not cast anything counts zero.
@@ -644,11 +657,16 @@ and closes its current loot window. `collect_loot` takes `actor`, collects slot 
 quantity reached inventory and records the item/count. It supports ordinary container loot, not quest-only slots.
 `loot_count` and `loot_entry` report the actor's current uncollected item slots and first entry; `loot_received`
 reports the inventory increase from its last successful `collect_loot`. Closed windows return zero slots/entry.
+The `loot_*` item metrics accept an optional `item` that keeps only the slots holding that item or a level-scaled
+copy of it (entries 4400001 and up). `loot_item_armor` reads the first such slot's armor, and `loot_base_entry`
+names the authored item a copy was made from. `carried_item_level` and `carried_item_required_level` require `item` and return the highest item
+level or required level among equipped and bagged items that are that item or a copy of it, or zero without one.
+`loot_slot` with `item` also picks up a copy of that item.
 `creature_loot_quality_rate` requires `entry` (a creature loot id), fills that template `rolls` times (default 10000)
 for the actor and reports the percentage of fills holding an item of at least `quality` (default 3, rare).
-`loot_slot` accepts an optional `item` to find that item in the current creature corpse's per-player slots,
-then submits the native pickup request. Without it, `slot` defaults to zero. `respawn_remaining` reads a fixture
-creature's remaining death-time respawn timer in seconds; summoned fixtures still use corpse-based timing.
+`loot_slot` accepts an optional `item` to find that item in the current creature corpse's or chest's per-player
+slots, then submits the native pickup request. Without it, `slot` defaults to zero. `respawn_remaining` reads a
+fixture creature's remaining death-time respawn timer in seconds; summoned fixtures still use corpse-based timing.
 `quest_rewarded` requires `quest` and reads the player's native rewarded status.
 `has_achievement` requires `achievement` and reads whether the player has completed it.
 `has_title` requires `title` (a CharTitles.dbc id) and reads whether the player has earned it.
@@ -659,6 +677,8 @@ reward eligibility and invokes native reward delivery. These actions do not test
 `action_button_packed` takes `button` and reads the complete action word, including its type.
 `server_packet_u32` takes `opcode` and optional zero-based `index`, and decodes a word from the last
 packet payload. It returns -1 when no such word was sent. These observe server state and packet contents.
+Besides the Ascension extension opcodes (0x520 and above), the recorded packets include the learned, superseded
+and removed spell notices (299, 300 and 515) that the client prints to chat.
 
 `relog` takes `actor`, commits the character through the native save path, logs it out, and reloads it
 through the native character-login handler. It preserves saved character state and the scenario phase.
@@ -774,6 +794,8 @@ and query the native quest level and XP calculations without awarding a reward.
 sent for that quest's log slot in `SMSG_UPDATE_OBJECT_ADDON` (fields 61 and 36 + slot), or -1 before one arrives.
 `quest_query_scaled` takes the same arguments and returns 1 when the last quest query response for that quest
 carried the client's scaled-quest flag `0x01000000`, 0 when it did not, or -1 before one arrives.
+`quest_query_reward_choice` takes the same arguments and returns the first choice reward item id in the last quest
+query response for that quest, or -1 before one arrives.
 
 ## Evidence boundaries
 
