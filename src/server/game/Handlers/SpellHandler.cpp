@@ -415,6 +415,12 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
                 return;
             spellId = replacement;
         }
+        if (_player->IsIdleTemporarySpellReplacement(spellId))
+        {
+            Spell::SendCastResult(_player, spellInfo, castCount, SPELL_FAILED_NOT_READY);
+            recvPacket.rfinish();
+            return;
+        }
     }
 
     // fail if we are cancelling pending request

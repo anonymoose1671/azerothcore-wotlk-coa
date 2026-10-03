@@ -201,6 +201,8 @@ struct Player : Unit
             spells.erase(it);
     }
     void SetTemporarySpellReplacement(uint32 original, uint32 replacement);
+    static bool SilencesTemporarySpellReplacements() { return false; }
+    void RedrawReplacedActionButtons(uint32, uint32, uint32) { }
     uint32 GetTemporarySpellReplacement(uint32 original) const;
     Session* GetSession() { return &session; }
     void ApplySpellMod(uint32, uint32 op, int32&) { assert(op == SPELLMOD_DURATION); }
@@ -225,6 +227,11 @@ struct Player : Unit
         damageDestination = {x, y, z, 0};
     }
 };
+struct ScriptMgr
+{
+    void OnPlayerTemporarySpellReplacementNotice(Player*, uint32, uint32, bool) { }
+} scripts;
+auto sScriptMgr = &scripts;
 // NATIVE_REPLACEMENTS
 struct SpellMgr
 {

@@ -108,9 +108,6 @@
 //  see: https://github.com/azerothcore/azerothcore-wotlk/issues/9766
 #include "GridNotifiersImpl.h"
 
-// "zzOldTesting Totem Dummy": every 3.3.5 client knows it as hidden (SPELL_ATTR0_DO_NOT_DISPLAY), one dummy effect
-static constexpr uint32 SILENT_REMOVAL_PLACEHOLDER = 22050;
-
 enum CustomEquipmentSpells : uint32
 {
     SPELL_BURNING_COMMANDER = 92089,
@@ -3249,7 +3246,6 @@ void Player::SendLearnPacket(uint32 spellId, bool learn, bool quiet)
 {
     if (learn)
     {
-        m_clientDroppedSpells.erase(spellId);
         bool const hushed = quiet && SilencesTemporarySpellReplacements();
         if (hushed)
             sScriptMgr->OnPlayerQuietSpellLearnNotice(this, spellId, false);
@@ -3262,14 +3258,11 @@ void Player::SendLearnPacket(uint32 spellId, bool learn, bool quiet)
     }
     else
     {
-        if (m_clientDroppedSpells.erase(spellId))
-            return;
-        // SMSG_REMOVED_SPELL makes the client print "You have unlearned"; a temporary spell replacement leaves silently
+        // SMSG_REMOVED_SPELL makes the client print "You have unlearned". A spell that has stood in for another stays
+        // in the client's spellbook instead: unlearning and relearning it would print, and would make the client's
+        // auto-placement treat it as new each time. The server refuses casting it outside its swap.
         if (SilencesTemporarySpellReplacements() && m_temporarySpellReplacementOrigins.contains(spellId))
-        {
-            SendSilentSpellRemoval(spellId);
             return;
-        }
         WorldPacket data(SMSG_REMOVED_SPELL, 4);
         data << uint32(spellId);
         SendDirectMessage(&data);
@@ -13885,23 +13878,10 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
     if (previous != replacement && IsInWorld())
     {
         // The client prints "You have learned a new spell" for every SMSG_SUPERCEDED_SPELL and nothing the server
-        // sends switches that off, so by default the swap is written into the bar here and the bar is resent. The
-        // replacement is taught quietly when the swap starts and dropped silently once nothing uses it, so it only
-        // sits in the spellbook while it stands in.
+        // sends switches that off, so by default the swap is written into the bar here and the bar is resent.
         if (SilencesTemporarySpellReplacements())
         {
-            if (replacement != original && m_clientDroppedSpells.contains(replacement))
-                SendLearnPacket(replacement, true, true);
             RedrawReplacedActionButtons(original, previous, replacement);
-            auto const held = m_spells.find(previous);
-            if (previous != original && held != m_spells.end() && held->second->State == PLAYERSPELL_TEMPORARY &&
-                !m_clientDroppedSpells.contains(previous) &&
-                std::none_of(m_temporarySpellReplacements.begin(), m_temporarySpellReplacements.end(),
-                    [previous](auto const& entry) { return entry.second == previous; }))
-            {
-                SendSilentSpellRemoval(previous);
-                m_clientDroppedSpells.insert(previous);
-            }
             return;
         }
         sScriptMgr->OnPlayerTemporarySpellReplacementNotice(this, previous, replacement, false);
@@ -13914,27 +13894,20 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
 
 bool Player::SilencesTemporarySpellReplacements()
 {
-    static bool const silent = []
-    {
-        if (!sConfigMgr->GetOption<bool>("CoA.TemporarySpellReplacement.Silent", true))
-            return false;
-        SpellInfo const* placeholder = sSpellMgr->GetSpellInfo(SILENT_REMOVAL_PLACEHOLDER);
-        if (placeholder && placeholder->HasAttribute(SPELL_ATTR0_DO_NOT_DISPLAY))
-            return true;
-        LOG_ERROR("entities.player", "Spell {} is missing or shown in the spellbook; temporary spell replacements "
-            "keep their chat lines", SILENT_REMOVAL_PLACEHOLDER);
-        return false;
-    }();
+    static bool const silent = sConfigMgr->GetOption<bool>("CoA.TemporarySpellReplacement.Silent", true);
     return silent;
 }
 
-void Player::SendSilentSpellRemoval(uint32 spellId)
+bool Player::IsIdleTemporarySpellReplacement(uint32 spellId) const
 {
-    // The client's SMSG_SUPERCEDED_SPELL handler removes the old spell without a chat line and announces the new one
-    // only when it is shown in the spellbook, so swapping to a hidden placeholder drops a spell silently
-    WorldPacket packet(SMSG_SUPERCEDED_SPELL, 8);
-    packet << spellId << uint32(SILENT_REMOVAL_PLACEHOLDER);
-    SendDirectMessage(&packet);
+    if (!m_temporarySpellReplacementOrigins.contains(spellId))
+        return false;
+    auto const spell = m_spells.find(spellId);
+    if (spell != m_spells.end() && spell->second->State != PLAYERSPELL_TEMPORARY &&
+        spell->second->State != PLAYERSPELL_REMOVED)
+        return false;
+    return std::none_of(m_temporarySpellReplacements.begin(), m_temporarySpellReplacements.end(),
+        [this, spellId](auto const& entry) { return GetTemporarySpellReplacement(entry.first) == spellId; });
 }
 
 void Player::RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement)

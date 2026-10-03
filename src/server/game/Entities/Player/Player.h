@@ -1816,6 +1816,7 @@ public:
     [[nodiscard]] uint32 GetTemporarySpellReplacement(uint32 original) const;
     [[nodiscard]] uint32 GetSavedActionButtonSpell(uint8 button, uint32 action);
     [[nodiscard]] static bool SilencesTemporarySpellReplacements();
+    [[nodiscard]] bool IsIdleTemporarySpellReplacement(uint32 spellId) const;
     [[nodiscard]] bool CanUseTwoHandWithShield(ItemTemplate const* main, ItemTemplate const* off) const;
     [[nodiscard]] float GetMeleeAbilityRangeBonus() const;
 
@@ -2961,9 +2962,7 @@ protected:
     std::map<uint32, uint32> m_temporarySpellReplacements;
     std::map<uint32, uint32> m_temporarySpellReplacementOrigins;
     std::map<uint8, uint32> m_replacedActionButtons;
-    std::set<uint32> m_clientDroppedSpells;
     void RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement);
-    void SendSilentSpellRemoval(uint32 spellId);
     bool ApplyTemporarySpellReplacementsToActionBar();
     PlayerTalentMap m_talents;
     uint32 m_lastPotionId;                              // last used health/mana potion in combat, that block next potion use

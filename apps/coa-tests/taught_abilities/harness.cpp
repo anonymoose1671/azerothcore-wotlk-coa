@@ -128,7 +128,6 @@ struct Player
     PlayerSpellMap m_spells;
     std::map<uint32, uint32> m_temporarySpellReplacements;
     std::map<uint32, uint32> m_temporarySpellReplacementOrigins;
-    std::set<uint32> m_clientDroppedSpells;
     Session session;
     Player() = default;
     Player(Player const&) = delete;
@@ -161,7 +160,6 @@ struct Player
     void SendLearnPacket(uint32, bool, bool = false) { ++learnPackets; }
     static bool SilencesTemporarySpellReplacements() { return false; }
     void RedrawReplacedActionButtons(uint32, uint32, uint32) { }
-    void SendSilentSpellRemoval(uint32) { }
     void _SaveSpells(CharacterDatabaseTransaction);
     void SetTemporarySpellReplacement(uint32, uint32);
     uint32 GetTemporarySpellReplacement(uint32) const;

@@ -77,8 +77,15 @@ struct Player : Unit
     { assert(mask == SPEC_MASK_ALL && onlyTemporary); if (spells.contains(id) && spells[id]) spells.erase(id); }
     Session* GetSession() { return &session; }
     void SetTemporarySpellReplacement(uint32 original, uint32 replacement);
+    static bool SilencesTemporarySpellReplacements() { return false; }
+    void RedrawReplacedActionButtons(uint32, uint32, uint32) { }
     uint32 GetTemporarySpellReplacement(uint32 original) const;
 };
+struct ScriptMgr
+{
+    void OnPlayerTemporarySpellReplacementNotice(Player*, uint32, uint32, bool) { }
+} scripts;
+auto sScriptMgr = &scripts;
 // NATIVE
 std::map<ObjectGuid, Unit*> world;
 namespace ObjectAccessor
