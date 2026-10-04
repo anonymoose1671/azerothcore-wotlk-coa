@@ -1,6 +1,6 @@
 -- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), placed in game with CoAWorldEdit:
 -- 33 Grimtotem Marauders and Patrols, a Warrior, both door Guards, seven Tallstriders and four Mountain Cougars removed
--- to thin the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and eleven
+-- to thin the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and twelve
 -- mobs moved.
 -- Worldforged pickups are set on the ground: the Ancestor's Axe, the Cord of Reverence, two Exalted Pendants, the Sun
 -- Touched Club and the Grimtotem Bow moved; a third Pendant and the Grimtotem Club on the cliff removed.
@@ -100,6 +100,8 @@ UPDATE `creature` SET `position_x` = -3459.649, `position_y` = -1184.731, `posit
 UPDATE `creature` SET `position_x` = -3584.479, `position_y` = -941.883, `position_z` = 197.182,
     `orientation` = 1.0753, `MovementType` = 2, `wander_distance` = 0
     WHERE `guid` = 9011068;
+UPDATE `creature` SET `position_x` = -3556.65, `position_y` = -1142.689, `position_z` = 205.01, `orientation` = 5.724
+    WHERE `guid` = 9011121;
 
 DELETE FROM `creature` WHERE `guid` IN (9011133, 9011134, 9011135, 9011136, 9011137);
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`,

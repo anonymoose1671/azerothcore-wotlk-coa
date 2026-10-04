@@ -1,7 +1,7 @@
 -- A Grimtotem Marauder butchers a kodo on the side of the road below Red Cloud Mesa, placed in game: a Kodo Carcass
 -- (new 9303002, the Dying Kodo's grey kodo 1453 lying dead, out of reach of clicks and blows) lies along the road, and
 -- Marauder 9011037 stands at its flank working at it with the looping Use animation. Grimtotem Warrior 9011113 by
--- Malgorm's hut works with the same animation, and a Warrior there and a Villager on the plaza sit (stand state 1).
+-- Malgorm's hut works with the same animation, and a Warrior there and two Villagers sit (stand state 1).
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `IconName`, `minlevel`, `maxlevel`, `exp`, `faction`,
     `npcflag`, `speed_walk`, `speed_run`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`,
     `unit_flags2`, `type`, `type_flags`, `VehicleId`, `AIName`, `MovementType`, `HealthModifier`, `ManaModifier`,
@@ -31,10 +31,11 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `p
 
 UPDATE `creature` SET `position_x` = -3447.295, `position_y` = -833.26, `position_z` = 71.563, `orientation` = 3.4969,
     `MovementType` = 0, `wander_distance` = 0 WHERE `guid` = 9011037;
-DELETE FROM `creature_addon` WHERE `guid` IN (9011037, 9011113, 9011114, 9011124);
+DELETE FROM `creature_addon` WHERE `guid` IN (9011037, 9011113, 9011114, 9011124, 9011121);
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`,
     `auras`) VALUES
 (9011037, 0, 0, 0, 0, 69, 0, NULL),
 (9011113, 0, 0, 0, 0, 69, 0, NULL),
 (9011114, 0, 0, 1, 0, 0, 0, NULL),
-(9011124, 0, 0, 1, 0, 0, 0, NULL);
+(9011124, 0, 0, 1, 0, 0, 0, NULL),
+(9011121, 0, 0, 1, 0, 0, 0, NULL);
