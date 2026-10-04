@@ -269,6 +269,8 @@ files.
 - `scenario.json`: exact scenario used.
 - `worldserver.log`: process output, including startup and script errors (in the server directory for a batch).
 - `result.json`: server version, actual values and step outcomes.
+  Failed cases include `failure_actors` with native positions, combat targets and controlled-unit movement.
+  Fixture teardown removes descendants of cloned creatures before their private phase is reused.
 - `summary.json`: native-stage result, binary/scenario SHA-256 and any cleanup failure.
 - `verification.json`: combined native and registered numerical verification for catalog scenarios (one file
   for the whole selection in a batch).
@@ -340,6 +342,9 @@ and Linux binaries.
 
 A creature fixture accepts `spell_hit_bonus` (0–100 percentage points) for its native spell hit modifier.
 An omitted bonus uses the creature's normal stats. Require the observed hit as well as the configured modifier.
+Optional `stationary: true` disables native movement for that fixture using `UNIT_FLAG_DISABLE_MOVE` and stops
+its current motion. Other creatures retain their original movement. Use it for a fixed damage target when
+wandering or fleeing would invalidate ordinary cast range or facing; it does not change spell hit or proc chance.
 
 Start from [scenarios/frostbolt.json](scenarios/frostbolt.json). Schema version 1 accepts up to eight players,
 eight creatures and 10,000 sequential steps. Optional `timeout_ms` bounds setup plus execution (default 90s,
@@ -377,6 +382,9 @@ through the native regeneration hook. Spell costs, healing, energize effects and
 It defaults to true and has no effect on other players or on a disabled harness.
 Optional `expansion` (0..2, default 2) is the fixture session's expansion, as a realm with a lower `Expansion`
 setting caps a real client's; it gates maps and profession ranks.
+Optional `ascension_client: true` marks the socketless session as having negotiated Ascension compatibility,
+including its spell modifier packet layout. It defaults to false. This tests server packet construction;
+it does not perform socket authentication or verify delivery to a rendered client.
 Characters are created and loaded through the existing character creation, enumeration and login
 handlers with ordinary player security. Optional `location` supplies `map`, `x`, `y`, `z`, `o` for a fixture
 teleport. `location.ignore_access` optionally bypasses entry requirements for a fixture (for example a solo
@@ -393,6 +401,9 @@ A scenario that depends on process-global state, such as the Who list, belongs i
 world phase (mask 1) automatically runs exclusively, including in an exploratory scenario. Phases do not
 separate creature text with
 area, zone or map range, which `system_messages` counts.
+
+The native fixture-cleanup companion cases also reserve the same phase to observe a deterministic case
+boundary. They use the accelerated clock and normal queue without slower or isolated retries.
 
 Creatures require `id`, player `owner` and template `entry`. Optional `distance` offsets X from their owner
 (default 3 yards); `faction`, `level`, `health` default to 14, 80, 100000. They retain template data and AI,
@@ -509,6 +520,7 @@ optional `table`), `pool_variant_count`, `pool_retired_item_count`, `pool_row_co
 (need `cache`, the last also `item`), which read the token table the realm loads and answer how many
 tier tokens a cache may pay, the highest tier among them, and whether one named token is among them.
 Boolean metrics use 0/1. Spell/aura metrics require `spell`; `item_count` requires `item`.
+`spell_family_flags` reads one word of the effective server spell's family flags; `index` is 0..2 (default 0).
 `stunned` reads the unit's native stun state, including changes caused by aura removal.
 `carried_item_count` sums the stack counts of equipped items (bags included), the backpack and the bags' contents.
 `aura_positive` reads the applied aura's beneficial flag; check `aura` separately to distinguish absence from a debuff.
@@ -603,10 +615,11 @@ binds it lists, only those on map `id` when given, or -1 when it carries another
 loot window. `loot_required_level` and `loot_item_level` read those fields from the first matching item.
 These values inspect generated loot through the native item template, without changing it.
 
-`server_packet_u32` and `server_packet_contains` accept `row` to capture a packet whose first 32-bit field is
-that value. Selected rows are retained independently of the ordinary 256-payload history limit, including core
-opcodes. `server_packet_u32` also accepts a byte `offset` and `skip_strings`: skip that many null-terminated
-strings at the offset, then read the 32-bit field at `index` relative to the resulting position.
+`server_packets`, `server_packet_u32` and `server_packet_contains` accept `row` to capture packets whose first
+32-bit field is that value. Selected rows are retained independently of the ordinary 256-payload history limit,
+including core opcodes. `server_packets` counts responses for that row; `server_packet_contains` returns 0 or 1
+for text in its latest response. `server_packet_u32` also accepts a byte `offset` and `skip_strings`: skip that many
+null-terminated strings at the offset, then read the 32-bit field at `index` relative to the resulting position.
 For an item query response, `offset: 16, skip_strings: 4` skips the four item names; indexes 9 and 10 are
 item level and required level. These observations cover server packet construction in socketless sessions.
 
@@ -742,6 +755,13 @@ the player, in the same phase and within 100 yards, including summons outside th
 An optional `spell` restricts the count to creatures with that aura; `caster` can select its aura owner. `min_distance` keeps creatures at least that many yards from the player (2D), and `owner_display: true` those wearing the player's display.
 `owned_creature_visible` requires a player and `entry` and reads one matching summon's server visibility,
 returning zero when absent. Pair it with a count assertion when checking a hidden helper.
+`owned_creature_spell_hit_chance` requires a player and a present owned creature selected by `entry`.
+It reads that creature's native spell hit modifier. `set_aura` accepts `owned_entry` to select the same type
+of owned creature within 100 yards and the player's phase; it cannot also select `pet: true`.
+`pet_casting` requires the player's present native pet and reads its casting flag and active non-melee spell.
+Use it to observe channel completion before submitting another ordinary pet cast;
+aura expiry is a separate event.
+
 `owned_creature_weapon_damage_min` requires a player and `entry`. It returns the lowest minimum weapon damage (`UNIT_FIELD_MINDAMAGE`) across their living
 owned creatures of that entry in the same phase and within 100 yards, so every copy of a guardian must meet an asserted `min`; zero when there are none.
 `owned_gameobject_count` requires a player and `entry`. It counts their summoned gameobjects of that entry
@@ -756,7 +776,8 @@ The [portable gadgets scenario](scenarios/portable-gadgets.json) checks item sum
 teleports and expiry. It requires `mod-portablemail`; mailbox and altar client interfaces are not tested.
 `power`/`max_power` and `pet_power`/`pet_max_power` accept a numeric `power` (0..6).
 The pet queries require a player with a current pet. Aura metrics optionally accept `caster` to select
-ownership; `aura_amount` also accepts an effect index (0..2, default 0). Missing auras yield zero;
+ownership; `aura_visible` observes whether the native aura application occupies a client-visible buff slot.
+`aura_amount` also accepts an effect index (0..2, default 0). Missing auras yield zero;
 check aura presence separately when zero is a valid effect amount. Permanent aura duration is -1.
 
 ### Destiny Weaver regressions
