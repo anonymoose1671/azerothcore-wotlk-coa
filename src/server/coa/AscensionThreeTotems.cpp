@@ -4,6 +4,7 @@
 #include "GameObjectAI.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
+#include "ObjectAccessor.h"
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
@@ -13,6 +14,8 @@
 #include "SpellInfo.h"
 #include "SpellMgr.h"
 #include "SpellScript.h"
+#include "TemporarySummon.h"
+#include <algorithm>
 
 namespace
 {
@@ -46,6 +49,8 @@ constexpr uint32 ENRAGE_HEALTH_PCT = 50;
 constexpr int32 ENRAGE_MS = 10000;
 constexpr uint32 LOW_HEALTH_PCT = 20;
 constexpr float CORRUPTED_TOTEM_REACH = 10.0f;
+constexpr uint32 NPC_TOTEM_CHANNEL_TARGET = 23033;
+constexpr float TOTEM_CHANNEL_TARGET_HEIGHT = 1.5f;
 
 enum MalgormEvents
 {
@@ -79,25 +84,54 @@ class spell_coa_corrupting_totem : public AuraScript
 {
     PrepareAuraScript(spell_coa_corrupting_totem);
 
-    void CorruptTotemOnCompletedChannel(AuraEffect const*, AuraEffectHandleModes)
+    GameObject* NearestCorruptibleTotem() const
     {
-        if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
-            return;
-
         Unit* corruptor = GetTarget();
         GameObject* totem = nullptr;
         NearestGooberCastingSpell check(corruptor, GetId(), CORRUPTED_TOTEM_REACH);
         Acore::GameObjectLastSearcher<NearestGooberCastingSpell> searcher(corruptor, totem, check);
         Cell::VisitObjects(corruptor, searcher, CORRUPTED_TOTEM_REACH);
+        return totem;
+    }
+
+    void ChannelIntoTotem(AuraEffect const*, AuraEffectHandleModes)
+    {
+        GameObject* totem = NearestCorruptibleTotem();
+        if (!totem)
+            return;
+
+        Position spot = totem->GetPosition();
+        spot.m_positionZ += TOTEM_CHANNEL_TARGET_HEIGHT;
+        if (TempSummon* channelTarget = totem->SummonCreature(NPC_TOTEM_CHANNEL_TARGET, spot,
+            TEMPSUMMON_TIMED_DESPAWN, uint32(std::max(GetAura()->GetDuration(), 0))))
+        {
+            _channelTarget = channelTarget->GetGUID();
+            GetTarget()->SetGuidValue(UNIT_FIELD_CHANNEL_OBJECT, _channelTarget);
+        }
+    }
+
+    void CorruptTotemOnCompletedChannel(AuraEffect const*, AuraEffectHandleModes)
+    {
+        if (Creature* channelTarget = ObjectAccessor::GetCreature(*GetTarget(), _channelTarget))
+            channelTarget->DespawnOrUnsummon();
+
+        if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
+            return;
+
+        GameObject* totem = NearestCorruptibleTotem();
         if (totem && totem->AI())
-            totem->AI()->SpellHit(corruptor, GetSpellInfo());
+            totem->AI()->SpellHit(GetTarget(), GetSpellInfo());
     }
 
     void Register() override
     {
+        AfterEffectApply += AuraEffectApplyFn(spell_coa_corrupting_totem::ChannelIntoTotem, EFFECT_0,
+                                              SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
         AfterEffectRemove += AuraEffectRemoveFn(spell_coa_corrupting_totem::CorruptTotemOnCompletedChannel, EFFECT_0,
                                                 SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
+
+    ObjectGuid _channelTarget;
 };
 
 struct npc_coa_malgorm_hollowhoof : public ScriptedAI
