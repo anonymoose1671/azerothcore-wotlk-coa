@@ -1,8 +1,8 @@
 -- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), placed in game with CoAWorldEdit:
--- 33 Grimtotem Marauders and Patrols, both door Guards and four Tallstriders removed to thin the camp, eight Offering
--- Bones removed and six moved onto their ledges, one bone added in game and five mobs moved. Worldforged pickups are
--- set on the ground: the Ancestor's Axe, the Cord of Reverence, two Exalted Pendants, the Sun Touched Club and the
--- Grimtotem Bow moved; a third Pendant and the Grimtotem Club on the cliff removed.
+-- 33 Grimtotem Marauders and Patrols, both door Guards, seven Tallstriders and four Mountain Cougars removed to thin
+-- the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and seven mobs moved.
+-- Worldforged pickups are set on the ground: the Ancestor's Axe, the Cord of Reverence, two Exalted Pendants, the Sun
+-- Touched Club and the Grimtotem Bow moved; a third Pendant and the Grimtotem Club on the cliff removed.
 -- Every value is the spawn as it was left in game.
 -- The patrols follow the map rather than the recorded route: the Grimtotem Patrol walks the plank path (its
 -- WC_BenchStone slabs) from the village gate to Malgorm's hut, and a second Patrol walks from the gate down the
@@ -15,7 +15,8 @@ DELETE FROM `creature` WHERE `guid` IN (
     9011028, 9011033, 9011052, 9011034, 9011046, 9011035, 9011061, 9011042, 9011013, 9011012,
     9011038, 9011040, 9011015, 9011014, 9011020, 9011043, 9011021, 9011048, 9011018, 9011039,
     9011019, 9011024, 9011023, 9011022, 9011041, 9011016, 9011025, 9011045, 9011064, 9011070,
-    9011071, 9011103, 9011102, 9011065, 9011066, 9011084, 9011085, 9011086, 9011087
+    9011071, 9011103, 9011102, 9011065, 9011066, 9011084, 9011085, 9011086, 9011087, 9011081,
+    9011082, 9011083, 94867, 94868, 94869, 94870
 );
 
 DELETE FROM `gameobject` WHERE `guid` IN (
@@ -82,8 +83,12 @@ UPDATE `creature` SET `position_x` = -3587.285, `position_y` = -1130.135, `posit
 UPDATE `creature` SET `position_x` = -3590.697, `position_y` = -953.126, `position_z` = 200.305,
     `orientation` = 4.5291, `MovementType` = 2, `wander_distance` = 0
     WHERE `guid` = 9011069;
-UPDATE `creature` SET `position_x` = -3628.05, `position_y` = -1035.92, `position_z` = 203.14, `orientation` = 0.1913
+UPDATE `creature` SET `position_x` = -3628.05, `position_y` = -1035.92, `position_z` = 203.14, `orientation` = 3.7177
     WHERE `guid` = 9011002;
+UPDATE `creature` SET `position_x` = -3587.5, `position_y` = -1110, `position_z` = 205.312, `orientation` = 3.2753
+    WHERE `guid` = 9011006;
+UPDATE `creature` SET `position_x` = -3577.5, `position_y` = -1193, `position_z` = 205.669, `orientation` = 3.7389
+    WHERE `guid` = 9011124;
 
 DELETE FROM `creature` WHERE `guid` IN (9011133, 9011134, 9011135, 9011136, 9011137);
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`,
