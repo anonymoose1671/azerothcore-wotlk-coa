@@ -113,6 +113,31 @@ enum CustomEquipmentSpells : uint32
     SPELL_VALKYR_GRIP = 707072
 };
 
+enum ClientKnownSupersededSpells : uint32
+{
+    SPELL_RANGER_SKULLPIERCER_RANK_1 = 802036
+};
+
+// The Ascension client shows the Ranger Advantage bar only while it knows Skullpiercer rank 1.
+static bool IsKeptInClientSpellbookWhenSuperseded(uint32 spellId)
+{
+    return spellId == SPELL_RANGER_SKULLPIERCER_RANK_1;
+}
+
+static void ReplaceSpellOnActionButtons(Player* player, uint32 from, uint32 to)
+{
+    bool changed = false;
+    for (uint8 slot = 0; slot < MAX_ACTION_BUTTONS; ++slot)
+    {
+        ActionButton const* button = player->GetActionButton(slot);
+        if (button && button->GetType() == ACTION_BUTTON_SPELL && button->GetAction() == from)
+            changed = player->addActionButton(slot, to, ACTION_BUTTON_SPELL) != nullptr || changed;
+    }
+
+    if (changed)
+        player->SendActionButtons(1);
+}
+
 enum CharacterFlags
 {
     CHARACTER_FLAG_NONE                 = 0x00000000,
@@ -2918,7 +2943,8 @@ void Player::SendInitialSpells()
         if (itr->second->State == PLAYERSPELL_REMOVED)
             continue;
 
-        if (!itr->second->Active || !itr->second->IsInSpec(GetActiveSpec()))
+        if ((!itr->second->Active && !IsKeptInClientSpellbookWhenSuperseded(itr->first)) ||
+            !itr->second->IsInSpec(GetActiveSpec()))
             continue;
 
         data << uint32(itr->first);
@@ -3285,7 +3311,12 @@ bool Player::addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool
                     if (!isBeingLoaded() && IsUnlearnNeededForSpell(spellId))
                         SendUnlearnSpells();
 
-                    if (IsInWorld())
+                    if (IsInWorld() && IsKeptInClientSpellbookWhenSuperseded(nextSpellInfo->Id))
+                    {
+                        SendLearnPacket(spellInfo->Id, true);
+                        ReplaceSpellOnActionButtons(this, nextSpellInfo->Id, spellInfo->Id);
+                    }
+                    else if (IsInWorld())
                     {
                         WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
                         data << uint32(nextSpellInfo->Id);
@@ -10502,9 +10533,7 @@ void Player::RestoreSpellMods(Spell* spell, uint32 ownerAuraId, Aura* aura)
             if (iterMod == spell->m_appliedMods.end())
                 continue;
             // Second, check if the current mod is one of those applied by the mod aura
-            bool const affected = mod->targetSpellRoot ? spell->m_spellInfo->IsAffectedBySpellMod(mod) :
-                bool(mod->mask & spell->m_spellInfo->SpellFamilyFlags);
-            if (!affected)
+            if (!(mod->mask & spell->m_spellInfo->SpellFamilyFlags))
                 continue;
 
             // remove from list - This will be done after all mods have been gone through
