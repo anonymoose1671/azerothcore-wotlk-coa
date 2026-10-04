@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "name": "A Grimtotem Marauder butchers a kodo carcass beside the road",
+  "contract": [
+    "rev_20261004_88_coa_marauder_butchering_kodo lays a Kodo Carcass 9303002 on the side of the road below Red Cloud",
+    "Mesa and stands Marauder 9011037 at its flank with the looping Use emote 69. Expected: the carcass lies there, out",
+    "of reach of targeting, with a Marauder beside it."
+  ],
+  "timeout_ms": 60000,
+  "location": {"map": 1, "x": -3450.1, "y": -835.7, "z": 73.0, "o": 0},
+  "players": [{"id": "scout", "race": 6, "class": 1, "level": 80}],
+  "steps": [
+    {"action": "set_phase", "actor": "scout", "value": 1},
+    {"action": "teleport", "actor": "scout", "map": 1, "x": -3450.1, "y": -835.7, "z": 73.0, "o": 0},
+    {"action": "assert", "label": "The Kodo Carcass lies beside the road", "actor": "scout",
+     "metric": "nearby_creature_count", "entry": 9303002, "min": 1, "within_ms": 5000},
+    {"action": "assert", "label": "A Marauder works at it", "actor": "scout", "metric": "nearby_creature_count",
+     "entry": 161809, "min": 1}
+  ]
+}
