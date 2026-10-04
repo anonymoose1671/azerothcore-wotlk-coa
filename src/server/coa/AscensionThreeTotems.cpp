@@ -18,16 +18,12 @@ constexpr uint32 SPELL_CHARGE_TRAIL = 256744;
 constexpr uint32 SPELL_CHARGE_TRAMPLE = 256745;
 constexpr uint32 SPELL_CHARGE_IMPACT = 256746;
 constexpr uint32 SPELL_CHARGE_TELEGRAPH = 255356;
-constexpr uint32 SPELL_STOMP_TELEGRAPH = 256108;
-constexpr uint32 SPELL_WAR_STOMP = 202949;
-constexpr uint32 SPELL_SHIELD_WALL = 256752;
-constexpr uint32 SPELL_ENRAGED_REGENERATION = 256755;
-constexpr uint32 SPELL_WALL_STUN = 256727;
+constexpr uint32 SPELL_ENRAGE = 256756;
 
 constexpr uint8 SAY_AGGRO_DISGUISED = 0;
 constexpr uint8 SAY_AGGRO = 1;
-constexpr uint8 SAY_STOMP = 2;
-constexpr uint8 SAY_INTERMISSION = 3;
+constexpr uint8 SAY_CHARGE = 2;
+constexpr uint8 SAY_ENRAGE = 3;
 constexpr uint8 SAY_LOW_HEALTH = 4;
 constexpr uint8 SAY_KILL = 5;
 constexpr uint8 SAY_DEATH = 6;
@@ -40,18 +36,13 @@ constexpr float WALL_TOLERANCE = 1.0f;
 constexpr float TRAMPLE_REACH = 2.5f;
 constexpr uint32 TRAMPLE_TICK_MS = 200;
 constexpr uint32 CHARGE_RUN_GRACE_MS = 1000;
-constexpr uint32 STOMP_WINDUP_MS = 2000;
-constexpr int32 WALL_STUN_MS = 6000;
-constexpr int32 STUNNED_EXTRA_DAMAGE_PCT = 50;
-constexpr uint32 INTERMISSION_HEALTH_PCT = 50;
-constexpr int32 INTERMISSION_MAX_MS = 45000;
+constexpr uint32 ENRAGE_HEALTH_PCT = 50;
+constexpr int32 ENRAGE_MS = 10000;
 constexpr uint32 LOW_HEALTH_PCT = 20;
 
 enum MalgormEvents
 {
-    EVENT_MALGORM_STOMP = 1,
-    EVENT_MALGORM_CHARGE,
-    EVENT_MALGORM_INTERMISSION_TIMEOUT
+    EVENT_MALGORM_CHARGE = 1
 };
 }
 
@@ -62,16 +53,13 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
     void Reset() override
     {
         _events.Reset();
-        _intermissionUsed = false;
-        _inIntermission = false;
+        _enraged = false;
         _saidLowHealth = false;
-        _saidStomp = false;
-        _stompWindupMs = 0;
+        _saidCharge = false;
         _chargeRunMs = 0;
         _trampleTickMs = 0;
         _trampled.clear();
-        for (uint32 spell : { SPELL_CHARGE_TELEGRAPH, SPELL_STOMP_TELEGRAPH, SPELL_CHARGE_TRAIL, SPELL_SHIELD_WALL,
-                 SPELL_ENRAGED_REGENERATION, SPELL_WALL_STUN })
+        for (uint32 spell : { SPELL_CHARGE_TELEGRAPH, SPELL_CHARGE_TRAIL, SPELL_ENRAGE })
             me->RemoveAurasDueToSpell(spell);
         me->SetControlled(false, UNIT_STATE_ROOT);
     }
@@ -82,17 +70,17 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
         bool const disguised = attacker
             && (attacker->HasAura(SPELL_DISGUISE_WARRIOR) || attacker->HasAura(SPELL_DISGUISE_GUARD));
         Talk(disguised ? SAY_AGGRO_DISGUISED : SAY_AGGRO, attacker);
-        _events.ScheduleEvent(EVENT_MALGORM_STOMP, 8s, 10s);
-        _events.ScheduleEvent(EVENT_MALGORM_CHARGE, 13s, 15s);
+        _events.ScheduleEvent(EVENT_MALGORM_CHARGE, 10s, 12s);
     }
 
     void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
     {
-        if (me->HasAura(SPELL_WALL_STUN))
-            damage += damage * STUNNED_EXTRA_DAMAGE_PCT / 100;
-
-        if (!_intermissionUsed && me->HealthBelowPctDamaged(INTERMISSION_HEALTH_PCT, damage))
-            StartIntermission();
+        if (!_enraged && me->HealthBelowPctDamaged(ENRAGE_HEALTH_PCT, damage))
+        {
+            _enraged = true;
+            Talk(SAY_ENRAGE);
+            HoldFor(SPELL_ENRAGE, ENRAGE_MS);
+        }
 
         if (!_saidLowHealth && me->HealthBelowPctDamaged(LOW_HEALTH_PCT, damage))
         {
@@ -147,79 +135,25 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
             return;
         }
 
-        if (_stompWindupMs)
-        {
-            UpdateStompWindup(diff);
-            return;
-        }
-
         if (!UpdateVictim())
             return;
 
-        if (me->HasUnitState(UNIT_STATE_CASTING | UNIT_STATE_STUNNED))
+        if (me->HasUnitState(UNIT_STATE_CASTING))
             return;
 
         _events.Update(diff);
 
-        switch (_events.ExecuteEvent())
+        if (_events.ExecuteEvent() == EVENT_MALGORM_CHARGE)
         {
-            case EVENT_MALGORM_STOMP:
-                BeginStomp();
-                _events.Repeat(14s, 16s);
-                KeepApart(EVENT_MALGORM_CHARGE);
-                return;
-            case EVENT_MALGORM_CHARGE:
-                BeginCharge();
-                if (!_inIntermission)
-                {
-                    _events.Repeat(18s, 22s);
-                    KeepApart(EVENT_MALGORM_STOMP);
-                }
-                return;
-            case EVENT_MALGORM_INTERMISSION_TIMEOUT:
-                EndIntermission();
-                return;
-            default:
-                break;
+            BeginCharge();
+            _events.Repeat(20s);
+            return;
         }
 
         DoMeleeAttackIfReady();
     }
 
 private:
-    void KeepApart(uint32 eventId)
-    {
-        if (_events.GetTimeUntilEvent(eventId) < 5s)
-            _events.RescheduleEvent(eventId, 5s);
-    }
-
-    void BeginStomp()
-    {
-        me->StopMoving();
-        me->SetControlled(true, UNIT_STATE_ROOT);
-        HoldFor(SPELL_STOMP_TELEGRAPH, STOMP_WINDUP_MS);
-        if (!_saidStomp || urand(0, 2) == 0)
-        {
-            _saidStomp = true;
-            Talk(SAY_STOMP);
-        }
-        _stompWindupMs = STOMP_WINDUP_MS;
-    }
-
-    void UpdateStompWindup(uint32 diff)
-    {
-        if (_stompWindupMs > diff)
-        {
-            _stompWindupMs -= diff;
-            return;
-        }
-
-        _stompWindupMs = 0;
-        me->RemoveAurasDueToSpell(SPELL_STOMP_TELEGRAPH);
-        DoCastSelf(SPELL_WAR_STOMP, true);
-        me->SetControlled(false, UNIT_STATE_ROOT);
-    }
-
     void BeginCharge()
     {
         Unit* target = SelectTarget(SelectTargetMethod::Random, 0, CHARGE_RANGE, true);
@@ -231,6 +165,11 @@ private:
         me->SetControlled(true, UNIT_STATE_ROOT);
         me->SetTarget();
         HoldFor(SPELL_CHARGE_TELEGRAPH, int32(sSpellMgr->AssertSpellInfo(SPELL_CHARGE_WINDUP)->CalcCastTime()));
+        if (!_saidCharge || urand(0, 2) == 0)
+        {
+            _saidCharge = true;
+            Talk(SAY_CHARGE);
+        }
         if (me->CastSpell(me, SPELL_CHARGE_WINDUP, false) != SPELL_CAST_OK)
             FinishCharge(false);
     }
@@ -281,7 +220,7 @@ private:
         Cell::VisitObjects(me, searcher, TRAMPLE_REACH);
         bool struck = false;
         for (Player* player : players)
-            if (player->IsAlive() && me->IsValidAttackTarget(player) && _trampled.insert(player->GetGUID()).second)
+            if (me->IsValidAttackTarget(player) && _trampled.insert(player->GetGUID()).second)
                 struck = true;
         if (struck)
             DoCastSelf(SPELL_CHARGE_TRAMPLE, true);
@@ -296,43 +235,10 @@ private:
         me->SetControlled(false, UNIT_STATE_ROOT);
         if (wasRunning)
             Trample();
-
         if (hitWall)
-        {
             DoCastSelf(SPELL_CHARGE_IMPACT, true);
-            HoldFor(SPELL_WALL_STUN, WALL_STUN_MS);
-            if (_inIntermission)
-                EndIntermission();
-        }
-        else if (_inIntermission)
-            _events.ScheduleEvent(EVENT_MALGORM_CHARGE, 2s);
-
         if (Unit* victim = me->GetVictim())
             me->SetTarget(victim->GetGUID());
-    }
-
-    void StartIntermission()
-    {
-        _intermissionUsed = true;
-        _inIntermission = true;
-        Talk(SAY_INTERMISSION);
-        _events.CancelEvent(EVENT_MALGORM_STOMP);
-        _events.CancelEvent(EVENT_MALGORM_CHARGE);
-        _events.ScheduleEvent(EVENT_MALGORM_CHARGE, 1s);
-        _events.ScheduleEvent(EVENT_MALGORM_INTERMISSION_TIMEOUT, Milliseconds(INTERMISSION_MAX_MS));
-        HoldFor(SPELL_SHIELD_WALL, INTERMISSION_MAX_MS);
-        HoldFor(SPELL_ENRAGED_REGENERATION, INTERMISSION_MAX_MS);
-    }
-
-    void EndIntermission()
-    {
-        _inIntermission = false;
-        me->RemoveAurasDueToSpell(SPELL_SHIELD_WALL);
-        me->RemoveAurasDueToSpell(SPELL_ENRAGED_REGENERATION);
-        _events.CancelEvent(EVENT_MALGORM_INTERMISSION_TIMEOUT);
-        _events.CancelEvent(EVENT_MALGORM_CHARGE);
-        _events.ScheduleEvent(EVENT_MALGORM_STOMP, 8s, 10s);
-        _events.ScheduleEvent(EVENT_MALGORM_CHARGE, 16s, 18s);
     }
 
     void HoldFor(uint32 spellId, int32 durationMs)
@@ -346,12 +252,10 @@ private:
 
     EventMap _events;
     GuidUnorderedSet _trampled;
-    bool _intermissionUsed = false;
-    bool _inIntermission = false;
+    bool _enraged = false;
     bool _saidLowHealth = false;
-    bool _saidStomp = false;
+    bool _saidCharge = false;
     bool _chargeHitsWall = false;
-    uint32 _stompWindupMs = 0;
     uint32 _chargeRunMs = 0;
     uint32 _trampleTickMs = 0;
 };
