@@ -1,15 +1,19 @@
 -- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), placed in game with CoAWorldEdit:
--- 30 Grimtotem Marauders and Patrols removed to thin the hillsides, eight Offering Bones removed and six moved
--- onto their ledges, one bone added in game, four mobs moved, and the Grimtotem Patrol walks a route through
--- the camp. Every value is the spawn as it was left in game.
+-- 30 Grimtotem Marauders and Patrols and one Guard removed to thin the hillsides, eight Offering Bones removed and
+-- six moved onto their ledges, one bone added in game, five mobs moved, and the Grimtotem Patrol walks a route
+-- through the camp. Worldforged pickups nearby are set on the ground: the Ancestor's Axe, the Cord of Reverence,
+-- two Exalted Pendants and the Sun Touched Club moved; a third Pendant and the Grimtotem Club on the cliff removed.
+-- Every value is the spawn as it was left in game.
 DELETE FROM `creature` WHERE `guid` IN (
     9011028, 9011033, 9011052, 9011034, 9011046, 9011035, 9011061, 9011042, 9011013, 9011012,
     9011038, 9011040, 9011015, 9011014, 9011020, 9011043, 9011021, 9011048, 9011018, 9011039,
-    9011019, 9011024, 9011023, 9011022, 9011041, 9011016, 9011025, 9011045, 9011064, 9011070
+    9011019, 9011024, 9011023, 9011022, 9011041, 9011016, 9011025, 9011045, 9011064, 9011070,
+    9011103
 );
 
 DELETE FROM `gameobject` WHERE `guid` IN (
-    7916534, 7916544, 7916539, 7916538, 7916537, 7916536, 7916542, 7916541, 7916546
+    7916534, 7916544, 7916539, 7916538, 7916537, 7916536, 7916542, 7916541, 7916522,
+    6941797, 7916546
 );
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`,
     `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`,
@@ -38,6 +42,25 @@ UPDATE `gameobject` SET `position_x` = -3462.089, `position_y` = -759.489, `posi
 UPDATE `gameobject` SET `position_x` = -3572.5, `position_y` = -909, `position_z` = 181.119, `orientation` = 4.4,
     `rotation0` = -0.1055302, `rotation1` = -0.076815, `rotation2` = -0.8015797, `rotation3` = 0.5834665
     WHERE `guid` = 7916543 AND `id` = 2300532;
+UPDATE `gameobject` SET `position_x` = -3347.371, `position_y` = -1022.166, `position_z` = 105.994,
+    `orientation` = 0.9836,
+    `rotation0` = -0.6233047, `rotation1` = -0.3339059, `rotation2` = 0.3339047, `rotation3` = 0.6233025
+    WHERE `guid` = 6941395 AND `id` = 90220;
+UPDATE `gameobject` SET `position_x` = -3049.759, `position_y` = -1138.55, `position_z` = 64.041,
+    `orientation` = 6.1886,
+    `rotation0` = -0.0102314, `rotation1` = -0.2161818, `rotation2` = -0.0461546, `rotation3` = 0.9752079
+    WHERE `guid` = 6941585 AND `id` = 254522;
+UPDATE `gameobject` SET `position_x` = -3466.83, `position_y` = -1092.99, `position_z` = 207.478, `orientation` = 0,
+    `rotation0` = 0, `rotation1` = 0, `rotation2` = 0, `rotation3` = 1
+    WHERE `guid` = 7916521 AND `id` = 2300515;
+UPDATE `gameobject` SET `position_x` = -3471.52, `position_y` = -1096.94, `position_z` = 207.432,
+    `orientation` = 5.2124,
+    `rotation0` = 0, `rotation1` = 0, `rotation2` = -0.5101788, `rotation3` = 0.8600685
+    WHERE `guid` = 7916520 AND `id` = 2300515;
+UPDATE `gameobject` SET `position_x` = -3552.999, `position_y` = -1210.354, `position_z` = 206.048,
+    `orientation` = 4.4873,
+    `rotation0` = 0, `rotation1` = 0, `rotation2` = -0.7820465, `rotation3` = 0.6232202
+    WHERE `guid` = 6942270 AND `id` = 520700;
 
 UPDATE `creature` SET `position_x` = -3331.774, `position_y` = -766.01, `position_z` = 51.391, `orientation` = 2.8562
     WHERE `guid` = 9011049;
@@ -48,6 +71,8 @@ UPDATE `creature` SET `position_x` = -3587.285, `position_y` = -1130.135, `posit
 UPDATE `creature` SET `position_x` = -3590.697, `position_y` = -953.126, `position_z` = 200.305,
     `orientation` = 4.5291, `MovementType` = 2, `wander_distance` = 0
     WHERE `guid` = 9011069;
+UPDATE `creature` SET `position_x` = -3628.05, `position_y` = -1035.92, `position_z` = 203.14, `orientation` = 0.1913
+    WHERE `guid` = 9011002;
 
 DELETE FROM `creature_addon` WHERE `guid` = 9011069;
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`,
