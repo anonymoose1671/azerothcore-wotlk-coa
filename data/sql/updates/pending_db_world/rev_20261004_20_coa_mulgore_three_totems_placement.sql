@@ -1,6 +1,7 @@
 -- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), placed in game with CoAWorldEdit:
--- 33 Grimtotem Marauders and Patrols, both door Guards, seven Tallstriders and four Mountain Cougars removed to thin
--- the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and seven mobs moved.
+-- 33 Grimtotem Marauders and Patrols, a Warrior, both door Guards, seven Tallstriders and four Mountain Cougars removed
+-- to thin the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and eleven
+-- mobs moved.
 -- Worldforged pickups are set on the ground: the Ancestor's Axe, the Cord of Reverence, two Exalted Pendants, the Sun
 -- Touched Club and the Grimtotem Bow moved; a third Pendant and the Grimtotem Club on the cliff removed.
 -- Every value is the spawn as it was left in game.
@@ -16,7 +17,7 @@ DELETE FROM `creature` WHERE `guid` IN (
     9011038, 9011040, 9011015, 9011014, 9011020, 9011043, 9011021, 9011048, 9011018, 9011039,
     9011019, 9011024, 9011023, 9011022, 9011041, 9011016, 9011025, 9011045, 9011064, 9011070,
     9011071, 9011103, 9011102, 9011065, 9011066, 9011084, 9011085, 9011086, 9011087, 9011081,
-    9011082, 9011083, 94867, 94868, 94869, 94870
+    9011082, 9011083, 94867, 94868, 94869, 94870, 9011111
 );
 
 DELETE FROM `gameobject` WHERE `guid` IN (
@@ -89,6 +90,14 @@ UPDATE `creature` SET `position_x` = -3587.5, `position_y` = -1110, `position_z`
     WHERE `guid` = 9011006;
 UPDATE `creature` SET `position_x` = -3577.5, `position_y` = -1193, `position_z` = 205.669, `orientation` = 3.7389
     WHERE `guid` = 9011124;
+UPDATE `creature` SET `position_x` = -3479.831, `position_y` = -1178.516, `position_z` = 214.109, `orientation` = 4.9336
+    WHERE `guid` = 9011114;
+UPDATE `creature` SET `position_x` = -3475.981, `position_y` = -1179.418, `position_z` = 214.112, `orientation` = 4.1422
+    WHERE `guid` = 9011112;
+UPDATE `creature` SET `position_x` = -3486, `position_y` = -1163.5, `position_z` = 214.139, `orientation` = 4.9775
+    WHERE `guid` = 9011110;
+UPDATE `creature` SET `position_x` = -3459.649, `position_y` = -1184.731, `position_z` = 214.11, `orientation` = 0.1524
+    WHERE `guid` = 9011113;
 
 DELETE FROM `creature` WHERE `guid` IN (9011133, 9011134, 9011135, 9011136, 9011137);
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`,
