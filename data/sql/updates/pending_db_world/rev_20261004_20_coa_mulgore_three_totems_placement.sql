@@ -3,7 +3,8 @@
 -- to thin the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and twelve
 -- mobs moved.
 -- Worldforged pickups are set on the ground: the Ancestor's Axe, the Cord of Reverence, two Exalted Pendants, the Sun
--- Touched Club and the Grimtotem Bow moved; a third Pendant and the Grimtotem Club on the cliff removed.
+-- Touched Club, the Grimtotem Bow and a Loose Barrel moved; a third Pendant, the Grimtotem Club on the cliff and a
+-- second Loose Barrel removed.
 -- Every value is the spawn as it was left in game.
 -- The Grimtotem Patrol walks the plank path (its WC_BenchStone slabs) from the village gate to Malgorm's hut;
 -- routes recorded in game send the Patrol from above the gate down the Grimtotem Mountain Path to the plank bridge,
@@ -73,6 +74,10 @@ UPDATE `gameobject` SET `position_x` = -3641.917, `position_y` = -1032.398, `pos
     `orientation` = 0.546,
     `rotation0` = -0.7376661, `rotation1` = -0.2065396, `rotation2` = 0.1733124, `rotation3` = 0.6189936
     WHERE `guid` = 6941796 AND `id` = 520699;
+UPDATE `gameobject` SET `position_x` = -3464.948, `position_y` = -1098.358, `position_z` = 206.176,
+    `orientation` = 5.577,
+    `rotation0` = 0, `rotation1` = 0, `rotation2` = -0.3458013, `rotation3` = 0.9383078
+    WHERE `guid` = 6941549 AND `id` = 520702;
 
 UPDATE `creature` SET `position_x` = -3331.774, `position_y` = -766.01, `position_z` = 51.391, `orientation` = 2.8562
     WHERE `guid` = 9011049;
@@ -85,7 +90,7 @@ UPDATE `creature` SET `position_x` = -3590.697, `position_y` = -953.126, `positi
     WHERE `guid` = 9011069;
 UPDATE `creature` SET `position_x` = -3628.05, `position_y` = -1035.92, `position_z` = 203.14, `orientation` = 3.7177
     WHERE `guid` = 9011002;
-UPDATE `creature` SET `position_x` = -3587.5, `position_y` = -1110, `position_z` = 205.312, `orientation` = 3.2753
+UPDATE `creature` SET `position_x` = -3587.5, `position_y` = -1110, `position_z` = 205.312, `orientation` = 0.1519
     WHERE `guid` = 9011006;
 UPDATE `creature` SET `position_x` = -3581.316, `position_y` = -1197.107, `position_z` = 206.195, `orientation` = 0.8804
     WHERE `guid` = 9011124;
