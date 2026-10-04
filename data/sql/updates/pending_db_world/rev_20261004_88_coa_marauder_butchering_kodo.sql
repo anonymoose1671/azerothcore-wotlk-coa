@@ -29,7 +29,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `p
 (9011138, 9303002, 1, 0, 0, 1, 1, 0, -3450.129, -835.71, 72.195, 1.6383, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0,
     'CoA Three Totems: Kodo Carcass on the side of the road below Red Cloud Mesa, placed in game');
 
-UPDATE `creature` SET `position_x` = -3447.136, `position_y` = -835.508, `position_z` = 72.2, `orientation` = 3.2091,
+UPDATE `creature` SET `position_x` = -3447.295, `position_y` = -833.26, `position_z` = 71.563, `orientation` = 3.4969,
     `MovementType` = 0, `wander_distance` = 0 WHERE `guid` = 9011037;
 DELETE FROM `creature_addon` WHERE `guid` IN (9011037, 9011113);
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`)
