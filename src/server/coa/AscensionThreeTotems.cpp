@@ -1,8 +1,14 @@
 /* Copyright (C) 2016+ AzerothCore, GNU AGPL v3. */
+#include "CellImpl.h"
+#include "GameObject.h"
+#include "GameObjectAI.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
+#include "SpellAuraEffects.h"
 #include "SpellAuras.h"
 #include "SpellInfo.h"
 #include "SpellMgr.h"
@@ -39,12 +45,60 @@ constexpr uint32 TREMOR_PULSE_MS = 1000;
 constexpr uint32 ENRAGE_HEALTH_PCT = 50;
 constexpr int32 ENRAGE_MS = 10000;
 constexpr uint32 LOW_HEALTH_PCT = 20;
+constexpr float CORRUPTED_TOTEM_REACH = 10.0f;
 
 enum MalgormEvents
 {
     EVENT_MALGORM_CHARGE = 1
 };
+
+class NearestGooberCastingSpell
+{
+public:
+    NearestGooberCastingSpell(WorldObject const* origin, uint32 spellId, float range)
+        : _origin(origin), _spellId(spellId), _range(range) { }
+
+    bool operator()(GameObject* gameObject)
+    {
+        if (gameObject->GetGoType() != GAMEOBJECT_TYPE_GOOBER || gameObject->GetGOInfo()->goober.spellId != _spellId
+            || !gameObject->isSpawned() || !_origin->IsWithinDistInMap(gameObject, _range))
+            return false;
+
+        _range = _origin->GetDistance(gameObject);
+        return true;
+    }
+
+private:
+    WorldObject const* _origin;
+    uint32 _spellId;
+    float _range;
+};
 }
+
+class spell_coa_corrupting_totem : public AuraScript
+{
+    PrepareAuraScript(spell_coa_corrupting_totem);
+
+    void CorruptTotemOnCompletedChannel(AuraEffect const*, AuraEffectHandleModes)
+    {
+        if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
+            return;
+
+        Unit* corruptor = GetTarget();
+        GameObject* totem = nullptr;
+        NearestGooberCastingSpell check(corruptor, GetId(), CORRUPTED_TOTEM_REACH);
+        Acore::GameObjectLastSearcher<NearestGooberCastingSpell> searcher(corruptor, totem, check);
+        Cell::VisitObjects(corruptor, searcher, CORRUPTED_TOTEM_REACH);
+        if (totem && totem->AI())
+            totem->AI()->SpellHit(corruptor, GetSpellInfo());
+    }
+
+    void Register() override
+    {
+        AfterEffectRemove += AuraEffectRemoveFn(spell_coa_corrupting_totem::CorruptTotemOnCompletedChannel, EFFECT_0,
+                                                SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+    }
+};
 
 struct npc_coa_malgorm_hollowhoof : public ScriptedAI
 {
@@ -307,6 +361,7 @@ public:
 void AddSC_AscensionThreeTotems()
 {
     RegisterCreatureAI(npc_coa_malgorm_hollowhoof);
+    RegisterSpellScript(spell_coa_corrupting_totem);
     RegisterSpellScript(spell_coa_malgorm_trample);
     RegisterSpellScript(spell_coa_grimtotem_disguise);
     new coa_grimtotem_disguise_drops_in_combat();
