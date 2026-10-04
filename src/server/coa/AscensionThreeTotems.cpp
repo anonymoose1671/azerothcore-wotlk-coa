@@ -19,8 +19,6 @@
 
 namespace
 {
-constexpr uint32 SPELL_DISGUISE_WARRIOR = 256709;
-constexpr uint32 SPELL_DISGUISE_GUARD = 256710;
 constexpr uint32 SPELL_CHARGE_WINDUP = 256743;
 constexpr uint32 SPELL_CHARGE_TRAIL = 256744;
 constexpr uint32 SPELL_CHARGE_IMPACT = 256746;
@@ -379,24 +377,10 @@ class spell_coa_grimtotem_disguise : public AuraScript
     }
 };
 
-class coa_grimtotem_disguise_drops_in_combat : public PlayerScript
-{
-public:
-    coa_grimtotem_disguise_drops_in_combat() : PlayerScript("coa_grimtotem_disguise_drops_in_combat",
-        {PLAYERHOOK_ON_PLAYER_ENTER_COMBAT}) { }
-
-    void OnPlayerEnterCombat(Player* player, Unit*) override
-    {
-        player->RemoveAurasDueToSpell(SPELL_DISGUISE_WARRIOR);
-        player->RemoveAurasDueToSpell(SPELL_DISGUISE_GUARD);
-    }
-};
-
 void AddSC_AscensionThreeTotems()
 {
     RegisterCreatureAI(npc_coa_malgorm_hollowhoof);
     RegisterSpellScript(spell_coa_corrupting_totem);
     RegisterSpellScript(spell_coa_malgorm_trample);
     RegisterSpellScript(spell_coa_grimtotem_disguise);
-    new coa_grimtotem_disguise_drops_in_combat();
 }
