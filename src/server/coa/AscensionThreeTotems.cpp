@@ -1,13 +1,12 @@
 /* Copyright (C) 2016+ AzerothCore, GNU AGPL v3. */
-#include "CellImpl.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
 #include "Player.h"
+#include "ReputationMgr.h"
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "SpellAuras.h"
 #include "SpellInfo.h"
 #include "SpellMgr.h"
+#include "SpellScript.h"
 
 namespace
 {
@@ -15,27 +14,26 @@ constexpr uint32 SPELL_DISGUISE_WARRIOR = 256709;
 constexpr uint32 SPELL_DISGUISE_GUARD = 256710;
 constexpr uint32 SPELL_CHARGE_WINDUP = 256743;
 constexpr uint32 SPELL_CHARGE_TRAIL = 256744;
-constexpr uint32 SPELL_CHARGE_TRAMPLE = 256745;
 constexpr uint32 SPELL_CHARGE_IMPACT = 256746;
 constexpr uint32 SPELL_CHARGE_TELEGRAPH = 255356;
 constexpr uint32 SPELL_CHARGE_TREMOR = 64228;
 constexpr uint32 SPELL_ENRAGE = 256756;
 
-constexpr uint8 SAY_AGGRO_DISGUISED = 0;
-constexpr uint8 SAY_AGGRO = 1;
-constexpr uint8 SAY_CHARGE = 2;
-constexpr uint8 SAY_ENRAGE = 3;
-constexpr uint8 SAY_LOW_HEALTH = 4;
-constexpr uint8 SAY_KILL = 5;
-constexpr uint8 SAY_DEATH = 6;
+constexpr uint32 FACTION_MALGORM = 1027;
+
+constexpr uint8 SAY_AGGRO = 0;
+constexpr uint8 SAY_CHARGE = 1;
+constexpr uint8 SAY_ENRAGE = 2;
+constexpr uint8 SAY_LOW_HEALTH = 3;
+constexpr uint8 SAY_KILL = 4;
+constexpr uint8 SAY_DEATH = 5;
 
 constexpr uint32 POINT_CHARGE_END = 1;
 constexpr float CHARGE_RANGE = 30.0f;
 constexpr float CHARGE_SPEED = 12.0f;
 constexpr float CHARGE_MIN_RUN = 2.0f;
 constexpr float WALL_TOLERANCE = 1.0f;
-constexpr float TRAMPLE_REACH = 2.5f;
-constexpr uint32 TRAMPLE_TICK_MS = 200;
+constexpr int32 TRAMPLE_DAMAGE = 1000000;
 constexpr uint32 CHARGE_RUN_GRACE_MS = 1000;
 constexpr uint32 TREMOR_PULSE_MS = 1000;
 constexpr uint32 ENRAGE_HEALTH_PCT = 50;
@@ -59,9 +57,7 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
         _saidLowHealth = false;
         _saidCharge = false;
         _chargeRunMs = 0;
-        _trampleTickMs = 0;
         _tremorPulseMs = 0;
-        _trampled.clear();
         for (uint32 spell : { SPELL_CHARGE_TELEGRAPH, SPELL_CHARGE_TRAIL, SPELL_ENRAGE })
             me->RemoveAurasDueToSpell(spell);
         me->SetControlled(false, UNIT_STATE_ROOT);
@@ -69,10 +65,7 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
 
     void JustEngagedWith(Unit* who) override
     {
-        Unit* attacker = who->GetCharmerOrOwnerPlayerOrPlayerItself();
-        bool const disguised = attacker
-            && (attacker->HasAura(SPELL_DISGUISE_WARRIOR) || attacker->HasAura(SPELL_DISGUISE_GUARD));
-        Talk(disguised ? SAY_AGGRO_DISGUISED : SAY_AGGRO, attacker);
+        Talk(SAY_AGGRO, who->GetCharmerOrOwnerPlayerOrPlayerItself());
         _events.ScheduleEvent(EVENT_MALGORM_CHARGE, 10s, 12s);
     }
 
@@ -101,15 +94,6 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
     void JustDied(Unit*) override
     {
         Talk(SAY_DEATH);
-    }
-
-    void OnSpellStart(SpellInfo const* spell) override
-    {
-        if (spell->Id != SPELL_CHARGE_WINDUP)
-            return;
-
-        if (Spell* windup = me->GetCurrentSpell(CURRENT_GENERIC_SPELL))
-            me->FocusTarget(windup, me);
     }
 
     void OnSpellCast(SpellInfo const* spell) override
@@ -167,7 +151,8 @@ private:
             return;
 
         me->StopMoving();
-        me->SetFacingToObject(target);
+        _chargeAngle = me->GetAngle(target);
+        me->SetFacingTo(_chargeAngle);
         me->SetControlled(true, UNIT_STATE_ROOT);
         me->SetTarget();
         HoldFor(SPELL_CHARGE_TELEGRAPH, int32(sSpellMgr->AssertSpellInfo(SPELL_CHARGE_WINDUP)->CalcCastTime()));
@@ -201,6 +186,7 @@ private:
     void RunCharge()
     {
         me->RemoveAurasDueToSpell(SPELL_CHARGE_TELEGRAPH);
+        me->SetOrientation(_chargeAngle);
         Position destination = me->GetPosition();
         me->MovePositionToFirstCollision(destination, CHARGE_RANGE, 0.0f);
         float const run = me->GetExactDist2d(&destination);
@@ -211,8 +197,6 @@ private:
             return;
         }
 
-        _trampled.clear();
-        _trampleTickMs = 0;
         _chargeRunMs = uint32(run / CHARGE_SPEED * IN_MILLISECONDS) + CHARGE_RUN_GRACE_MS;
         me->SetControlled(false, UNIT_STATE_ROOT);
         DoCastSelf(SPELL_CHARGE_TRAIL, true);
@@ -222,44 +206,19 @@ private:
 
     void UpdateChargeRun(uint32 diff)
     {
-        if (_trampleTickMs > diff)
-            _trampleTickMs -= diff;
-        else
-        {
-            _trampleTickMs = TRAMPLE_TICK_MS;
-            Trample();
-        }
-
         if (_chargeRunMs > diff)
             _chargeRunMs -= diff;
         else
             FinishCharge(_chargeHitsWall);
     }
 
-    void Trample()
-    {
-        std::list<Player*> players;
-        Acore::AnyPlayerInObjectRangeCheck check(me, TRAMPLE_REACH);
-        Acore::PlayerListSearcher<Acore::AnyPlayerInObjectRangeCheck> searcher(me, players, check);
-        Cell::VisitObjects(me, searcher, TRAMPLE_REACH);
-        bool struck = false;
-        for (Player* player : players)
-            if (me->IsValidAttackTarget(player) && _trampled.insert(player->GetGUID()).second)
-                struck = true;
-        if (struck)
-            DoCastSelf(SPELL_CHARGE_TRAMPLE, true);
-    }
-
     void FinishCharge(bool hitWall)
     {
-        bool const wasRunning = _chargeRunMs != 0;
         _chargeRunMs = 0;
         _tremorPulseMs = 0;
         me->RemoveAurasDueToSpell(SPELL_CHARGE_TELEGRAPH);
         me->RemoveAurasDueToSpell(SPELL_CHARGE_TRAIL);
         me->SetControlled(false, UNIT_STATE_ROOT);
-        if (wasRunning)
-            Trample();
         if (hitWall)
             DoCastSelf(SPELL_CHARGE_IMPACT, true);
         if (Unit* victim = me->GetVictim())
@@ -276,17 +235,79 @@ private:
     }
 
     EventMap _events;
-    GuidUnorderedSet _trampled;
     bool _enraged = false;
     bool _saidLowHealth = false;
     bool _saidCharge = false;
     bool _chargeHitsWall = false;
+    float _chargeAngle = 0.0f;
     uint32 _chargeRunMs = 0;
-    uint32 _trampleTickMs = 0;
     uint32 _tremorPulseMs = 0;
+};
+
+class spell_coa_malgorm_trample : public SpellScript
+{
+    PrepareSpellScript(spell_coa_malgorm_trample);
+
+    void Crush(SpellEffIndex)
+    {
+        SetHitDamage(TRAMPLE_DAMAGE);
+    }
+
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_coa_malgorm_trample::Crush, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+    }
+};
+
+class spell_coa_grimtotem_disguise : public AuraScript
+{
+    PrepareAuraScript(spell_coa_grimtotem_disguise);
+
+    void ForceMalgormNeutral(AuraEffect const*, AuraEffectHandleModes)
+    {
+        SetMalgormNeutral(true);
+    }
+
+    void RestoreMalgorm(AuraEffect const*, AuraEffectHandleModes)
+    {
+        SetMalgormNeutral(false);
+    }
+
+    void SetMalgormNeutral(bool apply)
+    {
+        if (Player* player = GetTarget()->ToPlayer())
+        {
+            player->GetReputationMgr().ApplyForceReaction(FACTION_MALGORM, REP_NEUTRAL, apply);
+            player->GetReputationMgr().SendForceReactions();
+        }
+    }
+
+    void Register() override
+    {
+        AfterEffectApply += AuraEffectApplyFn(spell_coa_grimtotem_disguise::ForceMalgormNeutral, EFFECT_2,
+            SPELL_AURA_FORCE_REACTION, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_coa_grimtotem_disguise::RestoreMalgorm, EFFECT_2,
+            SPELL_AURA_FORCE_REACTION, AURA_EFFECT_HANDLE_REAL);
+    }
+};
+
+class coa_grimtotem_disguise_drops_in_combat : public PlayerScript
+{
+public:
+    coa_grimtotem_disguise_drops_in_combat() : PlayerScript("coa_grimtotem_disguise_drops_in_combat",
+        {PLAYERHOOK_ON_PLAYER_ENTER_COMBAT}) { }
+
+    void OnPlayerEnterCombat(Player* player, Unit*) override
+    {
+        player->RemoveAurasDueToSpell(SPELL_DISGUISE_WARRIOR);
+        player->RemoveAurasDueToSpell(SPELL_DISGUISE_GUARD);
+    }
 };
 
 void AddSC_AscensionThreeTotems()
 {
     RegisterCreatureAI(npc_coa_malgorm_hollowhoof);
+    RegisterSpellScript(spell_coa_malgorm_trample);
+    RegisterSpellScript(spell_coa_grimtotem_disguise);
+    new coa_grimtotem_disguise_drops_in_combat();
 }
