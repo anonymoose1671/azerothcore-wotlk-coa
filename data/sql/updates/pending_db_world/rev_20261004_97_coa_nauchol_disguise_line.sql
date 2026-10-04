@@ -1,5 +1,5 @@
 -- Sage Nauchol sizes up the player he dresses in the Grimtotem Disguise for Death and Justice (1660033).
-DELETE FROM `creature_text` WHERE `CreatureID` = 161819;
+DELETE FROM `creature_text` WHERE `CreatureID` = 161819 AND `GroupID` = 0;
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Language`, `Probability`, `Emote`, `Duration`, `Sound`, `BroadcastTextId`, `TextRange`, `comment`) VALUES
 (161819, 0, 0, 'You almost look like one of us. Yes. It''ll do... as long as your attitude doesn''t give you away. Remember: chin up and eyes full of arrogance!', 12, 0, 100, 0, 0, 0, 0, 0, 'Sage Nauchol - Grimtotem Disguise given');
 
