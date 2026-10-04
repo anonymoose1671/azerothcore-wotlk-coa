@@ -18,6 +18,7 @@ constexpr uint32 SPELL_CHARGE_TRAIL = 256744;
 constexpr uint32 SPELL_CHARGE_TRAMPLE = 256745;
 constexpr uint32 SPELL_CHARGE_IMPACT = 256746;
 constexpr uint32 SPELL_CHARGE_TELEGRAPH = 255356;
+constexpr uint32 SPELL_CHARGE_TREMOR = 64228;
 constexpr uint32 SPELL_ENRAGE = 256756;
 
 constexpr uint8 SAY_AGGRO_DISGUISED = 0;
@@ -36,6 +37,7 @@ constexpr float WALL_TOLERANCE = 1.0f;
 constexpr float TRAMPLE_REACH = 2.5f;
 constexpr uint32 TRAMPLE_TICK_MS = 200;
 constexpr uint32 CHARGE_RUN_GRACE_MS = 1000;
+constexpr uint32 TREMOR_PULSE_MS = 1000;
 constexpr uint32 ENRAGE_HEALTH_PCT = 50;
 constexpr int32 ENRAGE_MS = 10000;
 constexpr uint32 LOW_HEALTH_PCT = 20;
@@ -58,6 +60,7 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
         _saidCharge = false;
         _chargeRunMs = 0;
         _trampleTickMs = 0;
+        _tremorPulseMs = 0;
         _trampled.clear();
         for (uint32 spell : { SPELL_CHARGE_TELEGRAPH, SPELL_CHARGE_TRAIL, SPELL_ENRAGE })
             me->RemoveAurasDueToSpell(spell);
@@ -129,6 +132,9 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
 
     void UpdateAI(uint32 diff) override
     {
+        if (_tremorPulseMs)
+            UpdateTremor(diff);
+
         if (_chargeRunMs)
         {
             UpdateChargeRun(diff);
@@ -170,8 +176,26 @@ private:
             _saidCharge = true;
             Talk(SAY_CHARGE);
         }
+        DoCastSelf(SPELL_CHARGE_TREMOR, true);
+        _tremorPulseMs = TREMOR_PULSE_MS;
         if (me->CastSpell(me, SPELL_CHARGE_WINDUP, false) != SPELL_CAST_OK)
             FinishCharge(false);
+    }
+
+    void UpdateTremor(uint32 diff)
+    {
+        if (_tremorPulseMs > diff)
+        {
+            _tremorPulseMs -= diff;
+            return;
+        }
+
+        _tremorPulseMs = 0;
+        if (me->FindCurrentSpellBySpellId(SPELL_CHARGE_WINDUP))
+        {
+            DoCastSelf(SPELL_CHARGE_TREMOR, true);
+            _tremorPulseMs = TREMOR_PULSE_MS;
+        }
     }
 
     void RunCharge()
@@ -230,6 +254,7 @@ private:
     {
         bool const wasRunning = _chargeRunMs != 0;
         _chargeRunMs = 0;
+        _tremorPulseMs = 0;
         me->RemoveAurasDueToSpell(SPELL_CHARGE_TELEGRAPH);
         me->RemoveAurasDueToSpell(SPELL_CHARGE_TRAIL);
         me->SetControlled(false, UNIT_STATE_ROOT);
@@ -258,6 +283,7 @@ private:
     bool _chargeHitsWall = false;
     uint32 _chargeRunMs = 0;
     uint32 _trampleTickMs = 0;
+    uint32 _tremorPulseMs = 0;
 };
 
 void AddSC_AscensionThreeTotems()

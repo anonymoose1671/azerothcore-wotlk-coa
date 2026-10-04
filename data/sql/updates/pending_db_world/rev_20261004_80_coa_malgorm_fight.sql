@@ -1,8 +1,9 @@
 -- Malgorm Hollowhoof becomes a fight (npc_coa_malgorm_hollowhoof in src/server/coa/AscensionThreeTotems.cpp) in place
--- of calling the village to arms. Players who ran it on CoA recall a charge at least every 20 seconds behind a red line
--- on the floor, running on until it struck a wall and knocking back the players in its path for heavy damage, and an
--- enrage at half health for 10 seconds; CoA's Charge 256743-256746 and Enrage 256756 build it. The line visual 255356,
--- the 30 yd reach and the lines are INFERRED; the lines are invented from the Three Totems quests.
+-- of calling the village to arms. Players who ran it on CoA recall a charge at least every 20 seconds: a red line on
+-- the floor and the ground quaking under him as he wound up, then a run until he struck a wall, knocking back the
+-- players in his path for heavy damage; and an enrage at half health for 10 seconds. CoA's Charge 256743-256746 and
+-- Enrage 256756 build it. The line visual 255356, the Ground Tremor 64228 quake, the 30 yd reach and the lines are
+-- INFERRED; the lines are invented from the Three Totems quests.
 UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_coa_malgorm_hollowhoof' WHERE `entry` = 161816;
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 161816 AND `source_type` = 0;
 
