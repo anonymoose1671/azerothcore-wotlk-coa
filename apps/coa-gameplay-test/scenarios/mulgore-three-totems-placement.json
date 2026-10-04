@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Three Totems placement from CoAWorldEdit stands where it was placed",
+  "name": "Three Totems spawns stand where they were placed in game",
   "contract": "rev_20261004_20_coa_mulgore_three_totems_placement adds the Offering Bone 7916546 on the upper ledge west of the Grimtotem camp, sends the Grimtotem Patrol 9011069 along the plank path (path 90110690) from the village gate to Malgorm's hut and back, and sends Patrol 9011068 from the gate down the Grimtotem Mountain Path (path 90110680) and Patrol 9011133 from the plank bridge into the valley (path 90111330). Expected: the bone stands within 20 yd of its placement, the plank-path and mountain-path patrols start at the gate, and a patrol reaches Malgorm's hut, where no other patrol stands, and a Battlefield Scavenger 161812 circles over the mountain path, where none stood before.",
   "timeout_ms": 300000,
   "location": {

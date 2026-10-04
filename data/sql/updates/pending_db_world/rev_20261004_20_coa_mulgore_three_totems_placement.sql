@@ -1,4 +1,4 @@
--- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), placed in game with CoAWorldEdit:
+-- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), as placed in game:
 -- 33 Grimtotem Marauders and Patrols, a Warrior, both door Guards, seven Tallstriders and four Mountain Cougars removed
 -- to thin the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and twelve
 -- mobs moved.
