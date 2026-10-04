@@ -2,7 +2,7 @@
   "schema": 1,
   "name": "Sage Nauchol calls out to the player who brings Morriga's ring",
   "contract": [
-    "rev_20261004_89_coa_nauchol_first_approach makes Sage Nauchol 161819 say \"Yeah? Who's there?\" when a player",
+    "rev_20261004_98_coa_nauchol_first_approach makes Sage Nauchol 161819 say \"Yeah? Who's there?\" when a player",
     "carrying Death and Exile 1660031 comes within 15 yd. Expected: the ring bearer hears a line as they step up to him,",
     "and a player without the quest who steps up the same way hears none."
   ],
