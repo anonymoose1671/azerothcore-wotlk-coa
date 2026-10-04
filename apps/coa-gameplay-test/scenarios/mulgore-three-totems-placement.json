@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "name": "Three Totems placement from CoAWorldEdit stands where it was placed",
+  "contract": "rev_20261004_20_coa_mulgore_three_totems_placement adds the Offering Bone 7916546 on the upper ledge west of the Grimtotem camp and gives the Grimtotem Patrol 9011069 the waypoint path 90110690 from its spawn at the camp gate. Expected: the bone stands within 20 yd of its placement and the patrol is spawned at the gate.",
+  "timeout_ms": 90000,
+  "location": {
+    "map": 1,
+    "x": -3500.0,
+    "y": -811.0,
+    "z": 102.0,
+    "o": 0
+  },
+  "players": [
+    {
+      "id": "scout",
+      "race": 6,
+      "class": 1,
+      "level": 80
+    }
+  ],
+  "steps": [
+    {
+      "action": "set_phase",
+      "actor": "scout",
+      "value": 1
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": -3500.0,
+      "y": -811.0,
+      "z": 102.0,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 2300532,
+      "min": 1,
+      "label": "The Offering Bone placed in game stands on the upper ledge"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": -3590.7,
+      "y": -953.1,
+      "z": 201.0,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_creature_count",
+      "entry": 161810,
+      "min": 1,
+      "label": "The Grimtotem Patrol starts its route at the camp gate"
+    }
+  ]
+}
