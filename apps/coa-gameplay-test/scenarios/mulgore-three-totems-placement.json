@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "name": "Three Totems spawns stand where they were placed in game",
-  "contract": "rev_20261004_20_coa_mulgore_three_totems_placement adds the Offering Bone 7916546 on the upper ledge west of the Grimtotem camp, sends the Grimtotem Patrol 9011069 along the plank path (path 90110690) from the village gate to Malgorm's hut and back, and sends Patrol 9011068 from the gate down the Grimtotem Mountain Path (path 90110680) and Patrol 9011133 from the plank bridge into the valley (path 90111330). Expected: the bone stands within 20 yd of its placement, the plank-path and mountain-path patrols start at the gate, and a patrol reaches Malgorm's hut, where no other patrol stands, and a Battlefield Scavenger 161812 circles over the mountain path, where none stood before.",
+  "contract": "rev_20261004_20_coa_mulgore_three_totems_placement adds the Offering Bone 7916546 on the upper ledge west of the Grimtotem camp, sends 9011069 along the plank path (path 90110690) from the village gate to Malgorm's hut and back, 9011068 from the gate down the Grimtotem Mountain Path (path 90110680) and 9011133 from the plank bridge into the valley (path 90111330); rev_20261004_92_coa_grimtotem_patrols_as_marauders makes these patrols Grimtotem Marauders 161809. Expected: the bone stands within 20 yd of its placement, no Grimtotem Patrol 161810 remains, the plank-path and mountain-path Marauders start at the gate, one more Marauder reaches Malgorm's hut, and a Battlefield Scavenger 161812 circles over the mountain path, where none stood before.",
   "timeout_ms": 300000,
   "location": {
     "map": 1,
@@ -63,16 +63,16 @@
       "actor": "scout",
       "metric": "nearby_creature_count",
       "entry": 161810,
-      "min": 1,
-      "label": "The Grimtotem Patrol starts its route at the camp gate"
+      "max": 0,
+      "label": "No Grimtotem Patrol is left at the camp gate"
     },
     {
       "action": "assert",
       "actor": "scout",
       "metric": "nearby_creature_count",
-      "entry": 161810,
+      "entry": 161809,
       "min": 2,
-      "label": "The plank-path Patrol and the mountain-path Patrol start at the gate"
+      "label": "The plank-path and mountain-path Marauders start at the gate"
     },
     {
       "action": "teleport",
@@ -84,13 +84,21 @@
       "o": 0
     },
     {
+      "action": "snapshot",
+      "actor": "scout",
+      "metric": "nearby_creature_count",
+      "entry": 161809,
+      "save_as": "hut_marauders"
+    },
+    {
       "action": "assert",
       "actor": "scout",
       "metric": "nearby_creature_count",
-      "entry": 161810,
+      "entry": 161809,
       "min": 1,
       "within_ms": 240000,
-      "label": "A Patrol follows the plank path to Malgorm's hut"
+      "label": "A Marauder follows the plank path to Malgorm's hut",
+      "relative_to": "hut_marauders"
     },
     {
       "action": "teleport",
