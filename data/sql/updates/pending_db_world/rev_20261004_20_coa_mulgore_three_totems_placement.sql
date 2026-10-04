@@ -1,14 +1,15 @@
 -- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), placed in game with CoAWorldEdit:
--- 30 Grimtotem Marauders and Patrols and one Guard removed to thin the hillsides, eight Offering Bones removed and
+-- 31 Grimtotem Marauders and Patrols and both door Guards removed to thin the camp, eight Offering Bones removed and
 -- six moved onto their ledges, one bone added in game, five mobs moved, and the Grimtotem Patrol walks a route
 -- through the camp. Worldforged pickups nearby are set on the ground: the Ancestor's Axe, the Cord of Reverence,
--- two Exalted Pendants and the Sun Touched Club moved; a third Pendant and the Grimtotem Club on the cliff removed.
+-- two Exalted Pendants, the Sun Touched Club and the Grimtotem Bow moved; a third Pendant and the Grimtotem Club on
+-- the cliff removed.
 -- Every value is the spawn as it was left in game.
 DELETE FROM `creature` WHERE `guid` IN (
     9011028, 9011033, 9011052, 9011034, 9011046, 9011035, 9011061, 9011042, 9011013, 9011012,
     9011038, 9011040, 9011015, 9011014, 9011020, 9011043, 9011021, 9011048, 9011018, 9011039,
     9011019, 9011024, 9011023, 9011022, 9011041, 9011016, 9011025, 9011045, 9011064, 9011070,
-    9011103
+    9011071, 9011103, 9011102
 );
 
 DELETE FROM `gameobject` WHERE `guid` IN (
@@ -61,6 +62,10 @@ UPDATE `gameobject` SET `position_x` = -3552.999, `position_y` = -1210.354, `pos
     `orientation` = 4.4873,
     `rotation0` = 0, `rotation1` = 0, `rotation2` = -0.7820465, `rotation3` = 0.6232202
     WHERE `guid` = 6942270 AND `id` = 520700;
+UPDATE `gameobject` SET `position_x` = -3641.917, `position_y` = -1032.398, `position_z` = 204.614,
+    `orientation` = 0.546,
+    `rotation0` = -0.7376661, `rotation1` = -0.2065396, `rotation2` = 0.1733124, `rotation3` = 0.6189936
+    WHERE `guid` = 6941796 AND `id` = 520699;
 
 UPDATE `creature` SET `position_x` = -3331.774, `position_y` = -766.01, `position_z` = 51.391, `orientation` = 2.8562
     WHERE `guid` = 9011049;
