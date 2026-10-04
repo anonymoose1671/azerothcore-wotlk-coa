@@ -1,0 +1,175 @@
+{
+  "schema": 1,
+  "name": "Worldforged Travel Sack and Break-time Gloves stand once each, where they were looted",
+  "contract": "The realm map labels both the Travel Sack bag pickup 95612 (item 450510) and the Break-time Gloves sack 68403 (item 515267, level 46) 'Travel Sack'. LootCollector pins loot the bag only in Red Cloud Mesa and the gloves only in Searing Gorge. Expected: 95612 beside the Red Cloud Mesa well, 68403 once in The Cauldron, and no 68403 at the other realm-map markers (Red Cloud Mesa, Mulgore, Shadowglen, Hillsbrad Foothills, Eastern Plaguelands).",
+  "timeout_ms": 120000,
+  "location": {
+    "map": 1,
+    "x": -3062.0,
+    "y": -537.0,
+    "z": 26.5,
+    "o": 0
+  },
+  "players": [
+    {
+      "id": "scout",
+      "race": 6,
+      "class": 1,
+      "level": 80
+    }
+  ],
+  "steps": [
+    {
+      "action": "set_phase",
+      "actor": "scout",
+      "value": 1
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": -3062.0,
+      "y": -537.0,
+      "z": 26.5,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 95612,
+      "equals": 1,
+      "label": "The Travel Sack bag stands beside the Red Cloud Mesa well"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": -3124.0,
+      "y": -619.0,
+      "z": 34.0,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 68403,
+      "equals": 0,
+      "label": "No level 46 gloves sack floats in Red Cloud Mesa"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 0,
+      "x": -6835.7,
+      "y": -1351.2,
+      "z": 170.0,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 68403,
+      "equals": 1,
+      "label": "The gloves sack stands in The Cauldron, Searing Gorge"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": -1472.8,
+      "y": -983.8,
+      "z": 149.6,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 68403,
+      "equals": 0,
+      "label": "No gloves sack in Mulgore"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": 10636.1,
+      "y": 841.8,
+      "z": 1316.5,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 68403,
+      "equals": 0,
+      "label": "No gloves sack in Shadowglen"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 0,
+      "x": -476.4,
+      "y": -367.8,
+      "z": 51.8,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 68403,
+      "equals": 0,
+      "label": "No gloves sack in Hillsbrad Foothills"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 0,
+      "x": 2456.8,
+      "y": -4270.3,
+      "z": 76.1,
+      "o": 0
+    },
+    {
+      "action": "wait",
+      "ms": 1500
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_gameobject_count",
+      "entry": 68403,
+      "equals": 0,
+      "label": "No gloves sack in Eastern Plaguelands"
+    }
+  ]
+}
