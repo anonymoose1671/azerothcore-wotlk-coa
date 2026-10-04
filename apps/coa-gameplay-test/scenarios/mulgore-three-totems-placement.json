@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "name": "Three Totems placement from CoAWorldEdit stands where it was placed",
-  "contract": "rev_20261004_20_coa_mulgore_three_totems_placement adds the Offering Bone 7916546 on the upper ledge west of the Grimtotem camp and gives the Grimtotem Patrol 9011069 the waypoint path 90110690 from its spawn at the camp gate. Expected: the bone stands within 20 yd of its placement and the patrol is spawned at the gate.",
-  "timeout_ms": 90000,
+  "contract": "rev_20261004_20_coa_mulgore_three_totems_placement adds the Offering Bone 7916546 on the upper ledge west of the Grimtotem camp, sends the Grimtotem Patrol 9011069 along the plank path (path 90110690) from the village gate to Malgorm's hut and back, and adds a second Patrol 9011133 at the gate that walks down the Grimtotem Mountain Path (path 90111330). Expected: the bone stands within 20 yd of its placement, both patrols and the standing patrol above the gate are at the gate when the realm starts, and a patrol reaches Malgorm's hut, where no other patrol stands, and a Battlefield Scavenger 161812 circles over the mountain path, where none stood before.",
+  "timeout_ms": 300000,
   "location": {
     "map": 1,
     "x": -3500.0,
@@ -65,6 +65,50 @@
       "entry": 161810,
       "min": 1,
       "label": "The Grimtotem Patrol starts its route at the camp gate"
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_creature_count",
+      "entry": 161810,
+      "min": 3,
+      "label": "The plank-path Patrol, the new mountain-path Patrol and the standing Patrol are at the gate"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": -3480.0,
+      "y": -1190.0,
+      "z": 214.0,
+      "o": 0
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_creature_count",
+      "entry": 161810,
+      "min": 1,
+      "within_ms": 240000,
+      "label": "A Patrol follows the plank path to Malgorm's hut"
+    },
+    {
+      "action": "teleport",
+      "actor": "scout",
+      "map": 1,
+      "x": -3489.4,
+      "y": -836.5,
+      "z": 89.0,
+      "o": 0
+    },
+    {
+      "action": "assert",
+      "actor": "scout",
+      "metric": "nearby_creature_count",
+      "entry": 161812,
+      "min": 1,
+      "within_ms": 5000,
+      "label": "A Battlefield Scavenger circles over the mountain path"
     }
   ]
 }
