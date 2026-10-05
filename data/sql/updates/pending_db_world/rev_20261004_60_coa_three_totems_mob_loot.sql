@@ -96,3 +96,6 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (161834, 7097, 0, 7.3456, 0, 1, 0, 1, 1, 'Cruel Carrion Spirit - Leg Meat, as Wiry Swoop 2969'),
 (161834, 4776, 0, 3.653, 0, 1, 0, 1, 1, 'Cruel Carrion Spirit - Ruffled Feather, as Wiry Swoop 2969'),
 (161816, 626264, 0, 100, 0, 1, 0, 1, 1, 'Malgorm Hollowhoof - Malgorm Hollowhoof''s Bracers');
+
+-- Every Grimtotem Marauder drops its Mane while Death and Tribute 1660030 still needs one.
+UPDATE `creature_loot_template` SET `Chance` = 100 WHERE `Entry` = 161809 AND `Item` = 559156;
