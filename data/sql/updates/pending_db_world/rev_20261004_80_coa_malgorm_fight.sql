@@ -1,15 +1,16 @@
 -- Malgorm Hollowhoof becomes a fight (npc_coa_malgorm_hollowhoof in src/server/coa/AscensionThreeTotems.cpp) in place
 -- of calling the village to arms. Players who ran it on CoA recall a charge at least every 20 seconds: a red line on
 -- the floor and the ground quaking under him as he wound up, then a run until he struck a wall that killed the players
--- in his path outright and knocked them back; and an enrage at half health for 10 seconds. CoA's Charge 256743-256746
--- and Enrage 256756 build it; spell_coa_malgorm_trample makes each trample 256745 lethal. His aggro, kill and death
--- lines are CoA's, as players recorded them; the charge, enrage and low-health lines, the line visual 255356, the
--- Ground Tremor 64228 quake and the 30 yd reach are INFERRED.
+-- in his path outright and knocked them back; an enrage at half health for 10 seconds; and Thunderclap. CoA's Charge
+-- 256743-256746 and Enrage 256756 build it, with the low-level creature Thunderclap 8078 every 14-18 s;
+-- spell_coa_malgorm_trample makes each trample 256745 lethal. A video of the fight shows him at 874 health at level 7
+-- (health modifier 6.38 on the level 7 warrior base of 137). His aggro, kill and death lines are CoA's, as players
+-- recorded them; the charge, enrage and low-health lines, the line visual 255356, the Ground Tremor 64228 quake and
+-- the 30 yd reach are INFERRED.
 -- In the Grimtotem Disguise he stands neutral instead of hostile: his faction is template 1842 (faction 1027, used by
 -- no creature), hostile to players, and spell_coa_grimtotem_disguise forces it neutral while the disguise lasts.
--- Entering combat in the disguise ends it (coa_grimtotem_disguise_drops_in_combat).
-UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_coa_malgorm_hollowhoof', `faction` = 1842
-    WHERE `entry` = 161816;
+UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_coa_malgorm_hollowhoof', `faction` = 1842,
+    `HealthModifier` = 6.38 WHERE `entry` = 161816;
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 161816 AND `source_type` = 0;
 
 DELETE FROM `spell_script_names` WHERE `spell_id` IN (256709, 256710, 256745);
