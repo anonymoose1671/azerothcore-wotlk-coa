@@ -19,8 +19,9 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (2300534, 1, 1, 2, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 12, 161852, 4, 60000, 1, 0, 0, 8, 0, 0, 0, 0, -3500.5, -1204, 212.906, 5.5, 'Taurine Totem - Linked - Summon its guardian spirit to attack the invoker'),
 (2300534, 1, 2, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 41, 0, 60, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Taurine Totem - Linked - Fade for 60 seconds');
 
--- Corrupting Totem 256716 as in Spell.dbc except ChannelInterruptFlags, which takes Drain Life's 31756 so moving,
--- casting, attacking or using something breaks the channel; the row also reaches the client, which cancels it too.
+-- Corrupting Totem 256716 as in Spell.dbc except ChannelInterruptFlags: Drain Life's 31756 plus taking damage (31758),
+-- so moving, casting, attacking, using something or being hit cancels the channel without altering the totem, instead
+-- of a hit pushing it back to an early finish. The row also reaches the client, which cancels it too.
 DELETE FROM `spell_dbc` WHERE `ID` = 256716;
 INSERT INTO `spell_dbc` (`ID`, `Category`, `DispelType`, `Mechanic`, `Attributes`, `AttributesEx`, `AttributesEx2`,
     `AttributesEx3`, `AttributesEx4`, `AttributesEx5`, `AttributesEx6`, `AttributesEx7`, `ShapeshiftMask`, `unk_320_2`,
@@ -69,7 +70,7 @@ INSERT INTO `spell_dbc` (`ID`, `Category`, `DispelType`, `Mechanic`, `Attributes
     `RequiredTotemCategoryID_2`, `RequiredAreasID`, `SchoolMask`, `RuneCostID`, `SpellMissileID`, `PowerDisplayID`,
     `EffectBonusMultiplier_1`, `EffectBonusMultiplier_2`, `EffectBonusMultiplier_3`, `SpellDescriptionVariableID`,
     `SpellDifficultyID`) VALUES
-(256716, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 47, 0, 31756, 0, 101,
+(256716, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 47, 0, 31758, 0, 101,
     0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 6, 0, 0,
     0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 278469, 0, 26913, 0, 0, 'Corrupting Totem', '', '', '', '',
