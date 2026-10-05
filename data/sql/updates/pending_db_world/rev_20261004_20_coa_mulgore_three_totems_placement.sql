@@ -1,7 +1,7 @@
 -- Three Totems (Mulgore, Red Cloud Mesa and the Grimtotem camp above it), as placed in game:
--- 33 Grimtotem Marauders and Patrols, a Warrior, both door Guards, seven Tallstriders and four Mountain Cougars removed
--- to thin the camp, eight Offering Bones removed and six moved onto their ledges, one bone added in game and twelve
--- mobs moved.
+-- 33 Grimtotem Marauders and Patrols, a Warrior, both door Guards, a Funeral Guard, seven Tallstriders and four
+-- Mountain Cougars removed to thin the camp, eight Offering Bones removed and six moved onto their ledges, one bone
+-- added in game and twelve mobs moved.
 -- Worldforged pickups are set on the ground: the Ancestor's Axe, the Cord of Reverence, two Exalted Pendants, the Sun
 -- Touched Club, the Grimtotem Bow and a Loose Barrel moved; a third Pendant, the Grimtotem Club on the cliff and a
 -- second Loose Barrel removed.
@@ -13,11 +13,11 @@
 -- Battlefield Scavengers placed in game circle over the path, a fourth sits on the rock above Hard Basin, and the
 -- Hyena Spirit stands where it was placed in game.
 DELETE FROM `creature` WHERE `guid` IN (
-    9011028, 9011033, 9011052, 9011034, 9011046, 9011035, 9011061, 9011042, 9011013, 9011012,
-    9011038, 9011040, 9011015, 9011014, 9011020, 9011043, 9011021, 9011048, 9011018, 9011039,
-    9011019, 9011024, 9011023, 9011022, 9011041, 9011016, 9011025, 9011045, 9011064, 9011070,
-    9011071, 9011103, 9011102, 9011065, 9011066, 9011084, 9011085, 9011086, 9011087, 9011081,
-    9011082, 9011083, 94867, 94868, 94869, 94870, 9011111, 9011067
+    9011132, 9011028, 9011033, 9011052, 9011034, 9011046, 9011035, 9011061, 9011042, 9011013,
+    9011012, 9011038, 9011040, 9011015, 9011014, 9011020, 9011043, 9011021, 9011048, 9011018,
+    9011039, 9011019, 9011024, 9011023, 9011022, 9011041, 9011016, 9011025, 9011045, 9011064,
+    9011070, 9011071, 9011103, 9011102, 9011065, 9011066, 9011084, 9011085, 9011086, 9011087,
+    9011081, 9011082, 9011083, 94867, 94868, 94869, 94870, 9011111, 9011067
 );
 
 DELETE FROM `gameobject` WHERE `guid` IN (
@@ -59,12 +59,13 @@ UPDATE `gameobject` SET `position_x` = -3049.759, `position_y` = -1138.55, `posi
     `orientation` = 6.1886,
     `rotation0` = -0.0102314, `rotation1` = -0.2161818, `rotation2` = -0.0461546, `rotation3` = 0.9752079
     WHERE `guid` = 6941585 AND `id` = 254522;
-UPDATE `gameobject` SET `position_x` = -3466.83, `position_y` = -1092.99, `position_z` = 207.478, `orientation` = 0,
-    `rotation0` = 0, `rotation1` = 0, `rotation2` = 0, `rotation3` = 1
+UPDATE `gameobject` SET `position_x` = -3466.957, `position_y` = -1092.769, `position_z` = 209.278,
+    `orientation` = 2.3562,
+    `rotation0` = -0.6532835, `rotation1` = 0.2705968, `rotation2` = -0.6532811, `rotation3` = -0.2705958
     WHERE `guid` = 7916521 AND `id` = 2300515;
-UPDATE `gameobject` SET `position_x` = -3471.52, `position_y` = -1096.94, `position_z` = 207.432,
-    `orientation` = 5.2124,
-    `rotation0` = 0, `rotation1` = 0, `rotation2` = -0.5101788, `rotation3` = 0.8600685
+UPDATE `gameobject` SET `position_x` = -3471.742, `position_y` = -1096.591, `position_z` = 209.232,
+    `orientation` = 1.8963,
+    `rotation0` = -0.5744108, `rotation1` = 0.4123762, `rotation2` = -0.5744087, `rotation3` = -0.4123747
     WHERE `guid` = 7916520 AND `id` = 2300515;
 UPDATE `gameobject` SET `position_x` = -3479.914, `position_y` = -1164.276, `position_z` = 215.86,
     `orientation` = 4.4873,
