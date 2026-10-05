@@ -26,3 +26,6 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (90110050, 10, -3592.0, -1088.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
 (90110050, 11, -3585.0, -1086.1, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
 (90110050, 12, -3579.9, -1081.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0);
+
+-- It stands neutral until attacked, like the Grimtotem Marauders.
+UPDATE `creature_template` SET `faction` = 7 WHERE `entry` = 161834;
