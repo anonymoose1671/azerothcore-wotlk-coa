@@ -119,6 +119,12 @@ struct Session
     void SendPacket(WorldPacket* packet) { replacements.push_back(packet->values); }
 };
 
+struct Aura
+{
+    bool Removed = false;
+    bool IsRemoved() const { return Removed; }
+};
+
 struct Player
 {
     uint32 cls = 16, level = 80, learnPackets = 0;
@@ -128,6 +134,7 @@ struct Player
     PlayerSpellMap m_spells;
     std::map<uint32, uint32> m_temporarySpellReplacements;
     std::map<uint32, uint32> m_temporarySpellReplacementOrigins;
+    std::map<uint32, Aura> auras;
     Session session;
     Player() = default;
     Player(Player const&) = delete;
@@ -142,6 +149,11 @@ struct Player
     void SetCanDualWield(bool value) { dualWield = value; }
     void AutoUnequipOffhandIfNeed() { ++offhandChecks; }
     Guid GetGUID() const { return {}; }
+    Aura const* GetAura(uint32 id, Guid) const
+    {
+        auto const itr = auras.find(id);
+        return itr == auras.end() ? nullptr : &itr->second;
+    }
     auto const& GetSpellMap() const { return m_spells; }
     Session* GetSession() { return &session; }
     bool IsInWorld() const { return true; }
@@ -170,6 +182,11 @@ struct Player
 bool IsAscensionCustomClass(Player const* player) { return IsAscensionClass(player->getClass()); }
 void SynchronizeAscensionRunemasterEchoes(Player*, uint32) { }
 void RemoveAscensionPrimalistWeapons(Player*) { }
+namespace AscensionWildcard
+{
+constexpr std::array<uint32, 1> SPECIALIZATION_SWAP_SPELLS = { 979993 };
+bool IsWildcardHero(Player const*) { return false; }
+}
 
 struct AscensionClassService
 {
@@ -182,6 +199,7 @@ struct AscensionClassService
     }
     bool AffectsProficiencies(uint32) const { return false; }
     void SynchronizeProficiencies(Player*) { }
+    void SendActiveSlot(Player*) { }
     static void ReconcileRunemasterFists(Player*, uint32) { }
     // ACTUAL_SERVICE
 };
@@ -215,6 +233,8 @@ void CheckReplacements()
     }
     for (auto const& entry : AscensionCompatData::TalentReplacements)
     {
+        if (entry.RequiresAura)
+            continue;
         uint32 const original = entry.OriginalSpellId, parent = entry.ParentSpellId;
         uint32 const base = entry.Ranks.front().SpellId;
         Player player;
@@ -324,6 +344,43 @@ void CheckReplacements()
         relog.removeSpell(originalRank, SPEC_MASK_ALL, false);
         assert(!relog.m_temporarySpellReplacements.contains(originalRank));
         assert(relog.GetTemporarySpellReplacement(original) == base);
+    }
+    for (auto const& entry : AscensionCompatData::TalentReplacements)
+    {
+        if (!entry.RequiresAura)
+            continue;
+        Player player;
+        player.cls = entry.ClassId;
+        uint32 const original = entry.OriginalSpellId, parent = entry.ParentSpellId;
+        uint32 const child = entry.Ranks.front().SpellId;
+        player.learnSpell(parent);
+        player.learnSpell(original);
+        assert(!player.HasSpell(child));
+        assert(player.GetTemporarySpellReplacement(original) == original);
+        player.auras[parent] = {};
+        service.SynchronizeTalentReplacements(&player);
+        assert(player.HasSpell(child));
+        assert(player.GetTemporarySpellReplacement(original) == child);
+        player.auras[parent].Removed = true;
+        service.SynchronizeTalentReplacements(&player);
+        assert(!player.HasSpell(child));
+        assert(player.GetTemporarySpellReplacement(original) == original);
+        player.auras[parent].Removed = false;
+        service.SynchronizeTalentReplacements(&player);
+        player.removeSpell(original, SPEC_MASK_ALL, false);
+        assert(!player.HasSpell(child));
+        player.learnSpell(original);
+        assert(player.HasSpell(child));
+        player.auras.erase(parent);
+        service.SynchronizeTalentReplacements(&player);
+        assert(!player.HasSpell(child));
+        player.Put(child);
+        player.auras[parent] = {};
+        service.SynchronizeTalentReplacements(&player);
+        player.auras.erase(parent);
+        service.SynchronizeTalentReplacements(&player);
+        assert(player.HasSpell(child));
+        assert(player.GetTemporarySpellReplacement(original) == original);
     }
     Player blood;
     blood.cls = 20;
