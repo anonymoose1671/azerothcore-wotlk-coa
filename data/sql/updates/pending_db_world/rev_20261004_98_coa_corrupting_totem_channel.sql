@@ -1,7 +1,5 @@
 -- Death by Laughter (1660034): the player channels Corrupting Totem for 10 s at a totem; a completed channel alters it.
--- The cast bar reads "Corrupting Totem", as on CoA, instead of the generic "Channeling".
-UPDATE `gameobject_template` SET `Data10` = 256716, `castBarCaption` = 'Corrupting Totem'
-    WHERE `entry` IN (2300527, 2300533, 2300534);
+UPDATE `gameobject_template` SET `Data10` = 256716 WHERE `entry` IN (2300527, 2300533, 2300534);
 
 DELETE FROM `spell_script_names` WHERE `spell_id` = 256716 AND `ScriptName` = 'spell_coa_corrupting_totem';
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
