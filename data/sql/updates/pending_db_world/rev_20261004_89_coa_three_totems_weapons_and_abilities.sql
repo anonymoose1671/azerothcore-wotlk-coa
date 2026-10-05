@@ -8,6 +8,7 @@
 -- Defensive Stance 7164 as it engages and Pummels 12555 (15 damage and an interrupt, the stock Grimtotem Mercenary's);
 -- a Villager throws 10277 at range and once heals itself with Healing Wave 332 (45-54) when badly hurt.
 -- The Funeral Guards cast Lightning Bolt, as players saw on CoA: the first rank 403 (13-15 Nature damage).
+-- A Villager sometimes calls out as a fight begins, with its CoA line as players recorded it.
 DELETE FROM `creature_equip_template` WHERE `CreatureID` IN (161809, 161810) AND `ID` = 1;
 INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`, `ItemID3`, `VerifiedBuild`) VALUES
 (161809, 1, 1905, 0, 0, 0),
@@ -16,6 +17,10 @@ INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`,
 UPDATE `creature` SET `equipment_id` = 1 WHERE `id` IN (161809, 161810);
 
 UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN (161810, 161813, 161815, 161834, 161851);
+
+DELETE FROM `creature_text` WHERE `CreatureID` = 161815;
+INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Probability`, `comment`) VALUES
+(161815, 0, 0, 'The red pigment of my tattoos was starting to fade...', 12, 100, 'Grimtotem Villager - aggro (CoA)');
 
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 161809 AND `source_type` = 0 AND `id` IN (1, 2);
 DELETE FROM `smart_scripts` WHERE `entryorguid` = 161837 AND `source_type` = 0 AND `id` IN (4, 5);
@@ -35,4 +40,5 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (161837, 0, 5, 0, 0, 0, 100, 0, 6000, 9000, 10000, 15000, 0, 0, 11, 12555, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Grimtotem Guard - In Combat - Cast Pummel'),
 (161815, 0, 0, 0, 9, 0, 100, 0, 5, 25, 6000, 9000, 0, 0, 11, 10277, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Grimtotem Villager - Victim 5-25 yd - Cast Throw'),
 (161815, 0, 1, 0, 2, 0, 100, 1, 0, 40, 0, 0, 0, 0, 11, 332, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Grimtotem Villager - Below 40% Health - Cast Healing Wave (once)'),
+(161815, 0, 2, 0, 4, 0, 30, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 'Grimtotem Villager - On Aggro - Say Line 0 (30%)'),
 (161813, 0, 0, 0, 0, 0, 100, 0, 1000, 3000, 6000, 9000, 0, 0, 11, 403, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Funeral Guard - In Combat - Cast Lightning Bolt');
