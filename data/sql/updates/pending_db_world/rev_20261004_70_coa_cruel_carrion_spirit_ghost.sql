@@ -7,22 +7,22 @@ INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `b
 UPDATE `creature_addon` SET `auras` = '22650' WHERE `guid` = 9011005;
 
 -- It circles the rock formation at the western edge of Hard Basin (the tall spire Thousandrock14 and its smaller
--- neighbour) instead of the lake: 12 points 14 yd around (-3592, -1074) at height 226, 19-23 yd above the ground and
+-- neighbour) instead of the lake: 12 points 14 yd around (-3592, -1074) at height 219, 12-15 yd above the ground and
 -- clear of the fallen tree, the smaller spire and the cliff ledges to the south-west.
-UPDATE `creature` SET `position_x` = -3578.0, `position_y` = -1074.0, `position_z` = 226, `orientation` = 1.8326
+UPDATE `creature` SET `position_x` = -3578.0, `position_y` = -1074.0, `position_z` = 219, `orientation` = 1.8326
     WHERE `guid` = 9011005;
 DELETE FROM `waypoint_data` WHERE `id` = 90110050;
 INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `velocity`,
     `delay`, `smoothTransition`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES
-(90110050, 1, -3578.0, -1074.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 2, -3579.9, -1067.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 3, -3585.0, -1061.9, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 4, -3592.0, -1060.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 5, -3599.0, -1061.9, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 6, -3604.1, -1067.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 7, -3606.0, -1074.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 8, -3604.1, -1081.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 9, -3599.0, -1086.1, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 10, -3592.0, -1088.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 11, -3585.0, -1086.1, 226, NULL, 0, 0, 0, 0, 0, 100, 0),
-(90110050, 12, -3579.9, -1081.0, 226, NULL, 0, 0, 0, 0, 0, 100, 0);
+(90110050, 1, -3578.0, -1074.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 2, -3579.9, -1067.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 3, -3585.0, -1061.9, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 4, -3592.0, -1060.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 5, -3599.0, -1061.9, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 6, -3604.1, -1067.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 7, -3606.0, -1074.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 8, -3604.1, -1081.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 9, -3599.0, -1086.1, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 10, -3592.0, -1088.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 11, -3585.0, -1086.1, 219, NULL, 0, 0, 0, 0, 0, 100, 0),
+(90110050, 12, -3579.9, -1081.0, 219, NULL, 0, 0, 0, 0, 0, 100, 0);
