@@ -8,7 +8,7 @@
     "credit; a full channel gives none at 5 s and one credit once the 10 s are up. The channel aims at an invisible",
     "floating stalker 23033 summoned inside the totem, so its visual runs from the player into the totem; the",
     "stalker is gone once the channel ends. A totem 6 yd away, within the server's use range, refuses the channel:",
-    "Corrupting Totem needs a totem within 2 yd of reach."
+    "Corrupting Totem needs a totem within 3 yd of reach."
   ],
   "timeout_ms": 60000,
   "location": {"map": 1, "x": -2712.6, "y": 19.0, "z": 14.5, "o": 0},

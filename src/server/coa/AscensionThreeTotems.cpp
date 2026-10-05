@@ -48,7 +48,7 @@ constexpr uint32 TREMOR_PULSE_MS = 1000;
 constexpr uint32 ENRAGE_HEALTH_PCT = 50;
 constexpr int32 ENRAGE_MS = 10000;
 constexpr uint32 LOW_HEALTH_PCT = 20;
-constexpr float CORRUPTED_TOTEM_REACH = 2.0f;
+constexpr float CORRUPTED_TOTEM_REACH = 3.0f;
 constexpr uint32 NPC_TOTEM_CHANNEL_TARGET = 23033;
 constexpr float TOTEM_CHANNEL_TARGET_HEIGHT = 1.5f;
 
