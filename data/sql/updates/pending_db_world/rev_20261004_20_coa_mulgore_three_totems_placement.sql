@@ -66,9 +66,9 @@ UPDATE `gameobject` SET `position_x` = -3471.52, `position_y` = -1096.94, `posit
     `orientation` = 5.2124,
     `rotation0` = 0, `rotation1` = 0, `rotation2` = -0.5101788, `rotation3` = 0.8600685
     WHERE `guid` = 7916520 AND `id` = 2300515;
-UPDATE `gameobject` SET `position_x` = -3552.999, `position_y` = -1210.354, `position_z` = 206.048,
+UPDATE `gameobject` SET `position_x` = -3479.914, `position_y` = -1164.276, `position_z` = 215.86,
     `orientation` = 4.4873,
-    `rotation0` = 0, `rotation1` = 0, `rotation2` = -0.7820465, `rotation3` = 0.6232202
+    `rotation0` = -0.4061053, `rotation1` = 0.454052, `rotation2` = -0.6364027, `rotation3` = 0.473188
     WHERE `guid` = 6942270 AND `id` = 520700;
 UPDATE `gameobject` SET `position_x` = -3641.917, `position_y` = -1032.398, `position_z` = 204.614,
     `orientation` = 0.546,

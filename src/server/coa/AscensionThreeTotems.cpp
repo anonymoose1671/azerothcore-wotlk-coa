@@ -25,6 +25,7 @@ constexpr uint32 SPELL_CHARGE_IMPACT = 256746;
 constexpr uint32 SPELL_CHARGE_TELEGRAPH = 255356;
 constexpr uint32 SPELL_CHARGE_TREMOR = 64228;
 constexpr uint32 SPELL_ENRAGE = 256756;
+constexpr uint32 SPELL_THUNDERCLAP = 8078;
 
 constexpr uint32 FACTION_MALGORM = 1027;
 
@@ -52,7 +53,8 @@ constexpr float TOTEM_CHANNEL_TARGET_HEIGHT = 1.5f;
 
 enum MalgormEvents
 {
-    EVENT_MALGORM_CHARGE = 1
+    EVENT_MALGORM_CHARGE = 1,
+    EVENT_MALGORM_THUNDERCLAP
 };
 
 class NearestGooberCastingSpell
@@ -153,6 +155,7 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
     {
         Talk(SAY_AGGRO, who->GetCharmerOrOwnerPlayerOrPlayerItself());
         _events.ScheduleEvent(EVENT_MALGORM_CHARGE, 10s, 12s);
+        _events.ScheduleEvent(EVENT_MALGORM_THUNDERCLAP, 7s, 9s);
     }
 
     void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
@@ -219,11 +222,18 @@ struct npc_coa_malgorm_hollowhoof : public ScriptedAI
 
         _events.Update(diff);
 
-        if (_events.ExecuteEvent() == EVENT_MALGORM_CHARGE)
+        switch (_events.ExecuteEvent())
         {
-            BeginCharge();
-            _events.Repeat(20s);
-            return;
+            case EVENT_MALGORM_CHARGE:
+                BeginCharge();
+                _events.Repeat(20s);
+                return;
+            case EVENT_MALGORM_THUNDERCLAP:
+                DoCastSelf(SPELL_THUNDERCLAP);
+                _events.Repeat(14s, 18s);
+                return;
+            default:
+                break;
         }
 
         DoMeleeAttackIfReady();
