@@ -47,7 +47,7 @@ constexpr uint32 TREMOR_PULSE_MS = 1000;
 constexpr uint32 ENRAGE_HEALTH_PCT = 50;
 constexpr int32 ENRAGE_MS = 10000;
 constexpr uint32 LOW_HEALTH_PCT = 20;
-constexpr float CORRUPTED_TOTEM_REACH = 10.0f;
+constexpr float CORRUPTED_TOTEM_REACH = 2.0f;
 constexpr uint32 NPC_TOTEM_CHANNEL_TARGET = 23033;
 constexpr float TOTEM_CHANNEL_TARGET_HEIGHT = 1.5f;
 
@@ -78,25 +78,39 @@ private:
     uint32 _spellId;
     float _range;
 };
+
+GameObject* NearestCorruptibleTotem(Unit* corruptor, uint32 spellId)
+{
+    GameObject* totem = nullptr;
+    NearestGooberCastingSpell check(corruptor, spellId, CORRUPTED_TOTEM_REACH);
+    Acore::GameObjectLastSearcher<NearestGooberCastingSpell> searcher(corruptor, totem, check);
+    Cell::VisitObjects(corruptor, searcher, CORRUPTED_TOTEM_REACH);
+    return totem;
+}
 }
 
-class spell_coa_corrupting_totem : public AuraScript
+class spell_coa_corrupting_totem : public SpellScript
 {
-    PrepareAuraScript(spell_coa_corrupting_totem);
+    PrepareSpellScript(spell_coa_corrupting_totem);
 
-    GameObject* NearestCorruptibleTotem() const
+    SpellCastResult RequireTotemAtHand()
     {
-        Unit* corruptor = GetTarget();
-        GameObject* totem = nullptr;
-        NearestGooberCastingSpell check(corruptor, GetId(), CORRUPTED_TOTEM_REACH);
-        Acore::GameObjectLastSearcher<NearestGooberCastingSpell> searcher(corruptor, totem, check);
-        Cell::VisitObjects(corruptor, searcher, CORRUPTED_TOTEM_REACH);
-        return totem;
+        return NearestCorruptibleTotem(GetCaster(), GetSpellInfo()->Id) ? SPELL_CAST_OK : SPELL_FAILED_OUT_OF_RANGE;
     }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_coa_corrupting_totem::RequireTotemAtHand);
+    }
+};
+
+class spell_coa_corrupting_totem_aura : public AuraScript
+{
+    PrepareAuraScript(spell_coa_corrupting_totem_aura);
 
     void ChannelIntoTotem(AuraEffect const*, AuraEffectHandleModes)
     {
-        GameObject* totem = NearestCorruptibleTotem();
+        GameObject* totem = NearestCorruptibleTotem(GetTarget(), GetId());
         if (!totem)
             return;
 
@@ -118,16 +132,16 @@ class spell_coa_corrupting_totem : public AuraScript
         if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
             return;
 
-        GameObject* totem = NearestCorruptibleTotem();
+        GameObject* totem = NearestCorruptibleTotem(GetTarget(), GetId());
         if (totem && totem->AI())
             totem->AI()->SpellHit(GetTarget(), GetSpellInfo());
     }
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_coa_corrupting_totem::ChannelIntoTotem, EFFECT_0,
+        AfterEffectApply += AuraEffectApplyFn(spell_coa_corrupting_totem_aura::ChannelIntoTotem, EFFECT_0,
                                               SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_coa_corrupting_totem::CorruptTotemOnCompletedChannel, EFFECT_0,
+        AfterEffectRemove += AuraEffectRemoveFn(spell_coa_corrupting_totem_aura::CorruptTotemOnCompletedChannel, EFFECT_0,
                                                 SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 
@@ -390,7 +404,7 @@ class spell_coa_grimtotem_disguise : public AuraScript
 void AddSC_AscensionThreeTotems()
 {
     RegisterCreatureAI(npc_coa_malgorm_hollowhoof);
-    RegisterSpellScript(spell_coa_corrupting_totem);
+    RegisterSpellAndAuraScriptPair(spell_coa_corrupting_totem, spell_coa_corrupting_totem_aura);
     RegisterSpellScript(spell_coa_malgorm_trample);
     RegisterSpellScript(spell_coa_grimtotem_disguise);
 }
