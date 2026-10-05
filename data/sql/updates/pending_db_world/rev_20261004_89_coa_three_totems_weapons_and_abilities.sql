@@ -17,6 +17,10 @@ INSERT INTO `creature_equip_template` (`CreatureID`, `ID`, `ItemID1`, `ItemID2`,
 
 UPDATE `creature` SET `equipment_id` = 1 WHERE `id` IN (161809, 161810);
 
+-- Health as in video at level 3 (warrior base 71): a Marauder has 158, a Patrol 132.
+UPDATE `creature_template` SET `HealthModifier` = 2.2254 WHERE `entry` = 161809;
+UPDATE `creature_template` SET `HealthModifier` = 1.8592 WHERE `entry` = 161810;
+
 UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN (161810, 161813, 161815, 161834, 161851);
 
 DELETE FROM `creature_text` WHERE `CreatureID` IN (161815, 161813);
