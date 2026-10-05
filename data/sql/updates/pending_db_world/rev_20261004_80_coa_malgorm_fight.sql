@@ -1,8 +1,9 @@
 -- Malgorm Hollowhoof becomes a fight (npc_coa_malgorm_hollowhoof in src/server/coa/AscensionThreeTotems.cpp) in place
 -- of calling the village to arms. Players who ran it on CoA recall a charge at least every 20 seconds: a red line on
 -- the floor and the ground quaking under him as he wound up, then a run until he struck a wall that killed the players
--- in his path outright and knocked them back; an enrage at half health for 10 seconds; and Thunderclap. CoA's Charge
--- 256743-256746 and Enrage 256756 build it, with the low-level creature Thunderclap 8078 every 14-18 s;
+-- in his path outright and knocked them back; an enrage at half health for 10 seconds; Thunderclap; and Slam. CoA's
+-- Charge 256743-256746 and Enrage 256756 build it, with the low-level creature Thunderclap 8078 every 14-18 s and
+-- Slam 11430 (a 2 s stun) every 10-14 s;
 -- spell_coa_malgorm_trample makes each trample 256745 lethal. A video of the fight shows him at 874 health at level 7
 -- (health modifier 6.38 on the level 7 warrior base of 137). His aggro, kill and death lines are CoA's, as players
 -- recorded them; the charge, enrage and low-health lines, the line visual 255356, the Ground Tremor 64228 quake and
