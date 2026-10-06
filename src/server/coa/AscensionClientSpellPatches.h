@@ -10,6 +10,8 @@
 
 namespace Ascension
 {
+    inline constexpr uint16 SMSG_PATCH_SPELL = 0x092A;
+
     template<class Tag>
     class ClientPatches
     {

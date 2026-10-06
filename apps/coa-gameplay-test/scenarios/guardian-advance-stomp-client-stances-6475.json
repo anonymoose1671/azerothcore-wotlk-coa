@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "name": "Guardian Advance's stomp reaches the client with its stance mask cleared (#6475)",
+  "contract": [
+    "Advance (Damage) 500673 carries Stances 0x30000 (Battle and Defensive Stance) in Spell.dbc. The server clears it",
+    "for its own cast check (AscensionGuardianCompletion.cpp ApplyContracts) and must stream the same row to the",
+    "client, whose own stance check otherwise refuses the recast before any packet is sent. Expected: the login spell",
+    "patch stream includes 500673 and its ShapeshiftMask dword is 0. The harness cannot observe the client-side",
+    "refusal itself."
+  ],
+  "timeout_ms": 30000,
+  "players": [
+    {"id": "guardian", "race": 1, "class": 18, "level": 80}
+  ],
+  "steps": [
+    {"action": "wait", "label": "Let the login patch stream finish", "ms": 6000},
+    {"action": "assert", "label": "The client received a Spell row for the stomp", "actor": "guardian", "metric": "client_spell_shapeshift_mask", "spell": 500673, "min": 0},
+    {"action": "assert", "label": "Its stance mask is cleared", "actor": "guardian", "metric": "client_spell_shapeshift_mask", "spell": 500673, "equals": 0}
+  ]
+}

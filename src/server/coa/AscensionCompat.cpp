@@ -178,7 +178,6 @@ constexpr uint16 SMSG_PATCH_LOADING_SCREENS = 0x05F8;
 constexpr uint16 SMSG_PATCH_CREATURE_DISPLAY_INFO = 0x0976;
 constexpr uint16 SMSG_PATCH_ITEM = 0x0932;
 constexpr uint16 SMSG_PATCH_ITEM_DISPLAY_INFO = 0x096B;
-constexpr uint16 SMSG_PATCH_SPELL = 0x092A;
 constexpr uint32 CUSTOM_DISPLAY_ID_FALLBACK_MIN = 652000;
 constexpr uint32 DISPLAY_PATCH_FALLBACK_DELAY_MS = 5000;
 
@@ -970,8 +969,9 @@ public:
                 return sSpellMgr->GetFirstSpellInChain(id) == sSpellMgr->GetFirstSpellInChain(rank) &&
                     sSpellMgr->GetSpellRank(id) < sSpellMgr->GetSpellRank(rank);
             });
-            if (!neededByHigherRank)
-                player->removeSpell(id, SPEC_MASK_ALL, true);
+            if (neededByHigherRank)
+                continue;
+            player->removeSpell(id, SPEC_MASK_ALL, true);
         }
 
         uint32 learned = 0;
@@ -3903,7 +3903,7 @@ private:
   }
 
   std::size_t SendSpellRow(Player *player, SpellPatchRow const &row) const {
-    WorldPacket packet(SMSG_PATCH_SPELL,
+    WorldPacket packet(Ascension::SMSG_PATCH_SPELL,
                        row.Values.size() * sizeof(uint32) + 1024);
     for (uint32 value : row.Values)
       packet << value;
@@ -4051,6 +4051,8 @@ private:
       return;
 
     row.Values[144] = info->SpellFamilyName;
+    row.Values[12] = info->Stances;
+    row.Values[14] = info->StancesNot;
     Ascension::ClientSpellPatches::Selector const selector =
         Ascension::ClientSpellPatches::Instance().GetSelector(info->Id);
     for (uint32 index = 0; index < 3; ++index)
