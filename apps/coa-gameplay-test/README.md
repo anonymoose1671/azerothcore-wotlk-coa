@@ -712,13 +712,19 @@ those bar packets; a temporary spell replacement is delivered as one of them ins
 `CoA.TemporarySpellReplacement.Silent` is on.
 `client_knows_spell` requires `spell` and is 1 while the packets the session was sent leave that spell in the client's
 spellbook: the login list, `SMSG_LEARNED_SPELL`, `SMSG_REMOVED_SPELL` and both halves of `SMSG_SUPERCEDED_SPELL`.
+`client_spell_copies` requires `spell` and counts the spellbook entries those packets leave the client with: the
+login list sets 1, every `SMSG_LEARNED_SPELL` adds one, every `SMSG_REMOVED_SPELL` removes one, and
+`SMSG_SUPERCEDED_SPELL` zeroes the superseded spell's count and adds one to the new one; `client_knows_spell`
+follows the same packets as a set and ignores the count. `client_spell_shapeshift_mask` requires `spell` and reads the ShapeshiftMask dword of the last Spell row
+the login patch stream sent the client for it, or -1 when no row was streamed.
 `client_chat_lines_for` requires `spell` and counts the learned or unlearned chat lines the client prints for it: every
 `SMSG_LEARNED_SPELL` unless the last pushed `SpellCustomAttr` row set its quiet-learn bit, every `SMSG_REMOVED_SPELL`,
 and every `SMSG_SUPERCEDED_SPELL` that swaps it in, except for spells hidden from the spellbook.
 `spellbook_loud_supersedes_for` requires `spell` and counts the `SMSG_SUPERCEDED_SPELL` notices that swapped that spell in
 while the client still held it notable, the bit of its `SpellCustomAttr` row the "New Spell Learned" toast tests: no row
 pushed yet, or the last one pushed carrying the bit. `spellbook_client_notable` reports the last pushed row's bit for
-`spell`: 1, 0, or -1 when none was pushed.
+`spell`: 1, 0, or -1 when none was pushed. A quiet temporary learn of a spell with neither a table nor a book row
+pushes the module's own spare row, so the metric reads 0 for it afterwards, not -1.
 `temporary_spell_replacement` requires `spell` and returns the spell ID currently standing in for it on the
 player's bars. `Player::GetTemporarySpellReplacement` returns the queried spell itself when nothing replaces
 it, so the unreplaced reading is that spell's own ID, never zero. It reads server-side state, not what the

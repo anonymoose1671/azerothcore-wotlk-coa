@@ -5,6 +5,7 @@
 
 #include "AscensionReaperTalents.h"
 #include "AccountMgr.h"
+#include "AscensionClientSpellPatches.h"
 #include "AscensionCoATalentState.h"
 #include "AscensionItemScaling.h"
 #include "AscensionQuestLog.h"
@@ -375,6 +376,8 @@ struct Actor
     std::map<uint32, bool> clientQuiet;
     std::map<uint32, uint32> clientChatLines;
     std::set<uint32> clientSpells;
+    std::map<uint32, uint32> clientSpellCopies;
+    std::map<uint32, uint32> clientSpellShapeshiftMask;
     std::map<uint32, uint32> loudSupersedes;
     std::vector<std::pair<uint32, uint32>> announcements;
     uint32 lastBuyOrdinal = 0;
@@ -765,6 +768,9 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         actor.notifiedAt.emplace(marked, actor.packetOrdinal);
     }
 
+    if (packet.GetOpcode() == Ascension::SMSG_PATCH_SPELL && packet.size() >= 16 * sizeof(uint32))
+        actor.clientSpellShapeshiftMask[packet.read<uint32>(0)] = packet.read<uint32>(12 * sizeof(uint32));
+
     if (packet.GetOpcode() == SMSG_QUESTGIVER_OFFER_REWARD ||
         packet.GetOpcode() == SMSG_QUESTGIVER_REQUEST_ITEMS ||
         packet.GetOpcode() == SMSG_QUESTGIVER_QUEST_DETAILS)
@@ -777,12 +783,14 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint16 count = 0;
         list >> talentSpec >> count;
         actor.clientSpells.clear();
+        actor.clientSpellCopies.clear();
         for (uint16 index = 0; index < count; ++index)
         {
             uint32 spell = 0;
             uint16 slot = 0;
             list >> spell >> slot;
             actor.clientSpells.insert(spell);
+            actor.clientSpellCopies[spell] = 1;
         }
     }
 
@@ -798,6 +806,8 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         swap >> previous >> replacement;
         actor.clientSpells.erase(previous);
         actor.clientSpells.insert(replacement);
+        actor.clientSpellCopies[previous] = 0;
+        ++actor.clientSpellCopies[replacement];
         if (!HiddenFromSpellbook(replacement))
             ++actor.clientChatLines[replacement];
         ++actor.supersededFor[replacement];
@@ -829,6 +839,7 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint32 announced = 0;
         announcement >> announced;
         actor.clientSpells.insert(announced);
+        ++actor.clientSpellCopies[announced];
         auto const quiet = actor.clientQuiet.find(announced);
         if (!HiddenFromSpellbook(announced) && (quiet == actor.clientQuiet.end() || !quiet->second))
             ++actor.clientChatLines[announced];
@@ -844,6 +855,9 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint32 removed = 0;
         removal >> removed;
         actor.clientSpells.erase(removed);
+        auto const copies = actor.clientSpellCopies.find(removed);
+        if (copies != actor.clientSpellCopies.end() && copies->second)
+            --copies->second;
         if (!HiddenFromSpellbook(removed))
             ++actor.clientChatLines[removed];
     }
@@ -2129,7 +2143,8 @@ private:
             metric == "spell_active" || metric == "global_cooldown_ms" || metric == "has_talent" ||
             metric == "spellbook_offers_spell" || metric == "spellbook_covers_spell" ||
             metric == "trainer_window_state" || metric == "trainer_window_ability" ||
-            metric == "temporary_spell_replacement" || metric == "client_knows_spell")
+            metric == "temporary_spell_replacement" || metric == "client_knows_spell" ||
+            metric == "client_spell_copies" || metric == "client_spell_shapeshift_mask")
             Require(sSpellMgr->GetSpellInfo(spell) != nullptr, "Unknown spell in metric");
         if (metric == "knows_spell")
             return player->HasSpell(spell);
@@ -2208,6 +2223,18 @@ private:
             return double(_actors.at(step.get<std::string>("actor")).supersededPackets);
         if (metric == "client_knows_spell")
             return _actors.at(step.get<std::string>("actor")).clientSpells.contains(spell) ? 1.0 : 0.0;
+        if (metric == "client_spell_copies")
+        {
+            auto const& copies = _actors.at(step.get<std::string>("actor")).clientSpellCopies;
+            auto const found = copies.find(spell);
+            return found == copies.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "client_spell_shapeshift_mask")
+        {
+            auto const& masks = _actors.at(step.get<std::string>("actor")).clientSpellShapeshiftMask;
+            auto const found = masks.find(spell);
+            return found == masks.end() ? -1.0 : double(found->second);
+        }
         if (metric == "client_chat_lines_for")
         {
             auto const& lines = _actors.at(step.get<std::string>("actor")).clientChatLines;

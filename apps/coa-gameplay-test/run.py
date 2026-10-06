@@ -44,7 +44,7 @@ METRICS = {
     'aura', 'aura_stacks', 'aura_charges', 'aura_duration_ms', 'aura_amount', 'aura_positive', 'aura_visible',
     'knows_spell', 'spell_active', 'has_talent', 'talent_points', 'cooldown_ms', 'global_cooldown_ms', 'spell_charges',
     'action_button', 'persisted_action_button', 'action_button_packed', 'item_count', 'carried_item_count',
-    'carried_pool_item_count', 'carried_variant_item_count', 'client_knows_spell',
+    'carried_pool_item_count', 'carried_variant_item_count', 'client_knows_spell', 'client_spell_copies', 'client_spell_shapeshift_mask',
     'pool_variant_count', 'pool_retired_item_count', 'pool_row_count', 'pool_item_present',
     'cache_token_count', 'cache_token_stage', 'cache_token_present',
     'free_inventory_slots', 'mail_count', 'mail_item_count', 'mail_has_item',
@@ -67,7 +67,7 @@ METRICS = {
     'trainer_list_packets', 'trainer_window_rows', 'trainer_window_state', 'trainer_window_ability',
     'vendor_list_packets', 'vendor_items', 'vendor_price', 'vendor_price_sum',
     'spellbook_superseded_packets', 'action_bar_packets', 'client_action_button',
-    'spellbook_superseded_for', 'spellbook_loud_supersedes_for', 'client_knows_spell', 'client_chat_lines_for',
+    'spellbook_superseded_for', 'spellbook_loud_supersedes_for', 'client_knows_spell', 'client_spell_copies', 'client_spell_shapeshift_mask', 'client_chat_lines_for',
     'spellbook_client_notable',
     'spellbook_cues_in_last_buy', 'spellbook_last_buy_cued',
     'spellbook_silent_buys', 'spellbook_multi_announced_buys',
@@ -571,7 +571,7 @@ def validate(scenario):
                         f'{where}: quest metric needs a player and quest')
             if metric.startswith('aura') or metric in {
                     'knows_spell', 'cooldown_ms', 'global_cooldown_ms', 'spell_charges', 'cast_remaining_ms', 'has_talent',
-                    'pet_knows_spell', 'client_knows_spell',
+                    'pet_knows_spell', 'client_knows_spell', 'client_spell_copies', 'client_spell_shapeshift_mask',
                     'pet_aura_stacks', 'pet_aura_duration_ms', 'charm_aura_stacks', 'spell_active',
                     'dynamic_object', 'dynamic_object_duration_ms', 'spell_power_cost',
                     'spell_damage_done', 'spell_damage_taken', 'spell_healing_taken', 'spell_hit_bonus_taken',
@@ -588,7 +588,7 @@ def validate(scenario):
                     'spell_proc_count', 'spell_proc_chance', 'aura_proc_rate', 'temporary_spell_replacement',
                     'cast_failure',
                     'trainer_window_state', 'trainer_window_ability', 'spellbook_superseded_for',
-                    'spellbook_loud_supersedes_for', 'spellbook_client_notable', 'client_knows_spell',
+                    'spellbook_loud_supersedes_for', 'spellbook_client_notable', 'client_knows_spell', 'client_spell_copies', 'client_spell_shapeshift_mask',
                     'client_chat_lines_for'}:
                 require('spell' in step, f'{where}: metric needs spell')
             for key in ('pet', 'critical'):
@@ -744,7 +744,7 @@ def validate(scenario):
             if metric == 'server_packet_contains':
                 require(isinstance(step.get('text'), str) and step['text'].strip(),
                         f'{where}: metric needs the text to look for')
-            if metric in {'knows_spell', 'client_knows_spell', 'has_talent', 'talent_points', 'cooldown_ms',
+            if metric in {'knows_spell', 'client_knows_spell', 'client_spell_copies', 'client_spell_shapeshift_mask', 'has_talent', 'talent_points', 'cooldown_ms',
                           'spell_charges',
                           'action_button', 'persisted_action_button', 'action_button_packed', 'item_count',
                           'carried_item_count', 'carried_pool_item_count', 'carried_variant_item_count',
@@ -773,7 +773,7 @@ def validate(scenario):
                           'vendor_price', 'vendor_price_sum', 'spellbook_superseded_packets',
                           'action_bar_packets', 'client_action_button',
                           'spellbook_superseded_for', 'spellbook_loud_supersedes_for', 'spellbook_client_notable',
-                          'client_knows_spell', 'client_chat_lines_for',
+                          'client_knows_spell', 'client_spell_copies', 'client_spell_shapeshift_mask', 'client_chat_lines_for',
                           'spellbook_cues_in_last_buy', 'spellbook_last_buy_cued',
                           'cast_speed_multiplier', 'spell_crit_chance', 'spell_power_cost',
                           'spell_damage_done', 'melee_damage_done',
