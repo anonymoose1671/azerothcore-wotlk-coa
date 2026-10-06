@@ -18,7 +18,9 @@
  *
  * The table has no row at all for some of the spells the books sell; those get a row of their
  * own on an id past the table's last, followed by one unchanged copy of the table's first row,
- * because the client only rebuilds that index when a push updates a row it already holds.
+ * because the client only rebuilds that index when a push updates a row it already holds. A
+ * temporary learn of a spell neither table covers borrows one spare id past the book's rows the
+ * same way.
  */
 
 #include "Configuration/Config.h"
@@ -34,6 +36,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iterator>
+#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -72,11 +75,38 @@ namespace
         return row.RowId >= SpellbookNotifyData::FIRST_FRESH_ROW_ID;
     }
 
+    /// The highest id the book's own rows take; the spare id below sits just past it.
+    constexpr uint32 HighestBookRowId()
+    {
+        uint32 highest = 0;
+        for (SpellbookNotifyData::Row const &row : SpellbookNotifyData::Rows)
+            highest = std::max(highest, row.RowId);
+        return highest;
+    }
+
+    /// The one id a spell no table covers is pushed on: just past the book's own rows, so the client's dense
+    /// [min, max] row index grows by one slot once and every later push overwrites that slot in place. One shared
+    /// id keeps the server stateless (Quiet, the learn packet and Unquiet go out back to back per player), and a
+    /// row whose spell dword has moved on is simply no row for the earlier spell. The first push past the book's
+    /// rows drops the row the client held at its old maximum, exactly as the book's first fresh push does; Push
+    /// resends a book row before every purchase, so that is the same pre-existing effect.
+    constexpr uint32 SPARE_ROW_ID = HighestBookRowId() + 1;
+    static_assert(SPARE_ROW_ID == SpellbookNotifyData::FIRST_FRESH_ROW_ID + SpellbookNotifyData::FRESH_ROWS,
+                  "the spare row id must be one the client adds rather than updates");
+
+    struct ClientTable
+    {
+        /// True only for the table the book data was generated from (SpellbookNotifyData.h, 58648 rows): the one
+        /// case in which a spare row is known not to shadow a row the client's own table holds.
+        bool Complete = false;
+        std::unordered_map<uint32, SpellbookNotifyData::Row> Rows;
+    };
+
     /// Every row of the client's SpellCustomAttr table, read once from the server's copy of it, which is the
     /// same file; the book's own table only covers the spells a book sells.
-    std::unordered_map<uint32, SpellbookNotifyData::Row> LoadTableRows()
+    ClientTable LoadTableRows()
     {
-        std::unordered_map<uint32, SpellbookNotifyData::Row> rows;
+        ClientTable table;
         std::string const path = sWorld->GetDataPath() + "dbc/SpellCustomAttr.dbc";
         std::ifstream file(path, std::ios::binary);
         std::vector<char> const data((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -90,24 +120,35 @@ namespace
         {
             LOG_WARN("module.spellbook", "{} is missing or not the client's SpellCustomAttr table; temporary spells "
                      "outside the books are learned with their chat line", path);
-            return rows;
+            return table;
         }
         for (uint32 index = 0; index < count; ++index)
         {
             uint32 fields[ROW_FIELDS];
             std::copy_n(data.begin() + sizeof(header) + std::size_t(index) * ROW_BYTES, ROW_BYTES,
                         reinterpret_cast<char *>(fields));
-            rows.emplace(fields[1], SpellbookNotifyData::Row{fields[1], fields[0], fields[2], fields[3], fields[4],
-                                                             fields[5], fields[6], fields[7], fields[8], fields[9],
-                                                             fields[10]});
+            table.Rows.emplace(fields[1], SpellbookNotifyData::Row{fields[1], fields[0], fields[2], fields[3],
+                                                                   fields[4], fields[5], fields[6], fields[7],
+                                                                   fields[8], fields[9], fields[10]});
         }
-        LOG_INFO("module.spellbook", "Read {} SpellCustomAttr rows from {}", rows.size(), path);
-        return rows;
+        table.Complete = count == SpellbookNotifyData::FIRST_FRESH_ROW_ID - 1;
+        if (!table.Complete)
+            LOG_WARN("module.spellbook", "{} has {} rows but the book data was built from {}; temporary spells "
+                     "outside both tables are learned with their chat line", path, count,
+                     SpellbookNotifyData::FIRST_FRESH_ROW_ID - 1);
+        LOG_INFO("module.spellbook", "Read {} SpellCustomAttr rows from {}", table.Rows.size(), path);
+        return table;
+    }
+
+    ClientTable const &Table()
+    {
+        static ClientTable const table = LoadTableRows();
+        return table;
     }
 
     SpellbookNotifyData::Row const *FindTableRow(uint32 spellId)
     {
-        static std::unordered_map<uint32, SpellbookNotifyData::Row> const rows = LoadTableRows();
+        auto const &rows = Table().Rows;
         auto const found = rows.find(spellId);
         return found == rows.end() ? nullptr : &found->second;
     }
@@ -122,6 +163,19 @@ namespace
             return nullptr;
 
         return &*found;
+    }
+
+    /// The row Quiet sends and Unquiet puts back: the book's, else the client table's, else a spare row of our
+    /// own with every attribute zero, which the client reads exactly as "no row" once it is put back.
+    std::optional<SpellbookNotifyData::Row> QuietableRow(uint32 spellId)
+    {
+        if (SpellbookNotifyData::Row const *row = FindRow(spellId))
+            return *row;
+        if (SpellbookNotifyData::Row const *row = FindTableRow(spellId))
+            return *row;
+        if (!Table().Complete)
+            return std::nullopt;
+        return SpellbookNotifyData::Row{spellId, SPARE_ROW_ID, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     }
 }
 
@@ -161,9 +215,7 @@ namespace SpellbookNotify
         if (!player || !player->GetSession())
             return;
 
-        SpellbookNotifyData::Row const *row = FindRow(spellId);
-        if (!row)
-            row = FindTableRow(spellId);
+        std::optional<SpellbookNotifyData::Row> const row = QuietableRow(spellId);
         if (!row)
             return;
 
@@ -172,7 +224,7 @@ namespace SpellbookNotify
         quiet.Field4 &= ~NOTABLE_BIT;
         SendRow(player, quiet);
 
-        if (AddsRow(*row))
+        if (AddsRow(quiet))
             SendRow(player, SpellbookNotifyData::RefreshRow);
     }
 
@@ -181,9 +233,7 @@ namespace SpellbookNotify
         if (!player || !player->GetSession())
             return;
 
-        SpellbookNotifyData::Row const *row = FindRow(spellId);
-        if (!row)
-            row = FindTableRow(spellId);
+        std::optional<SpellbookNotifyData::Row> const row = QuietableRow(spellId);
         if (!row)
             return;
 
