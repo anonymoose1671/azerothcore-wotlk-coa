@@ -2928,6 +2928,7 @@ bool Player::HasActivePowerType(Powers power)
 
 void Player::SendInitialSpells()
 {
+    m_quietlyTaughtSpells.clear();
     uint32 curTime = GameTime::GetGameTimeMS().count();
     uint32 infTime = GameTime::GetGameTimeMS().count() + infinityCooldownDelayCheck;
 
@@ -2943,6 +2944,9 @@ void Player::SendInitialSpells()
     {
         if (itr->second->State == PLAYERSPELL_REMOVED)
             continue;
+
+        if (itr->second->State == PLAYERSPELL_TEMPORARY && SilencesTemporarySpellReplacements())
+            m_quietlyTaughtSpells.insert(itr->first);
 
         if ((!itr->second->Active && !IsKeptInClientSpellbookWhenSuperseded(itr->first)) ||
             !itr->second->IsInSpec(GetActiveSpec()))
@@ -3246,6 +3250,7 @@ void Player::_removeTalentAurasAndSpells(uint32 spellId)
         if (spellInfo->Effects[i].TriggerSpell > 0 && spellInfo->Effects[i].Effect == SPELL_EFFECT_LEARN_SPELL)
         {
             removeSpell(spellInfo->Effects[i].TriggerSpell, SPEC_MASK_ALL, true);
+            ForgetQuietlyTaughtSpell(spellInfo->Effects[i].TriggerSpell);
             _removeTalentAurasAndSpells(spellInfo->Effects[i].TriggerSpell);
         }
     }
@@ -3270,11 +3275,23 @@ void Player::_addTalentAurasAndSpells(uint32 spellId)
 
 void Player::SendLearnPacket(uint32 spellId, bool learn, bool quiet)
 {
+    bool const silent = SilencesTemporarySpellReplacements();
     if (learn)
     {
-        bool const hushed = quiet && SilencesTemporarySpellReplacements();
+        if (silent && m_quietlyTaughtSpells.contains(spellId))
+        {
+            // The client still lists the spell from a quiet learn whose temporary removal it was never told about;
+            // the stock handler appends one spellbook entry per SMSG_LEARNED_SPELL (#436), so it is not sent again.
+            if (!quiet)
+                m_quietlyTaughtSpells.erase(spellId);
+            return;
+        }
+        bool const hushed = quiet && silent;
         if (hushed)
+        {
+            m_quietlyTaughtSpells.insert(spellId);
             sScriptMgr->OnPlayerQuietSpellLearnNotice(this, spellId, false);
+        }
         WorldPacket data(SMSG_LEARNED_SPELL, 6);
         data << uint32(spellId);
         data << uint16(0);
@@ -3284,11 +3301,14 @@ void Player::SendLearnPacket(uint32 spellId, bool learn, bool quiet)
     }
     else
     {
-        // SMSG_REMOVED_SPELL makes the client print "You have unlearned". A spell that has stood in for another stays
-        // in the client's spellbook instead: unlearning and relearning it would print, and would make the client's
-        // auto-placement treat it as new each time. The server refuses casting it outside its swap.
-        if (SilencesTemporarySpellReplacements() && m_temporarySpellReplacementOrigins.contains(spellId))
+        // SMSG_REMOVED_SPELL makes the client print "You have unlearned". A spell that has stood in for another, or
+        // was taught quietly and is only dropped as a temporary, stays in the client's spellbook instead: unlearning
+        // and relearning it would print, and would make the client's auto-placement treat it as new each time. The
+        // server refuses casting it while it is not active.
+        if (silent && (m_temporarySpellReplacementOrigins.contains(spellId) ||
+            (quiet && m_quietlyTaughtSpells.contains(spellId))))
             return;
+        m_quietlyTaughtSpells.erase(spellId);
         WorldPacket data(SMSG_REMOVED_SPELL, 4);
         data << uint32(spellId);
         SendDirectMessage(&data);
@@ -3329,6 +3349,7 @@ bool Player::addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool
                     }
                     else if (IsInWorld())
                     {
+                        m_quietlyTaughtSpells.erase(nextSpellInfo->Id);
                         WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
                         data << uint32(nextSpellInfo->Id);
                         data << uint32(spellInfo->Id);
@@ -3804,7 +3825,7 @@ void Player::removeSpell(uint32 spell_id, uint8 removeSpecMask, bool onlyTempora
     if (!onlyTemporary || ((!spellInfo->HasAttribute(SpellAttr0(SPELL_ATTR0_PASSIVE | SPELL_ATTR0_DO_NOT_DISPLAY)) || !spellInfo->HasAnyAura()) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL)))
     {
         sScriptMgr->OnPlayerForgotSpell(this, spell_id);
-        SendLearnPacket(spell_id, false);
+        SendLearnPacket(spell_id, false, onlyTemporary);
     }
 }
 
@@ -13967,6 +13988,20 @@ bool Player::IsIdleTemporarySpellReplacement(uint32 spellId) const
         return false;
     return std::none_of(m_temporarySpellReplacements.begin(), m_temporarySpellReplacements.end(),
         [this, spellId](auto const& entry) { return GetTemporarySpellReplacement(entry.first) == spellId; });
+}
+
+bool Player::IsStaleQuietlyTaughtSpell(uint32 spellId) const
+{
+    return SilencesTemporarySpellReplacements() && m_quietlyTaughtSpells.contains(spellId) && !HasActiveSpell(spellId);
+}
+
+void Player::ForgetQuietlyTaughtSpell(uint32 spellId)
+{
+    if (!m_quietlyTaughtSpells.erase(spellId) || !IsInWorld())
+        return;
+    WorldPacket data(SMSG_REMOVED_SPELL, 4);
+    data << uint32(spellId);
+    SendDirectMessage(&data);
 }
 
 void Player::RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement)

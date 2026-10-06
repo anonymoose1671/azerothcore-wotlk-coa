@@ -1817,6 +1817,8 @@ public:
     [[nodiscard]] uint32 GetSavedActionButtonSpell(uint8 button, uint32 action);
     [[nodiscard]] static bool SilencesTemporarySpellReplacements();
     [[nodiscard]] bool IsIdleTemporarySpellReplacement(uint32 spellId) const;
+    [[nodiscard]] bool IsStaleQuietlyTaughtSpell(uint32 spellId) const;
+    void ForgetQuietlyTaughtSpell(uint32 spellId);
     [[nodiscard]] bool CanUseTwoHandWithShield(ItemTemplate const* main, ItemTemplate const* off) const;
     [[nodiscard]] float GetMeleeAbilityRangeBonus() const;
 
@@ -2961,6 +2963,7 @@ protected:
     PlayerSpellMap m_spells;
     std::map<uint32, uint32> m_temporarySpellReplacements;
     std::map<uint32, uint32> m_temporarySpellReplacementOrigins;
+    std::set<uint32> m_quietlyTaughtSpells;
     std::map<uint8, uint32> m_replacedActionButtons;
     void RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement);
     bool ApplyTemporarySpellReplacementsToActionBar();

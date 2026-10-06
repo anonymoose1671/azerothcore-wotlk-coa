@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "name": "Pavise Crossbowman teaches Pavise and Shield as temporary spells without a chat line, a new button or an unlearn",
+  "contract": [
+    "aura_ascension_witch_hunter_lifecycle::Apply (AscensionWitchHunterDefenses.cpp, bound to Pavise Crossbowman 681453)",
+    "teaches Shield 9116 and Pavise 520865 with learnSpell(..., true) and Removed drops both with",
+    "removeSpell(..., SPEC_MASK_ALL, true): plain temporary learns, not swaps. 681453 is passive, so it applies when",
+    "learned. Pavise has SpellCustomAttr row 20266; Shield 9116 is SPELL_ATTR0_DO_NOT_DISPLAY, so the harness counts no",
+    "chat line for it either way and only its server state is asserted. Expected: no line for Pavise on learn or",
+    "removal, the client keeps Pavise after the server drops it, an empty button stays empty, no SMSG_SUPERCEDED_SPELL",
+    "is sent."
+  ],
+  "timeout_ms": 60000,
+  "players": [
+    {"id": "wh", "race": 1, "class": 15, "level": 60}
+  ],
+  "steps": [
+    {"action": "wait", "label": "Let login state settle", "ms": 3000},
+    {"action": "wait", "ms": 1200},
+    {"action": "assert", "label": "SETUP: the login bar was sent and button 120 is empty", "actor": "wh", "metric": "client_action_button", "button": 119, "equals": 0},
+    {"action": "assert", "label": "SETUP: Pavise is unknown before the talent", "actor": "wh", "metric": "knows_spell", "spell": 520865, "equals": 0},
+    {"action": "snapshot", "actor": "wh", "metric": "client_chat_lines_for", "spell": 520865, "save_as": "pavise_lines"},
+    {"action": "snapshot", "actor": "wh", "metric": "spellbook_superseded_packets", "save_as": "supersedes"},
+    {"action": "learn", "label": "Pavise Crossbowman teaches Shield and Pavise", "actor": "wh", "spell": 681453},
+    {"action": "assert", "label": "Pavise is taught", "actor": "wh", "metric": "knows_spell", "spell": 520865, "equals": 1, "within_ms": 1000},
+    {"action": "assert", "label": "Shield is taught", "actor": "wh", "metric": "knows_spell", "spell": 9116, "equals": 1, "within_ms": 1000},
+    {"action": "assert", "label": "The client holds Pavise", "actor": "wh", "metric": "client_knows_spell", "spell": 520865, "equals": 1},
+    {"action": "assert", "label": "QUIET: Pavise was taught without a line", "actor": "wh", "metric": "client_chat_lines_for", "spell": 520865, "relative_to": "pavise_lines", "equals": 0},
+    {"action": "unlearn", "label": "Drop Pavise Crossbowman", "actor": "wh", "spell": 681453, "all_specs": true},
+    {"action": "assert", "label": "The server drops Pavise", "actor": "wh", "metric": "knows_spell", "spell": 520865, "equals": 0, "within_ms": 1000},
+    {"action": "assert", "label": "The server drops Shield", "actor": "wh", "metric": "knows_spell", "spell": 9116, "equals": 0, "within_ms": 1000},
+    {"action": "assert", "label": "QUIET: the client keeps Pavise instead of an unlearned line", "actor": "wh", "metric": "client_knows_spell", "spell": 520865, "equals": 1},
+    {"action": "assert", "label": "QUIET: dropping Pavise printed nothing", "actor": "wh", "metric": "client_chat_lines_for", "spell": 520865, "relative_to": "pavise_lines", "equals": 0},
+    {"action": "assert", "label": "QUIET: an empty button stays empty", "actor": "wh", "metric": "client_action_button", "button": 119, "equals": 0},
+    {"action": "assert", "label": "QUIET: no swap was sent as SMSG_SUPERCEDED_SPELL", "actor": "wh", "metric": "spellbook_superseded_packets", "relative_to": "supersedes", "equals": 0}
+  ]
+}

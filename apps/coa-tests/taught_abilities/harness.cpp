@@ -170,6 +170,7 @@ struct Player
         return _addSpell(id, mask, temporary, skill);
     }
     void SendLearnPacket(uint32, bool, bool = false) { ++learnPackets; }
+    void ForgetQuietlyTaughtSpell(uint32) { }
     static bool SilencesTemporarySpellReplacements() { return false; }
     void RedrawReplacedActionButtons(uint32, uint32, uint32) { }
     void _SaveSpells(CharacterDatabaseTransaction);

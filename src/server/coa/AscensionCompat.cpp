@@ -880,6 +880,7 @@ public:
             if (!allowed)
             {
                 player->removeSpell(entry.SpellId, SPEC_MASK_ALL, true);
+                player->ForgetQuietlyTaughtSpell(entry.SpellId);
                 continue;
             }
 
