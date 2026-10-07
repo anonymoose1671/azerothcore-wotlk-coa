@@ -1059,6 +1059,16 @@ void ScriptMgr::OnPlayerTemporarySpellReplacementNotice(Player* player, uint32 p
     CALL_ENABLED_HOOKS(PlayerScript, PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE, script->OnPlayerTemporarySpellReplacementNotice(player, previous, replacement, sent));
 }
 
+void ScriptMgr::OnPlayerTemporarySpellLearnNotice(Player* player, uint32 spellId, bool sent)
+{
+    CALL_ENABLED_HOOKS(PlayerScript, PLAYERHOOK_ON_TEMPORARY_SPELL_LEARN_NOTICE, script->OnPlayerTemporarySpellLearnNotice(player, spellId, sent));
+}
+
+void ScriptMgr::OnPlayerTemporarySpellRemoveNotice(Player* player, uint32 spellId, bool sent)
+{
+    CALL_ENABLED_HOOKS(PlayerScript, PLAYERHOOK_ON_TEMPORARY_SPELL_REMOVE_NOTICE, script->OnPlayerTemporarySpellRemoveNotice(player, spellId, sent));
+}
+
 void ScriptMgr::OnPlayerSpellChargeConsumed(Player* player, SpellInfo const* spellInfo, Spell* spell, uint32 recoveryMs, uint64 nowEpochMs)
 {
     CALL_ENABLED_HOOKS(PlayerScript, PLAYERHOOK_ON_SPELL_CHARGE_CONSUMED, script->OnPlayerSpellChargeConsumed(player, spellInfo, spell, recoveryMs, nowEpochMs));

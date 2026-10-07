@@ -114,6 +114,7 @@
 #include <cstring>
 #include <ctime>
 #include <filesystem>
+#include <fstream>
 #include <type_traits>
 #include <deque>
 #include <limits>
@@ -179,6 +180,7 @@ constexpr uint16 SMSG_PATCH_LOADING_SCREENS = 0x05F8;
 constexpr uint16 SMSG_PATCH_CREATURE_DISPLAY_INFO = 0x0976;
 constexpr uint16 SMSG_PATCH_ITEM = 0x0932;
 constexpr uint16 SMSG_PATCH_ITEM_DISPLAY_INFO = 0x096B;
+constexpr uint16 SMSG_PATCH_CHARACTER_ADVANCEMENT = 0x064A;
 constexpr uint16 SMSG_PATCH_SPELL = 0x092A;
 constexpr uint16 SMSG_PATCH_SUPER_TRACK = 0x06BE;
 constexpr uint16 SMSG_PATCH_SPELL_SHAPESHIFT_FORM = 0x0949;
@@ -3612,6 +3614,8 @@ public:
              "{} Spell, {} SuperTrack and {} SpellShapeshiftForm patch rows for the client stream",
              rows.CreatureModels.size(), rows.CreatureDisplayIds.size(), rows.ItemDisplayInfos.size(),
              rows.Items.size(), rows.Spells.size(), rows.SuperTracks.size(), rows.ShapeshiftForms.size());
+    IndexClientSpells();
+    IndexClientSpellRanks();
   }
 
   void OnPlayerLogin(Player *player) {
@@ -3626,6 +3630,8 @@ public:
     _onDemandItemRows.erase(guid);
     _lastStreamMs.erase(guid);
     _fallbackTimers[guid] = { DISPLAY_PATCH_FALLBACK_DELAY_MS, false };
+    std::lock_guard entries(_swapEntryMutex);
+    _sentSwapEntries.erase(guid);
   }
 
   void OnPlayerLogout(Player *player) {
@@ -3640,6 +3646,10 @@ public:
       _lastStreamMs.erase(guid);
       if (auto node = _onDemandItemRows.extract(guid))
         onDemand = node.mapped();
+    }
+    {
+      std::lock_guard entries(_swapEntryMutex);
+      _sentSwapEntries.erase(guid);
     }
 
     if (onDemand.Rows || onDemand.SpellRows)
@@ -3663,6 +3673,51 @@ public:
 
         std::lock_guard lock(_mutex);
         _onDemandItemRows[player->GetGUID().GetCounter()].Add(sent);
+    }
+
+    void SendSpellNoticeRow(Player* player, uint32 spellId, bool hidden)
+    {
+        if (!ReceivesPatchRows(player) || !player->IsInWorld())
+            return;
+
+        std::optional<SpellPatchRow> row = ClientSpellRow(spellId);
+        if (!row || (row->Values[SPELL_ATTRIBUTES_FIELD] & (SPELL_ATTR0_IS_TRADESKILL | SPELL_ATTR0_DO_NOT_DISPLAY)))
+            return;
+
+        if (hidden)
+            row->Values[SPELL_ATTRIBUTES_FIELD] |= SPELL_ATTR0_DO_NOT_DISPLAY;
+        SendSpellRow(player, *row);
+    }
+
+    void SendSwapEntries(Player* player, std::vector<uint32> const& spells)
+    {
+        if (spells.empty() || !ReceivesPatchRows(player) || !player->IsInWorld())
+            return;
+
+        std::vector<uint32> added;
+        std::vector<std::pair<uint32, uint32>> rows;
+        {
+            std::lock_guard lock(_swapEntryMutex);
+            std::set<uint32>& sent = _sentSwapEntries[player->GetGUID().GetCounter()];
+            for (uint32 spell : spells)
+            {
+                uint32 const next = SWAP_ENTRY_FIRST_ID + uint32(_swapEntryIds.size());
+                uint32 const id = _swapEntryIds.try_emplace(spell, next).first->second;
+                _swapEntrySpells.try_emplace(id, spell);
+                if (sent.insert(id).second)
+                    added.push_back(id);
+            }
+            if (added.empty())
+                return;
+            for (uint32 id : sent)
+                rows.emplace_back(id, _swapEntrySpells.at(id));
+        }
+
+        std::unordered_map<uint32, uint32> const spellsById(rows.begin(), rows.end());
+        for (uint32 id : added)
+            SendSwapEntryRow(player, id, spellsById.at(id));
+        for (auto const& [id, spell] : rows)
+            SendSwapEntryRow(player, id, spell);
     }
 
   void OnPlayerUpdate(Player *player, uint32 diff) {
@@ -3837,7 +3892,6 @@ private:
   static constexpr uint32 SPELL_EXCLUDE_CASTER_AURA_SPELL_FIELD = 26;
   static constexpr uint32 SPELL_FAMILY_NAME_FIELD = 208;
   static constexpr uint32 SPELL_LEVEL_FIELD = 39;
-
   struct ClientSpellText {
     std::string Description;
     std::string ToolTip;
@@ -3869,6 +3923,177 @@ private:
     std::vector<ShapeshiftFormPatchRow> ShapeshiftForms;
     std::vector<CreatureModelPatchRow> CreatureModels;
   };
+
+  static constexpr uint32 SPELL_ATTRIBUTES_FIELD = 4;
+  static constexpr uint32 SWAP_ENTRY_FIRST_ID = 9000000;
+  static constexpr uint32 ADVANCEMENT_ENTRY_HIDDEN = 0x1;
+  static constexpr std::size_t ADVANCEMENT_ENTRY_SPELLS = 9;
+
+  std::size_t SendSwapEntryRow(Player *player, uint32 id, uint32 spell) {
+    std::array<uint32, ADVANCEMENT_ENTRY_SPELLS> spells{};
+    std::size_t count = 0;
+    for (uint32 rank : { spell, sSpellMgr->GetFirstSpellInChain(spell), ClientFirstRank(spell) })
+      if (rank && std::find(spells.begin(), spells.begin() + count, rank) == spells.begin() + count)
+        spells[count++] = rank;
+
+    WorldPacket packet(SMSG_PATCH_CHARACTER_ADVANCEMENT, 512);
+    auto const words = [&packet](uint32 count) {
+      for (uint32 index = 0; index < count; ++index)
+        packet << uint32(0);
+    };
+    auto const bytes = [&packet](uint32 count) {
+      for (uint32 index = 0; index < count; ++index)
+        packet << uint8(0);
+    };
+    packet << id;
+    bytes(1);
+    words(3);
+    for (uint32 rank : spells)
+      packet << rank;
+    words(2);
+    bytes(1);
+    words(3);
+    bytes(1);
+    words(3);
+    bytes(1);
+    words(22);
+    bytes(4);
+    bytes(2);
+    words(4);
+    bytes(1);
+    words(15);
+    bytes(1);
+    packet << ADVANCEMENT_ENTRY_HIDDEN;
+    bytes(5);
+    words(29);
+    bytes(3);
+    words(19);
+    return SendRowPacket(player, packet);
+  }
+
+  uint32 ClientFirstRank(uint32 spell) {
+    std::lock_guard lock(_clientSpellMutex);
+    auto const found = _clientFirstRanks.find(spell);
+    return found == _clientFirstRanks.end() ? spell : found->second;
+  }
+
+  void IndexClientSpellRanks() {
+    std::filesystem::path const path = std::filesystem::path(sWorld->GetDataPath()) / "dbc" / "SpellRank.dbc";
+    ClientDBC ranks;
+    if (!ranks.Load(path.string(), 3))
+      return;
+    std::unordered_map<uint32, uint32> firstRanks;
+    for (uint32 index = 0; index < ranks.GetRecordCount(); ++index)
+    {
+      ClientDBC::Record const record = ranks.GetRecord(index);
+      firstRanks[record.GetUInt32(2)] = record.GetUInt32(1);
+    }
+    std::lock_guard lock(_clientSpellMutex);
+    _clientFirstRanks = std::move(firstRanks);
+  }
+  static constexpr std::uint64_t CLIENT_DBC_HEADER_BYTES = 20;
+
+  struct ClientSpellFile {
+    std::string Path;
+    uint32 RecordSize = 0;
+    std::uint64_t StringBlock = 0;
+    std::vector<std::pair<uint32, uint32>> Rows;
+  };
+
+  template <class Dword, class Text>
+  static SpellPatchRow RawSpellRow(Dword const &dword, Text const &text) {
+    SpellPatchRow row;
+    std::size_t slot = 0;
+    for (uint32 field = 0; field < SPELL_DBC_FIELD_COUNT;)
+    {
+      bool const localized = field >= SPELL_NAME_FIELD && field <= SPELL_TOOLTIP_FIELD;
+      row.Values[slot++] = localized ? 0 : dword(field);
+      field += localized ? LOCALIZED_STRING_DWORDS : 1;
+    }
+    for (std::size_t index = 0; index < SPELL_WIRE_STRING_FIELDS.size(); ++index)
+      row.Strings[index] = text(SPELL_WIRE_STRING_FIELDS[index]);
+    return row;
+  }
+
+  std::optional<SpellPatchRow> ReadClientSpellRow(uint32 spellId) const {
+    auto const found = std::lower_bound(_clientSpells.Rows.begin(), _clientSpells.Rows.end(),
+                                        std::make_pair(spellId, uint32(0)));
+    if (found == _clientSpells.Rows.end() || found->first != spellId)
+      return std::nullopt;
+
+    std::ifstream file(_clientSpells.Path, std::ios::binary);
+    std::vector<char> record(_clientSpells.RecordSize);
+    file.seekg(std::streamoff(CLIENT_DBC_HEADER_BYTES + std::uint64_t(found->second) * _clientSpells.RecordSize));
+    if (!file.read(record.data(), std::streamsize(record.size())))
+      return std::nullopt;
+
+    auto const dword = [&record](uint32 field) {
+      uint32 value = 0;
+      std::memcpy(&value, record.data() + std::size_t(field) * sizeof(uint32), sizeof(uint32));
+      return value;
+    };
+    auto const text = [&](uint32 field) {
+      std::string value;
+      file.clear();
+      file.seekg(std::streamoff(_clientSpells.StringBlock + dword(field)));
+      std::getline(file, value, '\0');
+      return value;
+    };
+    return RawSpellRow(dword, text);
+  }
+
+  std::optional<SpellPatchRow> ClientSpellRow(uint32 spellId) {
+    PreparedPatchRows const &rows = GetPreparedPatchRows();
+    if (auto const found = rows.SpellRowIndexById.find(spellId); found != rows.SpellRowIndexById.end())
+    {
+      SpellPatchRow row = rows.Spells[found->second];
+      ApplyServerSpellSelectors(row);
+      return row;
+    }
+
+    std::lock_guard lock(_clientSpellMutex);
+    auto cached = _clientSpellRows.find(spellId);
+    if (cached == _clientSpellRows.end())
+      cached = _clientSpellRows.emplace(spellId, ReadClientSpellRow(spellId)).first;
+    return cached->second;
+  }
+
+  void IndexClientSpells() {
+    std::filesystem::path const path = std::filesystem::path(sWorld->GetDataPath()) / "dbc" / "Spell.dbc";
+    ClientDBC spells;
+    if (!spells.Load(path.string(), SPELL_DBC_FIELD_COUNT) || !spells.GetRecordCount())
+      return;
+
+    ClientSpellFile file;
+    file.Path = path.string();
+    file.RecordSize = spells.GetRecordSize();
+    file.StringBlock = CLIENT_DBC_HEADER_BYTES + std::uint64_t(spells.GetRecordCount()) * spells.GetRecordSize();
+    file.Rows.reserve(spells.GetRecordCount());
+    for (uint32 index = 0; index < spells.GetRecordCount(); ++index)
+      file.Rows.emplace_back(spells.GetRecord(index).GetUInt32(0), index);
+    std::sort(file.Rows.begin(), file.Rows.end());
+
+    std::lock_guard lock(_clientSpellMutex);
+    _clientSpells = std::move(file);
+    _clientSpellRows.clear();
+    for (uint32 index : { uint32(0), spells.GetRecordCount() / 2, spells.GetRecordCount() - 1 })
+    {
+      ClientDBC::Record const record = spells.GetRecord(index);
+      SpellPatchRow const expected = RawSpellRow(
+          [&record](uint32 field) { return record.GetUInt32(field); },
+          [&record](uint32 field) { return std::string(record.GetString(field)); });
+      std::optional<SpellPatchRow> const read = ReadClientSpellRow(record.GetUInt32(0));
+      if (!read || read->Values != expected.Values || read->Strings != expected.Strings)
+      {
+        LOG_ERROR("coa", "Spell rows read from {} differ from the loaded table; temporary spell notices keep "
+                  "their chat lines", path.string());
+        _clientSpells = {};
+        return;
+      }
+    }
+    LOG_INFO("coa", "Indexed {} Spell rows from {} for temporary spell notices", _clientSpells.Rows.size(),
+             path.string());
+  }
 
   static std::unordered_set<uint32> CollectOwnedItemIds(Player *player) {
     std::unordered_set<uint32> itemIds;
@@ -4596,6 +4821,16 @@ private:
   std::mutex _cacheMutex;
   bool _rowsPrepared = false;
   PreparedPatchRows _rows;
+
+  std::mutex _clientSpellMutex;
+  ClientSpellFile _clientSpells;
+  std::unordered_map<uint32, std::optional<SpellPatchRow>> _clientSpellRows;
+  std::unordered_map<uint32, uint32> _clientFirstRanks;
+
+  std::mutex _swapEntryMutex;
+  std::unordered_map<uint32, uint32> _swapEntryIds;
+  std::unordered_map<uint32, uint32> _swapEntrySpells;
+  std::unordered_map<uint32, std::set<uint32>> _sentSwapEntries;
 };
 
 class AscensionCollectionService {
@@ -7201,7 +7436,26 @@ public:
              PLAYERHOOK_ON_AFTER_UPDATE_ATTACK_POWER_AND_DAMAGE,
              PLAYERHOOK_ON_SEND_INITIAL_PACKETS_BEFORE_ADD_TO_MAP,
              PLAYERHOOK_CAN_USE_ITEM,
-             PLAYERHOOK_CHECK_ITEM_IN_SLOT_AT_LOAD_INVENTORY}) {}
+             PLAYERHOOK_CHECK_ITEM_IN_SLOT_AT_LOAD_INVENTORY,
+             PLAYERHOOK_ON_TEMPORARY_SPELL_REMOVE_NOTICE,
+             PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE}) {}
+
+    void OnPlayerTemporarySpellRemoveNotice(Player* player, uint32 spellId, bool sent) override
+    {
+        AscensionDisplayPatchService::Instance().SendSpellNoticeRow(player, spellId, !sent);
+    }
+
+    void OnPlayerTemporarySpellReplacementNotice(Player* player, uint32 previous, uint32 replacement,
+        bool sent) override
+    {
+        if (sent)
+            return;
+        std::vector<uint32> standIns;
+        for (uint32 spell : { previous, replacement })
+            if (player->IsTemporarySpellReplacementStandIn(spell))
+                standIns.push_back(spell);
+        AscensionDisplayPatchService::Instance().SendSwapEntries(player, standIns);
+    }
 
     bool OnPlayerCanUseItem(Player* player, ItemTemplate const* item, InventoryResult& result) override
     {

@@ -1,0 +1,224 @@
+{
+  "schema": 1,
+  "name": "Blast Mine's Remote Detonation comes and goes without a chat line or a new button (#3965)",
+  "contract": [
+    "AscensionTinker::Refresh teaches Remote Detonation 801798 with learnSpell(801798, true) while a Blast Mine 50045",
+    "is live and removes it with removeSpell(801798, SPEC_MASK_ALL, true) once no mine is left. The client printed",
+    "'You have learned a new spell' for every learn, placed it on another empty button up to level 10, and printed",
+    "'You have unlearned' for every removal. Extensions.dll skips the learn's lines while the spell's SpellCustomAttr",
+    "row carries the quiet-learn bit and its button placement while it carries the no-placement bit; the client skips",
+    "the removal's line while the spell's Spell row carries SPELL_ATTR0_DO_NOT_DISPLAY, and Extensions.dll leaves the",
+    "spell's buttons in place for a removal ending in a zero byte. Expected over two mines: the spell reaches the",
+    "client's spellbook each time, no line and no placement for any learn or removal, each removal keeps its buttons",
+    "and its Spell row is put back exactly afterwards, and an ordinary learn (Deploy Blast Mine) still prints its line."
+  ],
+  "timeout_ms": 90000,
+  "players": [
+    {
+      "id": "tinker",
+      "race": 1,
+      "class": 28,
+      "level": 10
+    }
+  ],
+  "creatures": [
+    {
+      "id": "golem",
+      "owner": "tinker",
+      "entry": 36,
+      "level": 6,
+      "distance": 4,
+      "health": 1000000
+    }
+  ],
+  "location": {
+    "map": 0,
+    "x": -8917.41,
+    "y": -115.853,
+    "z": 82.3711,
+    "o": 0
+  },
+  "steps": [
+    {
+      "action": "wait",
+      "label": "Let spawn AI and level scaling settle",
+      "ms": 5000
+    },
+    {
+      "action": "learn",
+      "label": "Deploy Blast Mine",
+      "actor": "tinker",
+      "spell": 801718
+    },
+    {
+      "action": "assert",
+      "label": "CONTROL: an ordinary learn still prints its line",
+      "actor": "tinker",
+      "metric": "client_chat_lines_for",
+      "spell": 801718,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "SETUP: Remote Detonation is unknown before any mine exists",
+      "actor": "tinker",
+      "metric": "knows_spell",
+      "spell": 801798,
+      "equals": 0
+    },
+    {
+      "action": "cast",
+      "label": "Deploy a mine 1 yd from the golem",
+      "actor": "tinker",
+      "spell": 801718,
+      "destination": {
+        "x": -8914.41,
+        "y": -115.853,
+        "z": 82.3711
+      }
+    },
+    {
+      "action": "assert",
+      "label": "SETUP: Remote Detonation is taught while the mine is live",
+      "actor": "tinker",
+      "metric": "knows_spell",
+      "spell": 801798,
+      "equals": 1,
+      "within_ms": 3000
+    },
+    {
+      "action": "assert",
+      "label": "The client is told about Remote Detonation",
+      "actor": "tinker",
+      "metric": "client_knows_spell",
+      "spell": 801798,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "Learning it printed nothing",
+      "actor": "tinker",
+      "metric": "client_chat_lines_for",
+      "spell": 801798,
+      "equals": 0
+    },
+    {
+      "action": "assert",
+      "label": "The learn places no button",
+      "actor": "tinker",
+      "metric": "client_placing_learns_for",
+      "spell": 801798,
+      "equals": 0
+    },
+    {
+      "action": "cast",
+      "label": "Detonate the mine",
+      "actor": "tinker",
+      "spell": 801798
+    },
+    {
+      "action": "assert",
+      "label": "SETUP: Remote Detonation leaves with the last mine",
+      "actor": "tinker",
+      "metric": "knows_spell",
+      "spell": 801798,
+      "equals": 0,
+      "within_ms": 3000
+    },
+    {
+      "action": "assert",
+      "label": "The client is told it is gone",
+      "actor": "tinker",
+      "metric": "client_knows_spell",
+      "spell": 801798,
+      "equals": 0
+    },
+    {
+      "action": "assert",
+      "label": "The removal keeps its buttons",
+      "actor": "tinker",
+      "metric": "client_removals_keeping_buttons_for",
+      "spell": 801798,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "The removal printed nothing",
+      "actor": "tinker",
+      "metric": "client_chat_lines_for",
+      "spell": 801798,
+      "equals": 0
+    },
+    {
+      "action": "assert",
+      "label": "Its row is put back exactly after the removal",
+      "actor": "tinker",
+      "metric": "client_spell_row_restored",
+      "spell": 801798,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "The restored row is Remote Detonation's own",
+      "actor": "tinker",
+      "metric": "server_packet_contains",
+      "opcode": 2346,
+      "row": 801798,
+      "text": "Remote Detonation",
+      "equals": 1
+    },
+    {
+      "action": "reset_cooldown",
+      "actor": "tinker",
+      "spell": 801718
+    },
+    {
+      "action": "wait",
+      "ms": 1600
+    },
+    {
+      "action": "cast",
+      "label": "Deploy a second mine",
+      "actor": "tinker",
+      "spell": 801718,
+      "destination": {
+        "x": -8914.41,
+        "y": -115.853,
+        "z": 82.3711
+      }
+    },
+    {
+      "action": "assert",
+      "label": "SETUP: Remote Detonation is taught again",
+      "actor": "tinker",
+      "metric": "knows_spell",
+      "spell": 801798,
+      "equals": 1,
+      "within_ms": 3000
+    },
+    {
+      "action": "assert",
+      "label": "Still one Remote Detonation on the client",
+      "actor": "tinker",
+      "metric": "client_spellbook_copies",
+      "spell": 801798,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "Zero lines for Remote Detonation over both mines",
+      "actor": "tinker",
+      "metric": "client_chat_lines_for",
+      "spell": 801798,
+      "equals": 0
+    },
+    {
+      "action": "assert",
+      "label": "Neither learn placed a button",
+      "actor": "tinker",
+      "metric": "client_placing_learns_for",
+      "spell": 801798,
+      "equals": 0
+    }
+  ]
+}

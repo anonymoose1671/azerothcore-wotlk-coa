@@ -76,6 +76,7 @@
 #include <bit>
 #include <chrono>
 #include <cmath>
+#include <cstring>
 #include <ctime>
 #include <filesystem>
 #include <fstream>
@@ -368,6 +369,15 @@ struct Actor
     std::map<uint32, uint32> clientSpellbookCopies;
     std::map<uint32, bool> clientNotable;
     std::map<uint32, uint32> loudSupersedes;
+    std::map<uint32, bool> clientSpellHidden;
+    std::map<uint32, std::array<std::string, 2>> clientSpellRows;
+    std::map<uint32, uint32> chatLines;
+    std::map<uint32, bool> clientQuiet;
+    std::map<uint32, bool> clientNoPlace;
+    std::map<uint32, std::vector<uint32>> entryRows;
+    std::set<uint32> indexedEntries;
+    std::map<uint32, uint32> placingLearns;
+    std::map<uint32, uint32> buttonKeepingRemovals;
     std::vector<std::pair<uint32, uint32>> announcements;
     uint32 lastBuyOrdinal = 0;
     uint32 lastBuyCues = 0;
@@ -748,12 +758,62 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint32 firstAttributes = 0;
         uint32 secondAttributes = 0;
         uint32 thirdAttributes = 0;
-        row >> rowId >> marked >> firstAttributes >> secondAttributes >> thirdAttributes;
+        uint32 fourthAttributes = 0;
+        row >> rowId >> marked >> firstAttributes >> secondAttributes >> thirdAttributes >> fourthAttributes;
         actor.clientNotable[marked] = (thirdAttributes & 0x400) != 0;
+        actor.clientQuiet[marked] = (fourthAttributes & 0x40000) != 0;
+        actor.clientNoPlace[marked] = (fourthAttributes & 0x1000000) != 0;
         ++actor.notifyRows[marked];
         ++actor.notifyRowTotal;
         actor.notifiedAt.emplace(marked, actor.packetOrdinal);
     }
+
+    constexpr uint16 SmsgPatchSpell = 0x092A;
+    constexpr std::size_t SpellAttributesOffset = 4 * sizeof(uint32);
+    if (packet.GetOpcode() == SmsgPatchSpell && packet.size() >= SpellAttributesOffset + sizeof(uint32))
+    {
+        uint32 const spell = packet.read<uint32>(0);
+        actor.clientSpellHidden[spell] = (packet.read<uint32>(SpellAttributesOffset) &
+            (SPELL_ATTR0_IS_TRADESKILL | SPELL_ATTR0_DO_NOT_DISPLAY)) != 0;
+        auto& rows = actor.clientSpellRows[spell];
+        rows[0] = std::move(rows[1]);
+        rows[1].assign(reinterpret_cast<char const*>(packet.contents()), packet.size());
+    }
+    constexpr uint16 SmsgPatchCharacterAdvancement = 0x064A;
+    constexpr std::size_t AdvancementEntrySpells = 9;
+    if (packet.GetOpcode() == SmsgPatchCharacterAdvancement && packet.size() >= sizeof(uint32))
+    {
+        WorldPacket row(packet);
+        uint32 id = 0;
+        std::string name;
+        row >> id >> name;
+        for (uint32 skipped = 0; skipped < 3; ++skipped)
+            row.read_skip<uint32>();
+        std::vector<uint32> spells(AdvancementEntrySpells);
+        for (uint32& spell : spells)
+            row >> spell;
+        if (actor.entryRows.emplace(id, spells).second)
+            actor.indexedEntries.clear();
+        else
+        {
+            actor.entryRows[id] = spells;
+            actor.indexedEntries.insert(id);
+        }
+    }
+    auto const flagged = [](std::map<uint32, bool> const& flags, uint32 spell)
+    {
+        auto const found = flags.find(spell);
+        return found != flags.end() && found->second;
+    };
+    auto const isEntry = [&actor](uint32 spell)
+    {
+        uint32 const first = sSpellMgr->GetFirstSpellInChain(spell);
+        for (uint32 id : actor.indexedEntries)
+            for (uint32 listed : actor.entryRows.at(id))
+                if (listed && (listed == spell || listed == first))
+                    return true;
+        return false;
+    };
 
     if (packet.GetOpcode() == SMSG_QUESTGIVER_OFFER_REWARD ||
         packet.GetOpcode() == SMSG_QUESTGIVER_REQUEST_ITEMS ||
@@ -783,6 +843,10 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint32 const removed = packet.read<uint32>(0);
         actor.clientSpells.erase(removed);
         actor.clientSpellbookCopies.erase(removed);
+        if (!flagged(actor.clientSpellHidden, removed))
+            ++actor.chatLines[removed];
+        if (packet.size() > sizeof(uint32) && packet.read<uint8>(sizeof(uint32)) == 0)
+            ++actor.buttonKeepingRemovals[removed];
     }
 
     if (packet.GetOpcode() == SMSG_SEND_UNLEARN_SPELLS)
@@ -814,6 +878,8 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         auto const notable = actor.clientNotable.find(replacement);
         if (notable == actor.clientNotable.end() || notable->second)
             ++actor.loudSupersedes[replacement];
+        if (!isEntry(previous) && !isEntry(replacement) && !flagged(actor.clientSpellHidden, replacement))
+            ++actor.chatLines[replacement];
         actor.announcements.emplace_back(actor.packetOrdinal, replacement);
     }
 
@@ -823,6 +889,11 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         uint32 announced = 0;
         announcement >> announced;
         ++actor.learnedAlerts[announced];
+        bool const hidden = flagged(actor.clientSpellHidden, announced);
+        if (!flagged(actor.clientQuiet, announced) && !isEntry(announced) && !hidden)
+            ++actor.chatLines[announced];
+        if (!flagged(actor.clientNoPlace, announced) && !hidden)
+            ++actor.placingLearns[announced];
         actor.announced.insert(announced);
         actor.clientSpells.insert(announced);
         ++actor.clientSpellbookCopies[announced];
@@ -2230,6 +2301,42 @@ private:
             auto const& loud = _actors.at(step.get<std::string>("actor")).loudSupersedes;
             auto const found = loud.find(spell);
             return found == loud.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "client_chat_lines_for")
+        {
+            auto const& lines = _actors.at(step.get<std::string>("actor")).chatLines;
+            auto const found = lines.find(spell);
+            return found == lines.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "client_placing_learns_for")
+        {
+            auto const& placing = _actors.at(step.get<std::string>("actor")).placingLearns;
+            auto const found = placing.find(spell);
+            return found == placing.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "client_removals_keeping_buttons_for")
+        {
+            auto const& kept = _actors.at(step.get<std::string>("actor")).buttonKeepingRemovals;
+            auto const found = kept.find(spell);
+            return found == kept.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "client_spell_row_restored")
+        {
+            auto const& rows = _actors.at(step.get<std::string>("actor")).clientSpellRows;
+            auto const found = rows.find(spell);
+            if (found == rows.end() || found->second[0].size() != found->second[1].size() ||
+                found->second[0].size() < 5 * sizeof(uint32))
+                return 0.0;
+            std::string hidden = found->second[0];
+            std::string const& restored = found->second[1];
+            constexpr std::size_t AttributesOffset = 4 * sizeof(uint32);
+            uint32 attributes = 0;
+            std::memcpy(&attributes, hidden.data() + AttributesOffset, sizeof(attributes));
+            if (!(attributes & SPELL_ATTR0_DO_NOT_DISPLAY))
+                return 0.0;
+            attributes &= ~uint32(SPELL_ATTR0_DO_NOT_DISPLAY);
+            std::memcpy(hidden.data() + AttributesOffset, &attributes, sizeof(attributes));
+            return hidden == restored ? 1.0 : 0.0;
         }
         if (metric == "spellbook_client_notable")
         {

@@ -3268,7 +3268,7 @@ void Player::_addTalentAurasAndSpells(uint32 spellId)
     }
 }
 
-void Player::SendLearnPacket(uint32 spellId, bool learn)
+void Player::SendLearnPacket(uint32 spellId, bool learn, bool keepActionButtons /*= false*/)
 {
     if (learn)
     {
@@ -3279,8 +3279,12 @@ void Player::SendLearnPacket(uint32 spellId, bool learn)
     }
     else
     {
-        WorldPacket data(SMSG_REMOVED_SPELL, 4);
+        WorldPacket data(SMSG_REMOVED_SPELL, 5);
         data << uint32(spellId);
+        // The CoA client's Extensions.dll leaves the spell's action buttons in place for a removal that ends in a
+        // zero byte; the stock client reads only the spell id.
+        if (keepActionButtons)
+            data << uint8(0);
         SendDirectMessage(&data);
     }
 }
@@ -3368,7 +3372,11 @@ bool Player::_addSpell(uint32 spellId, uint8 addSpecMask, bool temporary, bool l
     // condition mirrors the one Player::removeSpell uses for onlyTemporary. Player::learnSpell must not
     // announce the same grant again, or the client ends up with more copies than the server ever removes.
     if (IsInWorld() && !isBeingLoaded() && temporary && !learnFromSkill && (!spellInfo->HasAttribute(SpellAttr0(SPELL_ATTR0_PASSIVE | SPELL_ATTR0_DO_NOT_DISPLAY)) || !spellInfo->HasAnyAura()) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL))
+    {
+        sScriptMgr->OnPlayerTemporarySpellLearnNotice(this, spellInfo->Id, false);
         SendLearnPacket(spellInfo->Id, true);
+        sScriptMgr->OnPlayerTemporarySpellLearnNotice(this, spellInfo->Id, true);
+    }
 
     // xinef: DO NOT allow to learn spell with effect learn spell!
     // xinef: if spell possess spell learn effects only, learn those spells as temporary (eg. Metamorphosis, Tree of Life)
@@ -3808,7 +3816,11 @@ void Player::removeSpell(uint32 spell_id, uint8 removeSpecMask, bool onlyTempora
     if (!onlyTemporary || ((!spellInfo->HasAttribute(SpellAttr0(SPELL_ATTR0_PASSIVE | SPELL_ATTR0_DO_NOT_DISPLAY)) || !spellInfo->HasAnyAura()) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL)))
     {
         sScriptMgr->OnPlayerForgotSpell(this, spell_id);
-        SendLearnPacket(spell_id, false);
+        if (onlyTemporary)
+            sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, spell_id, false);
+        SendLearnPacket(spell_id, false, onlyTemporary);
+        if (onlyTemporary)
+            sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, spell_id, true);
     }
 }
 
@@ -13957,6 +13969,12 @@ uint32 Player::GetTemporarySpellReplacement(uint32 original) const
     auto itr = m_temporarySpellReplacements.find(original);
     return itr != m_temporarySpellReplacements.end() && HasActiveSpell(original) && HasActiveSpell(itr->second) ?
         itr->second : original;
+}
+
+bool Player::IsTemporarySpellReplacementStandIn(uint32 spellId) const
+{
+    auto const origin = m_temporarySpellReplacementOrigins.find(spellId);
+    return origin != m_temporarySpellReplacementOrigins.end() && origin->second != spellId;
 }
 
 uint32 Player::GetSavedActionButtonSpell(uint32 action)

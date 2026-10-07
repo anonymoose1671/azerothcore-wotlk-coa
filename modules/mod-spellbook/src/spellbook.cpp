@@ -786,6 +786,25 @@ public:
     }
 };
 
+/// A temporary spell (Remote Detonation while a mine is out, the Guardian's stomp, a talent's variant) is learned
+/// and dropped again with its owner, and every SMSG_LEARNED_SPELL printed "You have learned a new spell", could draw
+/// the "New Spell Learned" toast and, up to level 10, placed the spell on another empty button. Its row is sent quiet
+/// for exactly that packet and put back right after.
+class spellbook_temporary_learn_notice final : public PlayerScript
+{
+public:
+    spellbook_temporary_learn_notice() : PlayerScript("spellbook_temporary_learn_notice",
+                                                      {PLAYERHOOK_ON_TEMPORARY_SPELL_LEARN_NOTICE}) { }
+
+    void OnPlayerTemporarySpellLearnNotice(Player *player, uint32 spellId, bool sent) override
+    {
+        if (sent)
+            SpellbookNotify::Unquiet(player, spellId);
+        else
+            SpellbookNotify::Quiet(player, spellId);
+    }
+};
+
 class spellbook_metric_provider final : public WorldScript
 {
 public:
@@ -805,6 +824,7 @@ void AddSpellbookScripts()
 {
     new spellbook_metric_provider();
     new spellbook_swap_notice();
+    new spellbook_temporary_learn_notice();
     new SpellbookBookScript();
     new SpellbookServerScript();
 }
