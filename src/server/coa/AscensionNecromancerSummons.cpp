@@ -406,6 +406,7 @@ class npc_ascension_necromancer : public ScriptedAI
         }
         if (me->GetEntry() == 575091)
         {
+            me->CastSpell(me, 807317, true);
             if (!player->HasSpell(807098))
                 player->learnSpell(807098, true);
             auto previous = State(player).minions;
