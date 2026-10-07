@@ -2422,7 +2422,9 @@ public:
         }
         for (uint8 button = 0; button < MAX_ACTION_BUTTONS; ++button)
             if (ActionButton const* action = player->GetActionButton(button))
-                slot.Actions.emplace_back(button, action->packedData);
+                slot.Actions.emplace_back(button, action->GetType() == ACTION_BUTTON_SPELL ?
+                    player->GetSavedActionButtonSpell(action->GetAction()) | (uint32(ACTION_BUTTON_SPELL) << 24) :
+                    action->packedData);
         return slot;
     }
 
