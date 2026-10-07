@@ -344,6 +344,8 @@ void ApplyContracts(SpellInfo* info)
     }
     if (id == 801545)
         info->TargetAuraSpell = 0;
+    if (id == 531132)
+        info->AttributesEx4 |= SPELL_ATTR4_NO_CAST_LOG;
     if (id == 801514)
     {
         info->Effects[2].TargetA = SpellImplicitTargetInfo(TARGET_UNIT_MASTER);

@@ -399,6 +399,8 @@ class npc_ascension_necromancer : public ScriptedAI
             _events.ScheduleEvent(3, Milliseconds(sSpellMgr->GetSpellInfo(807640)->Effects[1].Amplitude));
         if (me->GetEntry() == 542064)
             _events.ScheduleEvent(4, 2s);
+        if (me->GetEntry() == 503200)
+            me->CastSpell(me, 531133, true);
         if (me->GetEntry() == 542065)
         {
             me->ToTempSummon()->SetTempSummonType(TEMPSUMMON_CORPSE_TIMED_DESPAWN);
