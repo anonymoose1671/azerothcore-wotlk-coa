@@ -30,6 +30,9 @@ void ApplyContracts(SpellInfo* info)
         info->Effects[0].ApplyAuraName = info->Effects[1].ApplyAuraName = SPELL_AURA_DUMMY;
         return;
     }
+    for (auto const& coefficient : NecromancerCoefficients)
+        if (coefficient.id == info->Id)
+            info->Effects[coefficient.effect].BonusMultiplier = 0.0f;
     if (info->SpellFamilyName != 29)
         return;
     uint32 id = info->Id;
@@ -351,9 +354,6 @@ void ApplyContracts(SpellInfo* info)
         info->Effects[2].TargetA = SpellImplicitTargetInfo(TARGET_UNIT_MASTER);
         info->Effects[2].TargetB = SpellImplicitTargetInfo();
     }
-    for (auto const& coefficient : NecromancerCoefficients)
-        if (coefficient.id == id)
-            info->Effects[coefficient.effect].BonusMultiplier = 0.0f;
     for (uint32 child : {573242, 801241, 707575, 561318, 561095, 570050, 505225, 681463})
         if (id == child)
         {

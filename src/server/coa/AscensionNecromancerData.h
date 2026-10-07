@@ -80,6 +80,7 @@ constexpr NecromancerCoefficient NecromancerCoefficients[] =
     { 802353, 0, 0.25000000f, 0.00000f, 0.00000f, 8, false },
     { 803779, 0, 0.59710000f, 0.00000f, 0.00000f, 16, false },
     { 805031, 1, 0.30000000f, 0.00000f, 0.00000f, 32, true },
+    { 807339, 0, 0.14882400f, 0.14882400f, 0.00000f, 16, false },
     { 808016, 0, 2.00000000f, 0.00000f, 0.00000f, 48, false },
 };
 struct NecromancerSummon
