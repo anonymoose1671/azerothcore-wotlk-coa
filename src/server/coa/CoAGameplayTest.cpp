@@ -377,6 +377,8 @@ struct Actor
     std::map<uint32, std::vector<uint32>> entryRows;
     std::set<uint32> indexedEntries;
     std::map<uint32, uint32> placingLearns;
+    std::map<uint32, uint32> clientSpellRank;
+    std::map<uint32, uint32> placingSupersedes;
     std::map<uint32, uint32> buttonKeepingRemovals;
     std::vector<std::pair<uint32, uint32>> announcements;
     uint32 lastBuyOrdinal = 0;
@@ -778,6 +780,28 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         auto& rows = actor.clientSpellRows[spell];
         rows[0] = std::move(rows[1]);
         rows[1].assign(reinterpret_cast<char const*>(packet.contents()), packet.size());
+        constexpr std::size_t SpellRecordBytes = 170 * sizeof(uint32);
+        constexpr uint32 RankString = 2;
+        std::size_t offset = SpellRecordBytes;
+        for (uint32 index = 0; index <= RankString && offset + sizeof(uint32) <= packet.size(); ++index)
+        {
+            uint32 const length = packet.read<uint32>(offset);
+            offset += sizeof(uint32);
+            if (index == RankString && offset + length <= packet.size())
+            {
+                uint32 rank = 0;
+                for (std::size_t at = offset; at < offset + length; ++at)
+                {
+                    char const character = char(packet.contents()[at]);
+                    if (character >= '0' && character <= '9')
+                        rank = rank * 10 + uint32(character - '0');
+                    else if (rank)
+                        break;
+                }
+                actor.clientSpellRank[spell] = rank;
+            }
+            offset += length;
+        }
     }
     constexpr uint16 SmsgPatchCharacterAdvancement = 0x064A;
     constexpr std::size_t AdvancementEntrySpells = 9;
@@ -880,6 +904,9 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
             ++actor.loudSupersedes[replacement];
         if (!isEntry(previous) && !isEntry(replacement) && !flagged(actor.clientSpellHidden, replacement))
             ++actor.chatLines[replacement];
+        if (auto const rank = actor.clientSpellRank.find(replacement);
+            rank == actor.clientSpellRank.end() || rank->second <= 1)
+            ++actor.placingSupersedes[replacement];
         actor.announcements.emplace_back(actor.packetOrdinal, replacement);
     }
 
@@ -2307,6 +2334,18 @@ private:
             auto const& lines = _actors.at(step.get<std::string>("actor")).chatLines;
             auto const found = lines.find(spell);
             return found == lines.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "client_placing_supersedes_for")
+        {
+            auto const& placing = _actors.at(step.get<std::string>("actor")).placingSupersedes;
+            auto const found = placing.find(spell);
+            return found == placing.end() ? 0.0 : double(found->second);
+        }
+        if (metric == "client_spell_rank_for")
+        {
+            auto const& ranks = _actors.at(step.get<std::string>("actor")).clientSpellRank;
+            auto const found = ranks.find(spell);
+            return found == ranks.end() ? -1.0 : double(found->second);
         }
         if (metric == "client_placing_learns_for")
         {

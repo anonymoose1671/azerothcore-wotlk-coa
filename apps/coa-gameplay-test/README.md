@@ -734,7 +734,10 @@ and every insertion of a new row clears that index. A learned or removed notice 
 `SMSG_PATCH_SPELL` row (2346) carries `SPELL_ATTR0_DO_NOT_DISPLAY` or `SPELL_ATTR0_IS_TRADESKILL`.
 `client_placing_learns_for` counts the spell's learned notices sent while its last `SpellCustomAttr` row lacked the
 no-placement bit (0x1000000 of the fourth attribute dword); up to level 10 the client places such a spell on an empty
-button. `client_removals_keeping_buttons_for` counts its removed notices ending in a zero byte, which Extensions.dll
+button. `client_placing_supersedes_for` counts the superseded notices adding that spell while the Rank text of its last
+`SMSG_PATCH_SPELL` row (the number in it) was 1 or less, or before any row was sent: up to level 10 the client places
+such a spell on an empty button. `client_spell_rank_for` returns that number for the last row sent, or -1.
+`client_removals_keeping_buttons_for` counts its removed notices ending in a zero byte, which Extensions.dll
 answers without clearing the spell's action buttons. `client_spell_row_restored` returns 1 when the last two
 `SMSG_PATCH_SPELL` rows for `spell` are the same row, first with `SPELL_ATTR0_DO_NOT_DISPLAY` and then without.
 The model reads attributes only from rows the server sent, not from the client's own tables.

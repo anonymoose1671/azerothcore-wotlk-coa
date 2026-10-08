@@ -3689,6 +3689,20 @@ public:
         SendSpellRow(player, *row);
     }
 
+    void SendSwapPlacementRow(Player* player, uint32 spellId, bool hold)
+    {
+        if (player->GetLevel() > CLIENT_AUTOPLACE_MAX_LEVEL || !ReceivesPatchRows(player) || !player->IsInWorld())
+            return;
+
+        std::optional<SpellPatchRow> row = ClientSpellRow(spellId);
+        if (!row || ClientRankNumber(row->Strings[SPELL_WIRE_RANK]) > 1)
+            return;
+
+        if (hold)
+            row->Strings[SPELL_WIRE_RANK] = CLIENT_UNPLACED_RANK;
+        SendSpellRow(player, *row);
+    }
+
     void SendSwapEntries(Player* player, std::vector<uint32> const& spells)
     {
         if (spells.empty() || !ReceivesPatchRows(player) || !player->IsInWorld())
@@ -3926,6 +3940,21 @@ private:
 
   static constexpr uint32 SPELL_ATTRIBUTES_FIELD = 4;
   static constexpr uint32 SWAP_ENTRY_FIRST_ID = 9000000;
+  static constexpr uint8 CLIENT_AUTOPLACE_MAX_LEVEL = 10;
+  static constexpr std::size_t SPELL_WIRE_RANK = 2;
+  static constexpr char const* CLIENT_UNPLACED_RANK = "Rank 2";
+
+  static uint32 ClientRankNumber(std::string const &text) {
+    uint32 rank = 0;
+    for (char character : text)
+    {
+      if (character >= '0' && character <= '9')
+        rank = rank * 10 + uint32(character - '0');
+      else if (rank)
+        break;
+    }
+    return rank;
+  }
   static constexpr uint32 ADVANCEMENT_ENTRY_HIDDEN = 0x1;
   static constexpr std::size_t ADVANCEMENT_ENTRY_SPELLS = 9;
 
@@ -7448,13 +7477,15 @@ public:
     void OnPlayerTemporarySpellReplacementNotice(Player* player, uint32 previous, uint32 replacement,
         bool sent) override
     {
+        AscensionDisplayPatchService& patches = AscensionDisplayPatchService::Instance();
+        patches.SendSwapPlacementRow(player, replacement, !sent);
         if (sent)
             return;
         std::vector<uint32> standIns;
         for (uint32 spell : { previous, replacement })
             if (player->IsTemporarySpellReplacementStandIn(spell))
                 standIns.push_back(spell);
-        AscensionDisplayPatchService::Instance().SendSwapEntries(player, standIns);
+        patches.SendSwapEntries(player, standIns);
     }
 
     bool OnPlayerCanUseItem(Player* player, ItemTemplate const* item, InventoryResult& result) override
