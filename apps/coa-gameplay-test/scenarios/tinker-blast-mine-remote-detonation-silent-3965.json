@@ -1,16 +1,14 @@
 {
   "schema": 1,
-  "name": "Blast Mine's Remote Detonation comes and goes without a chat line or a new button (#3965)",
+  "name": "Remote Detonation stays on its own button across mines (#3965)",
   "contract": [
-    "AscensionTinker::Refresh teaches Remote Detonation 801798 with learnSpell(801798, true) while a Blast Mine 50045",
-    "is live and removes it with removeSpell(801798, SPEC_MASK_ALL, true) once no mine is left. The client printed",
-    "'You have learned a new spell' for every learn, placed it on another empty button up to level 10, and printed",
-    "'You have unlearned' for every removal. Extensions.dll skips the learn's lines while the spell's SpellCustomAttr",
-    "row carries the quiet-learn bit and its button placement while it carries the no-placement bit; the client skips",
-    "the removal's line while the spell's Spell row carries SPELL_ATTR0_DO_NOT_DISPLAY, and Extensions.dll leaves the",
-    "spell's buttons in place for a removal ending in a zero byte. Expected over two mines: the spell reaches the",
-    "client's spellbook each time, no line and no placement for any learn or removal, each removal keeps its buttons",
-    "and its Spell row is put back exactly afterwards, and an ordinary learn (Deploy Blast Mine) still prints its line."
+    "Remote Detonation 801798 requires Bomb Ready 500354 (CasterAuraSpell), which a live Blast Mine 50045 applies to",
+    "its owner, so the spell is meant to stay known and be greyed out until a mine is down. AscensionTinker::Refresh",
+    "used to teach it as a temporary spell while a mine existed and remove it with the last mine, so every mine",
+    "printed 'You have learned a new spell', put another button on the bar up to level 10, and every detonation",
+    "printed 'You have unlearned'. Expected: learning Deploy Blast Mine teaches Remote Detonation once and it stays",
+    "known; casting it with no mine is refused for the missing aura; over two mines it is never learned or removed",
+    "again and prints nothing, while each mine still grants Bomb Ready and is detonated by it."
   ],
   "timeout_ms": 90000,
   "players": [
@@ -52,19 +50,47 @@
     },
     {
       "action": "assert",
-      "label": "CONTROL: an ordinary learn still prints its line",
-      "actor": "tinker",
-      "metric": "client_chat_lines_for",
-      "spell": 801718,
-      "equals": 1
-    },
-    {
-      "action": "assert",
-      "label": "SETUP: Remote Detonation is unknown before any mine exists",
+      "label": "Remote Detonation is known with Deploy Blast Mine",
       "actor": "tinker",
       "metric": "knows_spell",
       "spell": 801798,
-      "equals": 0
+      "equals": 1,
+      "within_ms": 2000
+    },
+    {
+      "action": "assert",
+      "label": "The client is told about it once",
+      "actor": "tinker",
+      "metric": "spellbook_learned_alerts",
+      "spell": 801798,
+      "equals": 1
+    },
+    {
+      "action": "wait",
+      "label": "Let the global cooldown pass",
+      "ms": 1600
+    },
+    {
+      "action": "cast",
+      "label": "Remote Detonation with no mine",
+      "actor": "tinker",
+      "spell": 801798
+    },
+    {
+      "action": "assert",
+      "label": "It does nothing without Bomb Ready (SPELL_FAILED_CASTER_AURASTATE)",
+      "actor": "tinker",
+      "metric": "cast_failure",
+      "spell": 801798,
+      "equals": 22,
+      "within_ms": 1000
+    },
+    {
+      "action": "snapshot",
+      "actor": "tinker",
+      "metric": "client_chat_lines_for",
+      "spell": 801798,
+      "save_as": "detonation_lines"
     },
     {
       "action": "cast",
@@ -79,36 +105,12 @@
     },
     {
       "action": "assert",
-      "label": "SETUP: Remote Detonation is taught while the mine is live",
+      "label": "SETUP: the mine grants Bomb Ready",
       "actor": "tinker",
-      "metric": "knows_spell",
-      "spell": 801798,
+      "metric": "aura",
+      "spell": 500354,
       "equals": 1,
-      "within_ms": 3000
-    },
-    {
-      "action": "assert",
-      "label": "The client is told about Remote Detonation",
-      "actor": "tinker",
-      "metric": "client_knows_spell",
-      "spell": 801798,
-      "equals": 1
-    },
-    {
-      "action": "assert",
-      "label": "Learning it printed nothing",
-      "actor": "tinker",
-      "metric": "client_chat_lines_for",
-      "spell": 801798,
-      "equals": 0
-    },
-    {
-      "action": "assert",
-      "label": "The learn places no button",
-      "actor": "tinker",
-      "metric": "client_placing_learns_for",
-      "spell": 801798,
-      "equals": 0
+      "within_ms": 2000
     },
     {
       "action": "cast",
@@ -118,59 +120,22 @@
     },
     {
       "action": "assert",
-      "label": "SETUP: Remote Detonation leaves with the last mine",
+      "label": "SETUP: the mine is gone",
       "actor": "tinker",
-      "metric": "knows_spell",
-      "spell": 801798,
+      "metric": "owned_creature_count",
+      "entry": 50045,
       "equals": 0,
-      "within_ms": 3000
-    },
-    {
-      "action": "assert",
-      "label": "The client is told it is gone",
-      "actor": "tinker",
-      "metric": "client_knows_spell",
-      "spell": 801798,
-      "equals": 0
-    },
-    {
-      "action": "assert",
-      "label": "The removal keeps its buttons",
-      "actor": "tinker",
-      "metric": "client_removals_keeping_buttons_for",
-      "spell": 801798,
-      "equals": 1
-    },
-    {
-      "action": "assert",
-      "label": "The removal printed nothing",
-      "actor": "tinker",
-      "metric": "client_chat_lines_for",
-      "spell": 801798,
-      "equals": 0
-    },
-    {
-      "action": "assert",
-      "label": "Its row is put back exactly after the removal",
-      "actor": "tinker",
-      "metric": "client_spell_row_restored",
-      "spell": 801798,
-      "equals": 1
-    },
-    {
-      "action": "assert",
-      "label": "The restored row is Remote Detonation's own",
-      "actor": "tinker",
-      "metric": "server_packet_contains",
-      "opcode": 2346,
-      "row": 801798,
-      "text": "Remote Detonation",
-      "equals": 1
+      "within_ms": 2000
     },
     {
       "action": "reset_cooldown",
       "actor": "tinker",
       "spell": 801718
+    },
+    {
+      "action": "reset_cooldown",
+      "actor": "tinker",
+      "spell": 801798
     },
     {
       "action": "wait",
@@ -189,16 +154,56 @@
     },
     {
       "action": "assert",
-      "label": "SETUP: Remote Detonation is taught again",
+      "label": "SETUP: the second mine grants Bomb Ready",
+      "actor": "tinker",
+      "metric": "aura",
+      "spell": 500354,
+      "equals": 1,
+      "within_ms": 2000
+    },
+    {
+      "action": "cast",
+      "label": "Detonate the second mine",
+      "actor": "tinker",
+      "spell": 801798
+    },
+    {
+      "action": "assert",
+      "label": "SETUP: the second mine is gone",
+      "actor": "tinker",
+      "metric": "owned_creature_count",
+      "entry": 50045,
+      "equals": 0,
+      "within_ms": 2000
+    },
+    {
+      "action": "assert",
+      "label": "Remote Detonation is still known after both mines",
       "actor": "tinker",
       "metric": "knows_spell",
       "spell": 801798,
       "equals": 1,
-      "within_ms": 3000
+      "within_ms": 1000
     },
     {
       "action": "assert",
-      "label": "Still one Remote Detonation on the client",
+      "label": "The client still holds it",
+      "actor": "tinker",
+      "metric": "client_knows_spell",
+      "spell": 801798,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "It was never learned again",
+      "actor": "tinker",
+      "metric": "spellbook_learned_alerts",
+      "spell": 801798,
+      "equals": 1
+    },
+    {
+      "action": "assert",
+      "label": "Still one copy on the client",
       "actor": "tinker",
       "metric": "client_spellbook_copies",
       "spell": 801798,
@@ -206,18 +211,11 @@
     },
     {
       "action": "assert",
-      "label": "Zero lines for Remote Detonation over both mines",
+      "label": "No line for Remote Detonation over both mines",
       "actor": "tinker",
       "metric": "client_chat_lines_for",
       "spell": 801798,
-      "equals": 0
-    },
-    {
-      "action": "assert",
-      "label": "Neither learn placed a button",
-      "actor": "tinker",
-      "metric": "client_placing_learns_for",
-      "spell": 801798,
+      "relative_to": "detonation_lines",
       "equals": 0
     }
   ]
