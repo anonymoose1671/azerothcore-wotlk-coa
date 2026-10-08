@@ -68,12 +68,12 @@
     },
     {
       "action": "assert",
-      "label": "Quick Shot comes back through a bar redraw, not a superseded-spell packet",
+      "label": "SETUP: the client was told Quick Shot came back",
       "actor": "ranger",
       "metric": "spellbook_superseded_for",
       "spell": 500074,
       "relative_to": "handed_back_before",
-      "equals": 0,
+      "min": 1,
       "within_ms": 2000
     },
     {
@@ -86,11 +86,11 @@
     },
     {
       "action": "assert",
-      "label": "The swap never touches Quick Shot's announcement row, so a genuine learn is still announced",
+      "label": "Quick Shot is notable again, so a genuine learn is still announced",
       "actor": "ranger",
       "metric": "spellbook_client_notable",
       "spell": 500074,
-      "equals": -1
+      "equals": 1
     }
   ]
 }

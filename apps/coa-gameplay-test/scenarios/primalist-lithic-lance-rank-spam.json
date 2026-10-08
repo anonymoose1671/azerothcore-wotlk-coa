@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "name": "Lithic Lance Ready supersedes only the highest known Geode Barrage rank",
-  "contract": "Lithic Lance Ready retargets one action-bar slot, the highest Geode Barrage rank the caster knows, to Lithic Lance. Gaining or losing the buff retargets no other rank, however many earlier Geode Barrage ranks remain in the spellbook, and the client prints no line for it: the swap is written into the bar server side and the bar is resent, and no SMSG_SUPERCEDED_SPELL hands a Geode Barrage rank back.",
+  "contract": "Lithic Lance Ready retargets one action-bar slot, the highest Geode Barrage rank the caster knows, to Lithic Lance. Gaining or losing the buff sends exactly one SMSG_SUPERCEDED_SPELL packet regardless of how many earlier Geode Barrage ranks remain in the spellbook.",
   "players": [
     {
       "id": "primalist",
@@ -24,9 +24,9 @@
     { "action": "set_aura", "actor": "primalist", "spell": 807048, "stacks": 1 },
     { "action": "assert", "actor": "primalist", "metric": "aura", "spell": 807048, "equals": 1 },
     {
-      "action": "assert", "label": "No superseded-spell packet: the bar is redrawn instead",
+      "action": "assert", "label": "One superseded-spell packet regardless of how many ranks are known",
       "actor": "primalist", "metric": "spellbook_superseded_packets",
-      "relative_to": "packets_before_apply", "equals": 0
+      "relative_to": "packets_before_apply", "equals": 1
     },
     {
       "action": "assert", "label": "Only the highest known rank is retargeted to Lithic Lance",
@@ -37,24 +37,15 @@
       "actor": "primalist", "metric": "temporary_spell_replacement", "spell": 500402, "equals": 500402
     },
     {
-      "action": "snapshot", "actor": "primalist", "metric": "spellbook_superseded_for", "spell": 502770,
-      "save_as": "geode_swaps_before_remove"
-    },
-    {
-      "action": "snapshot", "actor": "primalist", "metric": "client_chat_lines_for", "spell": 502770,
-      "save_as": "geode_lines_before_remove"
+      "action": "snapshot", "actor": "primalist", "metric": "spellbook_superseded_packets",
+      "save_as": "packets_before_remove"
     },
     { "action": "set_aura", "actor": "primalist", "spell": 807048, "stacks": 0 },
     { "action": "assert", "actor": "primalist", "metric": "aura", "spell": 807048, "equals": 0 },
     {
-      "action": "assert", "label": "No superseded-spell packet hands Geode Barrage back",
-      "actor": "primalist", "metric": "spellbook_superseded_for", "spell": 502770,
-      "relative_to": "geode_swaps_before_remove", "equals": 0
-    },
-    {
-      "action": "assert", "label": "The buff dropping printed no line for Geode Barrage",
-      "actor": "primalist", "metric": "client_chat_lines_for", "spell": 502770,
-      "relative_to": "geode_lines_before_remove", "equals": 0
+      "action": "assert", "label": "One superseded-spell packet again when the buff drops",
+      "actor": "primalist", "metric": "spellbook_superseded_packets",
+      "relative_to": "packets_before_remove", "equals": 1
     },
     {
       "action": "assert", "label": "The action bar reverts to the highest rank",

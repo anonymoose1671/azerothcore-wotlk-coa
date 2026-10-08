@@ -1,51 +1,50 @@
 {
   "schema": 1,
   "name": "Impcaller on the action bar is saved as Call: Hellfire Imp (#5469)",
-  "contract": "AscensionCompatData::TalentReplacements (AscensionTalentReplacementData.h:35) carries {17, 17, 706755, 804883, {{707666 at 0}}}: in Defiance specialization 17, knowing the Impcaller talent 706755 turns Call: Hellfire Imp 804883 into Impcaller 707666. AscensionClassService::SynchronizeTalentReplacements (AscensionCompat.cpp:884-953), run from OnPlayerLearnSpell (AscensionCompat.cpp:5782-5784), teaches 707666 with learnSpell(707666, true) (AscensionCompat.cpp:945), a temporary spell never written to character_spell, and registers it over Call: Hellfire Imp with Player::SetTemporarySpellReplacement (AscensionCompat.cpp:951). Before the fix Player::_SaveActions wrote 707666, and Player::_LoadActions at the next login runs before the class service teaches it again, so the button was refused and deleted. persisted_action_button reads Player::GetSavedActionButtonSpell, the id _SaveActions writes. A button holding Impcaller must be saved as Call: Hellfire Imp; a button holding Call: Hellfire Imp is saved unchanged. With CoA.TemporarySpellReplacement.Silent the Impcaller swap and the Shieldgore swap of the same Defiance Knight (Shieldgore rank 1 804353 over Infernal Strike 801016, neither spell with a SpellCustomAttr row) print no chat line on swap-in or swap-out and the client keeps the replacement after the server drops it.",
+  "contract": "AscensionCompatData::TalentReplacements (AscensionTalentReplacementData.h:35) carries {17, 17, 706755, 804883, {{707666 at 0}}}: in Defiance specialization 17, knowing the Impcaller talent 706755 turns Call: Hellfire Imp 804883 into Impcaller 707666. AscensionClassService::SynchronizeTalentReplacements (AscensionCompat.cpp:884-953), run from OnPlayerLearnSpell (AscensionCompat.cpp:5782-5784), teaches 707666 with learnSpell(707666, true) (AscensionCompat.cpp:945), a temporary spell never written to character_spell, and registers it over Call: Hellfire Imp with Player::SetTemporarySpellReplacement (AscensionCompat.cpp:951). Before the fix Player::_SaveActions wrote 707666, and Player::_LoadActions at the next login runs before the class service teaches it again, so the button was refused and deleted. persisted_action_button reads Player::GetSavedActionButtonSpell, the id _SaveActions writes. A button holding Impcaller must be saved as Call: Hellfire Imp; a button holding Call: Hellfire Imp is saved unchanged.",
   "timeout_ms": 60000,
   "players": [
-    {"id": "knight", "race": 1, "class": 17, "level": 11}
+    { "id": "knight", "race": 1, "class": 17, "level": 11 }
   ],
   "steps": [
-    {"action": "wait", "label": "Let login state settle", "ms": 3000},
-    {"action": "specialization", "label": "Choose Defiance", "actor": "knight", "id": 17},
-    {"action": "learn", "actor": "knight", "spell": 804883},
-    {"action": "learn", "actor": "knight", "spell": 801016},
-    {"action": "unlearn", "label": "Start without the Shieldgore talent Defiance grants", "actor": "knight", "spell": 301302, "all_specs": true},
-    {"action": "assert", "label": "SETUP: Infernal Strike is its own spell without the talent", "actor": "knight", "metric": "temporary_spell_replacement", "spell": 801016, "equals": 801016, "within_ms": 1000},
-    {"action": "set_action_button", "label": "Infernal Strike on a button the Shieldgore swap will redraw", "actor": "knight", "button": 4, "spell": 801016},
-    {"action": "wait", "ms": 1200},
-    {"action": "assert", "label": "SETUP: the login bar was sent and button 120 is empty", "actor": "knight", "metric": "client_action_button", "button": 119, "equals": 0},
-    {"action": "snapshot", "actor": "knight", "metric": "client_chat_lines_for", "spell": 707666, "save_as": "impcaller_lines"},
-    {"action": "snapshot", "actor": "knight", "metric": "client_chat_lines_for", "spell": 804353, "save_as": "shieldgore_lines"},
-    {"action": "snapshot", "actor": "knight", "metric": "spellbook_superseded_packets", "save_as": "supersedes"},
-    {"action": "learn", "label": "Pick the Shieldgore talent", "actor": "knight", "spell": 301302},
-    {"action": "assert", "label": "Shieldgore rank 1 stands in for Infernal Strike", "actor": "knight", "metric": "temporary_spell_replacement", "spell": 801016, "equals": 804353, "within_ms": 3000},
-    {"action": "assert", "label": "The server bar holds Shieldgore on the Infernal Strike button", "actor": "knight", "metric": "action_button", "button": 4, "equals": 804353, "within_ms": 1000},
-    {"action": "assert", "label": "The Infernal Strike button shows Shieldgore", "actor": "knight", "metric": "client_action_button", "button": 4, "equals": 804353, "within_ms": 1000},
-    {"action": "assert", "label": "QUIET: Shieldgore rank 1 has no SpellCustomAttr row and was still taught without a line", "actor": "knight", "metric": "client_chat_lines_for", "spell": 804353, "relative_to": "shieldgore_lines", "equals": 0},
-    {"action": "assert", "label": "QUIET: the client holds Shieldgore", "actor": "knight", "metric": "client_knows_spell", "spell": 804353, "equals": 1},
-    {"action": "learn", "label": "Pick the Impcaller talent", "actor": "knight", "spell": 706755},
-    {"action": "assert", "label": "The talent replaces Call: Hellfire Imp with Impcaller", "actor": "knight", "metric": "temporary_spell_replacement", "spell": 804883, "equals": 707666, "within_ms": 3000},
-    {"action": "assert", "label": "QUIET: Impcaller has no SpellCustomAttr row and was still taught without a line", "actor": "knight", "metric": "client_chat_lines_for", "spell": 707666, "relative_to": "impcaller_lines", "equals": 0},
-    {"action": "assert", "label": "QUIET: the client holds Impcaller", "actor": "knight", "metric": "client_knows_spell", "spell": 707666, "equals": 1},
-    {"action": "set_action_button", "actor": "knight", "button": 2, "spell": 707666},
-    {"action": "set_action_button", "actor": "knight", "button": 3, "spell": 804883},
-    {"action": "assert", "label": "The bar holds Impcaller", "actor": "knight", "metric": "action_button", "button": 2, "equals": 707666},
-    {"action": "assert", "label": "The Impcaller button is saved as Call: Hellfire Imp", "actor": "knight", "metric": "persisted_action_button", "button": 2, "equals": 804883},
-    {"action": "assert", "label": "Control: an ordinary known spell is saved unchanged", "actor": "knight", "metric": "persisted_action_button", "button": 3, "equals": 804883},
-    {"action": "unlearn", "label": "Drop the Shieldgore talent", "actor": "knight", "spell": 301302, "all_specs": true},
-    {"action": "assert", "label": "Infernal Strike is its own spell again", "actor": "knight", "metric": "temporary_spell_replacement", "spell": 801016, "equals": 801016, "within_ms": 3000},
-    {"action": "assert", "label": "The button shows Infernal Strike again", "actor": "knight", "metric": "client_action_button", "button": 4, "equals": 801016, "within_ms": 1000},
-    {"action": "assert", "label": "The server dropped Shieldgore", "actor": "knight", "metric": "knows_spell", "spell": 804353, "equals": 0},
-    {"action": "assert", "label": "QUIET: the client keeps Shieldgore instead of an unlearned line", "actor": "knight", "metric": "client_knows_spell", "spell": 804353, "equals": 1},
-    {"action": "assert", "label": "QUIET: swapping Shieldgore out printed nothing", "actor": "knight", "metric": "client_chat_lines_for", "spell": 804353, "relative_to": "shieldgore_lines", "equals": 0},
-    {"action": "unlearn", "label": "Drop the Impcaller talent", "actor": "knight", "spell": 706755, "all_specs": true},
-    {"action": "assert", "label": "Call: Hellfire Imp is its own spell again", "actor": "knight", "metric": "temporary_spell_replacement", "spell": 804883, "equals": 804883, "within_ms": 3000},
-    {"action": "assert", "label": "The server dropped Impcaller", "actor": "knight", "metric": "knows_spell", "spell": 707666, "equals": 0},
-    {"action": "assert", "label": "QUIET: the client keeps Impcaller instead of an unlearned line", "actor": "knight", "metric": "client_knows_spell", "spell": 707666, "equals": 1},
-    {"action": "assert", "label": "QUIET: swapping Impcaller out printed nothing", "actor": "knight", "metric": "client_chat_lines_for", "spell": 707666, "relative_to": "impcaller_lines", "equals": 0},
-    {"action": "assert", "label": "QUIET: an empty button stays empty", "actor": "knight", "metric": "client_action_button", "button": 119, "equals": 0},
-    {"action": "assert", "label": "QUIET: no swap was sent as SMSG_SUPERCEDED_SPELL", "actor": "knight", "metric": "spellbook_superseded_packets", "relative_to": "supersedes", "equals": 0}
+    { "action": "wait", "label": "Let login state settle", "ms": 3000 },
+    { "action": "specialization", "label": "Choose Defiance", "actor": "knight", "id": 17 },
+    { "action": "learn", "actor": "knight", "spell": 804883 },
+    { "action": "learn", "label": "Pick the Impcaller talent", "actor": "knight", "spell": 706755 },
+    {
+      "action": "assert",
+      "label": "The talent replaces Call: Hellfire Imp with Impcaller",
+      "actor": "knight",
+      "metric": "temporary_spell_replacement",
+      "spell": 804883,
+      "equals": 707666,
+      "within_ms": 3000
+    },
+    { "action": "set_action_button", "actor": "knight", "button": 2, "spell": 707666 },
+    { "action": "set_action_button", "actor": "knight", "button": 3, "spell": 804883 },
+    {
+      "action": "assert",
+      "label": "The bar holds Impcaller",
+      "actor": "knight",
+      "metric": "action_button",
+      "button": 2,
+      "equals": 707666
+    },
+    {
+      "action": "assert",
+      "label": "The Impcaller button is saved as Call: Hellfire Imp",
+      "actor": "knight",
+      "metric": "persisted_action_button",
+      "button": 2,
+      "equals": 804883
+    },
+    {
+      "action": "assert",
+      "label": "Control: an ordinary known spell is saved unchanged",
+      "actor": "knight",
+      "metric": "persisted_action_button",
+      "button": 3,
+      "equals": 804883
+    }
   ]
 }

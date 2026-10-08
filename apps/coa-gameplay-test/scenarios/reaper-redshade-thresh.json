@@ -167,9 +167,9 @@
     },
     {
       "action": "assert",
-      "label": "The transform rewrites the bar, but the button is still saved as Reap",
+      "label": "The transform redraws the bar without rewriting it: the saved button is still Reap",
       "actor": "reaper",
-      "metric": "persisted_action_button",
+      "metric": "action_button",
       "button": 1,
       "equals": 573303
     },

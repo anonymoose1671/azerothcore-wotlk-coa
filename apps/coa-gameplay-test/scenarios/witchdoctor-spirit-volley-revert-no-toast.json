@@ -87,12 +87,12 @@
     },
     {
       "action": "assert",
-      "label": "Reclamation comes back through a bar redraw, not a superseded-spell packet",
+      "label": "SETUP: the client was told Reclamation came back",
       "actor": "caster",
       "metric": "spellbook_superseded_for",
       "spell": 680904,
       "relative_to": "handed_back_before",
-      "equals": 0,
+      "min": 1,
       "within_ms": 2000
     },
     {
@@ -105,11 +105,11 @@
     },
     {
       "action": "assert",
-      "label": "The swap never touches Reclamation's announcement row, so a genuine learn is still announced",
+      "label": "Reclamation is notable again, so a genuine learn is still announced",
       "actor": "caster",
       "metric": "spellbook_client_notable",
       "spell": 680904,
-      "equals": -1
+      "equals": 1
     }
   ]
 }

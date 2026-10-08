@@ -5,8 +5,8 @@
     "Secret of Raven Hill 680513 promises drinking a tonic transforms Dawn Blade for the duration of 681499",
     "(SpellDuration 9, 30 seconds). Vampiric Tonic 802276 maps the replacement to 686020. The native replacement",
     "must exist while the temporary aura is active and clear after its natural expiry, without relogging or",
-    "action-bar replacement. The restored Dawn Blade reaches the client as a bar redraw: no native superseded-spell",
-    "packet is sent before or after expiry."
+    "action-bar replacement. Capture exactly one native superseded-spell packet announcing the restored Dawn",
+    "Blade after expiry, with none before it."
   ],
   "timeout_ms": 90000,
   "players": [
@@ -88,8 +88,8 @@
       "actor": "w",
       "metric": "spellbook_superseded_for",
       "spell": 802024,
-      "equals": 0,
-      "label": "No superseded-spell packet after expiry: the bar is redrawn instead"
+      "equals": 1,
+      "label": "Native packet restores Dawn Blade once after expiry"
     }
   ]
 }

@@ -97,7 +97,6 @@
 #include "WorldState.h"
 #include "WorldStateDefines.h"
 #include "WorldStatePackets.h"
-#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <queue>
@@ -111,7 +110,9 @@
 enum CustomEquipmentSpells : uint32
 {
     SPELL_BURNING_COMMANDER = 92089,
-    SPELL_VALKYR_GRIP = 707072
+    SPELL_VALKYR_GRIP = 707072,
+    SPELL_TITANS_GRIP = 46917,
+    SPELL_DUAL_WIELD = 674
 };
 
 enum ClientKnownSupersededSpells : uint32
@@ -2928,7 +2929,6 @@ bool Player::HasActivePowerType(Powers power)
 
 void Player::SendInitialSpells()
 {
-    m_quietlyTaughtSpells.clear();
     uint32 curTime = GameTime::GetGameTimeMS().count();
     uint32 infTime = GameTime::GetGameTimeMS().count() + infinityCooldownDelayCheck;
 
@@ -2944,9 +2944,6 @@ void Player::SendInitialSpells()
     {
         if (itr->second->State == PLAYERSPELL_REMOVED)
             continue;
-
-        if (itr->second->State == PLAYERSPELL_TEMPORARY && SilencesTemporarySpellReplacements())
-            m_quietlyTaughtSpells.insert(itr->first);
 
         if ((!itr->second->Active && !IsKeptInClientSpellbookWhenSuperseded(itr->first)) ||
             !itr->second->IsInSpec(GetActiveSpec()))
@@ -3037,7 +3034,8 @@ void Player::SendUnlearnSpells()
 
     for (auto const& itr : m_spells)
     {
-        if (itr.second->State == PLAYERSPELL_REMOVED || itr.second->Active)
+        if (itr.second->State == PLAYERSPELL_REMOVED || itr.second->Active ||
+            IsKeptInClientSpellbookWhenSuperseded(itr.first))
             continue;
 
         auto skillLineAbilities = sSpellMgr->GetSkillLineAbilityMapBounds(itr.first);
@@ -3250,7 +3248,6 @@ void Player::_removeTalentAurasAndSpells(uint32 spellId)
         if (spellInfo->Effects[i].TriggerSpell > 0 && spellInfo->Effects[i].Effect == SPELL_EFFECT_LEARN_SPELL)
         {
             removeSpell(spellInfo->Effects[i].TriggerSpell, SPEC_MASK_ALL, true);
-            ForgetQuietlyTaughtSpell(spellInfo->Effects[i].TriggerSpell);
             _removeTalentAurasAndSpells(spellInfo->Effects[i].TriggerSpell);
         }
     }
@@ -3273,44 +3270,23 @@ void Player::_addTalentAurasAndSpells(uint32 spellId)
     }
 }
 
-void Player::SendLearnPacket(uint32 spellId, bool learn, bool quiet)
+void Player::SendLearnPacket(uint32 spellId, bool learn, bool keepActionButtons /*= false*/)
 {
-    bool const silent = SilencesTemporarySpellReplacements();
     if (learn)
     {
-        if (silent && m_quietlyTaughtSpells.contains(spellId))
-        {
-            // The client still lists the spell from a quiet learn whose temporary removal it was never told about;
-            // the stock handler appends one spellbook entry per SMSG_LEARNED_SPELL (#436), so it is not sent again.
-            if (!quiet)
-                m_quietlyTaughtSpells.erase(spellId);
-            return;
-        }
-        bool const hushed = quiet && silent;
-        if (hushed)
-        {
-            m_quietlyTaughtSpells.insert(spellId);
-            sScriptMgr->OnPlayerQuietSpellLearnNotice(this, spellId, false);
-        }
         WorldPacket data(SMSG_LEARNED_SPELL, 6);
         data << uint32(spellId);
         data << uint16(0);
         SendDirectMessage(&data);
-        if (hushed)
-            sScriptMgr->OnPlayerQuietSpellLearnNotice(this, spellId, true);
     }
     else
     {
-        // SMSG_REMOVED_SPELL makes the client print "You have unlearned". A spell that has stood in for another, or
-        // was taught quietly and is only dropped as a temporary, stays in the client's spellbook instead: unlearning
-        // and relearning it would print, and would make the client's auto-placement treat it as new each time. The
-        // server refuses casting it while it is not active.
-        if (silent && (m_temporarySpellReplacementOrigins.contains(spellId) ||
-            (quiet && m_quietlyTaughtSpells.contains(spellId))))
-            return;
-        m_quietlyTaughtSpells.erase(spellId);
-        WorldPacket data(SMSG_REMOVED_SPELL, 4);
+        WorldPacket data(SMSG_REMOVED_SPELL, 5);
         data << uint32(spellId);
+        // The CoA client's Extensions.dll leaves the spell's action buttons in place for a removal that ends in a
+        // zero byte; the stock client reads only the spell id.
+        if (keepActionButtons)
+            data << uint8(0);
         SendDirectMessage(&data);
     }
 }
@@ -3349,7 +3325,6 @@ bool Player::addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool
                     }
                     else if (IsInWorld())
                     {
-                        m_quietlyTaughtSpells.erase(nextSpellInfo->Id);
                         WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
                         data << uint32(nextSpellInfo->Id);
                         data << uint32(spellInfo->Id);
@@ -3399,7 +3374,11 @@ bool Player::_addSpell(uint32 spellId, uint8 addSpecMask, bool temporary, bool l
     // condition mirrors the one Player::removeSpell uses for onlyTemporary. Player::learnSpell must not
     // announce the same grant again, or the client ends up with more copies than the server ever removes.
     if (IsInWorld() && !isBeingLoaded() && temporary && !learnFromSkill && (!spellInfo->HasAttribute(SpellAttr0(SPELL_ATTR0_PASSIVE | SPELL_ATTR0_DO_NOT_DISPLAY)) || !spellInfo->HasAnyAura()) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL))
-        SendLearnPacket(spellInfo->Id, true, true);
+    {
+        sScriptMgr->OnPlayerTemporarySpellLearnNotice(this, spellInfo->Id, false);
+        SendLearnPacket(spellInfo->Id, true);
+        sScriptMgr->OnPlayerTemporarySpellLearnNotice(this, spellInfo->Id, true);
+    }
 
     // xinef: DO NOT allow to learn spell with effect learn spell!
     // xinef: if spell possess spell learn effects only, learn those spells as temporary (eg. Metamorphosis, Tree of Life)
@@ -3570,6 +3549,16 @@ bool Player::IsNeedCastPassiveSpellAtLearn(SpellInfo const* spellInfo) const
 
 void Player::learnSpell(uint32 spellId, bool temporary /*= false*/, bool learnFromSkill /*= false*/)
 {
+    _learnSpell(spellId, temporary, learnFromSkill, true);
+}
+
+void Player::learnSpellWithoutAnnouncement(uint32 spellId, bool temporary /*= true*/)
+{
+    _learnSpell(spellId, temporary, false, false);
+}
+
+void Player::_learnSpell(uint32 spellId, bool temporary, bool learnFromSkill, bool announce)
+{
     if (IsAscensionClass(getClass()))
         if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId))
             if (spellInfo->IsDeprecatedForPlayers)
@@ -3584,7 +3573,11 @@ void Player::learnSpell(uint32 spellId, bool temporary /*= false*/, bool learnFr
 
     uint8 const specMask = GetLearnSpellSpecMask(spellId);
 
-    bool const added = addSpell(spellId, specMask, true, temporary, learnFromSkill);
+    // A caller that delivers the spell to the client itself (learnSpellWithoutAnnouncement) asks for
+    // neither announcement site to send it, or the client holds the spell twice: its spellbook is a
+    // list of slots that every announcement appends to, and the highest-rank view it draws over that
+    // list only collapses a spell that has ranks.
+    bool const added = addSpell(spellId, specMask, true, temporary, learnFromSkill || !announce);
     if (added)
     {
         sScriptMgr->OnPlayerLearnSpell(this, spellId);
@@ -3594,8 +3587,14 @@ void Player::learnSpell(uint32 spellId, bool temporary /*= false*/, bool learnFr
         // and Player::removeSpell answers such a grant with a single SMSG_REMOVED_SPELL. Announcing it twice
         // leaves the client one extra copy of the spell per grant/revoke cycle, which both hides the real
         // spellbook entry behind duplicates and keeps the client believing a revoked spell is still known.
-        if (IsInWorld() && (!temporary || learnFromSkill))
-            SendLearnPacket(spellId, true);
+        if (announce && IsInWorld() && (!temporary || learnFromSkill))
+        {
+            uint32 const replacement = GetTemporarySpellReplacement(spellId);
+            bool const artificersWandReplacement = replacement != spellId &&
+                (replacement == 561284 || (replacement >= 561354 && replacement <= 561357));
+            if (!artificersWandReplacement)
+                SendLearnPacket(spellId, true);
+        }
     }
 
     // pussywizard: rank stuff at the end!
@@ -3818,14 +3817,26 @@ void Player::removeSpell(uint32 spell_id, uint8 removeSpecMask, bool onlyTempora
         }
     }
 
-    if (spell_id == SPELL_BURNING_COMMANDER)
+    if (getClass() == CLASS_SUN_CLERIC && spell_id == SPELL_VALKYR_GRIP && !HasValkyrGrip())
+    {
+        SetCanTitanGrip(false);
+        if (!HasActiveSpell(SPELL_DUAL_WIELD))
+            SetCanDualWield(false);
+    }
+
+    if (spell_id == SPELL_BURNING_COMMANDER || spell_id == SPELL_VALKYR_GRIP ||
+        (getClass() == CLASS_HERO && spell_id == SPELL_TITANS_GRIP))
         AutoUnequipOffhandIfNeed();
 
     // pussywizard: remove from spell book (can't be replaced by previous rank, because such spells can't be unlearnt)
     if (!onlyTemporary || ((!spellInfo->HasAttribute(SpellAttr0(SPELL_ATTR0_PASSIVE | SPELL_ATTR0_DO_NOT_DISPLAY)) || !spellInfo->HasAnyAura()) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL)))
     {
         sScriptMgr->OnPlayerForgotSpell(this, spell_id);
-        SendLearnPacket(spell_id, false, onlyTemporary);
+        if (onlyTemporary)
+            sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, spell_id, false);
+        SendLearnPacket(spell_id, false, onlyTemporary && IsTemporarySpellReplacementStandIn(spell_id));
+        if (onlyTemporary)
+            sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, spell_id, true);
     }
 }
 
@@ -4145,7 +4156,7 @@ bool Player::resetTalents(bool noResetCost)
     if (m_canTitanGrip)
         SetCanTitanGrip(false);
     // xinef: remove dual wield if player does not have dual wield spell (shamans)
-    if (!HasSpell(674) && CanDualWield())
+    if (!HasSpell(SPELL_DUAL_WIELD) && CanDualWield())
         SetCanDualWield(false);
 
     AutoUnequipOffhandIfNeed();
@@ -4791,6 +4802,14 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
     uint32 newzone, newarea;
     GetZoneAndAreaId(newzone, newarea);
     UpdateZone(newzone, newarea, true);
+    if (sWorld->getBoolConfig(CONFIG_VMAP_INDOOR_CHECK))
+    {
+        SpellAttr0 const disallowedAttribute = IsOutdoors() ? SPELL_ATTR0_ONLY_INDOORS : SPELL_ATTR0_ONLY_OUTDOORS;
+        RemoveOwnedAuras([disallowedAttribute](Aura const* aura)
+        {
+            return !aura->IsPassive() && aura->GetSpellInfo()->HasAttribute(disallowedAttribute);
+        });
+    }
     sOutdoorPvPMgr->HandlePlayerResurrects(this, newzone);
 
     if (Battleground* bg = GetBattleground())
@@ -13947,6 +13966,11 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
 {
     auto itr = m_temporarySpellReplacements.find(original);
     uint32 previous = itr == m_temporarySpellReplacements.end() ? original : itr->second;
+    bool const sharedReplacement = replacement && std::any_of(m_temporarySpellReplacements.begin(),
+        m_temporarySpellReplacements.end(), [this, original, replacement](auto const& entry)
+        {
+            return entry.first != original && entry.second == replacement && HasActiveSpell(entry.first);
+        });
     if (!replacement)
     {
         m_temporarySpellReplacements.erase(original);
@@ -13959,14 +13983,13 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
         m_temporarySpellReplacements[original] = replacement;
         m_temporarySpellReplacementOrigins[replacement] = original;
     }
-    if (previous != replacement && IsInWorld())
+    if (previous != replacement && IsInWorld() && HasActiveSpell(original))
     {
-        // The client prints "You have learned a new spell" for every SMSG_SUPERCEDED_SPELL and nothing the server
-        // sends switches that off, so by default the swap is written into the bar here and the bar is resent.
-        if (SilencesTemporarySpellReplacements())
+        if (sharedReplacement)
         {
-            RedrawReplacedActionButtons(original, previous, replacement);
-            return;
+            sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, replacement, false);
+            SendLearnPacket(replacement, false, true);
+            sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, replacement, true);
         }
         sScriptMgr->OnPlayerTemporarySpellReplacementNotice(this, previous, replacement, false);
         WorldPacket packet(SMSG_SUPERCEDED_SPELL, 8);
@@ -13976,94 +13999,6 @@ void Player::SetTemporarySpellReplacement(uint32 original, uint32 replacement)
     }
 }
 
-bool Player::SilencesTemporarySpellReplacements()
-{
-    static bool const silent = sConfigMgr->GetOption<bool>("CoA.TemporarySpellReplacement.Silent", true);
-    return silent;
-}
-
-bool Player::IsIdleTemporarySpellReplacement(uint32 spellId) const
-{
-    if (!m_temporarySpellReplacementOrigins.contains(spellId))
-        return false;
-    auto const spell = m_spells.find(spellId);
-    if (spell != m_spells.end() && spell->second->State != PLAYERSPELL_TEMPORARY &&
-        spell->second->State != PLAYERSPELL_REMOVED)
-        return false;
-    return std::none_of(m_temporarySpellReplacements.begin(), m_temporarySpellReplacements.end(),
-        [this, spellId](auto const& entry) { return GetTemporarySpellReplacement(entry.first) == spellId; });
-}
-
-bool Player::IsStaleQuietlyTaughtSpell(uint32 spellId) const
-{
-    return SilencesTemporarySpellReplacements() && m_quietlyTaughtSpells.contains(spellId) && !HasActiveSpell(spellId);
-}
-
-void Player::ForgetQuietlyTaughtSpell(uint32 spellId)
-{
-    if (!m_quietlyTaughtSpells.erase(spellId) || !IsInWorld())
-        return;
-    WorldPacket data(SMSG_REMOVED_SPELL, 4);
-    data << uint32(spellId);
-    SendDirectMessage(&data);
-}
-
-void Player::RedrawReplacedActionButtons(uint32 original, uint32 previous, uint32 replacement)
-{
-    bool const reverting = replacement == original;
-    bool changed = false;
-    for (auto& [button, action] : m_actionButtons)
-    {
-        if (action.uState == ACTIONBUTTON_DELETED || action.GetType() != ACTION_BUTTON_SPELL ||
-            action.GetAction() != previous)
-            continue;
-        auto recorded = m_replacedActionButtons.find(button);
-        if (reverting)
-        {
-            // Several originals can share one replacement (every known rank of a spell): a button goes back to
-            // the original it was taken from, not to whichever original happens to revert first.
-            if (recorded != m_replacedActionButtons.end() && recorded->second != original)
-                continue;
-        }
-        else if (recorded == m_replacedActionButtons.end())
-            m_replacedActionButtons.emplace(button, original);
-        action.SetActionAndType(replacement, ACTION_BUTTON_SPELL);
-        changed = true;
-    }
-    if (reverting)
-        std::erase_if(m_replacedActionButtons, [original](auto const& entry) { return entry.second == original; });
-    if (changed)
-        SendActionButtons(1);
-}
-
-bool Player::ApplyTemporarySpellReplacementsToActionBar()
-{
-    if (!SilencesTemporarySpellReplacements())
-        return false;
-    bool changed = false;
-    for (auto const& [original, replacement] : m_temporarySpellReplacements)
-    {
-        if (GetTemporarySpellReplacement(original) == original)
-            continue;
-        for (auto& [button, action] : m_actionButtons)
-        {
-            if (action.uState == ACTIONBUTTON_DELETED || action.GetType() != ACTION_BUTTON_SPELL ||
-                action.GetAction() != original || m_replacedActionButtons.contains(button))
-                continue;
-            m_replacedActionButtons.emplace(button, original);
-            action.SetActionAndType(replacement, ACTION_BUTTON_SPELL);
-            changed = true;
-        }
-    }
-    return changed;
-}
-
-void Player::SendInitialActionButtons()
-{
-    ApplyTemporarySpellReplacementsToActionBar();
-    SendActionButtons(1);
-}
-
 uint32 Player::GetTemporarySpellReplacement(uint32 original) const
 {
     auto itr = m_temporarySpellReplacements.find(original);
@@ -14071,19 +14006,17 @@ uint32 Player::GetTemporarySpellReplacement(uint32 original) const
         itr->second : original;
 }
 
-uint32 Player::GetSavedActionButtonSpell(uint8 button, uint32 action)
+bool Player::IsTemporarySpellReplacementStandIn(uint32 spellId) const
+{
+    auto const origin = m_temporarySpellReplacementOrigins.find(spellId);
+    return origin != m_temporarySpellReplacementOrigins.end() && origin->second != spellId;
+}
+
+uint32 Player::GetSavedActionButtonSpell(uint32 action)
 {
     // A temporary replacement is never saved, so the next login would drop a button holding it: save the spell it
     // replaces, which the replacement takes over again once its owner re-applies it. A timed replacement may already
     // be unlearned while a button still holds it, which the next login would drop just the same.
-    if (auto recorded = m_replacedActionButtons.find(button);
-        recorded != m_replacedActionButtons.end() && HasSpell(recorded->second))
-    {
-        auto spell = m_spells.find(action);
-        if (spell == m_spells.end() || spell->second->State == PLAYERSPELL_TEMPORARY ||
-            spell->second->State == PLAYERSPELL_REMOVED)
-            action = recorded->second;
-    }
     for (uint8 depth = 0; depth < 4; ++depth)
     {
         auto spell = m_spells.find(action);
@@ -14100,8 +14033,15 @@ uint32 Player::GetSavedActionButtonSpell(uint8 button, uint32 action)
 
 bool Player::CanUseTwoHandWithShield(ItemTemplate const* main, ItemTemplate const* off) const
 {
-    if (getClass() != CLASS_GUARDIAN || !main || !off || main->InventoryType != INVTYPE_2HWEAPON ||
-        main->Class != ITEM_CLASS_WEAPON || off->InventoryType != INVTYPE_SHIELD)
+    if (!main || !off || main->InventoryType != INVTYPE_2HWEAPON || main->Class != ITEM_CLASS_WEAPON)
+        return false;
+    if (getClass() == CLASS_HERO && HasActiveSpell(SPELL_TITANS_GRIP) && CanTitanGrip() &&
+        main->SubClass == ITEM_SUBCLASS_WEAPON_STAFF)
+        return off->InventoryType == INVTYPE_SHIELD ||
+            (off->Class == ITEM_CLASS_WEAPON && CanDualWield() &&
+                (off->InventoryType == INVTYPE_WEAPON || off->InventoryType == INVTYPE_WEAPONOFFHAND) &&
+                off->SubClass != ITEM_SUBCLASS_WEAPON_POLEARM && off->SubClass != ITEM_SUBCLASS_WEAPON_FISHING_POLE);
+    if (getClass() != CLASS_GUARDIAN || off->InventoryType != INVTYPE_SHIELD)
         return false;
     return (main->SubClass == ITEM_SUBCLASS_WEAPON_POLEARM &&
         (HasSpell(802299) || HasSpell(803832) || HasSpell(807892))) ||
@@ -16337,10 +16277,10 @@ void Player::ActivateSpec(uint8 spec)
     SetPower(pw, 0);
 
     // xinef: remove titan grip if player had it set and does not have appropriate talent
-    if (!HasTalent(46917, GetActiveSpec()) && m_canTitanGrip)
+    if (!HasTalent(SPELL_TITANS_GRIP, GetActiveSpec()) && m_canTitanGrip)
         SetCanTitanGrip(false);
     // xinef: remove dual wield if player does not have dual wield spell (shamans)
-    if (!HasSpell(674) && CanDualWield())
+    if (!HasSpell(SPELL_DUAL_WIELD) && CanDualWield())
         SetCanDualWield(false);
 
     AutoUnequipOffhandIfNeed();
@@ -16380,7 +16320,6 @@ void Player::LoadActions(PreparedQueryResult result)
     if (result)
         _LoadActions(result);
 
-    ApplyTemporarySpellReplacementsToActionBar();
     SendActionButtons(1);
 }
 
@@ -17195,6 +17134,7 @@ void Player::SetRestFlag(RestFlag restFlag, uint32 triggerId /*= 0*/)
     {
         _restTime = GameTime::GetGameTime().count();
         SetPlayerFlag(PLAYER_FLAGS_RESTING);
+        UpdateManaRegen();
     }
 
     if (triggerId)
@@ -17210,6 +17150,7 @@ void Player::RemoveRestFlag(RestFlag restFlag)
     {
         _restTime = 0;
         RemovePlayerFlag(PLAYER_FLAGS_RESTING);
+        UpdateManaRegen();
     }
 }
 

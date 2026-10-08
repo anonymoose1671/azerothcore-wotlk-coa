@@ -241,6 +241,9 @@ namespace
                 return;
             if (!AscensionFelsworn::CanLearnRift(player, spellId))
                 return;
+            if (windowView && classId == CLASS_FLESHWARDEN && player->HasAura(301302) &&
+                sSpellMgr->GetFirstSpellInChain(spellId) == 801016)
+                return;
             if (windowView && classId == CLASS_GUARDIAN && AscensionGuardian::Ballad(spellId) &&
                 (spec != 20 || !player->HasAura(505344)))
                 return;
@@ -694,8 +697,15 @@ namespace
         bool OnGossipHello(Player *player, Creature *book) override
         {
             ClearGossipMenuFor(player);
-            if (!Enabled() || !IsAscensionClass(player->getClass()))
+            if (!Enabled())
                 return true;
+
+            // Any other class trains at the book what its realm's class trainers teach it.
+            if (!IsAscensionClass(player->getClass()))
+            {
+                player->GetSession()->SendTrainerList(book);
+                return true;
+            }
 
             // Right-clicking a book is a request for the trainer window: no gossip page in
             // between, which is how the books behaved on the live realm.
@@ -771,7 +781,8 @@ namespace
 class spellbook_swap_notice final : public PlayerScript
 {
 public:
-    spellbook_swap_notice() : PlayerScript("spellbook_swap_notice", {PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE}) { }
+    spellbook_swap_notice() : PlayerScript("spellbook_swap_notice",
+                                           {PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE}) { }
 
     void OnPlayerTemporarySpellReplacementNotice(Player *player, uint32 /*previous*/, uint32 replacement,
                                                  bool sent) override
@@ -783,19 +794,33 @@ public:
     }
 };
 
-/// A temporary spell, or a temporary spell replacement shown again, is taught with its row quiet for exactly that
-/// SMSG_LEARNED_SPELL: no chat line, no toast. The row is put back right after it.
-class spellbook_quiet_learn final : public PlayerScript
+/// A temporary spell (Remote Detonation while a mine is out, the Guardian's stomp, a talent's variant) is learned
+/// and dropped again with its owner, and every SMSG_LEARNED_SPELL printed "You have learned a new spell", could draw
+/// the "New Spell Learned" toast and, up to level 10, placed the spell on another empty button. Its row is sent quiet
+/// for exactly that packet and put back right after.
+class spellbook_temporary_learn_notice final : public PlayerScript
 {
 public:
-    spellbook_quiet_learn() : PlayerScript("spellbook_quiet_learn", {PLAYERHOOK_ON_QUIET_SPELL_LEARN_NOTICE}) { }
+    spellbook_temporary_learn_notice() : PlayerScript("spellbook_temporary_learn_notice",
+                                                      {PLAYERHOOK_ON_TEMPORARY_SPELL_LEARN_NOTICE}) { }
 
-    void OnPlayerQuietSpellLearnNotice(Player *player, uint32 spellId, bool sent) override
+    void OnPlayerTemporarySpellLearnNotice(Player *player, uint32 spellId, bool sent) override
     {
         if (sent)
             SpellbookNotify::Unquiet(player, spellId);
         else
             SpellbookNotify::Quiet(player, spellId);
+    }
+};
+
+class spellbook_notify_config final : public WorldScript
+{
+public:
+    spellbook_notify_config() : WorldScript("spellbook_notify_config", {WORLDHOOK_ON_AFTER_CONFIG_LOAD}) { }
+
+    void OnAfterConfigLoad(bool /*reload*/) override
+    {
+        SpellbookNotify::LoadConfig();
     }
 };
 
@@ -816,9 +841,10 @@ public:
 
 void AddSpellbookScripts()
 {
+    new spellbook_notify_config();
     new spellbook_metric_provider();
     new spellbook_swap_notice();
-    new spellbook_quiet_learn();
+    new spellbook_temporary_learn_notice();
     new SpellbookBookScript();
     new SpellbookServerScript();
 }

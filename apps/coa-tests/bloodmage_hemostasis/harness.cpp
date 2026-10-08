@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <initializer_list>
@@ -76,13 +77,13 @@ struct Player : Unit
     void removeSpell(uint32 id, uint32 mask, bool onlyTemporary)
     { assert(mask == SPEC_MASK_ALL && onlyTemporary); if (spells.contains(id) && spells[id]) spells.erase(id); }
     Session* GetSession() { return &session; }
+    void SendLearnPacket(uint32, bool, bool = false) { }
     void SetTemporarySpellReplacement(uint32 original, uint32 replacement);
-    static bool SilencesTemporarySpellReplacements() { return false; }
-    void RedrawReplacedActionButtons(uint32, uint32, uint32) { }
     uint32 GetTemporarySpellReplacement(uint32 original) const;
 };
 struct ScriptMgr
 {
+    void OnPlayerTemporarySpellRemoveNotice(Player*, uint32, bool) { }
     void OnPlayerTemporarySpellReplacementNotice(Player*, uint32, uint32, bool) { }
 } scripts;
 auto sScriptMgr = &scripts;
