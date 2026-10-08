@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <chrono>
@@ -203,6 +204,7 @@ struct Player : Unit
     void SetTemporarySpellReplacement(uint32 original, uint32 replacement);
     uint32 GetTemporarySpellReplacement(uint32 original) const;
     Session* GetSession() { return &session; }
+    void SendLearnPacket(uint32, bool, bool = false) { }
     void ApplySpellMod(uint32, uint32 op, int32&) { assert(op == SPELLMOD_DURATION); }
     TempSummon* SummonCreature(uint32 entry, Position const& pos, TempSummonType type, uint32 duration = 0);
     Position GetFirstCollisionPosition(float distance, float angle)
@@ -225,6 +227,12 @@ struct Player : Unit
         damageDestination = {x, y, z, 0};
     }
 };
+struct ScriptMgr
+{
+    void OnPlayerTemporarySpellRemoveNotice(Player*, uint32, bool) { }
+    void OnPlayerTemporarySpellReplacementNotice(Player*, uint32, uint32, bool) { }
+} scripts;
+auto sScriptMgr = &scripts;
 // NATIVE_REPLACEMENTS
 struct SpellMgr
 {

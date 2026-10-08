@@ -37,6 +37,9 @@ namespace SpellbookNotify
     /// with no row in the book data or the client's table borrows one spare row id.
     void Quiet(Player *player, std::uint32_t spellId);
 
+    /// Reads Spellbook.Notify.Enable; called once at startup and on every config reload.
+    void LoadConfig();
+
     /// Puts back the row Quiet replaced, so a later genuine learn of the spell is announced as usual.
     void Unquiet(Player *player, std::uint32_t spellId);
 }

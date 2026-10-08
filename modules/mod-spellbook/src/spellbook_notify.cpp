@@ -48,6 +48,8 @@ namespace
 
     constexpr char const *ENABLE_KEY = "Spellbook.Notify.Enable";
 
+    bool g_enabled = true;
+
     /// The bit of the third attribute dword the client's learn handler tests before it announces.
     constexpr uint32 NOTABLE_BIT = 0x400;
 
@@ -166,12 +168,17 @@ namespace
         return found == rows.end() ? nullptr : &found->second;
     }
 
-    /// The row Quiet sends and Unquiet puts back: the book's, else the client table's, else a spare row of our
-    /// own with every attribute zero, which the client reads exactly as "no row" once it is put back.
+    /// The row Quiet sends and Unquiet puts back: the client table's own, else a spare row of our own with every
+    /// attribute zero, which the client reads exactly as "no row" once it is put back.
+    /// A row the client already learns quietly, unplaced and without the toast needs no push at all.
+    bool IsQuietAlready(SpellbookNotifyData::Row const &row)
+    {
+        return (row.Field5 & (QUIET_LEARN_BIT | NO_AUTOPLACE_BIT)) == (QUIET_LEARN_BIT | NO_AUTOPLACE_BIT) &&
+               !(row.Field4 & NOTABLE_BIT);
+    }
+
     std::optional<SpellbookNotifyData::Row> QuietableRow(uint32 spellId)
     {
-        if (SpellbookNotifyData::Row const *row = FindRow(spellId))
-            return *row;
         if (SpellbookNotifyData::Row const *row = FindTableRow(spellId))
             return *row;
         if (!Table().Complete)
@@ -184,7 +191,12 @@ namespace SpellbookNotify
 {
     bool Enabled()
     {
-        return sConfigMgr->GetOption<bool>(ENABLE_KEY, true);
+        return g_enabled;
+    }
+
+    void LoadConfig()
+    {
+        g_enabled = sConfigMgr->GetOption<bool>(ENABLE_KEY, true);
     }
 
     void Push(Player *player, uint32 spellId)
@@ -230,11 +242,11 @@ namespace SpellbookNotify
 
     void Quiet(Player *player, uint32 spellId)
     {
-        if (!player || !player->GetSession())
+        if (!player || !player->GetSession() || !Enabled() || !IsAscensionClass(player->getClass()))
             return;
 
         std::optional<SpellbookNotifyData::Row> const row = QuietableRow(spellId);
-        if (!row)
+        if (!row || IsQuietAlready(*row))
             return;
 
         SpellbookNotifyData::Row quiet = *row;
@@ -248,11 +260,11 @@ namespace SpellbookNotify
 
     void Unquiet(Player *player, uint32 spellId)
     {
-        if (!player || !player->GetSession())
+        if (!player || !player->GetSession() || !Enabled() || !IsAscensionClass(player->getClass()))
             return;
 
         std::optional<SpellbookNotifyData::Row> const row = QuietableRow(spellId);
-        if (!row)
+        if (!row || IsQuietAlready(*row))
             return;
 
         SendRow(player, *row);

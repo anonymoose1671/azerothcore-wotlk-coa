@@ -17,6 +17,7 @@
 #include "CharacterCache.h"
 #include "CharmInfo.h"
 #include "Chat.h"
+#include "ClientDBC.h"
 #include "Config.h"
 #include "Creature.h"
 #include "CreatureAI.h"
@@ -376,6 +377,7 @@ struct Actor
     std::map<uint32, bool> clientNoPlace;
     std::map<uint32, std::vector<uint32>> entryRows;
     std::set<uint32> indexedEntries;
+    uint32 clientEntryMaximum = 0;
     std::map<uint32, uint32> placingLearns;
     std::map<uint32, uint32> clientSpellRank;
     std::map<uint32, uint32> placingSupersedes;
@@ -632,6 +634,37 @@ void ObserveExtensionPacket(Actor& actor, WorldPacket const& packet)
             : std::string(reinterpret_cast<char const*>(packet.contents()), packet.size()));
 }
 
+uint32 NativeAdvancementMaximum()
+{
+    static uint32 const maximum = []
+    {
+        uint32 highest = 0;
+        ClientDBC table;
+        if (table.Load(sWorld->GetDataPath() + "dbc/CharacterAdvancement.dbc", 1))
+            for (uint32 index = 0; index < table.GetRecordCount(); ++index)
+                highest = std::max(highest, table.GetRecord(index).GetUInt32(0));
+        return highest;
+    }();
+    return maximum;
+}
+
+std::unordered_map<uint32, uint32> const& NativeCustomAttributes()
+{
+    static std::unordered_map<uint32, uint32> const attributes = []
+    {
+        std::unordered_map<uint32, uint32> fourthDwords;
+        ClientDBC table;
+        if (table.Load(sWorld->GetDataPath() + "dbc/SpellCustomAttr.dbc", 11))
+            for (uint32 index = 0; index < table.GetRecordCount(); ++index)
+            {
+                ClientDBC::Record const row = table.GetRecord(index);
+                fourthDwords[row.GetUInt32(1)] = row.GetUInt32(5);
+            }
+        return fourthDwords;
+    }();
+    return attributes;
+}
+
 void ObservePacket(Actor& actor, WorldPacket const& packet)
 {
     ObserveExtensionPacket(actor, packet);
@@ -816,8 +849,17 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         std::vector<uint32> spells(AdvancementEntrySpells);
         for (uint32& spell : spells)
             row >> spell;
+        if (!actor.clientEntryMaximum)
+            actor.clientEntryMaximum = NativeAdvancementMaximum();
         if (actor.entryRows.emplace(id, spells).second)
+        {
             actor.indexedEntries.clear();
+            if (id > actor.clientEntryMaximum)
+            {
+                actor.entryRows.erase(actor.clientEntryMaximum);
+                actor.clientEntryMaximum = id;
+            }
+        }
         else
         {
             actor.entryRows[id] = spells;
@@ -828,6 +870,13 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
     {
         auto const found = flags.find(spell);
         return found != flags.end() && found->second;
+    };
+    auto const learnFlag = [](std::map<uint32, bool> const& pushed, uint32 spell, uint32 nativeBit)
+    {
+        if (auto const found = pushed.find(spell); found != pushed.end())
+            return found->second;
+        auto const native = NativeCustomAttributes().find(spell);
+        return native != NativeCustomAttributes().end() && (native->second & nativeBit) != 0;
     };
     auto const isEntry = [&actor](uint32 spell)
     {
@@ -917,9 +966,9 @@ void ObservePacket(Actor& actor, WorldPacket const& packet)
         announcement >> announced;
         ++actor.learnedAlerts[announced];
         bool const hidden = flagged(actor.clientSpellHidden, announced);
-        if (!flagged(actor.clientQuiet, announced) && !isEntry(announced) && !hidden)
+        if (!learnFlag(actor.clientQuiet, announced, 0x40000) && !isEntry(announced) && !hidden)
             ++actor.chatLines[announced];
-        if (!flagged(actor.clientNoPlace, announced) && !hidden)
+        if (!learnFlag(actor.clientNoPlace, announced, 0x1000000) && !hidden)
             ++actor.placingLearns[announced];
         actor.announced.insert(announced);
         actor.clientSpells.insert(announced);

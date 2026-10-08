@@ -3834,7 +3834,7 @@ void Player::removeSpell(uint32 spell_id, uint8 removeSpecMask, bool onlyTempora
         sScriptMgr->OnPlayerForgotSpell(this, spell_id);
         if (onlyTemporary)
             sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, spell_id, false);
-        SendLearnPacket(spell_id, false, onlyTemporary);
+        SendLearnPacket(spell_id, false, onlyTemporary && IsTemporarySpellReplacementStandIn(spell_id));
         if (onlyTemporary)
             sScriptMgr->OnPlayerTemporarySpellRemoveNotice(this, spell_id, true);
     }

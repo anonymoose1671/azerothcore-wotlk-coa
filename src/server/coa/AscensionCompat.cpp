@@ -2524,7 +2524,12 @@ public:
         for (uint8 button = 0; button < MAX_ACTION_BUTTONS; ++button)
             player->removeActionButton(button);
         for (auto const& [button, action] : target.Actions)
-            player->addActionButton(uint8(button), ACTION_BUTTON_ACTION(action), uint8(ACTION_BUTTON_TYPE(action)));
+        {
+            uint8 const type = uint8(ACTION_BUTTON_TYPE(action));
+            uint32 const spell = ACTION_BUTTON_ACTION(action);
+            player->addActionButton(uint8(button), type == ACTION_BUTTON_SPELL ?
+                player->GetTemporarySpellReplacement(spell) : spell, type);
+        }
         player->UpdatePlayerSetting("core.ascension_slot.active", 0, index);
         player->SaveToDB(false, false);
         player->SendActionButtons(1);
@@ -3616,6 +3621,7 @@ public:
              rows.Items.size(), rows.Spells.size(), rows.SuperTracks.size(), rows.ShapeshiftForms.size());
     IndexClientSpells();
     IndexClientSpellRanks();
+    IndexAdvancementEntryIds();
   }
 
   void OnPlayerLogin(Player *player) {
@@ -3677,10 +3683,10 @@ public:
 
     void SendSpellNoticeRow(Player* player, uint32 spellId, bool hidden)
     {
-        if (!ReceivesPatchRows(player) || !player->IsInWorld())
+        if (!IsAscensionCustomClass(player) || !ReceivesPatchRows(player) || !player->IsInWorld())
             return;
 
-        std::optional<SpellPatchRow> row = ClientSpellRow(spellId);
+        std::optional<SpellPatchRow> row = ClientSpellRow(player, spellId);
         if (!row || (row->Values[SPELL_ATTRIBUTES_FIELD] & (SPELL_ATTR0_IS_TRADESKILL | SPELL_ATTR0_DO_NOT_DISPLAY)))
             return;
 
@@ -3691,10 +3697,11 @@ public:
 
     void SendSwapPlacementRow(Player* player, uint32 spellId, bool hold)
     {
-        if (player->GetLevel() > CLIENT_AUTOPLACE_MAX_LEVEL || !ReceivesPatchRows(player) || !player->IsInWorld())
+        if (player->GetLevel() > CLIENT_AUTOPLACE_MAX_LEVEL || !IsAscensionCustomClass(player) ||
+            !ReceivesPatchRows(player) || !player->IsInWorld())
             return;
 
-        std::optional<SpellPatchRow> row = ClientSpellRow(spellId);
+        std::optional<SpellPatchRow> row = ClientSpellRow(player, spellId);
         if (!row || ClientRankNumber(row->Strings[SPELL_WIRE_RANK]) > 1)
             return;
 
@@ -3715,11 +3722,17 @@ public:
             std::set<uint32>& sent = _sentSwapEntries[player->GetGUID().GetCounter()];
             for (uint32 spell : spells)
             {
-                uint32 const next = SWAP_ENTRY_FIRST_ID + uint32(_swapEntryIds.size());
-                uint32 const id = _swapEntryIds.try_emplace(spell, next).first->second;
-                _swapEntrySpells.try_emplace(id, spell);
-                if (sent.insert(id).second)
-                    added.push_back(id);
+                auto entry = _swapEntryIds.find(spell);
+                if (entry == _swapEntryIds.end())
+                {
+                    if (_freeEntryIds.empty())
+                        continue;
+                    entry = _swapEntryIds.emplace(spell, _freeEntryIds.back()).first;
+                    _freeEntryIds.pop_back();
+                    _swapEntrySpells.emplace(entry->second, spell);
+                }
+                if (sent.insert(entry->second).second)
+                    added.push_back(entry->second);
             }
             if (added.empty())
                 return;
@@ -3788,6 +3801,10 @@ public:
         return;
       _fallbackTimers.erase(guid);
       _lastStreamMs[guid] = getMSTime();
+    }
+    {
+      std::lock_guard entries(_swapEntryMutex);
+      _sentSwapEntries.erase(guid);
     }
 
     std::vector<ItemPatchRow> itemRows;
@@ -3939,7 +3956,7 @@ private:
   };
 
   static constexpr uint32 SPELL_ATTRIBUTES_FIELD = 4;
-  static constexpr uint32 SWAP_ENTRY_FIRST_ID = 9000000;
+  static constexpr std::size_t SWAP_ENTRY_ID_POOL = 4096;
   static constexpr uint8 CLIENT_AUTOPLACE_MAX_LEVEL = 10;
   static constexpr std::size_t SPELL_WIRE_RANK = 2;
   static constexpr char const* CLIENT_UNPLACED_RANK = "Rank 2";
@@ -4004,6 +4021,26 @@ private:
     std::lock_guard lock(_clientSpellMutex);
     auto const found = _clientFirstRanks.find(spell);
     return found == _clientFirstRanks.end() ? spell : found->second;
+  }
+
+  void IndexAdvancementEntryIds() {
+    std::filesystem::path const path =
+        std::filesystem::path(sWorld->GetDataPath()) / "dbc" / "CharacterAdvancement.dbc";
+    ClientDBC entries;
+    if (!entries.Load(path.string(), 1) || !entries.GetRecordCount())
+      return;
+    std::vector<uint32> ids;
+    ids.reserve(entries.GetRecordCount());
+    for (uint32 index = 0; index < entries.GetRecordCount(); ++index)
+      ids.push_back(entries.GetRecord(index).GetUInt32(0));
+    std::sort(ids.begin(), ids.end());
+    std::vector<uint32> free;
+    for (std::size_t index = ids.size() - 1; index > 0 && free.size() < SWAP_ENTRY_ID_POOL; --index)
+      for (uint32 id = ids[index] - 1; id > ids[index - 1] && free.size() < SWAP_ENTRY_ID_POOL; --id)
+        free.push_back(id);
+    std::reverse(free.begin(), free.end());
+    std::lock_guard lock(_swapEntryMutex);
+    _freeEntryIds = std::move(free);
   }
 
   void IndexClientSpellRanks() {
@@ -4071,13 +4108,25 @@ private:
     return RawSpellRow(dword, text);
   }
 
-  std::optional<SpellPatchRow> ClientSpellRow(uint32 spellId) {
+  std::optional<SpellPatchRow> ClientSpellRow(Player *player, uint32 spellId) {
     PreparedPatchRows const &rows = GetPreparedPatchRows();
     if (auto const found = rows.SpellRowIndexById.find(spellId); found != rows.SpellRowIndexById.end())
     {
-      SpellPatchRow row = rows.Spells[found->second];
-      ApplyServerSpellSelectors(row);
-      return row;
+      SpellPatchRow const &prepared = rows.Spells[found->second];
+      bool streamed = !prepared.RequiresRegistration || Ascension::ClientSpellPatches::Instance().Contains(spellId,
+          Ascension::ClientSpellPatches::Delivery::Login);
+      if (!streamed)
+      {
+        std::lock_guard lock(_mutex);
+        auto const sent = _sentItemSpellRows.find(player->GetGUID().GetCounter());
+        streamed = sent != _sentItemSpellRows.end() && sent->second.contains(spellId);
+      }
+      if (streamed)
+      {
+        SpellPatchRow row = prepared;
+        ApplyServerSpellSelectors(row);
+        return row;
+      }
     }
 
     std::lock_guard lock(_clientSpellMutex);
@@ -4862,6 +4911,7 @@ private:
   std::unordered_map<uint32, uint32> _swapEntryIds;
   std::unordered_map<uint32, uint32> _swapEntrySpells;
   std::unordered_map<uint32, std::set<uint32>> _sentSwapEntries;
+  std::vector<uint32> _freeEntryIds;
 };
 
 class AscensionCollectionService {

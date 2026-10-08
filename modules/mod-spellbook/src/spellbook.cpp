@@ -781,7 +781,8 @@ namespace
 class spellbook_swap_notice final : public PlayerScript
 {
 public:
-    spellbook_swap_notice() : PlayerScript("spellbook_swap_notice", {PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE}) { }
+    spellbook_swap_notice() : PlayerScript("spellbook_swap_notice",
+                                           {PLAYERHOOK_ON_TEMPORARY_SPELL_REPLACEMENT_NOTICE}) { }
 
     void OnPlayerTemporarySpellReplacementNotice(Player *player, uint32 /*previous*/, uint32 replacement,
                                                  bool sent) override
@@ -812,6 +813,17 @@ public:
     }
 };
 
+class spellbook_notify_config final : public WorldScript
+{
+public:
+    spellbook_notify_config() : WorldScript("spellbook_notify_config", {WORLDHOOK_ON_AFTER_CONFIG_LOAD}) { }
+
+    void OnAfterConfigLoad(bool /*reload*/) override
+    {
+        SpellbookNotify::LoadConfig();
+    }
+};
+
 class spellbook_metric_provider final : public WorldScript
 {
 public:
@@ -829,6 +841,7 @@ public:
 
 void AddSpellbookScripts()
 {
+    new spellbook_notify_config();
     new spellbook_metric_provider();
     new spellbook_swap_notice();
     new spellbook_temporary_learn_notice();
