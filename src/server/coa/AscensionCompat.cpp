@@ -4544,6 +4544,8 @@ private:
       row.Values[4] = info->Attributes;
 
     row.Values[144] = info->SpellFamilyName;
+    row.Values[12] = info->Stances;
+    row.Values[14] = info->StancesNot;
     Ascension::ClientSpellPatches::Selector const selector =
         Ascension::ClientSpellPatches::Instance().GetSelector(info->Id);
     for (uint32 index = 0; index < 3; ++index)
