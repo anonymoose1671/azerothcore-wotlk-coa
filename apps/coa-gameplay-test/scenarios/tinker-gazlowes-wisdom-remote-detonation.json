@@ -2,11 +2,12 @@
   "schema": 1,
   "name": "Gazlowe's Wisdom alone keeps Remote Detonation known",
   "contract": [
-    "Gazlowe's Wisdom 803074 is a passive talent aura; with it, Shrapnel Shot 801009 drops a Blast Mine at its target",
-    "(spell_ascension_tinker_ability), so a Tinker who knows no mine spell can still have a live mine. Remote",
-    "Detonation 801798 is gated by CasterAuraSpell Bomb Ready 500354 from a live mine, so AscensionTinker::Refresh keeps",
-    "it known for every Tinker that can place a mine. Expected: with Gazlowe's Wisdom and no Blast or Shrapnel Mine",
-    "spell, Remote Detonation is known; once the talent is unlearned it is removed."
+    "Gazlowe's Wisdom 803074 is a passive talent aura; with it, Sticky Bomb Explosion 801009 spawns Shrapnel Mines",
+    "(850020, creature 50600) under its target (spell_ascension_tinker_ability), so a Tinker who knows no mine spell",
+    "can still have a live mine. Remote Detonation 801798 is gated by CasterAuraSpell Bomb Ready 500354 from a live",
+    "mine, so AscensionTinker::Refresh keeps it known for every Tinker that can place a mine. Expected: with",
+    "Gazlowe's Wisdom and no Blast or Shrapnel Mine spell, Remote Detonation is known; once the talent is unlearned",
+    "it is removed."
   ],
   "timeout_ms": 60000,
   "players": [
