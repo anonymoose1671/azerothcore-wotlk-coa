@@ -733,7 +733,8 @@ pushed yet, or the last one pushed carrying the bit. `spellbook_client_notable` 
 Extensions.dll. A learned notice (299) is silent while the spell's last `SpellCustomAttr` row carries the quiet-learn
 bit (0x40000 of the fourth attribute dword). A learned or superseded notice (300) is silent while a spell in it, or its
 first rank, is listed by an indexed `SMSG_PATCH_CHARACTER_ADVANCEMENT` row (1610); a row is indexed by its second send
-and every insertion of a new row clears that index. A learned or removed notice (515) is silent while the spell's last
+and every insertion of a new row clears that index; a learned or superseded notice is also silent while the added
+spell's last Spell row is hidden. A learned or removed notice (515) is silent while the spell's last
 `SMSG_PATCH_SPELL` row (2346) carries `SPELL_ATTR0_DO_NOT_DISPLAY` or `SPELL_ATTR0_IS_TRADESKILL`.
 `client_placing_learns_for` counts the spell's learned notices sent while its last `SpellCustomAttr` row lacked the
 no-placement bit (0x1000000 of the fourth attribute dword); up to level 10 the client places such a spell on an empty

@@ -168,8 +168,8 @@ namespace
         return found == rows.end() ? nullptr : &found->second;
     }
 
-    /// The row Quiet sends and Unquiet puts back: the client table's own, else a spare row of our own with every
-    /// attribute zero, which the client reads exactly as "no row" once it is put back.
+    /// The row Quiet sends and Unquiet puts back: the client table's own, else the book's, else a spare row of our
+    /// own with every attribute zero, which the client reads exactly as "no row" once it is put back.
     /// A row the client already learns quietly, unplaced and without the toast needs no push at all.
     bool IsQuietAlready(SpellbookNotifyData::Row const &row)
     {
@@ -180,6 +180,8 @@ namespace
     std::optional<SpellbookNotifyData::Row> QuietableRow(uint32 spellId)
     {
         if (SpellbookNotifyData::Row const *row = FindTableRow(spellId))
+            return *row;
+        if (SpellbookNotifyData::Row const *row = FindRow(spellId))
             return *row;
         if (!Table().Complete)
             return std::nullopt;
@@ -197,6 +199,7 @@ namespace SpellbookNotify
     void LoadConfig()
     {
         g_enabled = sConfigMgr->GetOption<bool>(ENABLE_KEY, true);
+        Table();
     }
 
     void Push(Player *player, uint32 spellId)

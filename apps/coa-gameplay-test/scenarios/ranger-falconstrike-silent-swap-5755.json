@@ -2,14 +2,14 @@
   "schema": 1,
   "name": "Ranger Falconstrike swaps in and out without chat lines (#5755, #6007)",
   "contract": [
-    "With the Falconstrike talent 573060 and its ready buff 573338, SyncFalconstrike keeps the highest Falconstrike",
-    "rank the level allows (806443 at level 80) learned as a temporary spell and swaps every known Quick Shot rank for",
-    "it through SMSG_SUPERCEDED_SPELL; when the buff ends it swaps Quick Shot 500074 back. Every proc printed 'You have",
+    "With the Falconstrike talent 573060 and its ready buff 573338, SyncFalconstrike keeps the highest Falconstrike rank",
+    "the level allows (806443 at level 80) learned as a temporary spell and swaps every known Quick Shot rank for it",
+    "through SMSG_SUPERCEDED_SPELL; when the buff ends it swaps Quick Shot 500074 back. Every proc printed 'You have",
     "learned a new spell: Falconstrike' and every revert 'You have learned a new spell: Quick Shot' (#6007).",
     "Extensions.dll silences a swap when either spell, or its first rank, is listed by an indexed CharacterAdvancement",
     "row, so the server sends a hidden row listing Falconstrike before its first swap. Expected over a proc and its",
-    "revert: both swaps still reach the client, Falconstrike is in the client's spellbook, no line for either spell,",
-    "and Quick Shot is not listed, so its own learns are still announced."
+    "revert: both swaps reach the client, Falconstrike is in the client's spellbook, and no line is printed for either",
+    "spell."
   ],
   "timeout_ms": 60000,
   "players": [

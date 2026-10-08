@@ -348,10 +348,10 @@ void Refresh(Player* player)
     }
     else
         FillMechsuitBar(player);
-    bool mines = false;
+    bool mines = player->HasAura(803074);
     for (auto const& pair : player->GetSpellMap())
         mines |= player->HasSpell(pair.first) &&
-            Any(sSpellMgr->GetSpellInfo(pair.first),{801718,805354,704463,706647,850020});
+            Any(sSpellMgr->GetSpellInfo(pair.first),{801718,805354,704463,706647});
     if (mines && !player->HasSpell(801798))
         player->learnSpell(801798);
     else if (!mines && player->HasSpell(801798))

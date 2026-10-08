@@ -2526,9 +2526,13 @@ public:
         for (auto const& [button, action] : target.Actions)
         {
             uint8 const type = uint8(ACTION_BUTTON_TYPE(action));
-            uint32 const spell = ACTION_BUTTON_ACTION(action);
-            player->addActionButton(uint8(button), type == ACTION_BUTTON_SPELL ?
-                player->GetTemporarySpellReplacement(spell) : spell, type);
+            uint32 spell = ACTION_BUTTON_ACTION(action);
+            if (type == ACTION_BUTTON_SPELL)
+            {
+                sScriptMgr->OnPlayerNormalizeActionButtonSpell(player, spell, true);
+                spell = player->GetTemporarySpellReplacement(spell);
+            }
+            player->addActionButton(uint8(button), spell, type);
         }
         player->UpdatePlayerSetting("core.ascension_slot.active", 0, index);
         player->SaveToDB(false, false);
@@ -3780,6 +3784,10 @@ public:
       return;
 
     uint32 const guid = player->GetGUID().GetCounter();
+    {
+      std::lock_guard entries(_swapEntryMutex);
+      _sentSwapEntries.erase(guid);
+    }
     PreparedPatchRows const &rows = GetPreparedPatchRows();
     {
       std::lock_guard lock(_mutex);
@@ -3801,10 +3809,6 @@ public:
         return;
       _fallbackTimers.erase(guid);
       _lastStreamMs[guid] = getMSTime();
-    }
-    {
-      std::lock_guard entries(_swapEntryMutex);
-      _sentSwapEntries.erase(guid);
     }
 
     std::vector<ItemPatchRow> itemRows;
@@ -4035,8 +4039,8 @@ private:
       ids.push_back(entries.GetRecord(index).GetUInt32(0));
     std::sort(ids.begin(), ids.end());
     std::vector<uint32> free;
-    for (std::size_t index = ids.size() - 1; index > 0 && free.size() < SWAP_ENTRY_ID_POOL; --index)
-      for (uint32 id = ids[index] - 1; id > ids[index - 1] && free.size() < SWAP_ENTRY_ID_POOL; --id)
+    for (std::size_t index = 1; index < ids.size() && free.size() < SWAP_ENTRY_ID_POOL; ++index)
+      for (uint32 id = ids[index - 1] + 1; id < ids[index] && free.size() < SWAP_ENTRY_ID_POOL; ++id)
         free.push_back(id);
     std::reverse(free.begin(), free.end());
     std::lock_guard lock(_swapEntryMutex);
@@ -4129,11 +4133,14 @@ private:
       }
     }
 
+    {
+      std::lock_guard lock(_clientSpellMutex);
+      if (auto const cached = _clientSpellRows.find(spellId); cached != _clientSpellRows.end())
+        return cached->second;
+    }
+    std::optional<SpellPatchRow> row = ReadClientSpellRow(spellId);
     std::lock_guard lock(_clientSpellMutex);
-    auto cached = _clientSpellRows.find(spellId);
-    if (cached == _clientSpellRows.end())
-      cached = _clientSpellRows.emplace(spellId, ReadClientSpellRow(spellId)).first;
-    return cached->second;
+    return _clientSpellRows.emplace(spellId, std::move(row)).first->second;
   }
 
   void IndexClientSpells() {

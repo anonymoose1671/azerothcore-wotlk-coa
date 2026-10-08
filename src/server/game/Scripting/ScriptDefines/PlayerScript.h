@@ -429,7 +429,8 @@ public:
 
     // Called just before (sent false) and just after (sent true) SMSG_SUPERCEDED_SPELL tells the client a temporary
     // spell replacement started or ended
-    virtual void OnPlayerTemporarySpellReplacementNotice(Player* /*player*/, uint32 /*previous*/, uint32 /*replacement*/, bool /*sent*/) { }
+    virtual void OnPlayerTemporarySpellReplacementNotice(Player* /*player*/, uint32 /*previous*/,
+        uint32 /*replacement*/, bool /*sent*/) { }
 
     // Called just before (sent false) and just after (sent true) SMSG_LEARNED_SPELL announces a temporary spell
     virtual void OnPlayerTemporarySpellLearnNotice(Player* /*player*/, uint32 /*spellId*/, bool /*sent*/) { }
